@@ -13,6 +13,7 @@ public class Main {
         TinyServer server = new TinyServer(11111, 11222);
         server.start();
         new Web();
+
         new Game();
     }
 }
