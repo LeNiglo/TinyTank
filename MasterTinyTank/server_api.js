@@ -8,7 +8,7 @@ ServerApi = function(db) {
 
     this.init_server = function(req, res, match) {
 	res.end(JSON.stringify({name: 'init_server', res: true, err: null}));
-    });
+    };
 
 };
 
