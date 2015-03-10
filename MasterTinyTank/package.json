@@ -2,7 +2,7 @@
     "name":"MasterTinyTank",
     "version":"1.0.0",
     "description":"The Master Server of our game is now a Web Service.",
-    "main":"server.js",
+    "main":"main.js",
     "repository":{
         "type":"git",
         "url":"git://github.com/LeNiglo/TinyTank.git"
