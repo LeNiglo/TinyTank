@@ -24,7 +24,7 @@ public class Network {
             return (ip);
         } catch (Exception e) {
             System.out.println("Unable to get your IP: " + e.getMessage() + ". Aborting");
-            System.exit(0);
+            //System.exit(0);
         }
         return ("0.0.0.0");
     }

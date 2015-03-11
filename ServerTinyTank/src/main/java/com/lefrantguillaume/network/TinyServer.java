@@ -10,19 +10,13 @@ import java.io.IOException;
  * Created by Styve on 10/03/2015.
  */
 public class TinyServer {
-    private int tcpPort;
-    private int udpPort;
 
     public TinyServer() {
-        this.tcpPort = Network.tcpPort;
-        this.udpPort = Network.udpPort;
     }
 
     public TinyServer(int tcpPort, int udpPort) {
         Network.tcpPort = tcpPort;
         Network.udpPort = udpPort;
-        this.tcpPort = tcpPort;
-        this.udpPort = udpPort;
     }
 
     public void start() {
@@ -37,7 +31,7 @@ public class TinyServer {
                     }
                 }
             });
-            server.bind(this.tcpPort, this.udpPort);
+            server.bind(Network.tcpPort, Network.udpPort);
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
             server.close();

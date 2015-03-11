@@ -10,7 +10,7 @@ import com.lefrantguillaume.network.master.Master;
 
 public class Main {
     public static void main(String args[]) {
-        TinyServer server = new TinyServer(11111, 11222);
+        TinyServer server = new TinyServer();
         server.start();
         Master master = new Master();
         master.initServer();
