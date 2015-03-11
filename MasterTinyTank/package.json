@@ -1,22 +1,25 @@
 {
-    "name":"MasterTinyTank",
-    "version":"1.0.0",
-    "description":"The Master Server of our game is now a Web Service.",
-    "main":"main.js",
-    "repository":{
-        "type":"git",
-        "url":"git://github.com/LeNiglo/TinyTank.git"
-    },
-    "dependencies":{
-        "mongodb":"~2.0",
-        "routes":"~2.0",
-        "MD5":"*"
-    },
-    "author":"LeNiglo",
-    "license":"Apache 2.0",
-    "bugs":{
-        "url":"https://github.com/LeNiglo/TinyTank/issues"
-    },
-    "homepage":"https://github.com/leniglo/TinyTank",
-    "README":"https://github.com/LeNiglo/TinyTank/MasterTinyTank/README.md"
+  "name": "MasterTinyTank",
+  "version": "1.0.0",
+  "description": "The Master Server of our game is now a Web Service.",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/LeNiglo/TinyTank.git"
+  },
+  "dependencies": {
+    "MD5": "*",
+    "body-parser": "^1.12.0",
+    "express": "^4.12.2",
+    "express-cors": "0.0.3",
+    "mongodb": "^1.4.34",
+    "mongoskin": "^1.4.12"
+  },
+  "author": "LeNiglo",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/LeNiglo/TinyTank/issues"
+  },
+  "homepage": "https://github.com/leniglo/TinyTank",
+  "README": "https://github.com/LeNiglo/TinyTank/MasterTinyTank/README.md"
 }

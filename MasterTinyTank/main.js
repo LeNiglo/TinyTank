@@ -1,74 +1,50 @@
 #!/usr/bin/nodejs
 
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
-var Router = require('routes');
-var router = new Router();
+var express = require('express');
+var cors = require('express-cors');
+var bodyParser = require('body-parser');
+var app = express();
+
 var ServerApi = require('./server_api.js');
 var ClientApi = require('./client_api.js');
 var WebApi = require('./web_api.js');
+
 var MongoClient = require('mongodb').MongoClient;
 
-var clean_mongo = function(cb) {
-    MongoClient.connect('mongodb://localhost:27017/tiny-tank', function(err, db) {
-	if (err) {
-	    cb(err, null);
-	} else {
-	    cb(null, db);
-	}
-    });
-};
-
-var notFound = function(req, res, match) {
-    res.statusCode = 404;
-    res.end(JSON.stringify({title: 'Not Found', data: '404 Not Found'}));
-};
-
 /* Starts by initilizing the connection with the Database */
-clean_mongo(function(err, db) {
+var db = require('mongoskin').db('mongodb://localhost:27017/tiny-tank');
 
-    if (err) {
-	console.log("Could not connect to MongoDB.");
-	return false;
-    } else {
-	/* Initializes the APIs */
-	var serverApi = new ServerApi(db);
-	var clientApi = new ClientApi(db);
-	var webApi = new WebApi(db);
+/* Initializes the APIs */
+var serverApi = new ServerApi(db);
+var clientApi = new ClientApi(db);
+var webApi = new WebApi(db);
 
-	/* HTTP options */
-	var allowed_origins = [
-	    "http://localhost",
-	    "http://lefrantguillaume.com",
-	    "http://tinytank.lefrantguillaume.com"
-	];
+/* CORS Options */
+app.use(cors({
+	allowedOrigins: [
+	"http://localhost",
+	"http://lefrantguillaume.com",
+	"http://tinytank.lefrantguillaume.com"
+	]
+}));
 
-	/* Loads the Routes */
-	router.addRoute('/servers/init_server', serverApi.init_server);
-	router.addRoute('/*', notFound);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-	/* Starts the HTTP server */
-	var server = http.createServer(function (req, res) {
-	    var path = url.parse(req.url).pathname;
-	    var match = router.match(path);
+/* Loads the Routes */
+/* Server communication */
+app.post('/server/init_server', serverApi.init_server);
+app.post('/server/update_last_active', serverApi.update_last_active);
+/* Client communication */
+/* Web communication */
+app.all('/web/list_servers', webApi.list_servers);
+app.all('*', function(req, res) { res.status(404).end(JSON.stringify({title:"Not Found",data:"404 Not Found"})); });
 
-	    /* Enables CORS */
-	    if (allowed_origins.indexOf(req.headers.origin) >= 0) {
-		res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
-		res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-		res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-		res.setHeader('Access-Control-Allow-Credentials', true);
-	    }
+/* Starts the App */
+var server = app.listen(1337, function () {
 
-	    res.statusCode = 200;
-	    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+	var host = server.address().address
+	var port = server.address().port
 
-	    console.log(path);
-	    match.fn(req, res, match);
-	}).listen(6668, function() {
-	    console.log('http server listening on port ' + this.address().port);
-	});
-    }
-
-});
+	console.log('Example app listening at http://%s:%s', host, port)
+})

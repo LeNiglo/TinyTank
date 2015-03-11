@@ -4,11 +4,14 @@ var url = require('url');
 
 WebApi = function(db) {
 
-    var Servers = db.collection('servers');
+	var Servers = db.collection('servers');
 
-    this.init_server = function(req, res, match) {
-	res.end(JSON.stringify({name: 'init_server', res: true, err: null}));
-    };
+	this.list_servers = function(req, res) {
+
+		Servers.find().toArray(function(err, result) {
+			res.status(200).json({name: 'list_server', res: result, err: err});
+		});
+	};
 
 };
 
