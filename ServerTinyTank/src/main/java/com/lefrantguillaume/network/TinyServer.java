@@ -14,11 +14,13 @@ public class TinyServer {
     private int udpPort;
 
     public TinyServer() {
-        this.tcpPort = 11111;
-        this.udpPort = 11222;
+        this.tcpPort = Network.tcpPort;
+        this.udpPort = Network.udpPort;
     }
 
     public TinyServer(int tcpPort, int udpPort) {
+        Network.tcpPort = tcpPort;
+        Network.udpPort = udpPort;
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
     }
