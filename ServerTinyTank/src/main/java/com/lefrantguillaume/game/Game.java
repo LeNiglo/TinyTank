@@ -1,10 +1,12 @@
 package com.lefrantguillaume.game;
 
+import com.lefrantguillaume.WindowController;
+
 /**
  * Created by Styve on 10/03/2015.
  */
 public class Game {
     public Game() {
-        System.out.println("Game started");
+        WindowController.addConsoleMsg("Game started");
     }
 }

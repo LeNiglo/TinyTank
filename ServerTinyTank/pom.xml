@@ -6,7 +6,9 @@
 
     <groupId>com.lefrantguillaume</groupId>
     <artifactId>ServerTinyTank</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
+    <url>http://maven.apache.org</url>
 
     <dependencies>
         <dependency>
@@ -32,6 +34,24 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.lefrantguillaume.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

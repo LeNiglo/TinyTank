@@ -13,8 +13,6 @@ import java.net.URL;
 
 // This class is a convenient place to keep things common to both the client and server.
 public class Network {
-    static public int tcpPort = 13333;
-    static public int udpPort = 13444;
 
     static public String getIp() {
         try {
@@ -32,15 +30,66 @@ public class Network {
     // This registers objects that are going to be sent over the network.
     static public void register (EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
-        kryo.register(SomeRequest.class);
-        kryo.register(SomeResponse.class);
+        kryo.register(MessageModel.class);
+        kryo.register(MessageConnect.class);
+        kryo.register(MessageDisconnect.class);
+        kryo.register(MessageMove.class);
+        kryo.register(MessageShoot.class);
     }
 
-    static public class SomeRequest {
-        public String text;
+    static public class MessageModel {
+        protected String pseudo;
+        protected int id;
+
+        public MessageModel() {}
+
+        public String getPseudo() { return pseudo; }
+        public int getId() { return id; }
+        public void setPseudo(String pseudo) { this.pseudo = pseudo; }
+        public void setId(int id) { this.id = id; }
     }
 
-    static public class SomeResponse {
-        public String text;
+    static public class MessageMove extends MessageModel {
+        private int direction;
+        private boolean move;
+
+        public MessageMove() {}
+
+        public int getDirection() { return direction; }
+        public boolean getMove() { return move; }
+
+        public void setDirection(int direction) { this.direction = direction; }
+        public void setMove(boolean move) { this.move = move; }
+    }
+
+    static public class MessageConnect extends MessageModel {
+        private String password;
+        private boolean success;
+
+        public MessageConnect() {}
+
+        public String getPassword() { return password; }
+        public boolean isSuccess() { return success; }
+        public void setPassword(String password) { this.password = password; }
+        public void setSuccess(boolean success) { this.success = success; }
+    }
+
+
+    static public class MessageDisconnect extends MessageModel {
+        private boolean success;
+
+        public MessageDisconnect() {}
+
+        public boolean isSuccess() { return success; }
+        public void setSuccess(boolean success) { this.success = success; }
+    }
+
+    static public class MessageShoot extends MessageModel {
+        private int valueKeyPressed;
+
+        public MessageShoot() {}
+
+        public int getValueKeyPressed() { return valueKeyPressed; }
+        public void setValueKeyPressed(int valueKeyPressed) { this.valueKeyPressed = valueKeyPressed; }
     }
 }

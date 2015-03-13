@@ -31,5 +31,6 @@
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.8.3" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-xc:1.8.3" level="project" />
+    <orderEntry type="library" name="JGoodies Forms" level="project" />
   </component>
 </module>
