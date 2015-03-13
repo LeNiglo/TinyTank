@@ -1,6 +1,7 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.WindowConfig;
+import com.lefrantguillaume.Utils.configs.WindowConfig;
+import com.lefrantguillaume.gameComponent.animations.AnimatorData;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.SlickException;
@@ -14,8 +15,7 @@ import java.util.Observer;
  */
 public class WindowFactory {
 
-    public static AppGameContainer windowFactory(List<Observer> observers, Class module, WindowConfig configs, boolean mode) throws SlickException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Class myClass = List.class;
-        return new AppGameContainer((BasicGame) module.getDeclaredConstructor(myClass).newInstance(observers), configs.getSizeX(), configs.getSizeY(), mode);
+    public static AppGameContainer windowFactory(List<Observer> observers, Class module, WindowConfig configs, AnimatorData animatorData, Object controller, boolean mode) throws SlickException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return new AppGameContainer((BasicGame) module.getDeclaredConstructor(List.class, AnimatorData.class, Object.class).newInstance(observers, animatorData, controller), configs.getSizeX(), configs.getSizeY(), mode);
     }
 }

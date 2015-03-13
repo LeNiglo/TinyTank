@@ -3,29 +3,29 @@ package com.lefrantguillaume.networkComponent;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.lefrantguillaume.Utils.NetworkConfig;
-import com.lefrantguillaume.Utils.NetworkManager;
+import com.lefrantguillaume.Utils.configs.NetworkConfig;
+import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
 import java.io.IOException;
+import java.util.Observable;
 
 /**
  * Created by andres_k on 11/03/2015.
  */
-public class NetworkCall {
+public class NetworkCall extends Observable {
     Client client = new Client();
 
     public NetworkCall(NetworkConfig config) {
-        NetworkManager.register(client);
+        NetworkRegister.register(client);
         client.start();
         try {
-            client.connect(5000, "10.10.253.242", 13333, 13444);
-
-        //a mettre dans une classe
+            client.connect(5000, config.getAddress(), config.getTcpPort(), config.getUdpPort());
             client.addListener(new Listener() {
                 public void received(Connection connection, Object object) {
-                    if (object instanceof NetworkManager.SomeResponse) {
-                        NetworkManager.SomeResponse response = (NetworkManager.SomeResponse) object;
-                        System.out.println("CLIENT: " + response.text);
+                    if (object instanceof MessageModel) {
+                        MessageModel response = (MessageModel) object;
+                        setChanged();
+                        notifyObservers(response);
                     }
                 }
             });
@@ -35,11 +35,7 @@ public class NetworkCall {
         }
     }
 
-    public void call(String value) {
-        NetworkManager.SomeRequest request = new NetworkManager.SomeRequest();
-        request.text = value;
+    public void call(MessageModel request) {
         client.sendTCP(request);
-
-        System.out.println("request to send: " + value);
     }
 }
