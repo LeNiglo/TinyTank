@@ -9,3 +9,5 @@ iron:router
 multiply:iron-router-progress
 jquery
 mizzao:bootstrap-3
+meteorhacks:kadira
+accounts-password

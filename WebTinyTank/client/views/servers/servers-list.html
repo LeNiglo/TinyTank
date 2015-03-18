@@ -1,0 +1,12 @@
+<template name="serversList">
+  <h1>Servers List</h1>
+
+	<table class="table">
+		<thead></thead>
+		<tbody>
+  	{{#each getServersList}}
+  	{{> serverItem}}
+  	{{/each}}
+	</tbody>
+</table>
+</template>

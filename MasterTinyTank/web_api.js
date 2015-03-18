@@ -10,7 +10,7 @@ WebApi = function(db) {
 	this.list_servers = function(req, res) {
 
 		Servers.find().toArray(function(err, result) {
-			res.status(200).json({name: 'list_server', res: result, err: err});
+			res.status(200).json({name: 'list_servers', res: result, err: err});
 		});
 	};
 
