@@ -3,7 +3,7 @@ package com.lefrantguillaume.networkComponent;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.lefrantguillaume.Utils.configs.NetworkConfig;
+import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.Observable;
 public class NetworkCall extends Observable {
     Client client = new Client();
 
-    public NetworkCall(NetworkConfig config) {
+    public NetworkCall(NetworkServerConfig config) {
         NetworkRegister.register(client);
         client.start();
         try {

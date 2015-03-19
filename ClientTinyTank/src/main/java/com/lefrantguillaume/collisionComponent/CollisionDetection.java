@@ -12,12 +12,12 @@ public class CollisionDetection {
 
         if (rectangle1.intersects(rectangle2)) {
             return true;
-        } else if (rectangle1.contains(obj2.getX(), obj2.getY()) &&
+        } /*else if (rectangle1.contains(obj2.getX(), obj2.getY()) &&
                 rectangle1.contains(obj2.getX() + obj2.getSizeX(), obj2.getY()) &&
                 rectangle1.contains(obj2.getX(), obj2.getY() + obj2.getSizeY()) &&
                 rectangle1.contains(obj2.getX() + obj2.getSizeX(), obj2.getY() + obj2.getSizeY())) {
             return true;
-        } else {
+        } */else {
             return false;
         }
     }

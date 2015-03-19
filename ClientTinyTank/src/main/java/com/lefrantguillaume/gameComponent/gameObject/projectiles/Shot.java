@@ -1,10 +1,11 @@
-package com.lefrantguillaume.gameComponent.actions;
+package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 
-import com.lefrantguillaume.Utils.Debug;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.gameComponent.actions.EnumActions;
 import com.lefrantguillaume.gameComponent.animations.Animator;
-import com.lefrantguillaume.gameComponent.tanks.EnumAnimationShot;
+import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -21,26 +22,39 @@ public class Shot implements Observer {
     private float angle;
     private Animator animator;
     private int userId;
-    private int shotId;
+    private int id;
     private boolean explode;
 
-    public Shot(float damage, float speed, Animator animator, Tuple<Float, Float, Float> coord, int userId, int shotId) {
+    public Shot(float damage, float speed, Animator animator, Tuple<Float, Float, Float> coord, int userId, int id) {
         this.explode = false;
         this.userId = userId;
-        this.shotId = shotId;
+        this.id = id;
         this.x = coord.getV1();
         this.y = coord.getV2();
         this.angle = coord.getV3();
         this.damage = damage;
         this.speed = speed;
         this.animator = animator;
-        Debug.debug("Shot: " + String.valueOf(userId) + " " + String.valueOf(shotId));
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
+
+        Debug.debug("check Object");
+        if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
+            this.x = order.getV1();
+            this.y = order.getV2();
+            this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
+            this.explode = true;
+        }
+    }
+
+    // FUNCTIONS
     public void move(int delta) {
         Pair<Float, Float> coords = movePredict(delta);
-        this.x = coords.getKey();
-        this.y = coords.getValue();
+        this.x = coords.getV1();
+        this.y = coords.getV2();
     }
 
     public Pair<Float, Float> movePredict(int delta) {
@@ -57,12 +71,13 @@ public class Shot implements Observer {
         return new Pair<Float, Float>(x, y);
     }
 
+    // GETTERS
     public int getUserId() {
         return this.userId;
     }
 
-    public int getShotId() {
-        return this.shotId;
+    public int getId() {
+        return this.id;
     }
 
     public float getDamage() {
@@ -94,15 +109,4 @@ public class Shot implements Observer {
         return animator;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        Tuple<Float, Float, EnumActions> order = (Tuple<Float, Float, EnumActions>) arg;
-
-        this.x = order.getV1();
-        this.y = order.getV2();
-        if (order.getV3() == EnumActions.EXPLODE) {
-            this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
-            this.explode = true;
-        }
-    }
 }

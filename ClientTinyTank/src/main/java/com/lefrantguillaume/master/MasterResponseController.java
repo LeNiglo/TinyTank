@@ -25,6 +25,7 @@ public class MasterResponseController extends Observable implements Observer {
             this.index = this.queue.size() - 1;
             this.setChanged();
             this.notifyObservers(this.queue.get(index));
+
             this.queue.remove(index);
         }
     }

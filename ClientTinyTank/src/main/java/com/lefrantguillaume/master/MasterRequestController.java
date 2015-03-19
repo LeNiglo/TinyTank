@@ -1,6 +1,5 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.Utils.Debug;
 import com.lefrantguillaume.networkComponent.NetworkCall;
 import com.lefrantguillaume.networkComponent.NetworkMessage;
 

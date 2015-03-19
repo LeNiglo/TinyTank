@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.tanks;
+package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 
 /**
  * Created by andres_k on 13/03/2015.

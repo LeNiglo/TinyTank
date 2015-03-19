@@ -3,11 +3,11 @@ package com.lefrantguillaume.Utils.configs;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class User {
+public class CurrentUser {
     private static String pseudo;
     private static int id;
 
-    public User(String pseudo, int id){
+    public CurrentUser(String pseudo, int id){
         this.pseudo = pseudo;
         this.id = id;
     }
@@ -16,7 +16,7 @@ public class User {
     }
 
     public static void setId(int id) {
-        User.id = id;
+        CurrentUser.id = id;
     }
 
     public static String getPseudo() {
@@ -24,6 +24,6 @@ public class User {
     }
 
     public static void setPseudo(String pseudo) {
-        User.pseudo = pseudo;
+        CurrentUser.pseudo = pseudo;
     }
 }

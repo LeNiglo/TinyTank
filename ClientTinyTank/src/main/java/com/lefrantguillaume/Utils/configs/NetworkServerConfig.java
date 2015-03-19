@@ -3,15 +3,15 @@ package com.lefrantguillaume.Utils.configs;
 /**
  * Created by andres_k on 11/03/2015.
  */
-public class NetworkConfig {
+public class NetworkServerConfig {
     private int udpPort;
     private int tcpPort;
     private String address;
 
-    public NetworkConfig() {
-        this.udpPort = 13444;
-        this.tcpPort = 13333;
-        this.address = "localhost";
+    public NetworkServerConfig(int udpPort, int tcpPort, String address) {
+        this.udpPort = udpPort;
+        this.tcpPort = tcpPort;
+        this.address = address;
     }
 
     public int getUdpPort(){

@@ -2,8 +2,9 @@ package com.lefrantguillaume.collisionComponent;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.gameComponent.actions.EnumActions;
-import com.lefrantguillaume.gameComponent.tanks.EnumType;
+import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,20 +14,20 @@ import java.util.Observable;
  * Created by andres_k on 13/03/2015.
  */
 public class CollisionObject extends Observable {
+    private final boolean solid;
+    private final int idUser;
+    private final int id;
+    private final EnumType type;
     private float x;
     private float y;
     private float saveX;
     private float saveY;
     private float sizeX;
     private float sizeY;
-    private int idUser;
-    private int id;
-    private List<Integer> areaId;
-    private EnumType type;
 
-    public CollisionObject(float x, float y, float sizeX, float sizeY, int idUser, int id, EnumType type) {
+    public CollisionObject(boolean solid, float x, float y, float sizeX, float sizeY, int idUser, int id, EnumType type) {
+        this.solid = solid;
         this.type = type;
-        this.areaId = new ArrayList<Integer>();
         this.x = x;
         this.y = y;
         this.saveX = x;
@@ -37,14 +38,29 @@ public class CollisionObject extends Observable {
         this.id = id;
     }
 
-    public void notifyCollision() {
+    // FUNCTIONS
+    public void notifyCollision(EnumType type) {
         this.setChanged();
-        this.notifyObservers(true);
+        Debug.debug("obj id:" + id + " idUser:" + idUser + " nbrObservers:"+ this.countObservers());
+        this.notifyObservers(new Tuple<Float, Float, EnumType>(this.x, this.y, type));
     }
 
-    public EnumType getType(){
+    public void modifCoord(Pair<Float, Float> coords) {
+        this.x = coords.getV1();
+        this.y = coords.getV2();
+    }
+
+    public void backToSave() {
+        this.x = this.saveX;
+        this.y = this.saveY;
+    }
+
+    // GETTERS
+
+    public EnumType getType() {
         return this.type;
     }
+
     public int getIdUser() {
         return this.idUser;
     }
@@ -65,30 +81,11 @@ public class CollisionObject extends Observable {
         return this.sizeY;
     }
 
-    public void modifCoord(Pair<Float, Float> coords) {
-        this.x = coords.getKey();
-        this.y = coords.getValue();
-    }
-
-    public void backToSave() {
-        this.x = this.saveX;
-        this.y = this.saveY;
-    }
-
-    public void alertObservers(){
-        this.setChanged();
-        this.notifyObservers(new Tuple<Float, Float, EnumActions>(this.x, this.y, EnumActions.EXPLODE));
-    }
-
-    public void addAreaId(int id) {
-        this.areaId.add(id);
-    }
-
-    public List<Integer> getAreaId() {
-        return this.areaId;
-    }
-
     public int getId() {
         return this.id;
+    }
+
+    public boolean isSolid() {
+        return solid;
     }
 }

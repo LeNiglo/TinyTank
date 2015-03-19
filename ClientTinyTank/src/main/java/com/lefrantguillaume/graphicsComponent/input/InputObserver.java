@@ -20,7 +20,7 @@ public class InputObserver implements Observer {
     public void update(Observable o, Object arg) {
     }
 
-    protected void addInQueue(int value, int mode) {
+    protected void addInQueue(int value, EnumInput mode) {
         MessageModel request = MessageFactory.createObject(value, mode);
         if (request != null) {
             queue.add(request);

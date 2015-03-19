@@ -16,10 +16,10 @@ public class InputGameObserver extends InputObserver {
     public void update(Observable o, Object arg) {
         System.out.println("input catch: " + arg);
         int value = (Integer) arg;
-        if (value < 0) {
-            this.addInQueue(value * -1, -1);
+        if (value > 0) {
+            this.addInQueue(value, EnumInput.PRESSED);
         } else {
-            this.addInQueue(value, 1);
+            this.addInQueue(value * EnumInput.RELEASED.getValue(), EnumInput.RELEASED);
         }
     }
 }

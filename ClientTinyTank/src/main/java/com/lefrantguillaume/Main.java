@@ -1,6 +1,7 @@
 package com.lefrantguillaume;
 
 import com.lefrantguillaume.master.Master;
+import org.newdawn.slick.SlickException;
 
 /**
  * Created by andres_k on 10/03/2015.
@@ -8,7 +9,11 @@ import com.lefrantguillaume.master.Master;
 public class Main {
 
     public static void main(String args[]) {
-        Master launcher = new Master(1280, 700);
-        launcher.start();
+        try {
+            Master launcher = new Master();
+            launcher.start();
+        } catch (SlickException e) {
+            e.printStackTrace();
+        }
     }
 }

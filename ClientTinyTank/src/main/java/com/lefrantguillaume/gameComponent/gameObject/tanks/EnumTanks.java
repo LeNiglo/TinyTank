@@ -1,15 +1,15 @@
-package com.lefrantguillaume.gameComponent.tanks;
+package com.lefrantguillaume.gameComponent.gameObject.tanks;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
-public enum EnumShots {
-    ROCKET(0),
-    LASER(1);
+public enum EnumTanks {
+    PANZER(0),
+    SNIPER(1);
 
     private final int id;
 
-    EnumShots(int id) {
+    EnumTanks(int id) {
         this.id = id;
     }
 

@@ -1,10 +1,12 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.Utils.configs.NetworkConfig;
-import com.lefrantguillaume.Utils.configs.User;
+import com.lefrantguillaume.Utils.configs.MasterConfig;
+import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.authComponent.AuthenticationController;
-import com.lefrantguillaume.gameComponent.GameController;
-import com.lefrantguillaume.gameComponent.animations.AnimatorData;
+import com.lefrantguillaume.gameComponent.controllers.GameController;
+import com.lefrantguillaume.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.graphicsComponent.input.InputGameObserver;
 import com.lefrantguillaume.graphicsComponent.input.InputHomeObserver;
 import com.lefrantguillaume.graphicsComponent.input.InputObserver;
@@ -26,41 +28,35 @@ import java.util.Observer;
  * Created by andres_k on 10/03/2015.
  */
 public class Master {
-    private User user;
+    private CurrentUser currentUser;
     private GameController gameController;
     private AuthenticationController authController;
-    private AnimatorData animatorData;
     private NetworkCall networkCall;
     private NetworkMessage masterRequestQueue;
     private NetworkMessage masterResponseQueue;
     private WindowConfig windowConfig;
-    private NetworkConfig networkConfig;
     private InputObserver inputGameObserver;
     private InputObserver inputHomeObserver;
     private MasterRequestController masterRequestController;
     private MasterResponseController masterResponseController;
 
-    public Master(int x, int y) {
-        init(x, y);
-    }
-
-    private void init(int x, int y) {
-        this.windowConfig = new WindowConfig(x, y);
-        this.user = new User("unknown", 0);
-        this.animatorData = new AnimatorData();
+    public Master() throws SlickException {
+        this.windowConfig = new WindowConfig();
+        this.currentUser = new CurrentUser("unknown", 1);
         this.initGame();
         this.initNetwork();
         this.initInput();
     }
-    private void initGame(){
+
+    private void initGame() throws SlickException {
         this.gameController = new GameController();
+        this.authController = new AuthenticationController();
     }
     private void initNetwork() {
         this.masterRequestQueue = new NetworkMessage();
         this.masterResponseQueue = new NetworkMessage();
         this.masterResponseController = new MasterResponseController(this.masterResponseQueue);
-        this.networkConfig = new NetworkConfig();
-        this.networkCall = new NetworkCall(this.networkConfig);
+        this.networkCall = new NetworkCall(new NetworkServerConfig(MasterConfig.getMasterUdpPort(), MasterConfig.getMasterTcpPort(), MasterConfig.getMasterAddress()));
         this.networkCall.addObserver(this.masterResponseController);
         this.masterRequestController = new MasterRequestController(this.masterRequestQueue, this.networkCall);
         this.masterRequestQueue.addObserver(this.masterRequestController);
@@ -72,52 +68,19 @@ public class Master {
     }
 
     public void start() {
- //       if (this.launchHome() == true) {
-            this.launchGame();
- //       }
-    }
-
-    public boolean launchHome() {
+        AppGameContainer appGame;
         try {
-            List<Observer> observers = new ArrayList<Observer>();
-            observers.add(inputHomeObserver);
+            List<Observer> homeObservers = new ArrayList<Observer>();
+            homeObservers.add(inputHomeObserver);
             this.masterResponseController.addObserver(this.authController);
-            AppGameContainer game = WindowFactory.windowFactory(observers, WindowHome.class, this.windowConfig, this.animatorData, this.authController, false);
-            game.start();
-        } catch (SlickException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        this.masterResponseController.deleteObservers();
-        return true;
-    }
-
-    public boolean launchGame() {
-        try {
-            List<Observer> observers = new ArrayList<Observer>();
-            observers.add(inputGameObserver);
+            List<Observer> gameObservers = new ArrayList<Observer>();
+            gameObservers.add(inputGameObserver);
             this.masterResponseController.addObserver(this.gameController);
-            AppGameContainer game = WindowFactory.windowFactory(observers, WindowGame.class, this.windowConfig, this.animatorData, this.gameController, false);
-            game.start();
+            appGame = new AppGameContainer(new Windows("TinyTank", homeObservers, this.authController, gameObservers, this.gameController));
+            appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
+            appGame.start();
         } catch (SlickException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-        this.masterResponseController.deleteObservers();
-        return true;
     }
 }

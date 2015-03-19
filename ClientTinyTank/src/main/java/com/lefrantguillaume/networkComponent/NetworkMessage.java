@@ -35,7 +35,7 @@ public class NetworkMessage extends Observable{
         return this.messages.get(index);
     }
 
-    public MessageModel remove(int index){
-        return this.messages.remove(index);
+    public void remove(int index){
+        this.messages.remove(index);
     }
 }

@@ -10,7 +10,6 @@ public class MessageShoot extends MessageModel {
 
     public MessageShoot() {
     }
-
     public MessageShoot(String pseudo, int id, int valueKeyPressed) {
         this.pseudo = pseudo;
         this.id = id;
