@@ -80,7 +80,7 @@ public class WindowGame extends BasicGameState {
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         g.drawAnimation(this.gameController.getMapController().getMapAnimator().currentAnimation(), 0, 0);
-        for (int i = 0; i < this.gameController.getMapController().getObstacles().size(); ++i){
+        for (int i = 0; i < this.gameController.getMapController().getObstacles().size(); ++i) {
             Obstacle current = this.gameController.getMapController().getObstacles().get(i);
             g.drawAnimation(current.getAnimator().currentAnimation(), current.getX(), current.getY());
         }
@@ -110,12 +110,12 @@ public class WindowGame extends BasicGameState {
 
         int x = Mouse.getX();
         int y = Mouse.getY();
-        tmp = "Mouse position x:" + x + " y:"+y;
+        tmp = "Mouse position x:" + x + " y:" + y;
         Input input = gameContainer.getInput();
         int xpos = input.getMouseX();
         int ypos = input.getMouseY();
-        tmp2 = "MouseSlick position x:" + xpos + " y:"+ypos;
-
+        tmp2 = "MouseSlick position x:" + xpos + " y:" + ypos;
+        this.myMouseMoved(xpos, ypos);
         for (int i = 0; i < this.gameController.getPlayers().size(); ++i) {
             if (this.gameController.getPlayers().get(i).getPlayerState().isMove()) {
                 if (!this.gameController.getCollisionController().checkCollision(this.gameController.getPlayers().get(i).movePredict(delta), this.gameController.getPlayers().get(i).getPlayerState().getUser().getId()))
@@ -162,7 +162,7 @@ public class WindowGame extends BasicGameState {
         double y = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getY();
 
         angle = MathTools.getAngle(x, y, newX, newY);
-       // Debug.debug("["+x+","+y+"],["+newX+","+newY+"] = "+angle);
-        this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle((float)angle);
+        // Debug.debug("["+x+","+y+"],["+newX+","+newY+"] = "+angle);
+        this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle((float) angle);
     }
 }
