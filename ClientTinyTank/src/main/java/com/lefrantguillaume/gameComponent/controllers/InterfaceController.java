@@ -1,7 +1,16 @@
-package com.lefrantguillaume.interfaceComponent;
+package com.lefrantguillaume.gameComponent.controllers;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.animations.EnumInterfaceComponent;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
+import com.lefrantguillaume.gameComponent.playerData.data.Player;
+import com.lefrantguillaume.gameComponent.playerData.data.User;
+import com.lefrantguillaume.interfaceComponent.AvailableTank;
+import com.lefrantguillaume.networkComponent.messages.MessageFactory;
+import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
@@ -13,7 +22,7 @@ import java.util.Observer;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class InterfaceController implements Observer {
+public class InterfaceController extends Observable implements Observer {
     private List<Animator> backgroundAnimator;
     private List<Animator> buttonAnimator;
     private AvailableTank availableTank;
@@ -27,6 +36,12 @@ public class InterfaceController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
+    }
+
+    public void loadGame(){
+        MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), this.availableTank.getCurrentTank());
+        this.setChanged();
+        this.notifyObservers(request);
     }
 
     public void drawBackground(Graphics g){

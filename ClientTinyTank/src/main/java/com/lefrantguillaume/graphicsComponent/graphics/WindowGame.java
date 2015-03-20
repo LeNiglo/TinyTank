@@ -8,13 +8,10 @@ import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.controllers.MapController;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.Obstacle;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
-import com.lefrantguillaume.gameComponent.playerData.data.User;
 import com.lefrantguillaume.graphicsComponent.input.*;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
@@ -34,7 +31,7 @@ import java.util.UUID;
  */
 
 public class WindowGame extends BasicGameState {
-    private AnimatorGameData animatorData;
+    private AnimatorGameData animatorGameData;
     private GameController gameController;
     private GameContainer container;
     private StateBasedGame stateGame;
@@ -45,10 +42,11 @@ public class WindowGame extends BasicGameState {
     public WindowGame(int id, List<Observer> observers, Object gameController) {
         this.id = id;
         this.gameController = (GameController) gameController;
-        this.animatorData = new AnimatorGameData();
+        this.animatorGameData = new AnimatorGameData();
         this.input = new InputCheck();
         for (int i = 0; i < observers.size(); ++i) {
             this.input.addObserver(observers.get(i));
+            this.gameController.addObserver(observers.get(i));
         }
     }
 
@@ -63,16 +61,15 @@ public class WindowGame extends BasicGameState {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
-        this.animatorData.initMap(this.gameController.getMapController().getConfigMapFile());
-        this.animatorData.initGame();
-        this.gameController.getMapController().setMapAnimator(this.animatorData.getMapAnimator());
+        this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
+        this.animatorGameData.initGame();
+        this.gameController.getMapController().setMapAnimator(this.animatorGameData.getMapAnimator());
+        this.gameController.setAnimatorGameData(this.animatorGameData);
         MapController map = this.gameController.getMapController();
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, -5, new Pair<Float, Float>(map.getSizeX(), 5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, map.getSizeY() + 5, new Pair<Float, Float>(map.getSizeX(), -5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, -5, 0, new Pair<Float, Float>(5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, new Pair<Float, Float>(-5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        //tmp
-        this.gameController.addPlayer(new Player(new User(CurrentUser.getPseudo(), CurrentUser.getId()), null, TankFactory.createTank(EnumTanks.TIGER, this.animatorData), this.gameController.getShots(), 15, 15));
     }
 
     @Override
@@ -157,6 +154,7 @@ public class WindowGame extends BasicGameState {
     @Override
     public void keyReleased(int key, char c) {
         if (input.keyCheck(key, EnumInput.RELEASED) == -1) {
+            this.gameController.clearData();
             this.stateGame.enterState(EnumWindow.HOME.getValue());
         }
     }

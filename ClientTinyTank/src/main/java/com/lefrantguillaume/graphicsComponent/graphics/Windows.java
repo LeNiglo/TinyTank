@@ -1,6 +1,6 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
-import com.lefrantguillaume.interfaceComponent.InterfaceController;
+import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -14,10 +14,10 @@ import java.util.Observer;
  */
 public class Windows extends StateBasedGame {
 
-    public Windows(String name, List<Observer> interfaceObservers, InterfaceController interfaceController, List<Observer> gameObservers, GameController gameController) {
+    public Windows(String name, List<Observer> observers, InterfaceController interfaceController, GameController gameController) {
         super(name);
-        this.addState(new WindowInterface(EnumWindow.HOME.getValue(), interfaceObservers, interfaceController));
-        this.addState(new WindowGame(EnumWindow.GAME.getValue(), gameObservers, gameController));
+        this.addState(new WindowInterface(EnumWindow.HOME.getValue(), observers, interfaceController));
+        this.addState(new WindowGame(EnumWindow.GAME.getValue(), observers, gameController));
     }
 
     @Override

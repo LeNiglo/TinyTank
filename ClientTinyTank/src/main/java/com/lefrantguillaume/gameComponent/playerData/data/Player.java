@@ -93,4 +93,8 @@ public class Player implements Observer{
     public void setInGame(boolean inGame) {
         this.inGame = inGame;
     }
+
+    public void setShots(List<Shot> shots){
+        this.shots= shots;
+    }
 }

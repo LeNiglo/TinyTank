@@ -1,9 +1,11 @@
 package com.lefrantguillaume.graphicsComponent.input;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.gameComponent.playerData.data.PlayerState;
 import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerDelete;
 import org.newdawn.slick.Input;
 
 import java.util.Observable;
@@ -14,6 +16,9 @@ import java.util.Observable;
 public class InputCheck extends Observable {
     public int keyCheck(int key, EnumInput mode){
         if (Input.KEY_ESCAPE == key) {
+            MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+            this.setChanged();
+            this.notifyObservers(request);
             return -1;
         }
         else if (key == Input.KEY_DOWN || key == Input.KEY_UP || key == Input.KEY_LEFT || key == Input.KEY_RIGHT)

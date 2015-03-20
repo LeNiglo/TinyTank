@@ -5,14 +5,20 @@ import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.RoundData.RoundController;
+import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.RoundData.Team;
+import com.lefrantguillaume.gameComponent.playerData.data.User;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
-import com.lefrantguillaume.networkComponent.messages.msg.MessageInitGame;
+import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerDelete;
+import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
+import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerUpdate;
 import org.newdawn.slick.SlickException;
+import sun.misc.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +28,14 @@ import java.util.Observer;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class GameController implements Observer {
+public class GameController  extends Observable implements Observer{
     private List<Player> players;
     private List<Shot> shots;
     private List<Team> teams;
     private CollisionController collisionController;
     private MapController mapController;
     private RoundController roundController;
+    private AnimatorGameData animatorGameData;
 
     public GameController() throws SlickException {
         this.players = new ArrayList<Player>();
@@ -37,27 +44,33 @@ public class GameController implements Observer {
         this.collisionController = new CollisionController();
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.roundController = new RoundController(this.players, this.teams);
+        this.animatorGameData = null;
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Debug.debug("Message receive");
         if (arg instanceof MessageModel) {
-            MessageModel action = (MessageModel) arg;
-            if (action.getPlayerAction() == true) {
-                Player current = this.getPlayer(action.getId());
+            MessageModel received = (MessageModel) arg;
+            if (received.getPlayerAction() == true) {
+                Player current = this.getPlayer(received.getId());
                 if (current != null) {
-                    current.doAction(new PlayerAction(action), this.collisionController);
+                    current.doAction(new PlayerAction(received), this.collisionController);
                 }
             }
             else {
-                if (action instanceof MessageInitGame){
-                    MessageInitGame task = (MessageInitGame) action;
-
-                    this.clearData();
-                    this.players = task.getPlayers();
-                    this.shots = task.getShots();
-
+                if (received instanceof MessagePlayerNew){
+                    MessagePlayerNew task = (MessagePlayerNew) received;
+                    if (this.animatorGameData != null)
+                        this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, TankFactory.createTank(task.getEnumTanks(), this.animatorGameData), this.getShots(), 15, 15));
+                }
+                if (received instanceof MessagePlayerDelete){
+                    MessagePlayerDelete task = (MessagePlayerDelete) received;
+                    this.deletePlayer(task.getId());
+                }
+                if (received instanceof MessagePlayerUpdate){
+                    MessagePlayerUpdate task = (MessagePlayerUpdate) received;
+                    this.updatePlayer(task.getId(), task.getPlayer());
                 }
             }
         }
@@ -74,7 +87,27 @@ public class GameController implements Observer {
         this.collisionController.addCollisionObject(obj);
     }
 
-    private void clearData(){
+    public void updatePlayer(String id, Player player){
+        for (int i = 0; i < this.players.size(); ++i){
+            if (this.players.get(i).getPlayerState().getUser().getIdUser().equals(id)){
+                this.players.remove(i);
+                this.players.set(i, player);
+                this.players.get(i).setShots(this.shots);
+                break;
+            }
+        }
+    }
+
+    public void deletePlayer(String id){
+        for (int i = 0; i < this.players.size(); ++i){
+            if (this.players.get(i).getPlayerState().getUser().getIdUser().equals(id)){
+                this.players.remove(i);
+                break;
+            }
+        }
+    }
+
+    public void clearData(){
         this.players.clear();
         this.shots.clear();
         this.teams.clear();
@@ -114,5 +147,9 @@ public class GameController implements Observer {
 
     public List<Team> getTeams() {
         return teams;
+    }
+
+    public void setAnimatorGameData(AnimatorGameData animatorGameData) {
+        this.animatorGameData = animatorGameData;
     }
 }

@@ -3,7 +3,7 @@ package com.lefrantguillaume.graphicsComponent.graphics;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
-import com.lefrantguillaume.interfaceComponent.InterfaceController;
+import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -29,6 +29,7 @@ public class WindowInterface extends BasicGameState {
         this.input = new InputCheck();
         for (int i = 0; i < observers.size(); ++i) {
             this.input.addObserver(observers.get(i));
+            this.interfaceController.addObserver(observers.get(i));
         }
     }
 
@@ -73,6 +74,7 @@ public class WindowInterface extends BasicGameState {
     public void keyReleased(int key, char c) {
         if (key == Input.KEY_RETURN) {
             this.stateGame.enterState(EnumWindow.GAME.getValue());
+            this.interfaceController.loadGame();
         }
         else if (key == Input.KEY_LEFT || key == Input.KEY_RIGHT){
             this.interfaceController.changeCurrentTank(key);
