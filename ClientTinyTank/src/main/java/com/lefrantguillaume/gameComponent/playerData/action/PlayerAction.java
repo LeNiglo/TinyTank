@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.actions;
+package com.lefrantguillaume.gameComponent.playerData.action;
 
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.networkComponent.messages.msg.MessageMove;
@@ -11,11 +11,11 @@ import java.util.List;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Action {
+public class PlayerAction {
     private EnumActions action;
     List<Object> values;
 
-    public Action(MessageModel todo) {
+    public PlayerAction(MessageModel todo) {
         this.action = EnumActions.NOTHING;
         this.values = new ArrayList<Object>();
         if (todo instanceof MessageMove) {
@@ -27,8 +27,9 @@ public class Action {
             this.values.add(new Integer(((MessageMove) todo).getDirection()));
         }
         else if (todo instanceof MessageShoot){
-            if (((MessageShoot) todo).getValueKeyPressed() == Input.KEY_A) {
+            if (((MessageShoot) todo).getValueKeyPressed() == Input.MOUSE_LEFT_BUTTON) {
                 this.action = EnumActions.SHOOT;
+                this.values.add(((MessageShoot)todo).getAngle());
             }
         }
     }
@@ -38,6 +39,6 @@ public class Action {
     }
 
     public EnumActions getAction() {
-        return action;
+        return this.action;
     }
 }

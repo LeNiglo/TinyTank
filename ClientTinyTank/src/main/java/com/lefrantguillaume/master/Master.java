@@ -3,7 +3,6 @@ package com.lefrantguillaume.master;
 import com.lefrantguillaume.Utils.configs.MasterConfig;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.authComponent.AuthenticationController;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.graphicsComponent.graphics.Windows;
@@ -11,15 +10,11 @@ import com.lefrantguillaume.graphicsComponent.input.InputGameObserver;
 import com.lefrantguillaume.graphicsComponent.input.InputHomeObserver;
 import com.lefrantguillaume.graphicsComponent.input.InputObserver;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowFactory;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowGame;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowHome;
 import com.lefrantguillaume.networkComponent.NetworkCall;
 import com.lefrantguillaume.networkComponent.NetworkMessage;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
@@ -42,7 +37,7 @@ public class Master {
 
     public Master() throws SlickException {
         this.windowConfig = new WindowConfig();
-        this.currentUser = new CurrentUser("unknown", 1);
+        this.currentUser = new CurrentUser("unknown", "541d51");
         this.initGame();
         this.initNetwork();
         this.initInput();
@@ -52,6 +47,7 @@ public class Master {
         this.gameController = new GameController();
         this.authController = new AuthenticationController();
     }
+
     private void initNetwork() {
         this.masterRequestQueue = new NetworkMessage();
         this.masterResponseQueue = new NetworkMessage();
@@ -68,19 +64,24 @@ public class Master {
     }
 
     public void start() {
-        AppGameContainer appGame;
+        AppGameContainer appGame = null;
         try {
-            List<Observer> homeObservers = new ArrayList<Observer>();
-            homeObservers.add(inputHomeObserver);
-            this.masterResponseController.addObserver(this.authController);
-            List<Observer> gameObservers = new ArrayList<Observer>();
-            gameObservers.add(inputGameObserver);
-            this.masterResponseController.addObserver(this.gameController);
-            appGame = new AppGameContainer(new Windows("TinyTank", homeObservers, this.authController, gameObservers, this.gameController));
-            appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
-            appGame.start();
+            this.startGame(appGame);
         } catch (SlickException e) {
             e.printStackTrace();
         }
+    }
+
+    private void startGame(AppGameContainer appGame) throws SlickException {
+        List<Observer> homeObservers = new ArrayList<Observer>();
+        homeObservers.add(inputHomeObserver);
+        this.masterResponseController.addObserver(this.authController);
+        List<Observer> gameObservers = new ArrayList<Observer>();
+        gameObservers.add(inputGameObserver);
+        this.masterResponseController.addObserver(this.gameController);
+        appGame = new AppGameContainer(new Windows("TinyTank", homeObservers, this.authController, gameObservers, this.gameController));
+        appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
+        appGame.start();
+
     }
 }

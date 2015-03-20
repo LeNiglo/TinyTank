@@ -5,17 +5,18 @@ package com.lefrantguillaume.Utils.configs;
  */
 public class CurrentUser {
     private static String pseudo;
-    private static int id;
+    private static String id;
 
-    public CurrentUser(String pseudo, int id){
+    //TODO mettre l'id en String
+    public CurrentUser(String pseudo, String id){
         this.pseudo = pseudo;
         this.id = id;
     }
-    public static int getId() {
+    public static String getId() {
         return id;
     }
 
-    public static void setId(int id) {
+    public static void setId(String id) {
         CurrentUser.id = id;
     }
 

@@ -10,9 +10,10 @@ public class MessageDisconnect extends MessageModel {
     private boolean sucess;
 
     public MessageDisconnect(){};
-    public MessageDisconnect(String pseudo, int id) {
+    public MessageDisconnect(String pseudo, String id) {
         this.pseudo = pseudo;
         this.id = id;
+        this.playerAction = false;
     }
 
     public boolean isSucess() {

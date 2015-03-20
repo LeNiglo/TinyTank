@@ -1,5 +1,6 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.MathTools;
@@ -7,21 +8,24 @@ import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.controllers.MapController;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.Obstacle;
-import com.lefrantguillaume.gameComponent.playerData.Player;
+import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.animations.AnimatorData;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
-import com.lefrantguillaume.gameComponent.playerData.User;
+import com.lefrantguillaume.gameComponent.playerData.data.User;
 import com.lefrantguillaume.graphicsComponent.input.*;
-import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
 import java.util.Observer;
+import java.util.UUID;
 
 
 /**
@@ -36,7 +40,6 @@ public class WindowGame extends BasicGameState {
     private InputCheck input;
     private int id;
     public String tmp = "no input";
-    public String tmp2 = "no input";
 
     public WindowGame(int id, List<Observer> observers, Object gameController) {
         this.id = id;
@@ -68,10 +71,10 @@ public class WindowGame extends BasicGameState {
         this.animatorData.initGame();
         this.gameController.getMapController().setMapAnimator(this.animatorData.getMapAnimator());
         MapController map = this.gameController.getMapController();
-        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, -5, map.getSizeX(), 5, -1, -1, EnumType.OBSTACLE));
-        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, map.getSizeY() + 5, map.getSizeX(), -5, -1, -1, EnumType.OBSTACLE));
-        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, -5, 0, 5, map.getSizeY(), -1, -1, EnumType.OBSTACLE));
-        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, -5, map.getSizeY(), -1, -1, EnumType.OBSTACLE));
+        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, -5, new Pair<Float, Float>(map.getSizeX(), 5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, 0, map.getSizeY() + 5, new Pair<Float, Float>(map.getSizeX(), -5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, -5, 0, new Pair<Float, Float>(5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, new Pair<Float, Float>(-5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         //tmp
         this.gameController.addPlayer(new Player(new User(CurrentUser.getPseudo(), CurrentUser.getId()), null, TankFactory.createTank("panzer", this.animatorData), this.gameController.getShots(), 15, 15));
 
@@ -92,29 +95,46 @@ public class WindowGame extends BasicGameState {
             } else {
                 current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
                 g.drawAnimation(current.getAnimator().currentAnimation(), current.getX(), current.getY());
+                Rectangle r = new Rectangle(this.gameController.getCollisionController().getCollisionObject(current.getId()).getX(),
+                        this.gameController.getCollisionController().getCollisionObject(current.getId()).getY(),
+                        this.gameController.getCollisionController().getCollisionObject(current.getId()).getSizeX(),
+                        this.gameController.getCollisionController().getCollisionObject(current.getId()).getSizeY());
+                Shape nr = r.transform(Transform.createRotateTransform(this.gameController.getCollisionController().getCollisionObject(current.getId()).getRadian(),
+                        this.gameController.getCollisionController().getCollisionObject(current.getId()).getCenterX(),
+                        this.gameController.getCollisionController().getCollisionObject(current.getId()).getCenterY()));
+                g.draw(nr);
             }
         }
         for (int i = 0; i < this.gameController.getPlayers().size(); ++i) {
             Player current = this.gameController.getPlayers().get(i);
             current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setRotation(current.getPlayerState().getDirection().getAngle());
-            g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getPlayerState().getX(), current.getPlayerState().getY());
+            g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getPlayerState().getAbsoluteX(), current.getPlayerState().getAbsoluteY());
             current.getTank().getGunAnimator().currentAnimation().getCurrentFrame().setRotation(current.getPlayerState().getGunAngle());
-            g.drawAnimation(current.getTank().getGunAnimator().currentAnimation(), current.getPlayerState().getX(), current.getPlayerState().getY());
+            g.drawAnimation(current.getTank().getGunAnimator().currentAnimation(), current.getPlayerState().getAbsoluteX(), current.getPlayerState().getAbsoluteY());
+
+            Rectangle r = new Rectangle(this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getX(),
+                    this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getY(),
+                    this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getSizeX(),
+                    this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getSizeY());
+            Shape nr = r.transform(Transform.createRotateTransform(this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getRadian(),
+                    this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getCenterX(),
+                    this.gameController.getCollisionController().getCollisionObject(current.getPlayerState().getUser().getId()).getCenterY()));
+            g.draw(nr);
         }
         g.drawString(tmp, 100, 50);
-        g.drawString(tmp2, 100, 80);
+        g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterY() - 2, 5, 5);
+        g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterX(), this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterY(), 1, 1);
+        g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getAbsoluteX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getAbsoluteY() - 2, 5, 5);
+        g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getAbsoluteX(), this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getAbsoluteY(), 1, 1);
+        g.setColor(Color.red);
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
-
-        int x = Mouse.getX();
-        int y = Mouse.getY();
-        tmp = "Mouse position x:" + x + " y:" + y;
         Input input = gameContainer.getInput();
         int xpos = input.getMouseX();
         int ypos = input.getMouseY();
-        tmp2 = "MouseSlick position x:" + xpos + " y:" + ypos;
+        tmp = "MouseSlick position x:" + xpos + " y:" + ypos;
         this.myMouseMoved(xpos, ypos);
         for (int i = 0; i < this.gameController.getPlayers().size(); ++i) {
             if (this.gameController.getPlayers().get(i).getPlayerState().isMove()) {
@@ -157,12 +177,10 @@ public class WindowGame extends BasicGameState {
 
 
     public void myMouseMoved(double newX, double newY) {
-        double angle;
-        double x = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getX();
-        double y = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getY();
+        double x = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterX();
+        double y = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getCenterY();
 
-        angle = MathTools.getAngle(x, y, newX, newY);
-        // Debug.debug("["+x+","+y+"],["+newX+","+newY+"] = "+angle);
-        this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle((float) angle);
+        float angle = MathTools.getAngle(x, y, newX, newY);
+        this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(angle);
     }
 }

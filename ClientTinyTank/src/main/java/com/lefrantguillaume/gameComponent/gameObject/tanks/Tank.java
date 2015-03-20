@@ -17,8 +17,8 @@ public class Tank {
 
 
     // FUNCTIONS
-    public Shot generateShot(int userId, int shotId, Tuple<Float, Float, Float> coord) {
-        Shot shot = new Shot(this.tankWeapon.getDamageShot(), this.tankWeapon.getSpeedShot(), new Animator(this.shotAnimator), coord, userId, shotId);
+    public Shot generateShot(String userId, Tuple<Float, Float, Float> coord) {
+        Shot shot = new Shot(userId, this.tankWeapon.getDamageShot(), this.tankWeapon.getSpeedShot(), new Animator(this.shotAnimator), coord);
         return shot;
     }
 
@@ -33,6 +33,10 @@ public class Tank {
 
     public Animator getGunAnimator() {
         return this.gunAnimator;
+    }
+
+    public Animator getShotAnimator() {
+        return this.shotAnimator;
     }
 
     public TankWeapon getTankWeapon(){

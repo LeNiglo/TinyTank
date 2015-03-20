@@ -4,20 +4,22 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
+import java.util.UUID;
+
 /**
  * Created by andres_k on 16/03/2015.
  */
 public class Obstacle {
-    private int userId;
-    private int id;
+    private String userId;
+    private UUID id;
     private Animator animator;
     private EnumType type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
 
-    public Obstacle(float x, float y, float sizeX, float sizeY, int userId, int id, Animator animator, EnumType type) {
+    public Obstacle(float x, float y, float sizeX, float sizeY, String userId, Animator animator, EnumType type) {
         this.userId = userId;
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.animator = animator;
         this.type = type;
         this.positions = new Pair<Float, Float>(x, y);
@@ -25,7 +27,7 @@ public class Obstacle {
     }
 
     // GETTERS
-    public int getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
@@ -45,7 +47,7 @@ public class Obstacle {
         return this.sizes.getV2();
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 

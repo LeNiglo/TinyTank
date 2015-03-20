@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.actions;
+package com.lefrantguillaume.gameComponent.playerData.action;
 
 import org.newdawn.slick.Input;
 

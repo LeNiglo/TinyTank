@@ -11,7 +11,7 @@ import org.newdawn.slick.Input;
  */
 public class MessageFactory {
     public static MessageModel createObject(int value, EnumInput mode) {
-        MessageModel object;
+        MessageModel object = null;
         if (value == Input.KEY_DOWN || value == Input.KEY_UP || value == Input.KEY_LEFT || value == Input.KEY_RIGHT) {
             if (mode == EnumInput.PRESSED) {
                 object = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), value, true);
@@ -19,11 +19,14 @@ public class MessageFactory {
                 object = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), value, false);
             }
         }
-        else if (value == Input.KEY_A && mode == EnumInput.RELEASED) {
-            object = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), value);
+        return object;
+    }
+
+    public static MessageModel createObject(int value, EnumInput mode, float x, float y, float angleDirection) {
+        MessageModel object = null;
+         if (value == Input.MOUSE_LEFT_BUTTON&& mode == EnumInput.RELEASED) {
+            object = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), value, angleDirection);
         }
-        else
-            return null;
         return object;
     }
 }

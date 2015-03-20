@@ -1,6 +1,9 @@
 package com.lefrantguillaume.collisionComponent;
 
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
+
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -10,14 +13,11 @@ public class CollisionDetection {
         Rectangle rectangle1 = new Rectangle(obj1.getX(), obj1.getY(), obj1.getSizeX(), obj1.getSizeY());
         Rectangle rectangle2 = new Rectangle(obj2.getX(), obj2.getY(), obj2.getSizeX(), obj2.getSizeY());
 
-        if (rectangle1.intersects(rectangle2)) {
+        Shape s1 = rectangle1.transform(Transform.createRotateTransform(obj1.getRadian(), obj1.getCenterX(), obj1.getCenterY()));
+        Shape s2 = rectangle2.transform(Transform.createRotateTransform(obj2.getRadian(), obj2.getCenterX(), obj2.getCenterY()));
+        if (s1.intersects(s2)) {
             return true;
-        } /*else if (rectangle1.contains(obj2.getX(), obj2.getY()) &&
-                rectangle1.contains(obj2.getX() + obj2.getSizeX(), obj2.getY()) &&
-                rectangle1.contains(obj2.getX(), obj2.getY() + obj2.getSizeY()) &&
-                rectangle1.contains(obj2.getX() + obj2.getSizeX(), obj2.getY() + obj2.getSizeY())) {
-            return true;
-        } */else {
+        } else {
             return false;
         }
     }

@@ -3,34 +3,31 @@ package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.gameComponent.actions.EnumActions;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public class Shot implements Observer {
-
+    private final UUID id;
+    private final String userId;
+    private final Animator animator;
+    private Pair<Float, Float> positions;
     private float damage;
     private float speed;
-    private float x;
-    private float y;
     private float angle;
-    private Animator animator;
-    private int userId;
-    private int id;
     private boolean explode;
 
-    public Shot(float damage, float speed, Animator animator, Tuple<Float, Float, Float> coord, int userId, int id) {
+    public Shot(String userId, float damage, float speed, Animator animator, Tuple<Float, Float, Float> coord) {
         this.explode = false;
         this.userId = userId;
-        this.id = id;
-        this.x = coord.getV1();
-        this.y = coord.getV2();
+        this.id = UUID.randomUUID();
+        this.positions = new Pair<Float, Float>(coord.getV1(), coord.getV2());
         this.angle = coord.getV3();
         this.damage = damage;
         this.speed = speed;
@@ -43,8 +40,8 @@ public class Shot implements Observer {
 
         Debug.debug("check Object");
         if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-            this.x = order.getV1();
-            this.y = order.getV2();
+            this.positions.setV1(order.getV1());
+            this.positions.setV2(order.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
         }
@@ -53,30 +50,33 @@ public class Shot implements Observer {
     // FUNCTIONS
     public void move(int delta) {
         Pair<Float, Float> coords = movePredict(delta);
-        this.x = coords.getV1();
-        this.y = coords.getV2();
+        this.positions.setV1(coords.getV1());
+        this.positions.setV2(coords.getV2());
     }
 
     public Pair<Float, Float> movePredict(int delta) {
-        float x = this.x;
-        float y = this.y;
-        if (this.angle == 270f)
-            y = y - ((this.speed / 10) * delta);
-        else if (this.angle == 0f)
-            x = x + ((this.speed / 10) * delta);
-        else if (this.angle == 90f)
-            y = y + ((this.speed / 10) * delta);
-        else if (this.angle == 180f)
-            x = x - ((this.speed / 10) * delta);
+        double addX = Math.cos(this.angle * Math.PI / 180);
+        double addY = Math.sin(this.angle * Math.PI / 180);
+        float x = this.positions.getV1() + (((float) addX * this.speed / 100) * delta);
+        float y = this.positions.getV2() + (((float) addY * this.speed / 100) * delta);
+
         return new Pair<Float, Float>(x, y);
     }
 
     // GETTERS
-    public int getUserId() {
+    public float getCenterX() {
+        return this.positions.getV1() + (this.animator.currentSizeAnimation().getV1() / 2);
+    }
+
+    public float getCenterY() {
+        return this.positions.getV2() + (this.animator.currentSizeAnimation().getV2() / 2);
+    }
+
+    public String getUserId() {
         return this.userId;
     }
 
-    public int getId() {
+    public UUID getId() {
         return this.id;
     }
 
@@ -89,11 +89,11 @@ public class Shot implements Observer {
     }
 
     public float getX() {
-        return this.x;
+        return this.positions.getV1();
     }
 
     public float getY() {
-        return this.y;
+        return this.positions.getV2();
     }
 
     public float getAngle() {
@@ -108,5 +108,4 @@ public class Shot implements Observer {
     public Animator getAnimator() {
         return animator;
     }
-
 }

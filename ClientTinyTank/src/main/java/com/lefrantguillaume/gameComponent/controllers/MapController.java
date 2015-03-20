@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 16/03/2015.
@@ -25,20 +26,29 @@ public class MapController {
         this.obstacles = new ArrayList<Obstacle>();
         this.collisionController = collisionController;
         this.configMapFile = configMapFile;
-        //tmp
-        sizes = new Pair<Float, Float>(1280f, 768f);
+        this.initMap();
+        this.initObstacles();
     }
 
     // FUNCTIONS
-    public void addObstacle(Obstacle obstacle){
-        CollisionObject collisionObject = new CollisionObject(true, obstacle.getX(), obstacle.getY(), obstacle.getSizeX(), obstacle.getSizeY(), obstacle.getUserId(), obstacle.getId(), EnumType.OBSTACLE);
+    public void initMap() {
+        sizes = new Pair<Float, Float>(1280f, 768f);
+
+    }
+
+    public void initObstacles() {
+
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        CollisionObject collisionObject = new CollisionObject(true, obstacle.getX(), obstacle.getY(), new Pair<Float, Float>(obstacle.getSizeX(), obstacle.getSizeY()), obstacle.getUserId(), obstacle.getId(), EnumType.OBSTACLE, 0);
         this.obstacles.add(obstacle);
         this.collisionController.addCollisionObject(collisionObject);
     }
 
-    public void deleteObstacle(int id){
-        for (int i = 0; i < this.obstacles.size(); ++i){
-            if (this.obstacles.get(i).getId() == id){
+    public void deleteObstacle(UUID id) {
+        for (int i = 0; i < this.obstacles.size(); ++i) {
+            if (this.obstacles.get(i).getId() == id) {
                 this.obstacles.remove(i);
                 break;
             }
@@ -46,16 +56,22 @@ public class MapController {
         this.collisionController.deleteCollisionObject(id);
     }
 
+    public void clearObstacles() {
+        this.obstacles.clear();
+    }
+
     // GETTERS
-    public float getSizeX(){
+    public float getSizeX() {
         return this.sizes.getV1();
     }
 
-    public float getSizeY(){
+    public float getSizeY() {
         return this.sizes.getV2();
     }
 
-    public List<Obstacle> getObstacles(){return this.obstacles;}
+    public List<Obstacle> getObstacles() {
+        return this.obstacles;
+    }
 
     public Animator getMapAnimator() {
         return mapAnimator;

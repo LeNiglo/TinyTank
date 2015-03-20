@@ -3,6 +3,7 @@ package com.lefrantguillaume.graphicsComponent.input;
 import com.lefrantguillaume.networkComponent.NetworkMessage;
 import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import sun.plugin2.message.Message;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -20,8 +21,7 @@ public class InputObserver implements Observer {
     public void update(Observable o, Object arg) {
     }
 
-    protected void addInQueue(int value, EnumInput mode) {
-        MessageModel request = MessageFactory.createObject(value, mode);
+    protected void addInQueue(MessageModel request) {
         if (request != null) {
             queue.add(request);
         }

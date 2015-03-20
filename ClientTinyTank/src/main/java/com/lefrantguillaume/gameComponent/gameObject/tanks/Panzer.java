@@ -12,7 +12,7 @@ public class Panzer extends Tank {
         this.tankAnimator = tankAnimator;
         this.shotAnimator = shotAnimator;
         this.gunAnimator = gunAnimator;
-        this.tankWeapon = new TankWeapon(10, 10, new Shield(spellAnimator));
+        this.tankWeapon = new TankWeapon(10, 20, new Shield(spellAnimator));
         this.tankState = new TankState(2, 10, 0);
     }
 }

@@ -1,6 +1,7 @@
 package com.lefrantguillaume.graphicsComponent.input;
 
 import com.lefrantguillaume.networkComponent.NetworkMessage;
+import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
 import java.util.Observable;
 
@@ -14,12 +15,7 @@ public class InputGameObserver extends InputObserver {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("input catch: " + arg);
-        int value = (Integer) arg;
-        if (value > 0) {
-            this.addInQueue(value, EnumInput.PRESSED);
-        } else {
-            this.addInQueue(value * EnumInput.RELEASED.getValue(), EnumInput.RELEASED);
-        }
+        MessageModel request = (MessageModel) arg;
+        this.addInQueue(request);
     }
 }
