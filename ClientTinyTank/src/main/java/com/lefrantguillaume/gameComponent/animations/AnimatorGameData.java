@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class AnimatorData {
+public class AnimatorGameData {
     private AnimatorFactory animatorFactory;
     private List<Animator> tankAnimator;
     private List<Animator> gunAnimator;
@@ -21,8 +21,8 @@ public class AnimatorData {
     private List<Animator> obstacleAnimator;
     private Animator mapAnimator;
 
-    public AnimatorData() {
-        this.animatorFactory = new AnimatorFactory();
+    public AnimatorGameData() {
+        this.animatorFactory = new AnimatorGameFactory();
         this.tankAnimator = new ArrayList<Animator>();
         this.gunAnimator = new ArrayList<Animator>();
         this.spellAnimator = new ArrayList<Animator>();
@@ -43,19 +43,27 @@ public class AnimatorData {
     }
 
     private void initTanks() throws SlickException {
-        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.PANZER_BODY));
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_BODY));
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_BODY));
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_BODY));
     }
 
     private void initGuns() throws SlickException {
-        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.PANZER_GUN));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_GUN));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_GUN));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_GUN));
     }
 
     private void initSpells() throws SlickException {
-        this.addSpellAnimator(this.animatorFactory.getAnimator(EnumSprites.PANZER_SPELL));
+        this.addSpellAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_SPELL));
+        this.addSpellAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_SPELL));
+        this.addSpellAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_SPELL));
     }
 
     private void initShots() throws SlickException {
-        this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.PANZER_ROCKET));
+        this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_HIT));
+        this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_HIT));
+        this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_HIT));
     }
 
     public void addTankAnimator(Animator tankAnimator) {

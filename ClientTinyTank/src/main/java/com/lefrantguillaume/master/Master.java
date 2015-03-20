@@ -3,7 +3,7 @@ package com.lefrantguillaume.master;
 import com.lefrantguillaume.Utils.configs.MasterConfig;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
-import com.lefrantguillaume.authComponent.AuthenticationController;
+import com.lefrantguillaume.interfaceComponent.InterfaceController;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.graphicsComponent.input.InputGameObserver;
@@ -25,7 +25,7 @@ import java.util.Observer;
 public class Master {
     private CurrentUser currentUser;
     private GameController gameController;
-    private AuthenticationController authController;
+    private InterfaceController interfaceController;
     private NetworkCall networkCall;
     private NetworkMessage masterRequestQueue;
     private NetworkMessage masterResponseQueue;
@@ -45,7 +45,7 @@ public class Master {
 
     private void initGame() throws SlickException {
         this.gameController = new GameController();
-        this.authController = new AuthenticationController();
+        this.interfaceController = new InterfaceController();
     }
 
     private void initNetwork() {
@@ -73,13 +73,13 @@ public class Master {
     }
 
     private void startGame(AppGameContainer appGame) throws SlickException {
-        List<Observer> homeObservers = new ArrayList<Observer>();
-        homeObservers.add(inputHomeObserver);
-        this.masterResponseController.addObserver(this.authController);
+        List<Observer> interfaceObservers = new ArrayList<Observer>();
+        interfaceObservers.add(inputHomeObserver);
+        this.masterResponseController.addObserver(this.interfaceController);
         List<Observer> gameObservers = new ArrayList<Observer>();
         gameObservers.add(inputGameObserver);
         this.masterResponseController.addObserver(this.gameController);
-        appGame = new AppGameContainer(new Windows("TinyTank", homeObservers, this.authController, gameObservers, this.gameController));
+        appGame = new AppGameContainer(new Windows("TinyTank", interfaceObservers, this.interfaceController, gameObservers, this.gameController));
         appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
         appGame.start();
 

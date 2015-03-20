@@ -17,8 +17,8 @@ public class WindowConfig {
         int width  = (int)dimension.getWidth();
 
 
-        this.sizeX = 1200;
-        this.sizeY = 700;
+        this.sizeX = 1280;
+        this.sizeY = 768;
     }
 
     public static int getSizeX() {

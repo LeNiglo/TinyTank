@@ -8,9 +8,10 @@ import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.controllers.MapController;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.Obstacle;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
-import com.lefrantguillaume.gameComponent.animations.AnimatorData;
+import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
 import com.lefrantguillaume.gameComponent.playerData.data.User;
@@ -33,7 +34,7 @@ import java.util.UUID;
  */
 
 public class WindowGame extends BasicGameState {
-    private AnimatorData animatorData;
+    private AnimatorGameData animatorData;
     private GameController gameController;
     private GameContainer container;
     private StateBasedGame stateGame;
@@ -44,16 +45,11 @@ public class WindowGame extends BasicGameState {
     public WindowGame(int id, List<Observer> observers, Object gameController) {
         this.id = id;
         this.gameController = (GameController) gameController;
-        this.animatorData = new AnimatorData();
+        this.animatorData = new AnimatorGameData();
         this.input = new InputCheck();
         for (int i = 0; i < observers.size(); ++i) {
             this.input.addObserver(observers.get(i));
         }
-    }
-
-    @Override
-    public void mouseWheelMoved(int change) {
-        System.out.println(change);
     }
 
     @Override
@@ -76,8 +72,7 @@ public class WindowGame extends BasicGameState {
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, -5, 0, new Pair<Float, Float>(5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         this.gameController.getCollisionController().addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, new Pair<Float, Float>(-5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
         //tmp
-        this.gameController.addPlayer(new Player(new User(CurrentUser.getPseudo(), CurrentUser.getId()), null, TankFactory.createTank("panzer", this.animatorData), this.gameController.getShots(), 15, 15));
-
+        this.gameController.addPlayer(new Player(new User(CurrentUser.getPseudo(), CurrentUser.getId()), null, TankFactory.createTank(EnumTanks.TIGER, this.animatorData), this.gameController.getShots(), 15, 15));
     }
 
     @Override
@@ -147,6 +142,11 @@ public class WindowGame extends BasicGameState {
                 if (!this.gameController.getCollisionController().checkCollision(this.gameController.getShots().get(i).movePredict(delta), this.gameController.getShots().get(i).getId()))
                     this.gameController.getShots().get(i).move(delta);
         }
+    }
+
+    @Override
+    public void mouseWheelMoved(int change) {
+        System.out.println(change);
     }
 
     @Override

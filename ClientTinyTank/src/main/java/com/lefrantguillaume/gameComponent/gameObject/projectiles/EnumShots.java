@@ -5,7 +5,8 @@ package com.lefrantguillaume.gameComponent.gameObject.projectiles;
  */
 public enum EnumShots {
     ROCKET(0),
-    LASER(1);
+    LASER(1),
+    MACHINE_GUN(2);
 
     private final int id;
 

@@ -1,6 +1,7 @@
 package com.lefrantguillaume.gameComponent.controllers;
 
 import com.lefrantguillaume.Utils.configs.MasterConfig;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.RoundData.RoundController;
@@ -40,6 +41,7 @@ public class GameController implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        Debug.debug("Message receive");
         if (arg instanceof MessageModel) {
             MessageModel action = (MessageModel) arg;
             if (action.getPlayerAction() == true) {
