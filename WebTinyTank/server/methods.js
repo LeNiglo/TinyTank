@@ -20,5 +20,27 @@ Meteor.methods({
     } catch (e) {
       return null;
     }
+  },
+  myRegister: function(datas) {
+    this.unblock();
+    try {
+      return Meteor.http.call("POST", process.env.API_URL+"/register", {
+        params: datas,
+        auth: process.env.API_AUTH
+      });
+    } catch (e) {
+      return null;
+    }
+  },
+  myLogin: function() {
+    this.unblock();
+    try {
+      return Meteor.http.call("POST", process.env.API_URL+"/login", {
+        params: {},
+        auth: process.env.API_AUTH
+      });
+    } catch (e) {
+      return null;
+    }
   }
 });

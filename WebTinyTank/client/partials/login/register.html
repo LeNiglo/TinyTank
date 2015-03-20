@@ -1,0 +1,32 @@
+<template name="register">
+  <div class="col-md-6 col-md-offset-3 text-center">
+    <h2 class="page-header">Register</h2>
+    <form id="register" role="register">
+      <div class="form-group">
+        <input type="text" name="email" class="form-control" placeholder="email" />
+      </div>
+      <div class="form-group">
+        <input type="text" name="username" class="form-control" placeholder="username" />
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" class="form-control" placeholder="password" />
+        <input type="password" name="password-v" class="form-control" placeholder="confirm" />
+      </div>
+      <div class="form-group">
+        <select name="from" class="form-control">
+          <option value="FR">France</option>
+          <option value="UK">United Kingdom</option>
+          <option value="SP">Spain</option>
+          <option value="DE">Deutschland</option>
+          <option value="BE">Belgium</option>
+          <option value="US">United States</option>
+          <option value="XX">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="submit" class="btn btn-success" value="Register"/>
+      </div>
+      <a href="{{ pathFor 'login' }}">Already an account ?</a>
+    </form>
+  </div>
+</template>

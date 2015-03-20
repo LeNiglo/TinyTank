@@ -1,4 +1,11 @@
 <template name="layout">
   {{> header}}
-  {{> yield}}
+
+  <div class="container" id="errors"></div>
+
+  <div class="container">
+    {{> yield}}
+  </div>
+
+  {{> footer}}
 </template>

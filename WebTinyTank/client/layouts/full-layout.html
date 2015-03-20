@@ -1,0 +1,10 @@
+<template name="fullWidth">
+  {{!-- full width banner here --}}
+
+  {{> header }}
+  <div class="container-fluid">
+    {{!-- the content must be done for will width --}}
+    {{> yield }}
+  </div>
+  {{> footer}}
+</template>

@@ -10,9 +10,12 @@
   "dependencies": {
     "MD5": "*",
     "basic-auth-connect": "^1.0.0",
+    "bcrypt": "^0.8.1",
     "body-parser": "^1.12.0",
     "express": "^4.12.2",
     "express-cors": "0.0.3",
+    "express-mailer": "^0.2.4",
+    "jade": "^1.9.2",
     "mongodb": "^1.4.34",
     "mongoskin": "^1.4.12"
   },
