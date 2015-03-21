@@ -1,9 +1,12 @@
 package com.lefrantguillaume.ui;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.gameComponent.Game;
-import com.lefrantguillaume.gameComponent.Map;
-import com.lefrantguillaume.gameComponent.eGameMode;
+import com.lefrantguillaume.game.Game;
+import com.lefrantguillaume.game.eGameMode;
+import com.lefrantguillaume.game.Map;
+import com.lefrantguillaume.network.MessageDownloadData;
+import com.lefrantguillaume.network.Network;
+import com.lefrantguillaume.network.SendFile;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.utils.Callback;
@@ -41,6 +44,7 @@ public class ServerConfig extends JFrame implements Observer {
 
     public ServerConfig(TinyServer server) {
         this.server = server;
+        this.server.addObserver(this);
         initComponents();
 
         button_stop.setEnabled(false);
@@ -95,6 +99,13 @@ public class ServerConfig extends JFrame implements Observer {
             JSONObject object = (JSONObject) parser.parse(reader);
             Map map = new Map();
             map.setName((String) (object.get("name") != null ? object.get("name") : name));
+            map.setFilePath(file.getAbsolutePath());
+            map.setFileName(file.getName());
+            map.setFileLength(file.length());
+            file = new File("maps/" + name + ".jpg");
+            map.setImgName(file.getName());
+            map.setImgPath(file.getPath());
+            map.setImgLength(file.length());
             maps.add(map);
         } catch (Exception e) {
             System.out.println("Parse JSON: " + e.getMessage());
@@ -513,20 +524,40 @@ public class ServerConfig extends JFrame implements Observer {
 
 
     @Override
-    public void update(Observable o, Object arg) {
-        if ((Boolean) arg) {
-            button_start.setEnabled(true);
-            if (button_start.getText().equals("Start")) {
-                button_stop.setEnabled(true);
-                button_start.setText("Restart");
-                WindowController.addConsoleMsg("Starting server...");
-            } else {
-                WindowController.addConsoleMsg("Restarting server...");
+    public void update(Observable o, final Object arg) {
+        if (o instanceof Game) {
+            if ((Boolean) arg) {
+                button_start.setEnabled(true);
+                if (button_start.getText().equals("Start")) {
+                    button_stop.setEnabled(true);
+                    button_start.setText("Restart");
+                    WindowController.addConsoleMsg("Starting server...");
+                } else {
+                    WindowController.addConsoleMsg("Restarting server...");
+                }
+                if (!server.start()) {
+                    button_stop.setEnabled(false);
+                    button_start.setText("Start");
+                    WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+                }
             }
-            if (!server.start()) {
-                button_stop.setEnabled(false);
-                button_start.setText("Start");
-                WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+        } else if (o instanceof TinyServer) {
+            if (arg instanceof MessageDownloadData) {
+                final Map map = maps.get(combo_map.getSelectedIndex());
+                Network.MessageDownload response = new Network.MessageDownload(map.getFileName(), map.getFileLength());
+                ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
+                new Thread("upload") {
+                    public void run() {
+                        try {
+                            new SendFile(map.getFilePath());
+                            Network.MessageDownload response = new Network.MessageDownload(map.getImgName(), map.getImgLength());
+                            ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
+                            new SendFile(map.getImgPath());
+                        } catch (Exception e) {
+                            System.out.println("Cannot send file: " + e.getMessage());
+                        }
+                    }
+                }.start();
             }
         }
     }

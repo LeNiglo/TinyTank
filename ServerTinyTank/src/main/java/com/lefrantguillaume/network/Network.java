@@ -2,11 +2,7 @@ package com.lefrantguillaume.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.gameComponent.playerData.data.Player;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -39,10 +35,13 @@ public class Network {
         kryo.register(MessageChangeTeam.class);
         kryo.register(MessageDelete.class);
         kryo.register(MessagePlayerNew.class);
-        kryo.register(MessagePlayerUpdate.class);
-
-        kryo.register(MessageHasMap.class);
-        kryo.register(MessageDownloadAnswer.class);
+        kryo.register(MessagePlayerUpdateState.class);
+        kryo.register(MessagePlayerUpdatePosition.class);
+        kryo.register(EnumTanks.class);
+        kryo.register(MessageNeedMap.class);
+        kryo.register(MessageDownload.class);
+        kryo.register(MessageTankChoice.class);
+        kryo.register(MessageGameObjects.class);
     }
 
     static public class MessageModel {
@@ -65,7 +64,6 @@ public class Network {
 
         public int getDirection() { return direction; }
         public boolean getMove() { return move; }
-
         public void setDirection(int direction) { this.direction = direction; }
         public void setMove(boolean move) { this.move = move; }
     }
@@ -73,6 +71,7 @@ public class Network {
     static public class MessageConnect extends MessageModel {
         private String mapName;
         private String encodedMap;
+        private String encodedJson;
         private List<String> users;
 
         MessageConnect() {}
@@ -81,12 +80,10 @@ public class Network {
         public String getMapName() {return mapName;}
         public String getEncodedMap() {return encodedMap;}
         public List<String> getUsers() {return users;}
-
         public void setMapName(String mapName) {this.mapName = mapName;}
         public void setEncodedMap(String encodedMap) {this.encodedMap = encodedMap;}
         public void setUsers(List<String> users) {this.users = users;}
     }
-
 
     static public class MessageDisconnect extends MessageModel {
         private boolean success;
@@ -105,7 +102,6 @@ public class Network {
 
         public int getValueKeyPressed() { return valueKeyPressed; }
         public float getAngle() {return angle;}
-
         public void setValueKeyPressed(int valueKeyPressed) { this.valueKeyPressed = valueKeyPressed; }
         public void setAngle(float angle) {this.angle = angle;}
     }
@@ -121,18 +117,11 @@ public class Network {
         public int getValueKeyPressed() { return valueKeyPressed; }
         public float getAngle() {return angle;}
         public float getX() {return x;}
-
+        public float getY() {return y;}
         public void setValueKeyPressed(int valueKeyPressed) { this.valueKeyPressed = valueKeyPressed; }
         public void setAngle(float angle) {this.angle = angle;}
         public void setX(float x) {this.x = x;}
-
-        public float getY() {
-            return y;
-        }
-
-        public void setY(float y) {
-            this.y = y;
-        }
+        public void setY(float y) {this.y = y;}
     }
 
     static public class MessagePlayerNew extends MessageModel {
@@ -142,45 +131,81 @@ public class Network {
         public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
     }
 
-    static public class MessageHasMap extends MessageModel {
+    static public class MessageChangeTeam extends MessageModel {
+        public MessageChangeTeam() {}
+    }
+
+    static public class MessageDelete extends MessageModel {
+        public MessageDelete() {}
+    }
+
+    static public class MessagePlayerUpdateState extends MessageModel {
+        private float currentLfe;
+        private float armor;
+        private float shieldEffect;
+        private float slowEffect;
+        private float boostEffect;
+
+        public MessagePlayerUpdateState() {}
+
+        public float getBoostEffect() {return boostEffect;}
+        public float getSlowEffect() {return slowEffect;}
+        public float getShieldEffect() {return shieldEffect;}
+        public float getArmor() {return armor;}
+        public float getCurrentLfe() {return currentLfe;}
+        public void setBoostEffect(float boostEffect) {this.boostEffect = boostEffect;}
+        public void setSlowEffect(float slowEffect) {this.slowEffect = slowEffect;}
+        public void setShieldEffect(float shieldEffect) {this.shieldEffect = shieldEffect;}
+        public void setArmor(float armor) {this.armor = armor;}
+        public void setCurrentLfe(float currentLfe) {this.currentLfe = currentLfe;}
+    }
+
+    static public class MessagePlayerUpdatePosition extends MessageModel {
+        private float x;
+        private float y;
+
+        public MessagePlayerUpdatePosition() {}
+
+        public float getX() {return x;}
+        public float getY() {return y;}
+        public void setX(float x) {this.x = x;}
+        public void setY(float y) {this.y = y;}
+    }
+
+    static public class MessageTankChoice extends MessageModel {
+        private EnumTanks enumTanks;
+
+        MessageTankChoice() {}
+
+        public EnumTanks getEnumTanks() {return enumTanks;}
+        public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
+    }
+
+
+    static public class MessageNeedMap {
         private boolean value;
 
-        public MessageHasMap() {}
-        public MessageHasMap(boolean value) { this.value = value; }
+        public MessageNeedMap() {}
+        public MessageNeedMap(boolean value) { this.value = value; }
 
         public boolean isValue() { return value; }
         public void setValue(boolean value) { this.value = value; }
     }
 
-    static public class MessageDownloadAnswer {
-        private String fileName;
-        private int fileSize;
+    static public class MessageGameObjects {
+        public MessageGameObjects() {}
+    }
 
-        public MessageDownloadAnswer() {}
-        public MessageDownloadAnswer(String fileName, int fileSize) { this.fileName = fileName; this.fileSize = fileSize; }
+    static public class MessageDownload {
+        private String fileName;
+        private long fileSize;
+
+        public MessageDownload() {}
+        public MessageDownload(String fileName, long fileSize) { this.fileName = fileName; this.fileSize = fileSize; }
 
         public String getFileName() {return fileName;}
-        public int getFileSize() {return fileSize;}
-
+        public long getFileSize() {return fileSize;}
         public void setFileName(String fileName) {this.fileName = fileName;}
-        public void setFileSize(int fileSize) {this.fileSize = fileSize;}
-    }
-
-    static class MessageChangeTeam extends MessageModel {
-        public MessageChangeTeam() {}
-    }
-
-    static class MessagePlayerUpdate extends MessageModel {
-        private Player player;
-
-        public MessagePlayerUpdate() {}
-
-        public Player getPlayer() {return player;}
-
-        public void setPlayer(Player player) {this.player = player;}
-    }
-
-    static class MessageDelete extends MessageModel {
-        public MessageDelete() {}
+        public void setFileSize(long fileSize) {this.fileSize = fileSize;}
     }
 }

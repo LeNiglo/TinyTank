@@ -12,7 +12,7 @@ public class ReceiveFile {
     private String ip;
     private String path = System.getProperty("user.dir") + "/";
 
-    public ReceiveFile (String ip, String FILE_TO_RECEIVE, int FILE_SIZE) throws IOException {
+    public ReceiveFile (String ip, String FILE_TO_RECEIVE, long FILE_SIZE) throws IOException {
         this.ip = ip;
         int bytesRead;
         int current;
@@ -23,7 +23,7 @@ public class ReceiveFile {
             sock = new Socket(this.ip, SOCKET_PORT);
             System.out.println("Downloading " + FILE_TO_RECEIVE + "...");
 
-            byte [] mybytearray  = new byte [FILE_SIZE];
+            byte [] mybytearray  = new byte [(int)FILE_SIZE];
             InputStream is = sock.getInputStream();
             try {
                 File theDir = new File(path + "maps");

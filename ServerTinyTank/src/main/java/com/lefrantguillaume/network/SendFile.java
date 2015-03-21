@@ -6,7 +6,6 @@ import java.net.Socket;
 
 public class SendFile {
     public final static int SOCKET_PORT = 13267;
-    private String path = System.getProperty("user.dir") + "\\";
 
     public SendFile(String FILE_TO_SEND) throws IOException {
         FileInputStream fis;
@@ -19,7 +18,7 @@ public class SendFile {
             try {
                 sock = servsock.accept();
                 // send file
-                File myFile = new File(path + FILE_TO_SEND);
+                File myFile = new File(FILE_TO_SEND);
                 byte[] mybytearray = new byte[(int) myFile.length()];
                 fis = new FileInputStream(myFile);
                 bis = new BufferedInputStream(fis);
