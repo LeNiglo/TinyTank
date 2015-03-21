@@ -2,7 +2,7 @@ package com.lefrantguillaume.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.game.Player;
+import sun.plugin2.message.Message;
 
 import java.util.List;
 
@@ -36,10 +36,13 @@ public class Network {
         kryo.register(MessageChangeTeam.class);
         kryo.register(MessageDelete.class);
         kryo.register(MessagePlayerNew.class);
-        kryo.register(MessagePlayerUpdate.class);
-
-        kryo.register(MessageHasMap.class);
-        kryo.register(MessageDownloadAnswer.class);
+        kryo.register(MessagePlayerUpdateState.class);
+        kryo.register(MessagePlayerUpdatePosition.class);
+        kryo.register(EnumTanks.class);
+        kryo.register(MessageNeedMap.class);
+        kryo.register(MessageDownload.class);
+        kryo.register(MessageTankChoice.class);
+        kryo.register(MessageGameObjects.class);
     }
 
     static public class MessageModel {
@@ -69,6 +72,7 @@ public class Network {
     static public class MessageConnect extends MessageModel {
         private String mapName;
         private String encodedMap;
+        private String encodedJson;
         private List<String> users;
 
         MessageConnect() {}
@@ -81,7 +85,6 @@ public class Network {
         public void setEncodedMap(String encodedMap) {this.encodedMap = encodedMap;}
         public void setUsers(List<String> users) {this.users = users;}
     }
-
 
     static public class MessageDisconnect extends MessageModel {
         private boolean success;
@@ -129,47 +132,15 @@ public class Network {
         public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
     }
 
-    static public class MessageHasMap extends MessageModel {
-        private boolean value;
-
-        public MessageHasMap() {}
-        public MessageHasMap(boolean value) { this.value = value; }
-
-        public boolean isValue() { return value; }
-        public void setValue(boolean value) { this.value = value; }
-    }
-
-    static public class MessageDownloadAnswer {
-        private String fileName;
-        private int fileSize;
-
-        public MessageDownloadAnswer() {}
-        public MessageDownloadAnswer(String fileName, int fileSize) { this.fileName = fileName; this.fileSize = fileSize; }
-
-        public String getFileName() {return fileName;}
-        public int getFileSize() {return fileSize;}
-        public void setFileName(String fileName) {this.fileName = fileName;}
-        public void setFileSize(int fileSize) {this.fileSize = fileSize;}
-    }
-
-    static class MessageChangeTeam extends MessageModel {
+    static public class MessageChangeTeam extends MessageModel {
         public MessageChangeTeam() {}
     }
 
-    static class MessagePlayerUpdate extends MessageModel {
-        private Player player;
-
-        public MessagePlayerUpdate() {}
-
-        public Player getPlayer() {return player;}
-        public void setPlayer(Player player) {this.player = player;}
-    }
-
-    static class MessageDelete extends MessageModel {
+    static public class MessageDelete extends MessageModel {
         public MessageDelete() {}
     }
 
-    static class MessagePlayerUpdateState extends MessageModel {
+    static public class MessagePlayerUpdateState extends MessageModel {
         private float currentLfe;
         private float armor;
         private float shieldEffect;
@@ -190,7 +161,7 @@ public class Network {
         public void setCurrentLfe(float currentLfe) {this.currentLfe = currentLfe;}
     }
 
-    static class MessagePlayerUpdatePosition extends MessageModel {
+    static public class MessagePlayerUpdatePosition extends MessageModel {
         private float x;
         private float y;
 
@@ -200,5 +171,42 @@ public class Network {
         public float getY() {return y;}
         public void setX(float x) {this.x = x;}
         public void setY(float y) {this.y = y;}
+    }
+
+    static public class MessageTankChoice extends MessageModel {
+        private EnumTanks enumTanks;
+
+        MessageTankChoice() {}
+
+        public EnumTanks getEnumTanks() {return enumTanks;}
+        public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
+    }
+
+
+    static public class MessageNeedMap {
+        private boolean value;
+
+        public MessageNeedMap() {}
+        public MessageNeedMap(boolean value) { this.value = value; }
+
+        public boolean isValue() { return value; }
+        public void setValue(boolean value) { this.value = value; }
+    }
+
+    static public class MessageGameObjects {
+        public MessageGameObjects() {}
+    }
+
+    static public class MessageDownload {
+        private String fileName;
+        private long fileSize;
+
+        public MessageDownload() {}
+        public MessageDownload(String fileName, long fileSize) { this.fileName = fileName; this.fileSize = fileSize; }
+
+        public String getFileName() {return fileName;}
+        public long getFileSize() {return fileSize;}
+        public void setFileName(String fileName) {this.fileName = fileName;}
+        public void setFileSize(long fileSize) {this.fileSize = fileSize;}
     }
 }

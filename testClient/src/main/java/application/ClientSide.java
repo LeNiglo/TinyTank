@@ -18,10 +18,10 @@ public class ClientSide {
         Network.register(client);
         client.addListener(new Listener() {
             public void received(Connection connection, Object object) {
-                if (object instanceof Network.MessageConnectAnswer) {
-                    ClientSide.this.isConnectAnswer((Network.MessageConnectAnswer) object);
-                } else if (object instanceof Network.MessageDownloadAnswer) {
-                    ClientSide.this.isDownloadAnswer((Network.MessageDownloadAnswer) object);
+                if (object instanceof Network.MessageConnect) {
+                    ClientSide.this.isConnectAnswer((Network.MessageConnect) object);
+                } else if (object instanceof Network.MessageDownload) {
+                    ClientSide.this.isDownloadAnswer((Network.MessageDownload) object);
                 }
             }
         });
@@ -29,7 +29,7 @@ public class ClientSide {
             public void run() {
                 try {
                     client.connect(5000, ClientSide.this.ip, 13333, 13444);
-                    Network.MessageConnect request = new Network.MessageConnect("Switi", 0, "monPass", true);
+                    Network.MessageConnect request = new Network.MessageConnect("Switi", "123456789");
                     client.sendTCP(request);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -48,16 +48,12 @@ public class ClientSide {
         }.start();
     }
 
-    public void isConnectAnswer(Network.MessageConnectAnswer response) {
-        System.out.println("The server said that current map is: " + response.getMapName());
-        Network.MessageHasMap request = new Network.MessageHasMap(false);
+    public void isConnectAnswer(Network.MessageConnect response) {
+        Network.MessageNeedMap request = new Network.MessageNeedMap(false);
         client.sendTCP(request);
-        System.out.println("We are saying that we don't have the map.");
-        // else
-        // Network.MessageHasMap request = new Network.MessageHasMap(true);
     }
 
-    public void isDownloadAnswer(final Network.MessageDownloadAnswer response) {
+    public void isDownloadAnswer(final Network.MessageDownload response) {
         new Thread("Download") {
             public void run() {
                 try {

@@ -7,11 +7,12 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.utils.ServerConfig;
 
 import java.io.IOException;
+import java.util.Observable;
 
 /**
  * Created by Styve on 10/03/2015.
  */
-public class TinyServer {
+public class TinyServer extends Observable {
     private Server server = new Server();
 
     public TinyServer() {
@@ -25,22 +26,20 @@ public class TinyServer {
                 public void received(Connection connection, Object object) {
                     if (object instanceof Network.MessageMove) {
                         isMessageMove(connection, (Network.MessageMove) object);
-                    } else if (object instanceof  Network.MessageShoot) {
+                    } else if (object instanceof Network.MessageShoot) {
                         isMessageShoot(connection, (Network.MessageShoot) object);
-                    } else if (object instanceof  Network.MessageConnect) {
+                    } else if (object instanceof Network.MessageConnect) {
                         isMessageConnect(connection, (Network.MessageConnect) object);
-                    } else if (object instanceof  Network.MessageHasMap) {
-                        isMessageHasMap(connection, (Network.MessageHasMap) object);
-                    } else if (object instanceof  Network.MessageSpell) {
+                    } else if (object instanceof Network.MessageNeedMap) {
+                        isMessageNeedMap(connection, (Network.MessageNeedMap) object);
+                    } else if (object instanceof Network.MessageSpell) {
                         isMessageSpell(connection, (Network.MessageSpell) object);
-                    } else if (object instanceof  Network.MessageChangeTeam) {
+                    } else if (object instanceof Network.MessageChangeTeam) {
                         isMessageChangeTeam(connection, (Network.MessageChangeTeam) object);
-                    } else if (object instanceof  Network.MessageDelete) {
+                    } else if (object instanceof Network.MessageDelete) {
                         isMessageDelete(connection, (Network.MessageDelete) object);
-                    } else if (object instanceof  Network.MessagePlayerNew) {
+                    } else if (object instanceof Network.MessagePlayerNew) {
                         isMessagePlayerNew(connection, (Network.MessagePlayerNew) object);
-                    } else if (object instanceof  Network.MessagePlayerUpdate) {
-                        isMessagePlayerUpdate(connection, (Network.MessagePlayerUpdate) object);
                     }
                 }
             });
@@ -59,7 +58,9 @@ public class TinyServer {
         server.stop();
     }
 
-    public Server getServer() { return this.server; }
+    public Server getServer() {
+        return this.server;
+    }
 
     private void isMessageMove(Connection connection, Network.MessageMove request) {
         System.out.println("direction recue: " + request.getDirection() + " // move : " + (request.getMove() ? "true" : "false"));
@@ -97,25 +98,11 @@ public class TinyServer {
         server.sendToAllTCP(request);
     }
 
-    private void isMessagePlayerUpdate(Connection connection, Network.MessagePlayerUpdate request) {
-        System.out.println("Update du joueur: " + request.getPseudo());
-        server.sendToAllTCP(request);
-    }
-
-    private void isMessageHasMap(final Connection connection, Network.MessageHasMap request) {
-        System.out.println((request.isValue() ? "Le client a la map" : "Le client n'a pas la map"));
-        if (!request.isValue()) {
-            new Thread("upload") {
-                public void run() {
-                    Network.MessageDownloadAnswer response = new Network.MessageDownloadAnswer("jolie_map.jpg", 151544);
-                    server.sendToTCP(connection.getID(), response);
-                    try {
-                        new SendFile("jolie_map.jpg");
-                    } catch (Exception e) {
-                        System.out.println("Cannot send file: " + e.getMessage());
-                    }
-                }
-            }.start();
-        }
+    private void isMessageNeedMap(final Connection connection, Network.MessageNeedMap request) {
+        System.out.println("Il a besoin de la map");
+        MessageDownloadData mdd = new MessageDownloadData(server, connection);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mdd);
     }
 }
+
