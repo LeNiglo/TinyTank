@@ -1,9 +1,9 @@
 package com.lefrantguillaume.ui;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.Game;
-import com.lefrantguillaume.game.Map;
-import com.lefrantguillaume.game.eGameMode;
+import com.lefrantguillaume.gameComponent.Game;
+import com.lefrantguillaume.gameComponent.Map;
+import com.lefrantguillaume.gameComponent.eGameMode;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.utils.Callback;

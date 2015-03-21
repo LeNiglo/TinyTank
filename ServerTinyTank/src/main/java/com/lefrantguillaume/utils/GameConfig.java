@@ -1,7 +1,7 @@
 package com.lefrantguillaume.utils;
 
-import com.lefrantguillaume.game.Map;
-import com.lefrantguillaume.game.eGameMode;
+import com.lefrantguillaume.gameComponent.Map;
+import com.lefrantguillaume.gameComponent.eGameMode;
 
 /**
  * Created by Styve on 19/03/2015.

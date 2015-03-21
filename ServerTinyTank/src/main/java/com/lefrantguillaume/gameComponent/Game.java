@@ -1,4 +1,4 @@
-package com.lefrantguillaume.game;
+package com.lefrantguillaume.gameComponent;
 
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.utils.GameConfig;

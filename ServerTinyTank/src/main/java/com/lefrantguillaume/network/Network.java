@@ -2,7 +2,7 @@ package com.lefrantguillaume.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.game.Player;
+import com.lefrantguillaume.gameComponent.playerData.data.Player;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
