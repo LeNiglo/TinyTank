@@ -1,17 +1,16 @@
 package com.lefrantguillaume.ui;
 
+import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.Game;
 import com.lefrantguillaume.game.eGameMode;
 import com.lefrantguillaume.game.Map;
-import com.lefrantguillaume.network.MessageDownloadData;
-import com.lefrantguillaume.network.Network;
-import com.lefrantguillaume.network.SendFile;
-import com.lefrantguillaume.network.TinyServer;
+import com.lefrantguillaume.network.*;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
+import com.lefrantguillaume.utils.MD5;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -35,14 +34,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 12/03/2015.
  */
-public class ServerConfig extends JFrame implements Observer {
+public class ServerGUI extends JFrame implements Observer {
     private TinyServer server;
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     private ScheduledFuture<?> t = null;
     private Game game = null;
     private List<Map> maps = new ArrayList<Map>();
+    private Map currentMap = null;
 
-    public ServerConfig(TinyServer server) {
+    public ServerGUI(TinyServer server) {
         this.server = server;
         this.server.addObserver(this);
         initComponents();
@@ -79,16 +79,18 @@ public class ServerConfig extends JFrame implements Observer {
             }
         });
 
-        for (File file : files) {
-            String name = file.getName().substring(0, file.getName().lastIndexOf("."));
-            if (new File("maps/" + name + ".jpg").exists()) {
-                this.parseJSON(file, name);
-            } else {
-                System.out.println("not valid");
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                String name = file.getName().substring(0, file.getName().lastIndexOf("."));
+                if (new File("maps/" + name + ".jpg").exists()) {
+                    this.parseJSON(file, name);
+                } else {
+                    System.out.println("not valid");
+                }
             }
-        }
-        for (Map map : maps) {
-            combo_map.addItem(map.getName());
+            for (Map map : maps) {
+                combo_map.addItem(map.getName());
+            }
         }
     }
 
@@ -98,6 +100,7 @@ public class ServerConfig extends JFrame implements Observer {
             FileReader reader = new FileReader(file);
             JSONObject object = (JSONObject) parser.parse(reader);
             Map map = new Map();
+            map.setFileNameNoExt(name);
             map.setName((String) (object.get("name") != null ? object.get("name") : name));
             map.setFilePath(file.getAbsolutePath());
             map.setFileName(file.getName());
@@ -113,7 +116,8 @@ public class ServerConfig extends JFrame implements Observer {
     }
 
     public void newGame() {
-        GameConfig config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), maps.get(combo_map.getSelectedIndex()), (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
+        currentMap = maps.get((combo_map.getSelectedIndex()));
+        GameConfig config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
         this.game = new Game(config);
         this.game.addObserver(this);
         this.game.start();
@@ -145,7 +149,7 @@ public class ServerConfig extends JFrame implements Observer {
                 }, new Callback() {
                     @Override
                     public void complete() {
-                        ServerConfig.this.newGame();
+                        ServerGUI.this.newGame();
                     }
                 }).run();
             }
@@ -543,21 +547,30 @@ public class ServerConfig extends JFrame implements Observer {
             }
         } else if (o instanceof TinyServer) {
             if (arg instanceof MessageDownloadData) {
-                final Map map = maps.get(combo_map.getSelectedIndex());
-                Network.MessageDownload response = new Network.MessageDownload(map.getFileName(), map.getFileLength());
+                Network.MessageDownload response = new Network.MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
                 ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
                 new Thread("upload") {
                     public void run() {
                         try {
-                            new SendFile(map.getFilePath());
-                            Network.MessageDownload response = new Network.MessageDownload(map.getImgName(), map.getImgLength());
+                            new SendFile(currentMap.getFilePath());
+                            Network.MessageDownload response = new Network.MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
                             ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
-                            new SendFile(map.getImgPath());
+                            new SendFile(currentMap.getImgPath());
                         } catch (Exception e) {
                             System.out.println("Cannot send file: " + e.getMessage());
                         }
                     }
                 }.start();
+            } else if (arg instanceof MessageConnectData) {
+                System.out.println("J'envoie un message Connect");
+                try {
+                    String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
+                    String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
+                    Network.MessageConnect response = new Network.MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
+                    ((MessageConnectData) arg).getServer().sendToTCP(((MessageConnectData) arg).getConnection().getID(), response);
+                } catch (Exception e) {
+                    Log.error("MD5: " + e.getMessage());
+                }
             }
         }
     }

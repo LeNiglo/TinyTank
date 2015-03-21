@@ -11,6 +11,7 @@ public class Map {
     private String imgName;
     private String imgPath;
     private long imgLength;
+    private String fileNameNoExt;
 
     public Map() {}
 
@@ -23,6 +24,7 @@ public class Map {
     public String getImgName() {return imgName;}
     public String getImgPath() {return imgPath;}
     public long getImgLength() {return imgLength;}
+    public String getFileNameNoExt() {return fileNameNoExt;}
     public void setName(String name) {
         this.name = name;
     }
@@ -32,4 +34,5 @@ public class Map {
     public void setImgName(String imgName) {this.imgName = imgName;}
     public void setImgPath(String imgPath) {this.imgPath = imgPath;}
     public void setImgLength(long imgLength) {this.imgLength = imgLength;}
+    public void setFileNameNoExt(String fileNameNoExt) {this.fileNameNoExt = fileNameNoExt;}
 }

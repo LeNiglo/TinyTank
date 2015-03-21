@@ -1,6 +1,7 @@
 package com.lefrantguillaume;
 
 import com.lefrantguillaume.network.TinyServer;
+import com.lefrantguillaume.ui.ServerGUI;
 import com.lefrantguillaume.utils.ServerConfig;
 
 import java.util.Observable;
@@ -16,7 +17,7 @@ public class Main {
             ServerConfig.writeConfig();
         TinyServer server = new TinyServer();
 
-        com.lefrantguillaume.ui.ServerConfig app = new com.lefrantguillaume.ui.ServerConfig(server);
+        ServerGUI app = new ServerGUI(server);
         WindowObserver a = new WindowObserver(app);
         new WindowController(a);
     }
@@ -30,9 +31,9 @@ class WindowControllerObserver extends Observable {
 }
 
 class WindowObserver implements Observer {
-    private final com.lefrantguillaume.ui.ServerConfig window;
+    private final ServerGUI window;
 
-    public WindowObserver(com.lefrantguillaume.ui.ServerConfig window) {
+    public WindowObserver(ServerGUI window) {
         this.window = window;
     }
 

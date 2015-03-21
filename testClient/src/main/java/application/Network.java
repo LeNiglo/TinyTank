@@ -3,6 +3,7 @@ package application;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,6 +43,7 @@ public class Network {
         kryo.register(MessageDownload.class);
         kryo.register(MessageTankChoice.class);
         kryo.register(MessageGameObjects.class);
+        kryo.register(ArrayList.class);
     }
 
     static public class MessageModel {
@@ -70,19 +72,27 @@ public class Network {
 
     static public class MessageConnect extends MessageModel {
         private String mapName;
+        private String mapFileName;
         private String encodedMap;
         private String encodedJson;
         private List<String> users;
 
-        MessageConnect() {}
-        MessageConnect(String mapName, String encodedMap) { this.mapName = mapName; this.encodedMap = encodedMap;}
+        public MessageConnect() {}
+        public MessageConnect(String pseudo, String id) {
+            this.pseudo = pseudo;
+            this.id = id;
+        }
 
         public String getMapName() {return mapName;}
         public String getEncodedMap() {return encodedMap;}
         public List<String> getUsers() {return users;}
+        public String getEncodedJson() {return encodedJson;}
+        public String getMapFileName() {return mapFileName;}
         public void setMapName(String mapName) {this.mapName = mapName;}
         public void setEncodedMap(String encodedMap) {this.encodedMap = encodedMap;}
         public void setUsers(List<String> users) {this.users = users;}
+        public void setEncodedJson(String encodedJson) {this.encodedJson = encodedJson;}
+        public void setMapFileName(String mapFileName) {this.mapFileName = mapFileName;}
     }
 
     static public class MessageDisconnect extends MessageModel {

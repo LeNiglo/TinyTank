@@ -2,8 +2,13 @@ package application;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
+import com.esotericsoftware.minlog.Log;
 import communication.ReceiveFile;
+import utils.MD5;
+
+import java.util.List;
 
 /**
  * Created by Styve on 17/03/2015.
@@ -17,6 +22,11 @@ public class ClientSide {
         this.client.start();
         Network.register(client);
         client.addListener(new Listener() {
+            public void connected(Connection connection) {
+                Network.MessageConnect request = new Network.MessageConnect("Switi", "123456789");
+                client.sendTCP(request);
+            }
+
             public void received(Connection connection, Object object) {
                 if (object instanceof Network.MessageConnect) {
                     ClientSide.this.isConnectAnswer((Network.MessageConnect) object);
@@ -29,27 +39,36 @@ public class ClientSide {
             public void run() {
                 try {
                     client.connect(5000, ClientSide.this.ip, 13333, 13444);
-                    Network.MessageConnect request = new Network.MessageConnect("Switi", "123456789");
-                    client.sendTCP(request);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
         }.start();
-
-        new Thread() {
-            public void run() {
-                try {
-                    while (true) {
-                        Thread.sleep(1000);
-                    }
-                } catch (Exception ignored) {}
-            }
-        }.start();
+        while (true) {
+            try {
+                Thread.sleep(1000);
+            } catch (Exception ignored) {}
+        }
     }
 
     public void isConnectAnswer(Network.MessageConnect response) {
-        Network.MessageNeedMap request = new Network.MessageNeedMap(false);
+        String encodedJson = response.getEncodedJson();
+        String encodedMap = response.getEncodedMap();
+        String mapName = response.getMapName();
+        String name = response.getMapFileName();
+        List<String> players = response.getUsers();
+        try {
+            if (MD5.getMD5Checksum(System.getProperty("user.dir") + "/maps/" + name + ".jpg").equals(encodedMap) &&
+                    MD5.getMD5Checksum(System.getProperty("user.dir") + "/maps/" + name + ".json").equals(encodedJson))  {
+                System.out.println("Pas besoin de la map");
+                // TODO: TankChoice
+                return;
+            }
+        } catch (Exception e) {
+            Log.error("MD5: " + e.getMessage());
+        }
+        System.out.println("Besoin de la map");
+        Network.MessageNeedMap request = new Network.MessageNeedMap(true);
         client.sendTCP(request);
     }
 

@@ -3,6 +3,8 @@ package com.lefrantguillaume.game;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.utils.GameConfig;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -10,6 +12,7 @@ import java.util.Observable;
  */
 public class Game extends Observable {
     private GameConfig config;
+    private List<String> playerNames = new ArrayList<String>();
 
     public Game(GameConfig config) {
         this.config = config;
@@ -20,4 +23,6 @@ public class Game extends Observable {
         this.notifyObservers(true);
         WindowController.addConsoleMsg("Game started");
     }
+
+    public List<String> getPlayerNames() {return playerNames;}
 }

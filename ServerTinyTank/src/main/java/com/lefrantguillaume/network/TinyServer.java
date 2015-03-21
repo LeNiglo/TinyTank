@@ -23,6 +23,10 @@ public class TinyServer extends Observable {
         server.start();
         try {
             server.addListener(new Listener() {
+                public void connected(Connection connection) {
+                    WindowController.addConsoleMsg("Connected: " + connection.getRemoteAddressTCP().getHostName() + " with Client ID: " + connection.getID());
+                }
+
                 public void received(Connection connection, Object object) {
                     if (object instanceof Network.MessageMove) {
                         isMessageMove(connection, (Network.MessageMove) object);
@@ -42,6 +46,10 @@ public class TinyServer extends Observable {
                         isMessagePlayerNew(connection, (Network.MessagePlayerNew) object);
                     }
                 }
+
+                public void disconnected(Connection connection) {
+                    WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
+                }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
             WindowController.addConsoleMsg("Server listening on port " + ServerConfig.tcpPort + " (tcp) and " + ServerConfig.udpPort + " (udp).");
@@ -54,8 +62,8 @@ public class TinyServer extends Observable {
     }
 
     public void stop() {
-        WindowController.addConsoleMsg("Server stopped.");
         server.stop();
+        WindowController.addConsoleMsg("Server stopped.");
     }
 
     public Server getServer() {
@@ -74,8 +82,9 @@ public class TinyServer extends Observable {
 
     private void isMessageConnect(Connection connection, Network.MessageConnect request) {
         System.out.println("Nouvelle connection: " + request.getPseudo() + " est sous l'id " + request.getId());
-        Network.MessageConnect response = new Network.MessageConnect("jolie_map.jpg", "0000");
-        server.sendToTCP(connection.getID(), response);
+        MessageConnectData mcd = new MessageConnectData(server, connection);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mcd);
     }
 
     private void isMessageSpell(Connection connection, Network.MessageSpell request) {
