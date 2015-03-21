@@ -35,18 +35,17 @@ import java.util.concurrent.TimeUnit;
  * Created by Styve on 12/03/2015.
  */
 public class ServerGUI extends JFrame implements Observer {
-    private TinyServer server;
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     private ScheduledFuture<?> t = null;
     private Game game = null;
+    private GameConfig config = new GameConfig();
     private List<Map> maps = new ArrayList<Map>();
     private Map currentMap = null;
 
-    public ServerGUI(TinyServer server) {
-        this.server = server;
-        this.server.addObserver(this);
+    public ServerGUI() {
         initComponents();
 
+        this.game = new Game();
         button_stop.setEnabled(false);
         setContentPane(rootPanel);
         setBounds(200, 200, 800, 500);
@@ -117,24 +116,10 @@ public class ServerGUI extends JFrame implements Observer {
 
     public void newGame() {
         currentMap = maps.get((combo_map.getSelectedIndex()));
-        GameConfig config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
-        this.game = new Game(config);
+        config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
+        this.game.setConfig(config);
         this.game.addObserver(this);
         this.game.start();
-        final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
-
-        if (t != null) {
-            t.cancel(true);
-        }
-        t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
-                String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
-                label_uptime.setText(d);
-            }
-        }, 0, 1, TimeUnit.SECONDS);
     }
 
     private void button_startMouseClicked(MouseEvent e) {
@@ -168,7 +153,7 @@ public class ServerGUI extends JFrame implements Observer {
 
     private void button_stopMouseClicked(MouseEvent e) {
         if (button_stop.isEnabled()) {
-            server.stop();
+            this.game.stop();
             button_stop.setEnabled(false);
             button_start.setText("Start");
         }
@@ -530,23 +515,35 @@ public class ServerGUI extends JFrame implements Observer {
     @Override
     public void update(Observable o, final Object arg) {
         if (o instanceof Game) {
-            if ((Boolean) arg) {
-                button_start.setEnabled(true);
-                if (button_start.getText().equals("Start")) {
+            if (arg instanceof Boolean) {
+                if ((Boolean) arg) {
+                    button_start.setEnabled(true);
                     button_stop.setEnabled(true);
-                    button_start.setText("Restart");
-                    WindowController.addConsoleMsg("Starting server...");
+                    if (button_start.getText().equals("Start")) {
+                        button_start.setText("Restart");
+                        WindowController.addConsoleMsg("Starting server...");
+                    } else {
+                        WindowController.addConsoleMsg("Restarting server...");
+                    }
+                    final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
+                    if (t != null) {
+                        t.cancel(true);
+                    }
+                    t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                        public void run() {
+                            DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                            dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                            long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
+                            String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
+                            label_uptime.setText(d);
+                        }
+                    }, 0, 1, TimeUnit.SECONDS);
                 } else {
-                    WindowController.addConsoleMsg("Restarting server...");
-                }
-                if (!server.start()) {
                     button_stop.setEnabled(false);
                     button_start.setText("Start");
                     WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                 }
-            }
-        } else if (o instanceof TinyServer) {
-            if (arg instanceof MessageDownloadData) {
+            } else if (arg instanceof MessageDownloadData) {
                 Network.MessageDownload response = new Network.MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
                 ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
                 new Thread("upload") {
@@ -570,6 +567,13 @@ public class ServerGUI extends JFrame implements Observer {
                     ((MessageConnectData) arg).getServer().sendToTCP(((MessageConnectData) arg).getConnection().getID(), response);
                 } catch (Exception e) {
                     Log.error("MD5: " + e.getMessage());
+                }
+            } else if (arg instanceof String) {
+                String data = (String) arg;
+                if (data.equals("stop")) {
+                    t.cancel(true);
+                    button_stop.setEnabled(false);
+                    button_start.setText("Start");
                 }
             }
         }

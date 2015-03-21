@@ -42,28 +42,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0" vertical-offset="804" max-vertical-offset="1564">
               <caret line="61" column="87" selection-start-line="61" selection-start-column="87" selection-end-line="61" selection-end-column="87" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MD5.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/MD5.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="714">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReceiveFile.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
+      <file leaf-file-name="MD5.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/utils/MD5.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.2520593" vertical-offset="0" max-vertical-offset="1020">
-              <caret line="10" column="47" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.019769358" vertical-offset="107" max-vertical-offset="714">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -75,6 +63,7 @@
             <state vertical-scroll-proportion="0.0" vertical-offset="1039" max-vertical-offset="2108">
               <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
               <folding>
+                <element signature="imports" expanded="false" />
                 <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
                 <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
                 <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
@@ -201,7 +190,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -346,6 +334,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -676,11 +665,12 @@
       <workItem from="1426906479268" duration="436000" />
       <workItem from="1426907339256" duration="25000" />
       <workItem from="1426932777630" duration="7358000" />
+      <workItem from="1426961495700" duration="712000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32979000" />
+    <option name="totallyTimeSpent" value="33691000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -696,9 +686,9 @@
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3296875" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296875" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32946146" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -754,192 +744,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
-          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
-          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
-          <folding>
-            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1190">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
-          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
-          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
-          <folding>
-            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1190">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
-          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
-          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
-          <folding>
-            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
-            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
-            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
-          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="804" max-vertical-offset="1564">
+          <caret line="61" column="87" selection-start-line="61" selection-start-column="87" selection-end-line="61" selection-end-column="87" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/MD5.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="714">
+        <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="714">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="804" max-vertical-offset="1564">
-          <caret line="61" column="87" selection-start-line="61" selection-start-column="87" selection-end-line="61" selection-end-column="87" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1020">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -948,6 +771,215 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="1039" max-vertical-offset="2108">
           <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
           <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1122">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
+          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1190">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
+          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1190">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="158" max-vertical-offset="1020">
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="50" max-vertical-offset="1700">
+          <caret line="210" column="1" selection-start-line="210" selection-start-column="1" selection-end-line="210" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageSpell#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerNew#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageChangeTeam#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageDelete#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdateState#0;class#Network#0" expanded="false" />
+            <element signature="class#MessagePlayerUpdatePosition#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageTankChoice#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageNeedMap#0;class#Network#0" expanded="false" />
+            <element signature="class#MessageGameObjects#0;class#Network#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="311" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="84" max-vertical-offset="1003">
+          <caret line="46" column="50" selection-start-line="46" selection-start-column="50" selection-end-line="46" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/ClientSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="804" max-vertical-offset="1564">
+          <caret line="61" column="87" selection-start-line="61" selection-start-column="87" selection-end-line="61" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/application/Network.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1039" max-vertical-offset="2108">
+          <caret line="89" column="16" selection-start-line="89" selection-start-column="16" selection-end-line="89" selection-end-column="16" />
+          <folding>
+            <element signature="imports" expanded="false" />
             <element signature="class#MessageMove#0;class#Network#0" expanded="false" />
             <element signature="class#MessageDisconnect#0;class#Network#0" expanded="false" />
             <element signature="class#MessageShoot#0;class#Network#0" expanded="false" />
@@ -966,8 +998,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/communication/ReceiveFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2520593" vertical-offset="0" max-vertical-offset="1020">
+        <state vertical-scroll-proportion="0.085667215" vertical-offset="101" max-vertical-offset="1020">
           <caret line="10" column="47" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/MD5.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.019769358" vertical-offset="107" max-vertical-offset="714">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
           <folding />
         </state>
       </provider>

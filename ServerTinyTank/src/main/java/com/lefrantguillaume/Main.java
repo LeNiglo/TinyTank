@@ -15,9 +15,8 @@ public class Main {
     public static void main(String args[]) {
         if (!ServerConfig.loadConfig())
             ServerConfig.writeConfig();
-        TinyServer server = new TinyServer();
 
-        ServerGUI app = new ServerGUI(server);
+        ServerGUI app = new ServerGUI();
         WindowObserver a = new WindowObserver(app);
         new WindowController(a);
     }
