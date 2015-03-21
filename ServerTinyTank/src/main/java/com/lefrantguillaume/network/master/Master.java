@@ -1,8 +1,9 @@
 package com.lefrantguillaume.network.master;
 
 import com.esotericsoftware.minlog.Log;
+import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.network.Network;
-import com.lefrantguillaume.utils.Configuration;
+import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -11,7 +12,6 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
-import java.util.ResourceBundle;
 import java.util.concurrent.*;
 
 /**
@@ -24,7 +24,7 @@ public class Master {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://username:password@10.10.252.222:1337/server/";
+        String masterServer = "http://10.10.252.222:1337/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -38,9 +38,9 @@ public class Master {
         return response;
     }
 
-    public void initServer() {
+    public boolean initServer() {
         try {
-            InitServerSnd st = new InitServerSnd(Network.getIp(), Configuration.gameName, Configuration.tcpPort, Configuration.udpPort);
+            InitServerSnd st = new InitServerSnd(ServerConfig.gameName, ServerConfig.tcpPort, ServerConfig.udpPort);
             ClientResponse response = this.getClientResponse(st, "init_server");
             InitServerRcv output = response.getEntity(InitServerRcv.class);
             if (!output.getRes()) {
@@ -58,8 +58,10 @@ public class Master {
                 }, 600, 600, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            WindowController.addConsoleMsg("Online server not reachable: " + e.getMessage());
+            return false;
         }
+        return true;
     }
 
     public void updateServer() {

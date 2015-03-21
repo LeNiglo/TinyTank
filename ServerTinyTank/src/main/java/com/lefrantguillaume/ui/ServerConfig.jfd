@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :p:10:p, par l {comp panel1::l:p::p, seq l {space :p:92:p, comp label_server:::p::p}}, space :p:12:p, comp separator1:::p:2:p, space s:::p, par l {seq l {comp label_map:::p::p, space u:::p, comp combo_map:::::x}, seq t {par l {seq l {comp label_mode:::p::p, space :::p, comp combo_mode::::151:x}, seq l {par l {comp label_pts::l:p::p, comp label_timelimit::l:p::p}, space s:::p, par l {comp field_pts::::90:x, comp field_timelimit::::90:x}}, comp button_save::t::196:x}, space :::p, comp separator2:::p::p, space :::p, comp scroll_players:::p:104:p}, seq {comp button_start:::p::p, space :p:12:p, comp button_froce_change:::p::p, space u:::p, comp label_uptime:::p::p, space :0:23:x}}}, comp scroll_console::t:::x, comp text_input::t:::x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p:12:p, par l:::p {seq {comp label_server:::p::p, space :::p, comp panel1:::p::p}, seq l {par t {comp label_map:::p::p, comp combo_map:::p::p}, par l {seq l {space s:::p, par l:::p {comp separator2:::::x, seq {comp scroll_players:::p:115:p, space :0:0:x}}}, seq l {space :p:7:p, par t {comp combo_mode:::p::p, comp label_mode:::p::p}, space u:::p, par b {comp label_pts::b:p::p, comp field_pts::b:p::p}, space :::p, par b {comp label_timelimit::b:p::p, comp field_timelimit::b:p::p}, space :::p, comp button_save:::p::p}}, space :::p, par b {comp button_froce_change::b:p::p, comp label_uptime::b:p::p, comp button_start::b:p::p}}, comp separator1::l:::x}, space :::p, comp scroll_console:::p:230:p, space :::p, comp text_input:::p::p, space :::x}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :p:10:p, par l {comp panel1::l:p::p, seq l {space :p:92:p, comp label_server:::p::p}}, space :p:12:p, comp separator1:::p:2:p, space s:::p, par l {seq l {comp label_map:::p::p, space u:::p, comp combo_map:::::x}, seq t {par l {seq l {comp label_mode:::p::p, space :::p, comp combo_mode::::276:x}, seq l {par l {comp label_pts::l:p::p, comp label_timelimit::l:p::p}, space s:::p, par l {comp field_pts::::215:x, comp field_timelimit::::215:x}}, comp button_save::t::321:x}, space :::p, comp separator2:::p::p, space :::p, comp scroll_players:::p:104:p}, seq {comp button_start:::p::p, space :::p, comp button_stop:::p::p, space :::p, comp button_froce_change:::p::p, space ::140:x, comp label_uptime:::p::p}}}, comp scroll_console::l:::x, comp text_input::l:::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p:12:p, par l {seq {comp label_server:::p::p, space :::p, comp panel1:::p::p}, seq l {par t {comp label_map:::p::p, comp combo_map:::p::p}, par l {seq l {space s:::p, par l:::p {comp separator2:::::x, seq {comp scroll_players:::p:115:p, space :0:0:x}}}, seq l {space :p:7:p, par t {comp combo_mode:::p::p, comp label_mode:::p::p}, space u:::p, par b {comp label_pts::b:p::p, comp field_pts::b:p::p}, space :::p, par b {comp label_timelimit::b:p::p, comp field_timelimit::b:p::p}, space :::p, comp button_save:::p::p}}, par l {seq {space s:::p, comp label_uptime:::p::p}, seq l {space :p:4:p, par b {comp button_start::b:p::p, comp button_stop::b:p::p, comp button_froce_change::b:p::p}}}}, comp separator1::::200:x}, space :::p, comp scroll_console:::p:225:p, space :::p, comp text_input:::p::p, space ::12:x}}"
 		} ) {
 			name: "rootPanel"
 			"maximumSize": new java.awt.Dimension( 650, 480 )
@@ -108,7 +108,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button_start"
-				"text": "Start server"
+				"text": "Start"
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_startMouseClicked", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -163,9 +163,14 @@ new FormModel {
 				"text": "Save all changes"
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_saveMouseClicked", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button_stop"
+				"text": "Stop"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_stopMouseClicked", true ) )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 660, 485 )
+			"size": new java.awt.Dimension( 785, 485 )
 		} )
 	}
 }

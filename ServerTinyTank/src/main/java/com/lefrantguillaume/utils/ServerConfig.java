@@ -6,18 +6,16 @@ import java.util.Properties;
 /**
  * Created by Styve on 12/03/2015.
  */
-public class Configuration {
+public class ServerConfig {
     public static String gameName;
     public static int tcpPort;
     public static int udpPort;
     public static int maxAllowedPlayers;
     public static int maxAllowedPing;
-    public static int ptsLimit;
-    public static int timeLimit;
     public static boolean friendlyFire;
     public static boolean allyNoBlock;
 
-    public Configuration() {
+    public ServerConfig() {
     }
 
     public static boolean loadConfig() {
@@ -32,8 +30,6 @@ public class Configuration {
             udpPort = Integer.valueOf(props.getProperty("udpPort", "13444"));
             maxAllowedPlayers = Integer.valueOf(props.getProperty("maxAllowedPlayers", "8"));
             maxAllowedPing = Integer.valueOf(props.getProperty("maxAllowedPing", "100"));
-            ptsLimit = Integer.valueOf(props.getProperty("ptsLimit", "30"));
-            timeLimit = Integer.valueOf(props.getProperty("timeLimit", "900"));
             friendlyFire = Boolean.valueOf(props.getProperty("friendlyFire", "false"));
             allyNoBlock = Boolean.valueOf(props.getProperty("allyNoBlock", "true"));
 
@@ -60,8 +56,6 @@ public class Configuration {
             props.setProperty("gameName", "My TinyTank Game");
             props.getProperty("friendlyFire", "0");
             props.getProperty("allyNoBlock", "1");
-            props.getProperty("ptsLimit", "30");
-            props.getProperty("timeLimit", "900");
             init();
             FileWriter writer = new FileWriter(configFile);
             props.store(writer, " This file is the Host settings.");
@@ -84,7 +78,5 @@ public class Configuration {
         maxAllowedPing = 100;
         friendlyFire = false;
         allyNoBlock = true;
-        ptsLimit = 30;
-        timeLimit = 900;
     }
 }

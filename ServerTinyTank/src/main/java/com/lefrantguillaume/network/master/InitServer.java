@@ -30,13 +30,11 @@ class InitServerRcv {
 }
 
 class InitServerSnd {
-    private String ip;
     private String gameName;
     private int tcpPort;
     private int udpPort;
 
-    public InitServerSnd(String ip, String gameName, int tcpPort, int udpPort) {
-        this.ip = ip;
+    public InitServerSnd(String gameName, int tcpPort, int udpPort) {
         this.gameName = gameName;
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
@@ -45,12 +43,10 @@ class InitServerSnd {
     public InitServerSnd() {}
 
     public String getGameName() { return gameName; }
-    public String getIp() { return ip; }
     public int getTcpPort() { return tcpPort; }
     public int getUdpPort() { return udpPort; }
 
     public void setGameName(String gameName) { this.gameName = gameName; }
-    public void setIp(String ip) { this.ip = ip; }
     public void setTcpPort(int tcpPort) { this.tcpPort = tcpPort; }
     public void setUdpPort(int udpPort) { this.udpPort = udpPort; }
 }

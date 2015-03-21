@@ -1,10 +1,7 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.game.Game;
 import com.lefrantguillaume.network.TinyServer;
-import com.lefrantguillaume.network.master.Master;
-import com.lefrantguillaume.ui.ServerConfig;
-import com.lefrantguillaume.utils.Configuration;
+import com.lefrantguillaume.utils.ServerConfig;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -15,18 +12,13 @@ import java.util.Observer;
 
 public class Main {
     public static void main(String args[]) {
-        if (!Configuration.loadConfig())
-            Configuration.writeConfig();
+        if (!ServerConfig.loadConfig())
+            ServerConfig.writeConfig();
         TinyServer server = new TinyServer();
 
-        ServerConfig app = new ServerConfig(server);
+        com.lefrantguillaume.ui.ServerConfig app = new com.lefrantguillaume.ui.ServerConfig(server);
         WindowObserver a = new WindowObserver(app);
         new WindowController(a);
-
-
-        Master master = new Master();
-        master.initServer();
-        new Game();
     }
 }
 
@@ -38,9 +30,9 @@ class WindowControllerObserver extends Observable {
 }
 
 class WindowObserver implements Observer {
-    private final ServerConfig window;
+    private final com.lefrantguillaume.ui.ServerConfig window;
 
-    public WindowObserver(ServerConfig window) {
+    public WindowObserver(com.lefrantguillaume.ui.ServerConfig window) {
         this.window = window;
     }
 
