@@ -4,22 +4,12 @@ var url = require('url');
 
 WebApi = function(db) {
 
-	var Servers = db.collection('servers');
-	var Blogs = db.collection('devblog');
-	var Users = db.collection('users');
-
 	this.list_servers = function(req, res) {
 
 		Servers.find().toArray(function(err, result) {
 			res.status(200).json({name: 'list_servers', res: result, err: err});
 		});
 	};
-
-	this.dev_blog = function(req, res) {
-		Blogs.find().toArray(function(err, result) {
-			res.status(200).json({name: "dev_blog", res: result, err: err});
-		});
-	}
 
 	this.register = function(req, res) {
 		Users.findOne({
@@ -31,8 +21,6 @@ WebApi = function(db) {
 			} else {
 
 				//TODO Check here if email, username and password are correct ...
-
-				console.log(req.body);
 
 				Users.insert({
 					email: req.body.email.toLowerCase(),
@@ -75,8 +63,13 @@ WebApi = function(db) {
 					if (err) {
 						console.log(err, res);
 						res.status(200).json({name: "login", res: false, err: err});
+					} else if (res == false) {
+						res.status(200).json({name: "login", res: false, err: "Passwords didn't match."});
 					} else {
-						res.status(200).json({name: "login", res: true, err: null});
+
+						//TODO generate token here
+
+						res.status(200).json({name: "login", res: res, err: null});
 					}
 				});
 			}

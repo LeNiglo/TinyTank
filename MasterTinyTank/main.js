@@ -19,6 +19,11 @@ var WebApi = require('./web_api.js');
 var db = require('mongoskin').db('mongodb://localhost:27017/tiny-tank');
 var ObjectID = require('mongoskin').ObjectID
 
+
+var Servers = db.collection('servers');
+var Users = db.collection('users');
+
+
 /*
 **	Initializes the APIs
 */
@@ -83,7 +88,6 @@ app.post('/server/update_last_active', serverApi.update_last_active);
 app.post('/web/register', webApi.register);
 app.post('/web/login', webApi.login);
 app.get('/web/list_servers', webApi.list_servers);
-app.get('/web/dev_blog', webApi.dev_blog);
 
 /*
 **	Error handling

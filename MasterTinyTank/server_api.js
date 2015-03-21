@@ -4,8 +4,6 @@ var url = require('url');
 
 ServerApi = function(db) {
 
-	var Servers = db.collection('servers');
-
 	this.init_server = function(req, res) {
 		Servers.insert({
 			name: req.body.gameName,

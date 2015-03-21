@@ -8,5 +8,4 @@ meteor-platform
 iron:router
 multiply:iron-router-progress
 jquery
-accounts-password
 meteorhacks:kadira@2.20.1
