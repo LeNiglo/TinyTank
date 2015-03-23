@@ -42,6 +42,8 @@ public class CollisionObject extends Observable {
     }
 
     public void modifCoord(Pair<Float, Float> coords) {
+        this.saveX = this.positions.getV1();
+        this.saveY = this.positions.getV2();
         this.positions.setV1(coords.getV1());
         this.positions.setV2(coords.getV2());
     }
@@ -104,5 +106,13 @@ public class CollisionObject extends Observable {
     // SETTERS
     public void setAngle(float angle) {
         this.angle = angle;
+    }
+
+    public void setX(float x){
+        this.positions.setV1(x);
+    }
+
+    public void setY(float y){
+        this.positions.setV2(y);
     }
 }

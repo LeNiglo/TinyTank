@@ -17,6 +17,7 @@ public class InputCheck extends Observable {
     public int keyCheck(int key, EnumInput mode){
         if (Input.KEY_ESCAPE == key) {
             MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+            CurrentUser.setInGame(false);
             this.setChanged();
             this.notifyObservers(request);
             return -1;
@@ -31,11 +32,14 @@ public class InputCheck extends Observable {
     }
 
     public int mouseClickCheck(PlayerState player, int x, int y, EnumInput mode){
-        float angle = MathTools.getAngle(player.getCenterX(), player.getCenterY(), x, y);
+        if (player != null) {
+            float angle = MathTools.getAngle(player.getX(), player.getY(), x, y);
 
-        MessageModel request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, angle);
-        this.setChanged();
-        this.notifyObservers(request);
-        return 0;
+            MessageModel request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, angle);
+            this.setChanged();
+            this.notifyObservers(request);
+            return 0;
+        }
+        return -1;
     }
 }

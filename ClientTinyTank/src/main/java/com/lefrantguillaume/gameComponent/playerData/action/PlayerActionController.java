@@ -27,7 +27,6 @@ public class PlayerActionController extends Observable {
     }
 
     public boolean doAction(PlayerAction playerAction, CollisionController collisionController) {
-        Debug.debug(String.valueOf(playerAction.getAction()));
         if (playerAction.getAction() != EnumActions.NOTHING) {
             if (playerAction.getAction() == EnumActions.MOVE) {
                 this.playerState.setMove(true);
@@ -36,8 +35,9 @@ public class PlayerActionController extends Observable {
             } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == this.playerState.getDirection().getValue()) {
                 this.playerState.setMove(false);
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
-                Shot shot = tank.generateShot(this.playerState.getUser().getIdUser(), new Tuple<Float, Float, Float>(this.playerState.getCenterX(), this.playerState.getCenterY(), (Float) playerAction.getValue(0)));
-                CollisionObject obj = new CollisionObject(true, this.playerState.getAbsoluteX(), this.playerState.getAbsoluteY(),
+                Shot shot = tank.generateShot(this.playerState.getUser().getIdUser(), new Tuple<Float, Float, Float>(this.playerState.getX(),
+                        this.playerState.getY(), (Float) playerAction.getValue(0)));
+                CollisionObject obj = new CollisionObject(true, shot.getGraphicalX(), shot.getGraphicalY(),
                         this.tank.getShotAnimator().currentSizeAnimation(), this.playerState.getUser().getIdUser(), shot.getId(), EnumType.SHOT, shot.getAngle());
                 obj.addObserver(shot);
                 collisionController.addCollisionObject(obj);

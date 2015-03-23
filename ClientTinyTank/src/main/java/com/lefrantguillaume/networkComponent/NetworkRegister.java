@@ -2,6 +2,7 @@ package com.lefrantguillaume.networkComponent;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.networkComponent.messages.msg.*;
 
@@ -21,6 +22,8 @@ public class NetworkRegister {
         kryo.register(MessageChangeTeam.class);
         kryo.register(MessagePlayerDelete.class);
         kryo.register(MessagePlayerNew.class);
-        kryo.register(MessagePlayerDelete.class);
+        kryo.register(MessagePlayerUpdateState.class);
+        kryo.register(MessagePlayerUpdatePosition.class);
+        kryo.register(EnumTanks.class);
     }
 }

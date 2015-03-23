@@ -2,6 +2,8 @@ package com.lefrantguillaume.collisionComponent;
 
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.gameComponent.controllers.MapController;
+import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +15,20 @@ import java.util.UUID;
 public class CollisionController {
     private List<CollisionObject> items;
 
-    public CollisionController() {
+    public CollisionController(MapController map)
+    {
         this.items = new ArrayList<CollisionObject>();
+        this.createWorld(map);
     }
 
     // FUNCTIONS
+    public void createWorld(MapController map){
+        this.addCollisionObject(new CollisionObject(true, 0, -5, new Pair<Float, Float>(map.getSizeX(), 5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, 0, map.getSizeY() + 5, new Pair<Float, Float>(map.getSizeX(), -5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, -5, 0, new Pair<Float, Float>(5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, new Pair<Float, Float>(-5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+    }
+
     public void addCollisionObject(CollisionObject object) {
         Debug.debug("Add object with user:" + String.valueOf(object.getIdUser() + " and id:" + String.valueOf(object.getId())));
         this.items.add(object);
@@ -64,5 +75,9 @@ public class CollisionController {
                 return this.items.get(i);
         }
         return null;
+    }
+
+    public List<CollisionObject> getCollisionObjects(){
+        return this.items;
     }
 }

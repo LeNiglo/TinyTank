@@ -7,7 +7,7 @@ import com.lefrantguillaume.gameComponent.playerData.action.EnumDirection;
  * Created by andres_k on 13/03/2015.
  */
 public class PlayerState {
-    private Pair<Float, Float> absolutePositions;
+    private Pair<Float, Float> positions;
     private Pair<Float, Float> sizeAnimation;
     private boolean move;
     private float gunAngle;
@@ -16,7 +16,7 @@ public class PlayerState {
 
     public PlayerState(User user, float x, float y, Pair<Float, Float> sizeAnimation) {
         this.user = user;
-        this.absolutePositions = new Pair<Float, Float>(x, y);
+        this.positions = new Pair<Float, Float>(x, y);
         this.sizeAnimation = sizeAnimation;
         this.move = false;
         this.direction = EnumDirection.DOWN;
@@ -28,21 +28,21 @@ public class PlayerState {
         return this.user;
     }
 
-    public float getAbsoluteX() {
-        return this.absolutePositions.getV1();
+    public float getX() {
+        return this.positions.getV1();
     }
 
-    public float getAbsoluteY() {
-        return this.absolutePositions.getV2();
+    public float getY() {
+        return this.positions.getV2();
     }
 
-    public float getCenterX() {
-        return this.absolutePositions.getV1() + (this.sizeAnimation.getV1() / 2);
-    //    double px = Math.cos(this.direction.getAngle()) * (ax - rx) - Math.sin(this.direction.getAngle()) * (ay - ry) + rx;
+    public float getGraphicalX() {
+        return this.positions.getV1() - (this.sizeAnimation.getV1() / 2);
+        //    double px = Math.cos(this.direction.getAngle()) * (ax - rx) - Math.sin(this.direction.getAngle()) * (ay - ry) + rx;
     }
 
-    public float getCenterY() {
-        return this.absolutePositions.getV2() + (this.sizeAnimation.getV2() / 2);
+    public float getGraphicalY() {
+        return this.positions.getV2() - (this.sizeAnimation.getV2() / 2);
     }
 
     public boolean isMove() {
@@ -62,12 +62,13 @@ public class PlayerState {
     }
 
     // SETTERS
-    public void setY(float y) {
-        this.absolutePositions.setV2(y);
-    }
 
     public void setX(float x) {
-        this.absolutePositions.setV1(x);
+        this.positions.setV1(x);
+    }
+
+    public void setY(float y) {
+        this.positions.setV2(y);
     }
 
     public void setMove(boolean move) {

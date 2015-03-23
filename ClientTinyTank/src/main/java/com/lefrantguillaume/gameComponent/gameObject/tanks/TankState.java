@@ -6,7 +6,7 @@ package com.lefrantguillaume.gameComponent.gameObject.tanks;
 public class TankState {
     private final float speed;
     private final float maxLife;
-    private final float armor;
+    private float armor;
     private float currentLife;
     private float shieldEffect;
     private float slowEffect;
@@ -69,5 +69,9 @@ public class TankState {
 
     public void setBoostEffect(float boostEffect) {
         this.boostEffect = boostEffect;
+    }
+
+    public void setArmor(float armor){
+        this.armor = armor;
     }
 }

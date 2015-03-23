@@ -13,6 +13,8 @@ import com.lefrantguillaume.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.state.GameState;
+import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,7 @@ public class InterfaceController extends Observable implements Observer {
 
     public void loadGame(){
         MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), this.availableTank.getCurrentTank());
+
         this.setChanged();
         this.notifyObservers(request);
     }

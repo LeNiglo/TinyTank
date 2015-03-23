@@ -40,8 +40,8 @@ public class Shot implements Observer {
 
         Debug.debug("check Object");
         if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-            this.positions.setV1(order.getV1());
-            this.positions.setV2(order.getV2());
+//            this.positions.setV1(order.getV1());
+            //          this.positions.setV2(order.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
         }
@@ -49,27 +49,47 @@ public class Shot implements Observer {
 
     // FUNCTIONS
     public void move(int delta) {
-        Pair<Float, Float> coords = movePredict(delta);
+        Pair<Float, Float> coords = movePredict(delta, false);
         this.positions.setV1(coords.getV1());
         this.positions.setV2(coords.getV2());
     }
 
-    public Pair<Float, Float> movePredict(int delta) {
+    /**
+     * @param delta
+     * @param mode  : true for graphic mode
+     * @return
+     */
+    public Pair<Float, Float> movePredict(int delta, boolean mode) {
+        float x;
+        float y;
         double addX = Math.cos(this.angle * Math.PI / 180);
         double addY = Math.sin(this.angle * Math.PI / 180);
-        float x = this.positions.getV1() + (((float) addX * this.speed / 100) * delta);
-        float y = this.positions.getV2() + (((float) addY * this.speed / 100) * delta);
+        if (mode == true) {
+            x = this.getGraphicalX() + (((float) addX * this.speed / 100) * delta);
+            y = this.getGraphicalY() + (((float) addY * this.speed / 100) * delta);
+        } else {
+            x = this.getX() + (((float) addX * this.speed / 100) * delta);
+            y = this.getY() + (((float) addY * this.speed / 100) * delta);
 
+        }
         return new Pair<Float, Float>(x, y);
     }
 
     // GETTERS
-    public float getCenterX() {
-        return this.positions.getV1() + (this.animator.currentSizeAnimation().getV1() / 2);
+    public float getGraphicalX() {
+        return this.positions.getV1() - (this.animator.currentSizeAnimation().getV1() / 2);
     }
 
-    public float getCenterY() {
-        return this.positions.getV2() + (this.animator.currentSizeAnimation().getV2() / 2);
+    public float getGraphicalY() {
+        return this.positions.getV2() - (this.animator.currentSizeAnimation().getV2() / 2);
+    }
+
+    public float getX() {
+        return this.positions.getV1();
+    }
+
+    public float getY() {
+        return this.positions.getV2();
     }
 
     public String getUserId() {
@@ -86,14 +106,6 @@ public class Shot implements Observer {
 
     public float getSpeed() {
         return this.speed;
-    }
-
-    public float getX() {
-        return this.positions.getV1();
-    }
-
-    public float getY() {
-        return this.positions.getV2();
     }
 
     public float getAngle() {

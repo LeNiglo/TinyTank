@@ -15,6 +15,7 @@ import org.newdawn.slick.SlickException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 10/03/2015.
@@ -33,7 +34,7 @@ public class Master {
 
     public Master() throws SlickException {
         this.windowConfig = new WindowConfig();
-        this.currentUser = new CurrentUser("unknown", "541d51");
+        this.currentUser = new CurrentUser("unknown", UUID.randomUUID().toString());
         this.initGame();
         this.initNetwork();
         this.initInput();

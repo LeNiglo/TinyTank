@@ -17,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Player implements Observer{
+public class Player implements Observer {
     private List<Shot> shots;
     private UUID idTeam;
     private Tank tank;
@@ -51,24 +51,37 @@ public class Player implements Observer{
     }
 
     public void move(int delta) {
-        Pair<Float, Float> coords = movePredict(delta);
+        Pair<Float, Float> coords = movePredict(delta, false);
         this.getPlayerState().setX(coords.getV1());
         this.getPlayerState().setY(coords.getV2());
     }
 
-    public Pair<Float, Float> movePredict(int delta) {
+    /**
+     * @param delta
+     * @param mode : true for graphical mode
+     * @return
+     */
+    public Pair<Float, Float> movePredict(int delta, boolean mode) {
+        float x;
+        float y;
         double addX = Math.cos(this.getPlayerState().getDirection().getAngle() * Math.PI / 180);
         double addY = Math.sin(this.getPlayerState().getDirection().getAngle() * Math.PI / 180);
-        float x = this.getPlayerState().getAbsoluteX() + (((float)addX / 10) * delta);
-        float y = this.getPlayerState().getAbsoluteY() + (((float)addY / 10) * delta);
+
+        if (mode == true) {
+            x = this.getPlayerState().getGraphicalX() + (((float) addX / 10) * delta);
+            y = this.getPlayerState().getGraphicalY() + (((float) addY / 10) * delta);
+        } else {
+            x = this.getPlayerState().getX() + (((float) addX / 10) * delta);
+            y = this.getPlayerState().getY() + (((float) addY / 10) * delta);
+        }
         return new Pair<Float, Float>(x, y);
     }
 
-    public int getDamage(float damage){
+    public int getDamage(float damage) {
         return 0;
     }
 
-    public int getEffect(){
+    public int getEffect() {
         return 0;
     }
 
@@ -94,7 +107,7 @@ public class Player implements Observer{
         this.inGame = inGame;
     }
 
-    public void setShots(List<Shot> shots){
-        this.shots= shots;
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
     }
 }

@@ -6,6 +6,7 @@ import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
