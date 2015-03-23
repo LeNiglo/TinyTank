@@ -41,7 +41,6 @@ public class Network {
         kryo.register(EnumTanks.class);
         kryo.register(MessageNeedMap.class);
         kryo.register(MessageDownload.class);
-        kryo.register(MessageTankChoice.class);
         kryo.register(MessageGameObjects.class);
         kryo.register(ArrayList.class);
     }
@@ -140,6 +139,8 @@ public class Network {
     static public class MessagePlayerNew extends MessageModel {
         private EnumTanks enumTanks;
 
+        public MessagePlayerNew() {}
+
         public EnumTanks getEnumTanks() {return enumTanks;}
         public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
     }
@@ -184,16 +185,6 @@ public class Network {
         public void setX(float x) {this.x = x;}
         public void setY(float y) {this.y = y;}
     }
-
-    static public class MessageTankChoice extends MessageModel {
-        private EnumTanks enumTanks;
-
-        MessageTankChoice() {}
-
-        public EnumTanks getEnumTanks() {return enumTanks;}
-        public void setEnumTanks(EnumTanks enumTanks) {this.enumTanks = enumTanks;}
-    }
-
 
     static public class MessageNeedMap {
         private boolean value;

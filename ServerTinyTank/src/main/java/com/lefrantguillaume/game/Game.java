@@ -1,9 +1,7 @@
 package com.lefrantguillaume.game;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.network.MessageConnectData;
-import com.lefrantguillaume.network.MessageDownloadData;
-import com.lefrantguillaume.network.TinyServer;
+import com.lefrantguillaume.network.*;
 import com.lefrantguillaume.utils.GameConfig;
 
 import java.util.ArrayList;
@@ -25,8 +23,10 @@ public class Game extends Observable implements Observer {
     }
 
     public void start() {
+        server.stop();
+        boolean res = server.start();
         this.setChanged();
-        this.notifyObservers(server.start());
+        this.notifyObservers(res);
         WindowController.addConsoleMsg("Game started");
     }
 
@@ -42,6 +42,10 @@ public class Game extends Observable implements Observer {
         if (arg instanceof MessageDownloadData || arg instanceof MessageConnectData) {
             this.setChanged();
             this.notifyObservers(arg);
+        } else if (arg instanceof MessageTankData) {
+            MessageTankData mtd = ((MessageTankData) arg);
+            playerNames.add(mtd.getRequest().getPseudo());
+            mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
         }
     }
 

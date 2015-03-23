@@ -44,6 +44,8 @@ public class TinyServer extends Observable {
                         isMessageDelete(connection, (Network.MessageDelete) object);
                     } else if (object instanceof Network.MessagePlayerNew) {
                         isMessagePlayerNew(connection, (Network.MessagePlayerNew) object);
+                    } else if (object instanceof Network.MessagePlayerNew) {
+                        isMessageTankChoice(connection, (Network.MessagePlayerNew) object);
                     }
                 }
 
@@ -112,6 +114,15 @@ public class TinyServer extends Observable {
         MessageDownloadData mdd = new MessageDownloadData(server, connection);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mdd);
+    }
+
+    private void isMessageTankChoice(Connection connection, Network.MessagePlayerNew request) {
+        Network.EnumTanks tankId = request.getEnumTanks();
+        String tank = (tankId == Network.EnumTanks.RUSHER ? "Rusher" : (tankId == Network.EnumTanks.SNIPER ? "Sniper" : (tankId == Network.EnumTanks.TIGER ? "Tiger" : "NULL")));
+        System.out.println(request.getPseudo() + " a choisi le tank: " + tank);
+        MessageTankData mtd = new MessageTankData(server, connection, request);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mtd);
     }
 }
 
