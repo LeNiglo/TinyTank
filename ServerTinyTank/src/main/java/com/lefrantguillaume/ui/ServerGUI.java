@@ -3,6 +3,7 @@ package com.lefrantguillaume.ui;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.Game;
+import com.lefrantguillaume.game.Player;
 import com.lefrantguillaume.game.eGameMode;
 import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.network.*;
@@ -43,6 +44,7 @@ public class ServerGUI extends JFrame implements Observer {
     private GameConfig config = new GameConfig();
     private List<Map> maps = new ArrayList<Map>();
     private Map currentMap = null;
+    DefaultTableModel model = new DefaultTableModel();
 
     public ServerGUI() {
         initComponents();
@@ -54,7 +56,6 @@ public class ServerGUI extends JFrame implements Observer {
     }
 
     public void init() {
-        DefaultTableModel model = new DefaultTableModel();
         model.addColumn("Player");
         model.addColumn("Kills");
         model.addColumn("Deaths");
@@ -83,6 +84,8 @@ public class ServerGUI extends JFrame implements Observer {
     }
 
     public void loadMaps() {
+        maps.clear();
+        currentMap = null;
         File dir = new File("maps");
         File[] files = dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String filename) {
@@ -670,7 +673,23 @@ public class ServerGUI extends JFrame implements Observer {
                     button_stop.setEnabled(false);
                     button_start.setText("Start");
                 }
+            } else if (arg instanceof MessageTankData) {
+                Log.info("GUI a recu le nouveau joueur.");
+                updatePlayerList();
+            } else if (arg instanceof MessageDeleteData) {
+                Log.info("GUI a remove un joueur.");
+                updatePlayerList();
             }
+        }
+    }
+
+    public void updatePlayerList() {
+        model.setRowCount(0);
+        HashMap<String, Player> players = game.getPlayers();
+        for (java.util.Map.Entry<String, Player> player : players.entrySet()){
+            Log.info("GUI joueur : " + player.getValue().getPseudo());
+            Object[] list = new Object[]{player.getValue().getPseudo(), player.getValue().getKills(), player.getValue().getDeaths()};
+            model.addRow(list);
         }
     }
 

@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.game.EnumTanks;
 import com.lefrantguillaume.utils.ServerConfig;
 
 import java.io.IOException;
@@ -43,9 +44,9 @@ public class TinyServer extends Observable {
                     } else if (object instanceof Network.MessageDelete) {
                         isMessageDelete(connection, (Network.MessageDelete) object);
                     } else if (object instanceof Network.MessagePlayerNew) {
-                        isMessagePlayerNew(connection, (Network.MessagePlayerNew) object);
-                    } else if (object instanceof Network.MessagePlayerNew) {
                         isMessageTankChoice(connection, (Network.MessagePlayerNew) object);
+                    } else if (object instanceof Network.MessagePlayerUpdatePosition) {
+                        isMessageUpdate(connection, (Network.MessagePlayerUpdatePosition) object);
                     }
                 }
 
@@ -101,12 +102,10 @@ public class TinyServer extends Observable {
 
     private void isMessageDelete(Connection connection, Network.MessageDelete request) {
         System.out.println(request.getPseudo() + " a envoyé un message DELETE");
+        MessageDeleteData mdd = new MessageDeleteData(server, connection, request);
         server.sendToAllTCP(request);
-    }
-
-    private void isMessagePlayerNew(Connection connection, Network.MessagePlayerNew request) {
-        System.out.println("Nouveau joueur: " + request.getPseudo());
-        server.sendToAllTCP(request);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mdd);
     }
 
     private void isMessageNeedMap(final Connection connection, Network.MessageNeedMap request) {
@@ -117,12 +116,18 @@ public class TinyServer extends Observable {
     }
 
     private void isMessageTankChoice(Connection connection, Network.MessagePlayerNew request) {
-        Network.EnumTanks tankId = request.getEnumTanks();
-        String tank = (tankId == Network.EnumTanks.RUSHER ? "Rusher" : (tankId == Network.EnumTanks.SNIPER ? "Sniper" : (tankId == Network.EnumTanks.TIGER ? "Tiger" : "NULL")));
+        System.out.println("Nouveau joueur: " + request.getPseudo());
+        EnumTanks tankId = request.getEnumTanks();
+        String tank = (tankId == EnumTanks.RUSHER ? "Rusher" : (tankId == EnumTanks.SNIPER ? "Sniper" : (tankId == EnumTanks.TIGER ? "Tiger" : "NULL")));
         System.out.println(request.getPseudo() + " a choisi le tank: " + tank);
         MessageTankData mtd = new MessageTankData(server, connection, request);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mtd);
+    }
+
+    private void isMessageUpdate(Connection connection, Network.MessagePlayerUpdatePosition request) {
+        System.out.println("Update: " + request.getX() + " / " + request.getY());
+        server.sendToAllExceptTCP(connection.getID(), request);
     }
 }
 
