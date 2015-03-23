@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -44,9 +46,20 @@ public class ServerGUI extends JFrame implements Observer {
 
     public ServerGUI() {
         initComponents();
-
         this.game = new Game();
         this.game.addObserver(this);
+        init();
+        this.loadMaps();
+        setVisible(true);
+    }
+
+    public void init() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("Player");
+        model.addColumn("Kills");
+        model.addColumn("Deaths");
+        table_players.setModel(model);
+        table_players.getColumn("Player").setMinWidth(150);
         button_stop.setEnabled(false);
         setContentPane(rootPanel);
         setBounds(200, 200, 1000, 580);
@@ -63,8 +76,6 @@ public class ServerGUI extends JFrame implements Observer {
         check_noblock.setSelected(com.lefrantguillaume.utils.ServerConfig.allyNoBlock);
         field_timelimit.setText("600");
         field_pts.setText("30");
-        this.loadMaps();
-        setVisible(true);
     }
 
     public void addToConsoleLog(String msg) {
@@ -527,37 +538,37 @@ public class ServerGUI extends JFrame implements Observer {
                             .addComponent(scroll_console)
                             .addGroup(rootPanelLayout.createSequentialGroup()
                                 .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(rootPanelLayout.createSequentialGroup()
-                                        .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(label_server)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(rootPanelLayout.createSequentialGroup()
+                                                .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label_server)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(rootPanelLayout.createSequentialGroup()
-                                        .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(rootPanelLayout.createSequentialGroup()
-                                        .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(label_server2)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(hSpacer4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGroup(rootPanelLayout.createSequentialGroup()
+                                                .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(rootPanelLayout.createSequentialGroup()
+                                                .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label_server2)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(hSpacer4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(rootPanelLayout.createParallelGroup()
-                                    .addGroup(rootPanelLayout.createSequentialGroup()
-                                        .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGroup(rootPanelLayout.createSequentialGroup()
-                                        .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(label_server3)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))))
+                                        .addGroup(rootPanelLayout.createSequentialGroup()
+                                                .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(rootPanelLayout.createSequentialGroup()
+                                                .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label_server3)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))))
                         .addContainerGap())
             );
             rootPanelLayout.setVerticalGroup(
