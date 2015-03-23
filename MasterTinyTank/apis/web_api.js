@@ -21,6 +21,13 @@ WebApi = function(db) {
 			} else {
 
 				//TODO Check here if email, username and password are correct ...
+				var email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		    var password_re = /^[\W\w]{8,99}$/;
+		    var username_re = /^[\w\s]{6,20}$/;
+
+		    if (!(email_re.test(req.body.email) && password_re.test(req.body.password) && username_re.test(req.body.username))) {
+					res.status(200).json({name: "register", res: false, err: "Parameters aren't correct, please try again with others."});
+		    }
 
 				Users.insert({
 					email: req.body.email.toLowerCase(),
@@ -61,7 +68,6 @@ WebApi = function(db) {
 			} else {
 				bcrypt.compare(req.body.password, exists.password, function(err, res) {
 					if (err) {
-						console.log(err, res);
 						res.status(200).json({name: "login", res: false, err: err});
 					} else if (res == false) {
 						res.status(200).json({name: "login", res: false, err: "Passwords didn't match."});

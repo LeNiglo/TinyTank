@@ -7,17 +7,16 @@ Template.login.events({
     var password = $this.find('input[name="password"]').val();
     var email = $this.find('input[name="email"]').val();
 
-    //TODO Check the email and password, to see if they match the correct RegExp, to the same on the server.
-
     Meteor.call("myLogin", {
       email: email,
       password: password
     }, function(error, results) {
-      console.log("login", error, results);
       if (error) {
-        myAlert('')
+        myAlert(error, "Login failed", "danger");
       } else {
-
+        //TODO change by profile page and add username to the myAlert
+        Router.go("home");
+        myAlert("", "Welcome Back !", "success");
       }
     });
 

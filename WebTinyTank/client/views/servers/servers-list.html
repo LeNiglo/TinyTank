@@ -1,12 +1,28 @@
 <template name="serversList">
   <h1>Servers List</h1>
 
-	<table class="table">
-		<thead></thead>
-		<tbody>
-  	{{#each getServersList}}
-  	{{> serverItem}}
-  	{{/each}}
-	</tbody>
-</table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Server Name</th>
+        <th>Current Map</th>
+        <th>Uptime</th>
+        <th>Nb Players</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each getServersList}}
+      {{> serverItem}}
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="serverItem">
+  <tr>
+    <th>{{name}}</th>
+    <td>{{map}}</td>
+    <td>{{getUptime started_at}}</td>
+    <td>{{getPlayerCount users}}</td>
+  </tr>
 </template>

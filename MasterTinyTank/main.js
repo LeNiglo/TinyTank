@@ -6,31 +6,25 @@ var basicAuth = require('basic-auth-connect');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
 var mailer = require('express-mailer');
+var morgan = require('morgan');
 var app = express();
-
-var ServerApi = require('./server_api.js');
-var ClientApi = require('./client_api.js');
-var WebApi = require('./web_api.js');
 
 
 /*
 **	Starts by initilizing the connection with the Database
 */
 var db = require('mongoskin').db('mongodb://localhost:27017/tiny-tank');
-var ObjectID = require('mongoskin').ObjectID
+ObjectID = require('mongoskin').ObjectID;
 
 
-var Servers = db.collection('servers');
-var Users = db.collection('users');
+Servers = db.collection('servers');
+Users = db.collection('users');
 
 
 /*
 **	Initializes the APIs
 */
-var WEB_URL = 'http://localhost:3000';
-var serverApi = new ServerApi(db);
-var clientApi = new ClientApi(db);
-var webApi = new WebApi(db);
+WEB_URL = 'http://localhost:3000';
 
 /*
 **	Init Mailer
@@ -49,6 +43,8 @@ mailer.extend(app, {
 });
 app.set('views', __dirname + '/emails');
 app.set('view engine', 'jade');
+
+app.use(morgan('combined'));
 
 app.use(cors({
 	allowedOrigins: [
@@ -70,30 +66,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 /*
 **	Loads the Routes
-**
-**	Server communication
 */
 
-app.post('/server/init_server', serverApi.init_server);
-app.post('/server/update_last_active', serverApi.update_last_active);
-
-/*
-**	Client communication
-*/
-
-/*
-**	Web communication
-*/
-
-app.post('/web/register', webApi.register);
-app.post('/web/login', webApi.login);
-app.get('/web/list_servers', webApi.list_servers);
-
-/*
-**	Error handling
-*/
-
-app.all('*', function(req, res) { res.status(404).end(JSON.stringify({title:"Not Found",data:"404 Not Found"})); });
+require('./router.js')(app, db);
+require('./background.js')(app, db);
 
 /*
 **	Starts the App
