@@ -36,6 +36,19 @@ public class Game extends Observable implements Observer {
         this.notifyObservers("stop");
     }
 
+    public boolean kick(String pseudo) {
+        int kicked = 0;
+        for (Map.Entry<String, Player> entry : players.entrySet()){
+            if (entry.getValue().getPseudo().equals(pseudo)) {
+                players.remove(entry.getValue().getId());
+                entry.getValue().getConnection().close();
+                updatePlayerList();
+                kicked++;
+            }
+        }
+        return kicked > 0;
+    }
+
     public List<String> getPlayerNames() {return playerNames;}
     public HashMap<String, Player> getPlayers() { return players;}
 
@@ -50,13 +63,10 @@ public class Game extends Observable implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        if (arg instanceof MessageDownloadData || arg instanceof MessageConnectData) {
-            this.setChanged();
-            this.notifyObservers(arg);
-        } else if (arg instanceof MessageTankData) {
+        if (arg instanceof MessageTankData) {
             MessageTankData mtd = ((MessageTankData) arg);
             mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
-            players.put(((MessageTankData) arg).getRequest().getId(), new Player(((MessageTankData) arg).getRequest().getId(), ((MessageTankData) arg).getRequest().getPseudo(), ((MessageTankData) arg).getRequest().getEnumTanks()));
+            players.put(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), mtd.getRequest().getEnumTanks(), mtd.getConnection()));
             for (Map.Entry<String, Player> entry : players.entrySet()) {
                 Network.MessagePlayerNew a = ((MessageTankData) arg).getRequest();
                 a.setEnumTanks(entry.getValue().getTank());
@@ -65,15 +75,13 @@ public class Game extends Observable implements Observer {
                 mtd.getServer().sendToTCP(mtd.getConnection().getID(), a);
             }
             updatePlayerList();
-            this.setChanged();
-            this.notifyObservers(arg);
         } else if (arg instanceof MessageDeleteData) {
             MessageDeleteData mtd = (MessageDeleteData) arg;
             players.remove(mtd.getRequest().getId());
             updatePlayerList();
-            this.setChanged();
-            this.notifyObservers(arg);
         }
+        this.setChanged();
+        this.notifyObservers(arg);
     }
 
     public GameConfig getConfig() {return config;}

@@ -1,5 +1,6 @@
 package com.lefrantguillaume.ui;
 
+import java.awt.event.*;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.Game;
@@ -12,6 +13,7 @@ import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.MD5;
+import javafx.scene.input.KeyCode;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -85,6 +87,7 @@ public class ServerGUI extends JFrame implements Observer {
 
     public void loadMaps() {
         maps.clear();
+        combo_map.removeAllItems();
         currentMap = null;
         File dir = new File("maps");
         File[] files = dir.listFiles(new FilenameFilter() {
@@ -131,10 +134,27 @@ public class ServerGUI extends JFrame implements Observer {
 
     public void newGame() {
         if (combo_map.getItemCount() > 0) {
-            currentMap = maps.get((combo_map.getSelectedIndex()));
-            config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
-            this.game.setConfig(config);
-            this.game.start();
+            new Thread() {
+                public void run() {
+                    new CallbackTask(new Runnable() {
+                        public void run() {
+                            Master master = new Master();
+                            WindowController.addConsoleMsg("Connecting to the master server...");
+                            if (master.initServer()) {
+                                WindowController.addConsoleMsg("Connected to master server !");
+                            }
+                        }
+                    }, new Callback() {
+                        @Override
+                        public void complete() {
+                            currentMap = maps.get((combo_map.getSelectedIndex()));
+                            config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
+                            ServerGUI.this.game.setConfig(config);
+                            ServerGUI.this.game.start();
+                        }
+                    }).run();
+                }
+            }.start();
         } else {
             JOptionPane.showMessageDialog(null, "Please check that your maps folder exists and is not empty.\n" +
                     "For more information, read the docs @ http://blablabl.com\n\n" +
@@ -145,18 +165,7 @@ public class ServerGUI extends JFrame implements Observer {
     private void button_startMouseClicked(MouseEvent e) {
         new Thread() {
             public void run() {
-                new CallbackTask(new Runnable() {
-                    public void run() {
-                        Master master = new Master();
-                        //if (master.initServer()) {
-                        //}
-                    }
-                }, new Callback() {
-                    @Override
-                    public void complete() {
-                        ServerGUI.this.newGame();
-                    }
-                }).run();
+                ServerGUI.this.newGame();
             }
         }.start();
     }
@@ -174,6 +183,26 @@ public class ServerGUI extends JFrame implements Observer {
     private void button_stopMouseClicked(MouseEvent e) {
         if (button_stop.isEnabled()) {
             this.game.stop();
+        }
+    }
+
+    private void button_refreshMouseClicked(MouseEvent e) {
+        loadMaps();
+    }
+
+    private void text_inputKeyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            String text = text_input.getText();
+            text_input.setText("");
+            WindowController.addConsoleMsg("> " + text);
+            if (text.matches("^kick\\s+.+$")) {
+                String pseudo = text.replace("kick ", "").trim();
+                if (game.kick(pseudo)) {
+                    WindowController.addConsoleMsg("Player '" + pseudo + "' was kicked from the server.");
+                } else {
+                    WindowController.addConsoleMsg("No such player: " + pseudo);
+                }
+            }
         }
     }
 
@@ -214,6 +243,7 @@ public class ServerGUI extends JFrame implements Observer {
         button_start = new JButton();
         button_stop = new JButton();
         button_froce_change = new JButton();
+        button1 = new JButton();
         label_server2 = new JLabel();
         panel3 = new JPanel();
         scroll_players = new JScrollPane();
@@ -359,6 +389,12 @@ public class ServerGUI extends JFrame implements Observer {
             //---- text_input ----
             text_input.setBackground(new Color(36, 36, 36));
             text_input.setForeground(Color.white);
+            text_input.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    text_inputKeyPressed(e);
+                }
+            });
 
             //---- label_server ----
             label_server.setText("Tiny Server");
@@ -422,6 +458,15 @@ public class ServerGUI extends JFrame implements Observer {
                 //---- button_froce_change ----
                 button_froce_change.setText("Force change map");
 
+                //---- button1 ----
+                button1.setIcon(new ImageIcon("C:\\Users\\Styve\\TinyTank\\ServerTinyTank\\src\\main\\resources\\refresh.png"));
+                button1.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        button_refreshMouseClicked(e);
+                    }
+                });
+
                 GroupLayout panel2Layout = new GroupLayout(panel2);
                 panel2.setLayout(panel2Layout);
                 panel2Layout.setHorizontalGroup(
@@ -429,54 +474,60 @@ public class ServerGUI extends JFrame implements Observer {
                         .addGroup(panel2Layout.createSequentialGroup()
                             .addContainerGap()
                             .addGroup(panel2Layout.createParallelGroup()
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_map)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(combo_map, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_mode)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(combo_mode, GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_pts)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(field_pts, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_timelimit)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(field_timelimit, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(button_start, GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(button_stop, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(button_froce_change)))
+                                    .addGroup(panel2Layout.createSequentialGroup()
+                                            .addComponent(label_map)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(combo_map, GroupLayout.PREFERRED_SIZE, 204, GroupLayout.PREFERRED_SIZE)
+                                            .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(panel2Layout.createSequentialGroup()
+                                            .addComponent(label_pts)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(field_pts, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                                    .addGroup(panel2Layout.createSequentialGroup()
+                                            .addComponent(label_mode)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(combo_mode, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+                                    .addGroup(panel2Layout.createSequentialGroup()
+                                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(label_timelimit, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(button_start, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addGroup(panel2Layout.createParallelGroup()
+                                                    .addComponent(field_timelimit, GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                                                    .addGroup(panel2Layout.createSequentialGroup()
+                                                            .addGap(0, 196, Short.MAX_VALUE)
+                                                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                                                    .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+                                                            .addComponent(button_stop)
+                                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                            .addComponent(button_froce_change, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)))))
                             .addContainerGap())
                 );
                 panel2Layout.setVerticalGroup(
                     panel2Layout.createParallelGroup()
                         .addGroup(panel2Layout.createSequentialGroup()
                             .addContainerGap()
+                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(label_map)
+                                    .addComponent(combo_map)
+                                    .addComponent(button1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                            .addGap(12, 12, 12)
                             .addGroup(panel2Layout.createParallelGroup()
-                                .addComponent(label_map)
-                                .addComponent(combo_map, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel2Layout.createParallelGroup()
-                                .addComponent(label_mode)
-                                .addComponent(combo_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(label_mode)
+                                    .addComponent(combo_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_pts)
-                                .addComponent(field_pts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(label_pts)
+                                    .addComponent(field_pts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_timelimit)
-                                .addComponent(field_timelimit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                                    .addComponent(label_timelimit)
+                                    .addComponent(field_timelimit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                             .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(button_froce_change)
-                                .addComponent(button_stop)
-                                .addComponent(button_start))
+                                    .addComponent(button_start)
+                                    .addComponent(button_stop)
+                                    .addComponent(button_froce_change))
                             .addContainerGap())
                 );
             }
@@ -490,6 +541,10 @@ public class ServerGUI extends JFrame implements Observer {
 
                 //======== scroll_players ========
                 {
+
+                    //---- table_players ----
+                    table_players.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                    table_players.setEnabled(false);
                     scroll_players.setViewportView(table_players);
                 }
 
@@ -504,14 +559,16 @@ public class ServerGUI extends JFrame implements Observer {
                 panel3Layout.setHorizontalGroup(
                     panel3Layout.createParallelGroup()
                         .addGroup(panel3Layout.createSequentialGroup()
+                            .addContainerGap()
                             .addGroup(panel3Layout.createParallelGroup()
-                                .addComponent(scroll_players, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
-                                    .addGap(0, 0, Short.MAX_VALUE)
-                                    .addComponent(label1)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(label_uptime)))
-                            .addContainerGap())
+                                    .addGroup(panel3Layout.createSequentialGroup()
+                                            .addComponent(scroll_players, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                                            .addContainerGap())
+                                    .addGroup(panel3Layout.createSequentialGroup()
+                                            .addGap(0, 222, Short.MAX_VALUE)
+                                            .addComponent(label1)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(label_uptime))))
                 );
                 panel3Layout.setVerticalGroup(
                     panel3Layout.createParallelGroup()
@@ -520,8 +577,8 @@ public class ServerGUI extends JFrame implements Observer {
                             .addComponent(scroll_players, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
                             .addGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_uptime)
-                                .addComponent(label1))
+                                    .addComponent(label_uptime)
+                                    .addComponent(label1))
                             .addContainerGap())
                 );
             }
@@ -537,64 +594,67 @@ public class ServerGUI extends JFrame implements Observer {
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(rootPanelLayout.createParallelGroup()
-                            .addComponent(text_input)
-                            .addComponent(scroll_console)
-                            .addGroup(rootPanelLayout.createSequentialGroup()
-                                .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server2)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(rootPanelLayout.createParallelGroup()
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)))))
-                        .addContainerGap())
+                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                        .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                                        .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(label_server)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(rootPanelLayout.createParallelGroup()
+                                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                                        .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                                        .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(label_server2)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(rootPanelLayout.createParallelGroup()
+                                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                                        .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(label_server3)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                                        .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addContainerGap())))
+                                .addGroup(rootPanelLayout.createSequentialGroup()
+                                        .addGroup(rootPanelLayout.createParallelGroup()
+                                                .addComponent(text_input)
+                                                .addComponent(scroll_console))
+                                        .addContainerGap())))
             );
             rootPanelLayout.setVerticalGroup(
                 rootPanelLayout.createParallelGroup()
                     .addGroup(rootPanelLayout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server)
-                            .addComponent(hSpacer2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server2)
-                            .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server3)
-                            .addComponent(hSpacer6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label_server)
+                                .addComponent(hSpacer2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label_server2)
+                                .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(label_server3)
+                                .addComponent(hSpacer6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                            .addComponent(separator2)
-                            .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                                .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(separator2, GroupLayout.Alignment.TRAILING)
+                                .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(scroll_console, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -686,7 +746,7 @@ public class ServerGUI extends JFrame implements Observer {
     public void updatePlayerList() {
         model.setRowCount(0);
         HashMap<String, Player> players = game.getPlayers();
-        for (java.util.Map.Entry<String, Player> player : players.entrySet()){
+        for (java.util.Map.Entry<String, Player> player : players.entrySet()) {
             Log.info("GUI joueur : " + player.getValue().getPseudo());
             Object[] list = new Object[]{player.getValue().getPseudo(), player.getValue().getKills(), player.getValue().getDeaths()};
             model.addRow(list);
@@ -729,6 +789,7 @@ public class ServerGUI extends JFrame implements Observer {
     private JButton button_start;
     private JButton button_stop;
     private JButton button_froce_change;
+    private JButton button1;
     private JLabel label_server2;
     private JPanel panel3;
     private JScrollPane scroll_players;

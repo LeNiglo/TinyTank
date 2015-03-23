@@ -24,7 +24,7 @@ public class Master {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://10.10.252.222:1337/server/";
+        String masterServer = "http://10.10.253.130:1337/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);

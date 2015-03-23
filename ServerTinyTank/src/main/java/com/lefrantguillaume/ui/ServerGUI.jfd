@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp text_input::l:::x, comp scroll_console::l:::x, seq l {par t:::p {seq {comp hSpacer1:::p:89:p, space :::p, comp label_server:::p::p, space :::p, comp hSpacer2:::::x}, comp panel1:::p::p}, space :::p, par l:::p {seq {comp separator1:::p:8:p, space :::p, comp panel2:::p::p}, seq {comp hSpacer3:::p:74:p, space :::p, comp label_server2:::p::p, space :::p, comp hSpacer4:::::x}}, space :p::p, par l {seq {comp separator2:::p::p, space :::p, comp panel3:::::x}, seq {comp hSpacer5:::p:82:p, space :::p, comp label_server3:::p::p, space :::p, comp hSpacer6::::81:x}}}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp hSpacer1::b:p::p, comp label_server::b:p::p, comp hSpacer2::b:p::p, comp label_server2::b:p::p, comp hSpacer4::b:p::p, comp hSpacer3::b:p::p, comp label_server3::b:p::p, comp hSpacer6:::p::p, comp hSpacer5::b:p::p}, space :::p, par l:::p {comp panel2:::::x, comp panel1:::::x, comp separator1::::199:x, comp separator2::l:::x, comp panel3::l:::x}, space :::p, comp scroll_console::::294:x, space :::p, comp text_input:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {par t:::p {seq {comp hSpacer1:::p:89:p, space :::p, comp label_server:::p::p, space :::p, comp hSpacer2:::::x}, comp panel1:::p::p}, space :::p, par l {seq {comp separator1:::p:8:p, space :::p, comp panel2:::p::p, space :::p, comp separator2:::p::p}, seq {comp hSpacer3:::p:74:p, space :::p, comp label_server2:::p::p, space :::p, comp hSpacer4:::p:75:p}}, space u:::p, par l {seq {comp hSpacer5:::p:82:p, space :::p, comp label_server3:::p::p, space :::p, comp hSpacer6:::::x}, seq {comp panel3:::::x, space :::p}}}, seq {par l {comp text_input:::::x, comp scroll_console:::::x}, space :::p}}}}"
+			"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp hSpacer1::b:p::p, comp label_server::b:p::p, comp hSpacer2::b:p::p, comp label_server2::b:p::p, comp hSpacer4::b:p::p, comp hSpacer3::b:p::p, comp label_server3::b:p::p, comp hSpacer6:::p::p, comp hSpacer5::b:p::p}, space :::p, par l:::p {comp panel1:::::x, comp separator1::::199:x, comp panel2::l:::x, comp separator2::t:::x, comp panel3::l:::x}, space :::p, comp scroll_console::::294:x, space :::p, comp text_input:::p::p, space :::p}}"
 		} ) {
 			name: "rootPanel"
 			"maximumSize": new java.awt.Dimension( 940, 580 )
@@ -87,6 +87,7 @@ new FormModel {
 				name: "text_input"
 				"background": new java.awt.Color( 36, 36, 36, 255 )
 				"foreground": new java.awt.Color( 255, 255, 255, 255 )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "text_inputKeyPressed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label_server"
@@ -104,8 +105,8 @@ new FormModel {
 				"foreground": new java.awt.Color( 255, 255, 255, 255 )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp label_map:::p::p, space :::p, comp combo_map::::267:x}, seq l {comp label_mode:::p::p, space :::p, comp combo_mode::::258:x}, seq l {comp label_pts:::p::p, space :::p, comp field_pts::::209:x}, seq l {comp label_timelimit:::p::p, space :::p, comp field_timelimit::::243:x}, seq l {comp button_start::::83:x, space :::p, comp button_stop:::p:80:p, space :::p, comp button_froce_change:::p::p}}, space :::p}}"
-				"$verticalGroup": "par l {seq l {space :::p, par l {comp label_map:::p::p, comp combo_map:::p::p}, space :::p, par l {comp label_mode:::p::p, comp combo_mode:::p::p}, space :::p, par b {comp label_pts::b:p::p, comp field_pts::b:p::p}, space :::p, par b {comp label_timelimit::b:p::p, comp field_timelimit::b:p::p}, space ::37:x, par b {comp button_froce_change::b:p::p, comp button_stop::b:p::p, comp button_start::b:p::p}, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp label_map:::p::p, space :::p, comp combo_map:::p:204:p, space :0:0:x}, seq {comp label_pts:::p::p, space :::p, comp field_pts::::198:x}, seq {comp label_mode:::p::p, space :::p, comp combo_mode::::247:x}, seq l {par l:::p {comp label_timelimit:::::x, comp button_start:::::x}, space :p::p, par l {comp field_timelimit::l::232:x, seq {space :0:196:x, comp button1:::p:36:p}, seq t {comp button_stop:::p::p, space :::p, comp button_froce_change::::172:x}}}}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, par l:::p {comp label_map:::p::p, comp combo_map:::::x, comp button1::l::0:x}, space :p:12:p, par l {comp label_mode:::p::p, comp combo_mode:::p::p}, space :::p, par b {comp label_pts::b:p::p, comp field_pts::b:p::p}, space :::p, par b {comp label_timelimit::b:p::p, comp field_timelimit::b:p::p}, space ::31:x, par b {comp button_start::b:p::p, comp button_stop::b:p::p, comp button_froce_change::b:p::p}, space :::p}}"
 			} ) {
 				name: "panel2"
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -163,6 +164,11 @@ new FormModel {
 					name: "button_froce_change"
 					"text": "Force change map"
 				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"icon": new com.jformdesigner.model.SwingIcon( 1, "C:\\Users\\Styve\\TinyTank\\ServerTinyTank\\src\\main\\resources\\refresh.png" )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_refreshMouseClicked", true ) )
+				} )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label_server2"
@@ -170,7 +176,7 @@ new FormModel {
 				"font": #Font0
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {par l {comp scroll_players::l::0:x, seq t {space :0:0:x, comp label1:::p::p, space :::p, comp label_uptime:::p::p}}, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp scroll_players::::312:x, space :::p}, seq l {space :0:222:x, comp label1:::p::p, space :::p, comp label_uptime:::p::p}}}}"
 				"$verticalGroup": "par l {seq l {space :::p, comp scroll_players:::p:115:p, space ::56:x, par b {comp label_uptime::b:p::p, comp label1::b:p::p}, space :::p}}"
 			} ) {
 				name: "panel3"
@@ -178,6 +184,8 @@ new FormModel {
 					name: "scroll_players"
 					add( new FormComponent( "javax.swing.JTable" ) {
 						name: "table_players"
+						"selectionMode": 0
+						"enabled": false
 					} )
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
@@ -214,7 +222,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 940, 580 )
+			"size": new java.awt.Dimension( 975, 580 )
 		} )
 	}
 }
