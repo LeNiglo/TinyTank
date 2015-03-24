@@ -1,11 +1,11 @@
 var http = require('http');
 var url = require('url');
+var jwt = require('jwt-simple');
 
 
-WebApi = function(db) {
+WebApi = function(app, db) {
 
 	this.list_servers = function(req, res) {
-
 		Servers.find().toArray(function(err, result) {
 			res.status(200).json({name: 'list_servers', res: result, err: err});
 		});
@@ -20,14 +20,13 @@ WebApi = function(db) {
 				res.status(200).json({name: "register", res: false, err: "Email of Username already taken."});
 			} else {
 
-				//TODO Check here if email, username and password are correct ...
 				var email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		    var password_re = /^[\W\w]{8,99}$/;
-		    var username_re = /^[\w\s]{6,20}$/;
+				var password_re = /^[\W\w]{8,99}$/;
+				var username_re = /^[\w\s]{6,20}$/;
 
-		    if (!(email_re.test(req.body.email) && password_re.test(req.body.password) && username_re.test(req.body.username))) {
+				if (!(email_re.test(req.body.email) && password_re.test(req.body.password) && username_re.test(req.body.username))) {
 					res.status(200).json({name: "register", res: false, err: "Parameters aren't correct, please try again with others."});
-		    }
+				}
 
 				Users.insert({
 					email: req.body.email.toLowerCase(),
@@ -66,16 +65,25 @@ WebApi = function(db) {
 			if (!exists) {
 				res.status(200).json({name: "login", res: false, err: "Account doesn't exists."});
 			} else {
-				bcrypt.compare(req.body.password, exists.password, function(err, res) {
+				bcrypt.compare(req.body.password, exists.password, function(err, result) {
 					if (err) {
 						res.status(200).json({name: "login", res: false, err: err});
 					} else if (res == false) {
 						res.status(200).json({name: "login", res: false, err: "Passwords didn't match."});
 					} else {
 
-						//TODO generate token here
+						var expires = moment().add(7, 'days').toDate();
+						var token = jwt.encode({
+							iss: exists._id,
+							exp: expires
+						}, app.get('jwtTokenSecret'));
 
-						res.status(200).json({name: "login", res: res, err: null});
+						exists.token = token;
+						Users.update({_id: exists._id}, {$set: {token: token}}, function(error, result) {
+
+							res.status(200).json({name: "login", res: exists, err: null});
+
+						});
 					}
 				});
 			}

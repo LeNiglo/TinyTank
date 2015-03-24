@@ -4,7 +4,7 @@ var express = require('express');
 var cors = require('express-cors');
 var basicAuth = require('basic-auth-connect');
 var bodyParser = require('body-parser');
-var bcrypt = require('bcrypt');
+var jwt = require('jwt-simple');
 var mailer = require('express-mailer');
 var morgan = require('morgan');
 var app = express();
@@ -13,7 +13,11 @@ var app = express();
 /*
 **	Starts by initilizing the connection with the Database
 */
-var db = require('mongoskin').db('mongodb://localhost:27017/tiny-tank');
+bcrypt = require('bcrypt');
+app.set('jwtTokenSecret', 'TheSecretStringIsMuchStrongerThanOneMillionOfTanks');
+moment = require('moment');
+
+var db = require('mongoskin').db(process.env.MONGO_URL || 'mongodb://localhost:27017/tiny-tank');
 ObjectID = require('mongoskin').ObjectID;
 
 
@@ -24,7 +28,7 @@ Users = db.collection('users');
 /*
 **	Initializes the APIs
 */
-WEB_URL = 'http://localhost:3000';
+WEB_URL = process.env.WEB_URL || 'http://localhost:3000';
 
 /*
 **	Init Mailer
@@ -58,7 +62,7 @@ app.use(cors({
 **	Authentification for the API
 **	Replace with a real badass user and password
 */
-app.use(basicAuth('username', 'password'));
+app.use(basicAuth("T0N1jjOQIDmA4cJnmiT6zHvExjoSLRnbqEJ6h2zWKXLtJ9N8ygVHvkP7Sy4kqrv", "lMhIq0tVVwIvPKSBg8p8YbPg0zcvihBPJW6hsEGUiS6byKjoZcymXQs5urequUo"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -68,8 +72,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 **	Loads the Routes
 */
 
-require('./router.js')(app, db);
-require('./background.js')(app, db);
+require('./plugins/router.js')(app, db);
+require('./plugins/background.js')(app, db);
 
 /*
 **	Starts the App

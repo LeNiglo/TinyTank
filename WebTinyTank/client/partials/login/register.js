@@ -23,6 +23,7 @@ Template.register.events({
 
     if (!(email_re.test(email) && password_re.test(password) && username_re.test(username))) {
       myAlert("Parameters aren't correct, please try again with others.", "Not enought strength.", "danger");
+      return false;
     }
 
     Meteor.call("myRegister", {

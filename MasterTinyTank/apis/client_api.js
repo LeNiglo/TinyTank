@@ -1,8 +1,9 @@
 var http = require('http');
 var url = require('url');
+var jwt = require('jwt-simple');
 
 
-ClientApi = function(db) {
+ClientApi = function(app, db) {
 
   this.login = function() {
     Users.findOne({

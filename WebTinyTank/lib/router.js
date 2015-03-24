@@ -10,6 +10,10 @@ Router.map(function() {
 		layoutTemplate: 'fullLayout'
 	});
 
+	this.route('download', {
+		layoutTemplate: 'fullLayout'
+	});
+
 	this.route('login');
 	this.route('register');
 
