@@ -46,7 +46,8 @@ public class ServerGUI extends JFrame implements Observer {
     private GameConfig config = new GameConfig();
     private List<Map> maps = new ArrayList<Map>();
     private Map currentMap = null;
-    DefaultTableModel model = new DefaultTableModel();
+    private DefaultTableModel model = new DefaultTableModel();
+    private Master master = new Master();
 
     public ServerGUI() {
         initComponents();
@@ -138,7 +139,6 @@ public class ServerGUI extends JFrame implements Observer {
                 public void run() {
                     new CallbackTask(new Runnable() {
                         public void run() {
-                            Master master = new Master();
                             WindowController.addConsoleMsg("Connecting to the master server...");
                             if (master.initServer()) {
                                 WindowController.addConsoleMsg("Connected to master server !");
@@ -730,14 +730,17 @@ public class ServerGUI extends JFrame implements Observer {
                 String data = (String) arg;
                 if (data.equals("stop")) {
                     t.cancel(true);
+                    master.stopServer();
                     button_stop.setEnabled(false);
                     button_start.setText("Start");
                 }
             } else if (arg instanceof MessageTankData) {
                 Log.info("GUI a recu le nouveau joueur.");
+                master.addUser(((MessageTankData) arg).getRequest().getPseudo());
                 updatePlayerList();
             } else if (arg instanceof MessageDeleteData) {
                 Log.info("GUI a remove un joueur.");
+                master.delUser(((MessageDeleteData) arg).getRequest().getPseudo());
                 updatePlayerList();
             }
         }

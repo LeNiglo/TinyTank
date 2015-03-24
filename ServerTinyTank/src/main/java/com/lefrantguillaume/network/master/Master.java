@@ -19,17 +19,18 @@ import java.util.concurrent.*;
  */
 public class Master {
     private String id = null;
+    private ScheduledExecutorService updateThread;
 
     public Master() {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://10.10.253.130:1337/server/";
+        String masterServer = "http://10.10.253.184:1337/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         Client client = Client.create(clientConfig);
-        client.addFilter(new HTTPBasicAuthFilter("username", "password"));
+        client.addFilter(new HTTPBasicAuthFilter("T0N1jjOQIDmA4cJnmiT6zHvExjoSLRnbqEJ6h2zWKXLtJ9N8ygVHvkP7Sy4kqrv", "lMhIq0tVVwIvPKSBg8p8YbPg0zcvihBPJW6hsEGUiS6byKjoZcymXQs5urequUo"));
         WebResource webResource = client.resource(masterServer + path);
         ClientResponse response = webResource.accept("application/json").type("application/json").post(ClientResponse.class, st);
         if (response.getStatus() != 200) {
@@ -50,12 +51,12 @@ public class Master {
                 this.id = output.getId();
                 Log.info("Server id: " + this.id);
 
-                ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
-                scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                updateThread = Executors.newScheduledThreadPool(5);
+                updateThread.scheduleAtFixedRate(new Runnable() {
                     public void run() {
                         updateServer();
                     }
-                }, 600, 600, TimeUnit.SECONDS);
+                }, 300, 300, TimeUnit.SECONDS);
             }
         } catch (Exception e) {
             WindowController.addConsoleMsg("Online server not reachable: " + e.getMessage());
@@ -73,6 +74,48 @@ public class Master {
                 Log.error("Master server error: " + output.getErr());
             } else {
                 Log.info("Sent alive signal to master server.");
+            }
+        } catch (Exception e) {
+            Log.error(e.getMessage());
+        }
+    }
+
+    public void stopServer() {
+        try {
+            updateThread.shutdown();
+            StopServerSnd st = new StopServerSnd(this.id);
+            ClientResponse response = this.getClientResponse(st, "stop_server");
+            StopServerRcv output = response.getEntity(StopServerRcv.class);
+            if (!output.getRes()) {
+                Log.error("Master server error: " + output.getErr());
+            }
+        } catch (Exception e) {
+            Log.error(e.getMessage());
+        }
+    }
+
+    public void addUser(String pseudo) {
+        try {
+            updateThread.shutdown();
+            AddUserSnd st = new AddUserSnd(this.id, pseudo);
+            ClientResponse response = this.getClientResponse(st, "add_user");
+            AddUserRcv output = response.getEntity(AddUserRcv.class);
+            if (!output.getRes()) {
+                Log.error("Master server error: " + output.getErr());
+            }
+        } catch (Exception e) {
+            Log.error(e.getMessage());
+        }
+    }
+
+    public void delUser(String pseudo) {
+        try {
+            updateThread.shutdown();
+            DelUserSnd st = new DelUserSnd(this.id, pseudo);
+            ClientResponse response = this.getClientResponse(st, "remove_user");
+            DelUserRcv output = response.getEntity(DelUserRcv.class);
+            if (!output.getRes()) {
+                Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
             Log.error(e.getMessage());
