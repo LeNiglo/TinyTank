@@ -3,38 +3,54 @@ package com.lefrantguillaume.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.Observable;
+import java.util.Observer;
 import java.util.UUID;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class CollisionObject extends Observable {
+public class CollisionObject extends Observable implements Observer{
     private final boolean solid;
     private final String idUser;
     private final UUID id;
     private final EnumType type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
+    private Pair<Float, Float> shiftOrigin;
     private float angle;
     private float saveX;
     private float saveY;
 
-    public CollisionObject(boolean solid, float x, float y, Pair<Float, Float> sizes, String idUser, UUID id, EnumType type, float angle) {
+    public CollisionObject(boolean solid,Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
         this.solid = solid;
+        this.shiftOrigin = shiftOrigin;
         this.type = type;
         this.angle = angle;
-        this.positions = new Pair<Float, Float>(x, y);
+        this.positions = positions;
         this.sizes = sizes;
-        this.saveX = x;
-        this.saveY = y;
+        this.saveX = positions.getV1();
+        this.saveY = positions.getV2();
         this.idUser = idUser;
         this.id = id;
     }
 
     // FUNCTIONS
+    @Override
+    public void update(Observable o, Object arg) {
+        Rectangle coord = (Rectangle) arg;
+
+        if (coord != null) {
+            this.positions.setV1(coord.getShiftOrigin().getV1());
+            this.positions.setV2(coord.getShiftOrigin().getV2());
+            this.sizes.setV1(coord.getSizes().getV1());
+            this.sizes.setV2(coord.getSizes().getV2());
+        }
+    }
+
     public void notifyCollision(EnumType type) {
         this.setChanged();
         Debug.debug("obj id:" + id + " idUser:" + idUser + " nbrObservers:" + this.countObservers());
@@ -44,8 +60,8 @@ public class CollisionObject extends Observable {
     public void modifCoord(Pair<Float, Float> coords) {
         this.saveX = this.positions.getV1();
         this.saveY = this.positions.getV2();
-        this.positions.setV1(coords.getV1());
-        this.positions.setV2(coords.getV2());
+        this.positions.setV1(this.positions.getV1() + coords.getV1());
+        this.positions.setV2(this.positions.getV2() + coords.getV2());
     }
 
     public void backToSave() {
@@ -55,12 +71,12 @@ public class CollisionObject extends Observable {
 
     // GETTERS
 
-    public float getCenterX() {
-        return this.positions.getV1() + (this.sizes.getV1() / 2);
+    public float getX() {
+        return this.positions.getV1();
     }
 
-    public float getCenterY() {
-        return this.positions.getV2() + (this.sizes.getV2() / 2);
+    public float getY() {
+        return this.positions.getV2();
     }
 
     public EnumType getType() {
@@ -71,12 +87,12 @@ public class CollisionObject extends Observable {
         return this.idUser;
     }
 
-    public float getX() {
-        return this.positions.getV1();
+    public float getOriginX() {
+        return this.positions.getV1() + this.shiftOrigin.getV1();
     }
 
-    public float getY() {
-        return this.positions.getV2();
+    public float getOriginY() {
+        return this.positions.getV2() + this.shiftOrigin.getV2();
     }
 
     public float getSizeX() {
@@ -115,4 +131,5 @@ public class CollisionObject extends Observable {
     public void setY(float y){
         this.positions.setV2(y);
     }
+
 }

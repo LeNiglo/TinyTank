@@ -16,9 +16,11 @@ public class Obstacle {
     private EnumType type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
+    private Pair<Float, Float> shiftOrigin;
 
-    public Obstacle(float x, float y, float sizeX, float sizeY, String userId, Animator animator, EnumType type) {
+    public Obstacle(float x, float y, float sizeX, float sizeY, String userId, Animator animator, EnumType type, Pair<Float, Float> shiftOrigin) {
         this.userId = userId;
+        this.shiftOrigin = shiftOrigin;
         this.id = UUID.randomUUID();
         this.animator = animator;
         this.type = type;
@@ -39,14 +41,6 @@ public class Obstacle {
         return this.positions.getV2();
     }
 
-    public float getSizeX() {
-        return this.sizes.getV1();
-    }
-
-    public float getSizeY() {
-        return this.sizes.getV2();
-    }
-
     public UUID getId() {
         return id;
     }
@@ -57,6 +51,18 @@ public class Obstacle {
 
     public EnumType getType() {
         return type;
+    }
+
+    public Pair<Float, Float> getPositions() {
+        return this.positions;
+    }
+
+    public Pair<Float, Float> getSizes() {
+        return this.sizes;
+    }
+
+    public Pair<Float, Float> getShiftOrigin() {
+        return shiftOrigin;
     }
 
     // SETTERS
@@ -79,4 +85,5 @@ public class Obstacle {
     public void setAnimator(Animator animator) {
         this.animator = animator;
     }
+
 }

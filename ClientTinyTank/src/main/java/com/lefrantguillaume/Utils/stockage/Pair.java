@@ -27,4 +27,8 @@ public class Pair<T1, T2> {
     public void setV2(T2 value) {
         this.v2 = value;
     }
+
+    public String toString(){
+        return new String("v1:" + this.getV1() + " v2:"+this.getV2());
+    }
 }

@@ -1,0 +1,146 @@
+package com.lefrantguillaume.gameComponent.gameObject.tanks.equipment;
+
+import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.gameComponent.animations.Animator;
+import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
+import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by andres_k on 18/03/2015.
+ */
+public class TankWeapon {
+    private Animator shotAnimator;
+    private EnumShots shotType;
+    private final float damageShot;
+    private final float speedShot;
+    private List<Canon> canons;
+    private Pair<Float, Float> shiftHitImpact;
+    private Pair<Float, Float> shiftHitOrigin;
+    private Pair<Float, Float> shiftWeaponOrigin;
+    private List<Rectangle> collisionObject;
+    private int current;
+
+    public TankWeapon(float speedShot, float damageShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitImpact, Pair<Float, Float> shiftHitOrigin, Animator shotAnimator, EnumShots shotType) {
+        this.shiftWeaponOrigin = shiftWeaponOrigin;
+        this.shiftHitOrigin = shiftHitOrigin;
+        this.shiftHitImpact = shiftHitImpact;
+        this.shotAnimator = shotAnimator;
+        this.shotType = shotType;
+        this.damageShot = damageShot;
+        this.speedShot = speedShot;
+        this.shiftHitImpact = shiftHitImpact;
+        this.current = 0;
+        this.canons = new ArrayList<Canon>();
+        this.collisionObject = new ArrayList<Rectangle>();
+    }
+
+    public TankWeapon(TankWeapon tankWeapon) {
+        this.shiftWeaponOrigin = tankWeapon.shiftWeaponOrigin;
+        this.shiftHitOrigin = tankWeapon.shiftHitOrigin;
+        this.shiftHitImpact = tankWeapon.shiftHitImpact;
+        this.shotAnimator = new Animator(tankWeapon.shotAnimator);
+        this.shotType = tankWeapon.shotType;
+        this.damageShot = tankWeapon.damageShot;
+        this.speedShot = tankWeapon.speedShot;
+        this.shiftHitImpact = tankWeapon.shiftHitImpact;
+        this.current = 0;
+        this.canons = new ArrayList<Canon>();
+        this.collisionObject = new ArrayList<Rectangle>();
+        for (int i = 0; i < tankWeapon.canons.size(); ++i) {
+            this.canons.add(tankWeapon.canons.get(i));
+        }
+        for (int i = 0; i < tankWeapon.collisionObject.size(); ++i) {
+            this.collisionObject.add(tankWeapon.collisionObject.get(i));
+        }
+    }
+
+    // FUNCTIONS
+
+    public Shot generateShot(String userId, float angle, Pair<Float, Float> coord) {
+/*
+        float x = coord.getV1() + this.canons.get(this.current).getShiftOrigin().getV1();
+        float y = coord.getV2() + this.canons.get(this.current).getShiftOrigin().getV2();
+*/
+        float x1 = this.canons.get(this.current).getShiftCanonHead().getV1();
+        float y1 = this.canons.get(this.current).getShiftCanonHead().getV2();
+        double radAngle = angle * Math.PI / 180;
+
+        float x = (float) (x1 * Math.cos(radAngle) - y1 * Math.sin(radAngle) + coord.getV1());
+        float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
+
+        Tuple<Float, Float, Float> newCoord = new Tuple<Float, Float, Float>(x, y, angle);
+        Shot shot = new Shot(userId, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, this.shiftHitOrigin, this.getShiftHitImpact());
+
+        for (int i = 0; i < this.collisionObject.size(); ++i) {
+            shot.addCollisionObject(this.collisionObject.get(i));
+        }
+        return shot;
+    }
+
+    public void addCollisionObject(Rectangle rectangle) {
+        this.collisionObject.add(rectangle);
+    }
+
+    public void nextCanon() {
+        this.current += 1;
+        if (this.current == this.canons.size())
+            this.current = 0;
+    }
+
+    public void prevCanon() {
+        this.current -= 1;
+        if (this.current < 0)
+            this.current = this.canons.size() - 1;
+    }
+
+    public void addCanon(Canon canon) {
+        this.canons.add(canon);
+    }
+
+    // GETETRS
+    public float getDamageShot() {
+        return this.damageShot;
+    }
+
+    public float getSpeedShot() {
+        return this.speedShot;
+    }
+
+    public Animator getShotAnimator() {
+        return this.shotAnimator;
+    }
+
+    public EnumShots getShotType() {
+        return shotType;
+    }
+
+    public Canon getCurrentCanon() {
+        return this.canons.get(this.current);
+    }
+
+    public Pair<Float, Float> getShiftHitImpact() {
+        return this.shiftHitImpact;
+    }
+
+    public Pair<Float, Float> getShiftHitOrigin() {
+        return this.shiftHitOrigin;
+    }
+
+    public Pair<Float, Float> getShiftWeaponOrigin() {
+        return this.shiftWeaponOrigin;
+    }
+
+    public float getGraphicalX(float value) {
+        return value + this.shiftWeaponOrigin.getV1();
+    }
+
+    public float getGraphicalY(float value) {
+        return value + this.shiftWeaponOrigin.getV2();
+    }
+}

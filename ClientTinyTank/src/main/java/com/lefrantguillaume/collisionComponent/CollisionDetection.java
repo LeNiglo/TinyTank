@@ -10,11 +10,11 @@ import org.newdawn.slick.geom.Transform;
  */
 public class CollisionDetection {
     public static boolean checkCollision(CollisionObject obj1, CollisionObject obj2) {
-        Rectangle rectangle1 = new Rectangle(obj1.getX(), obj1.getY(), obj1.getSizeX(), obj1.getSizeY());
-        Rectangle rectangle2 = new Rectangle(obj2.getX(), obj2.getY(), obj2.getSizeX(), obj2.getSizeY());
+        Rectangle rectangle1 = new Rectangle(obj1.getOriginX(), obj1.getOriginY(), obj1.getSizeX(), obj1.getSizeY());
+        Rectangle rectangle2 = new Rectangle(obj2.getOriginX(), obj2.getOriginY(), obj2.getSizeX(), obj2.getSizeY());
 
-        Shape s1 = rectangle1.transform(Transform.createRotateTransform(obj1.getRadian(), obj1.getCenterX(), obj1.getCenterY()));
-        Shape s2 = rectangle2.transform(Transform.createRotateTransform(obj2.getRadian(), obj2.getCenterX(), obj2.getCenterY()));
+        Shape s1 = rectangle1.transform(Transform.createRotateTransform(obj1.getRadian(), obj1.getX(), obj1.getY()));
+        Shape s2 = rectangle2.transform(Transform.createRotateTransform(obj2.getRadian(), obj2.getX(), obj2.getY()));
         if (s1.intersects(s2)) {
             return true;
         } else {

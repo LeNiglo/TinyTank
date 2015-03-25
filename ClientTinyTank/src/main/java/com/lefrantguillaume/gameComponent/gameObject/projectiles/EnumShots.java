@@ -4,17 +4,45 @@ package com.lefrantguillaume.gameComponent.gameObject.projectiles;
  * Created by andres_k on 13/03/2015.
  */
 public enum EnumShots {
-    ROCKET(0),
-    LASER(1),
-    MACHINE_GUN(2);
+    NULL(-1, "null"),
+    ROCKET(0, "rocket"),
+    LASER(1, "laser"),
+    MACHINE_GUN(2, "machine_gun");
 
-    private final int id;
+    private final int index;
+    private final String value;
 
-    EnumShots(int id) {
-        this.id = id;
+    EnumShots(int index, String value) {
+        this.index = index;
+        this.value = value;
     }
 
-    public int getValue() {
-        return id;
+    public int getIndex() {
+        return index;
+    }
+
+    public String getValue() {
+        return value;
+    }
+    public static EnumShots getEnumByIndex(int index) {
+        EnumShots[] shots = EnumShots.values();
+        int valuesNumber = shots.length;
+        for (int i = 0; i < valuesNumber; i++) {
+            EnumShots type = shots[i];
+            if (type.getIndex() == index)
+                return type;
+        }
+        return NULL;
+    }
+
+    public static EnumShots getEnumByValue(String value) {
+        EnumShots[] shots = EnumShots.values();
+        int valuesNumber = shots.length;
+        for (int i = 0; i < valuesNumber; i++) {
+            EnumShots type = shots[i];
+            if (type.getValue().equals(value))
+                return type;
+        }
+        return NULL;
     }
 }

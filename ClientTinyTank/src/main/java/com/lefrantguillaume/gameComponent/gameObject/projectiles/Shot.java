@@ -3,35 +3,41 @@ package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
-import java.util.Observable;
-import java.util.Observer;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Shot implements Observer {
+public class Shot extends Observable implements Observer {
     private final UUID id;
     private final String userId;
     private final Animator animator;
+    private final Pair<Float, Float> shiftOrigin;
+    private final Pair<Float, Float> shiftToImpact;
     private Pair<Float, Float> positions;
     private float damage;
     private float speed;
     private float angle;
     private boolean explode;
+    private List<Rectangle> collisionObject;
 
-    public Shot(String userId, float damage, float speed, Animator animator, Tuple<Float, Float, Float> coord) {
+    public Shot(String userId, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact) {
+        this.shiftOrigin = shiftOrigin;
+        this.shiftToImpact = shiftToImpact;
         this.explode = false;
         this.userId = userId;
         this.id = UUID.randomUUID();
-        this.positions = new Pair<Float, Float>(coord.getV1(), coord.getV2());
-        this.angle = coord.getV3();
+        this.positions = new Pair<Float, Float>(positioning.getV1(), positioning.getV2());
+        this.angle = positioning.getV3();
         this.damage = damage;
         this.speed = speed;
         this.animator = animator;
+        this.collisionObject = new ArrayList<Rectangle>();
     }
 
     @Override
@@ -40,8 +46,16 @@ public class Shot implements Observer {
 
         Debug.debug("check Object");
         if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-//            this.positions.setV1(order.getV1());
-            //          this.positions.setV2(order.getV2());
+//            this.shiftOrigin.setV1(this.shiftToImpact.getV1());
+ //           this.shiftOrigin.setV2(this.shiftToImpact.getV2());
+
+//            Debug.debug("newX= "+order.getV1()+" + " + this.shiftToImpact.getV1()+ " = " + newX);
+  //          Debug.debug("newY= "+order.getV2()+" + " + this.shiftToImpact.getV2() + " = " + newY);
+
+            //rotate newX et newY
+
+   //         this.positions.setV1(order.getV1());
+     //       this.positions.setV2(order.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
         }
@@ -49,39 +63,26 @@ public class Shot implements Observer {
 
     // FUNCTIONS
     public void move(int delta) {
-        Pair<Float, Float> coords = movePredict(delta, false);
-        this.positions.setV1(coords.getV1());
-        this.positions.setV2(coords.getV2());
+        Pair<Float, Float> coords = MathTools.movePredict(this.angle, this.speed, delta);
+        this.positions.setV1(this.positions.getV1() + coords.getV1());
+        this.positions.setV2(this.positions.getV2() + coords.getV2());
     }
 
-    /**
-     * @param delta
-     * @param mode  : true for graphic mode
-     * @return
-     */
-    public Pair<Float, Float> movePredict(int delta, boolean mode) {
-        float x;
-        float y;
-        double addX = Math.cos(this.angle * Math.PI / 180);
-        double addY = Math.sin(this.angle * Math.PI / 180);
-        if (mode == true) {
-            x = this.getGraphicalX() + (((float) addX * this.speed / 100) * delta);
-            y = this.getGraphicalY() + (((float) addY * this.speed / 100) * delta);
-        } else {
-            x = this.getX() + (((float) addX * this.speed / 100) * delta);
-            y = this.getY() + (((float) addY * this.speed / 100) * delta);
+    public Pair<Float, Float> movePredict(int delta) {
+        return MathTools.movePredict(this.angle, this.speed, delta);
+    }
 
-        }
-        return new Pair<Float, Float>(x, y);
+    public void addCollisionObject(Rectangle rectangle) {
+        this.collisionObject.add(rectangle);
     }
 
     // GETTERS
     public float getGraphicalX() {
-        return this.positions.getV1() - (this.animator.currentSizeAnimation().getV1() / 2);
+        return this.positions.getV1() + this.shiftOrigin.getV1();
     }
 
     public float getGraphicalY() {
-        return this.positions.getV2() - (this.animator.currentSizeAnimation().getV2() / 2);
+        return this.positions.getV2() + this.shiftOrigin.getV2();
     }
 
     public float getX() {
@@ -119,5 +120,21 @@ public class Shot implements Observer {
 
     public Animator getAnimator() {
         return animator;
+    }
+
+    public Pair<Float, Float> getPositions() {
+        return this.positions;
+    }
+
+    public Pair<Float, Float> getShiftOrigin(){
+        return this.shiftOrigin;
+    }
+
+    public Pair<Float, Float> getShiftToImpact(){
+        return this.shiftToImpact;
+    }
+
+    public List<Rectangle> getCollisionObject(){
+        return this.collisionObject;
     }
 }

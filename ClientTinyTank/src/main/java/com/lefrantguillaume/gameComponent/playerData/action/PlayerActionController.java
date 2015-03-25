@@ -1,13 +1,14 @@
 package com.lefrantguillaume.gameComponent.playerData.action;
 
 import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.playerData.data.PlayerState;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.Tank;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;
 
 import java.util.List;
 import java.util.Observable;
@@ -35,12 +36,17 @@ public class PlayerActionController extends Observable {
             } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == this.playerState.getDirection().getValue()) {
                 this.playerState.setMove(false);
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
-                Shot shot = tank.generateShot(this.playerState.getUser().getIdUser(), new Tuple<Float, Float, Float>(this.playerState.getX(),
-                        this.playerState.getY(), (Float) playerAction.getValue(0)));
-                CollisionObject obj = new CollisionObject(true, shot.getGraphicalX(), shot.getGraphicalY(),
-                        this.tank.getShotAnimator().currentSizeAnimation(), this.playerState.getUser().getIdUser(), shot.getId(), EnumType.SHOT, shot.getAngle());
-                obj.addObserver(shot);
-                collisionController.addCollisionObject(obj);
+                Shot shot = tank.generateShot(this.playerState.getUser().getIdUser(), (Float) playerAction.getValue(0));
+
+                for (int i = 0; i < shot.getCollisionObject().size(); ++i){
+                    Rectangle current = shot.getCollisionObject().get(i);
+
+                    CollisionObject obj = new CollisionObject(true, shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
+                            shot.getUserId(), shot.getId(), EnumType.TANK, shot.getAngle());
+                    obj.addObserver(shot);
+                    shot.addObserver(obj);
+                    collisionController.addCollisionObject(obj);
+                }
                 this.shots.add(shot);
             }
             else if (playerAction.getAction() == EnumActions.SPELL){

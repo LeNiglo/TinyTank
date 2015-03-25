@@ -3,11 +3,13 @@ package com.lefrantguillaume.gameComponent.controllers;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.MasterConfig;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.RoundData.RoundController;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
@@ -19,6 +21,8 @@ import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerDelete;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerUpdatePosition;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerUpdateState;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class GameController extends Observable implements Observer {
     private MapController mapController;
     private RoundController roundController;
     private AnimatorGameData animatorGameData;
+    private TankConfigData tankConfigData;
 
     public GameController() throws SlickException {
         this.players = new ArrayList<Player>();
@@ -46,6 +51,7 @@ public class GameController extends Observable implements Observer {
         this.roundController = new RoundController(this.players, this.teams);
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.collisionController = new CollisionController(this.mapController);
+        this.tankConfigData = new TankConfigData();
     }
 
     public void clearData() {
@@ -68,18 +74,18 @@ public class GameController extends Observable implements Observer {
             } else {
                 if (received instanceof MessagePlayerNew) {
                     MessagePlayerNew task = (MessagePlayerNew) received;
-                    Debug.debug("NEW PLAYER");
-                    if (this.animatorGameData != null) {
-                        this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, TankFactory.createTank(task.getEnumTanks(), this.animatorGameData), this.getShots(), 50, 50));
+                    if (this.animatorGameData != null && this.tankConfigData.isValid()) {
+                        Debug.debug("NEW PLAYER");
+                        this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), 50, 50));
                         if (task.getId().equals(CurrentUser.getId())) {
                             CurrentUser.setInGame(true);
                             this.collisionController.createWorld(this.mapController);
                         } else {
-                            Debug.debug("My position send -> [" + this.getPlayer(CurrentUser.getId()).getPlayerState().getX() + "," +
-                                    this.getPlayer(CurrentUser.getId()).getPlayerState().getY() + "]");
+                            Debug.debug("My position send -> [" + this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() + "," +
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() + "]");
                             MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                                    this.getPlayer(CurrentUser.getId()).getPlayerState().getX(),
-                                    this.getPlayer(CurrentUser.getId()).getPlayerState().getY());
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
                             this.setChanged();
                             this.notifyObservers(request);
                         }
@@ -106,14 +112,21 @@ public class GameController extends Observable implements Observer {
 
     // FUNCTIONS
     public void addPlayer(Player player) {
-        Debug.debug("add player: [" + player.getPlayerState().getX() + "," + player.getPlayerState().getY() + "] ?= [" + player.getPlayerState().getGraphicalX() + "," + player.getPlayerState().getGraphicalY() + "]");
-        CollisionObject obj = new CollisionObject(true, player.getPlayerState().getGraphicalX(), player.getPlayerState().getGraphicalY(),
-                player.getTank().getTankAnimator().currentSizeAnimation(),
-                player.getPlayerState().getUser().getIdUser(), player.getPlayerState().getUser().getId(), EnumType.TANK, player.getPlayerState().getDirection().getAngle());
-        obj.addObserver(player);
-        collisionController.addCollisionObject(obj);
+        Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "] ?= [" +
+                player.getTank().getTankState().getGraphicalX() + "," + player.getTank().getTankState().getGraphicalY() + "]");
+
+        for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i){
+            Rectangle current = player.getTank().getTankState().getCollisionObject().get(i);
+
+            Debug.debug("originCol:"+ current.getShiftOrigin().toString());
+            Debug.debug("pos:"+player.getTank().getTankState().getPositions().toString());
+            CollisionObject obj = new CollisionObject(true, player.getTank().getTankState().getPositions(), current.getSizes(),
+                   current.getShiftOrigin() , player.getPlayerState().getUser().getIdUser(), player.getPlayerState().getUser().getId(), EnumType.TANK, player.getPlayerState().getDirection().getAngle());
+            obj.addObserver(player);
+            player.addObserver(obj);
+            this.collisionController.addCollisionObject(obj);
+        }
         this.players.add(player);
-        this.collisionController.addCollisionObject(obj);
     }
 
     public void updateStatePlayer(MessagePlayerUpdateState task) {
@@ -135,8 +148,8 @@ public class GameController extends Observable implements Observer {
         Debug.debug("new pos [" + task.getX() + "," + task.getY() + "] : id="+task.getId());
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getPlayerState().getUser().getIdUser().equals(task.getId())) {
-                this.players.get(i).getPlayerState().setX(task.getX());
-                this.players.get(i).getPlayerState().setY(task.getY());
+                this.players.get(i).getTank().getTankState().setX(task.getX());
+                this.players.get(i).getTank().getTankState().setY(task.getY());
                 this.collisionController.getCollisionObject(this.players.get(i).getPlayerState().getUser().getId()).setX(task.getX());
                 this.collisionController.getCollisionObject(this.players.get(i).getPlayerState().getUser().getId()).setY(task.getY());
                 break;
@@ -147,10 +160,17 @@ public class GameController extends Observable implements Observer {
     public void deletePlayer(String id) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getPlayerState().getUser().getIdUser().equals(id)) {
+                this.getCollisionController().deleteCollisionObject(this.players.get(i).getPlayerState().getUser().getId());
                 this.players.remove(i);
                 break;
             }
         }
+    }
+
+    public void initTankConfigData(JSONObject config) throws JSONException {
+        if (this.animatorGameData == null)
+            throw new JSONException("tankConfigData failed");
+        this.tankConfigData.initTanks(config, this.animatorGameData);
     }
 
     // GETTERS

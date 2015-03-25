@@ -2,6 +2,7 @@ package com.lefrantguillaume.graphicsComponent.input;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.gameComponent.playerData.data.PlayerState;
 import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
@@ -31,9 +32,9 @@ public class InputCheck extends Observable {
         return 0;
     }
 
-    public int mouseClickCheck(PlayerState player, int x, int y, EnumInput mode){
-        if (player != null) {
-            float angle = MathTools.getAngle(player.getX(), player.getY(), x, y);
+    public int mouseClickCheck(TankState tank, int x, int y, EnumInput mode){
+        if (tank != null) {
+            float angle = MathTools.getAngle(tank.getX(), tank.getY(), x, y);
 
             MessageModel request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, angle);
             this.setChanged();

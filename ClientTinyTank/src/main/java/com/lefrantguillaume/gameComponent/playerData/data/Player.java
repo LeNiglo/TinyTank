@@ -2,10 +2,11 @@ package com.lefrantguillaume.gameComponent.playerData.data;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.Tank;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerActionController;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Player implements Observer {
+public class Player extends Observable implements Observer{
     private List<Shot> shots;
     private UUID idTeam;
     private Tank tank;
@@ -30,7 +31,8 @@ public class Player implements Observer {
         this.shots = shots;
         this.idTeam = idTeam;
         this.tank = tank;
-        this.playerState = new PlayerState(user, x, y, tank.getTankAnimator().currentSizeAnimation());
+        this.playerState = new PlayerState(user);
+        this.tank.getTankState().setPositions(new Pair<Float, Float>(x, y));
         this.playerActionController = new PlayerActionController(this.playerState, this.shots, this.tank);
         //this.actionController.addObserver();
     }
@@ -51,30 +53,13 @@ public class Player implements Observer {
     }
 
     public void move(int delta) {
-        Pair<Float, Float> coords = movePredict(delta, false);
-        this.getPlayerState().setX(coords.getV1());
-        this.getPlayerState().setY(coords.getV2());
+        Pair<Float, Float> coords = this.movePredict(delta);
+        this.tank.getTankState().addX(coords.getV1());
+        this.tank.getTankState().addY(coords.getV2());
     }
 
-    /**
-     * @param delta
-     * @param mode : true for graphical mode
-     * @return
-     */
-    public Pair<Float, Float> movePredict(int delta, boolean mode) {
-        float x;
-        float y;
-        double addX = Math.cos(this.getPlayerState().getDirection().getAngle() * Math.PI / 180);
-        double addY = Math.sin(this.getPlayerState().getDirection().getAngle() * Math.PI / 180);
-
-        if (mode == true) {
-            x = this.getPlayerState().getGraphicalX() + (((float) addX / 10) * delta);
-            y = this.getPlayerState().getGraphicalY() + (((float) addY / 10) * delta);
-        } else {
-            x = this.getPlayerState().getX() + (((float) addX / 10) * delta);
-            y = this.getPlayerState().getY() + (((float) addY / 10) * delta);
-        }
-        return new Pair<Float, Float>(x, y);
+    public Pair<Float, Float> movePredict(int delta) {
+        return MathTools.movePredict(this.getPlayerState().getDirection().getAngle(), this.tank.getTankState().getSpeed(), delta);
     }
 
     public int getDamage(float damage) {

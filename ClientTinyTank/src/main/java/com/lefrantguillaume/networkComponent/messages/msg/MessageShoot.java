@@ -6,6 +6,7 @@ import com.lefrantguillaume.networkComponent.messages.MessageModel;
  * Created by andres_k on 12/03/2015.
  */
 public class MessageShoot extends MessageModel {
+//change to shotId;
     private int valueKeyPressed;
     private float angle;
 

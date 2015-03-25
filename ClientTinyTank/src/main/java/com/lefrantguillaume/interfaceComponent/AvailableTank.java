@@ -2,7 +2,7 @@ package com.lefrantguillaume.interfaceComponent;
 
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.animations.EnumInterfaceComponent;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
@@ -71,6 +71,6 @@ public class AvailableTank {
     }
 
     public EnumTanks getCurrentTank(){
-        return EnumTanks.getTankById(this.currentTankStat.getIndex());
+        return EnumTanks.getEnumByIndex(this.currentTankStat.getIndex());
     }
 }

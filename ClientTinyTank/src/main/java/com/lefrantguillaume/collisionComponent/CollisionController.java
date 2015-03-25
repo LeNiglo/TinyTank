@@ -15,18 +15,39 @@ import java.util.UUID;
 public class CollisionController {
     private List<CollisionObject> items;
 
-    public CollisionController(MapController map)
-    {
+    public CollisionController(MapController map) {
         this.items = new ArrayList<CollisionObject>();
         this.createWorld(map);
     }
 
     // FUNCTIONS
-    public void createWorld(MapController map){
-        this.addCollisionObject(new CollisionObject(true, 0, -5, new Pair<Float, Float>(map.getSizeX(), 5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, 0, map.getSizeY() + 5, new Pair<Float, Float>(map.getSizeX(), -5f), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, -5, 0, new Pair<Float, Float>(5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, map.getSizeX() + 5, 0, new Pair<Float, Float>(-5f, map.getSizeY()), "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+    public void createWorld(MapController map) {
+        Pair<Float, Float> pos1 = new Pair<Float, Float>(map.getSizeX() / 2, 0f);
+        Pair<Float, Float> pos2 = new Pair<Float, Float>(map.getSizeX() / 2, map.getSizeY());
+        Pair<Float, Float> pos3 = new Pair<Float, Float>(0f, map.getSizeY() / 2);
+        Pair<Float, Float> pos4 = new Pair<Float, Float>(map.getSizeX(), map.getSizeY() / 2);
+        Pair<Float, Float> size1 = new Pair<Float, Float>(map.getSizeX(), 5f);
+        Pair<Float, Float> size2 = new Pair<Float, Float>(5f, map.getSizeY());
+        Pair<Float, Float> origin1 = new Pair<Float, Float>(-map.getSizeX() / 2, -5f);
+        Pair<Float, Float> origin2 = new Pair<Float, Float>(-map.getSizeX() / 2, 0f);
+        Pair<Float, Float> origin3 = new Pair<Float, Float>(-5f, -map.getSizeY() / 2);
+        Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
+
+        Debug.debug("pos:\n"+pos1.toString());
+        Debug.debug(pos2.toString());
+        Debug.debug(pos3.toString());
+        Debug.debug(pos4.toString());
+        Debug.debug("size:\n"+size1.toString());
+        Debug.debug(size2.toString());
+        Debug.debug("origin:\n"+origin1.toString());
+        Debug.debug(origin2.toString());
+        Debug.debug(origin3.toString());
+        Debug.debug(origin4.toString());
+        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+
     }
 
     public void addCollisionObject(CollisionObject object) {
@@ -41,7 +62,7 @@ public class CollisionController {
         }
     }
 
-    public void clearCollisionObjects(){
+    public void clearCollisionObjects() {
         this.items.clear();
     }
 
@@ -54,8 +75,8 @@ public class CollisionController {
                     CollisionObject current = this.items.get(i);
                     if (!current.getIdUser().equals(object.getIdUser())) {
                         if (CollisionDetection.checkCollision(object, current)) {
-                            Debug.debug("delete");
                             object.notifyCollision(current.getType());
+                            current.notifyCollision(current.getType());
                             if (current.isSolid()) {
                                 object.backToSave();
                             }
@@ -71,13 +92,15 @@ public class CollisionController {
     // GETTERS
     public CollisionObject getCollisionObject(UUID id) {
         for (int i = 0; i < this.items.size(); ++i) {
-            if (this.items.get(i).getId() == id)
-                return this.items.get(i);
+            if (this.items.get(i) != null) {
+                if (this.items.get(i).getId() == id)
+                    return this.items.get(i);
+            }
         }
         return null;
     }
 
-    public List<CollisionObject> getCollisionObjects(){
+    public List<CollisionObject> getCollisionObjects() {
         return this.items;
     }
 }

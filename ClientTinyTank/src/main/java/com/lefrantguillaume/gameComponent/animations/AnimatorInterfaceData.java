@@ -31,12 +31,12 @@ public class AnimatorInterfaceData {
 
     public void initTanks() throws SlickException {
         this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_TIGER));
-        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RUSHER));
         this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_SNIPER));
+        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RUSHER));
         this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RANK));
         this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_TIGER));
-        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_RUSHER));
         this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_SNIPER));
+        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_RUSHER));
     }
 
     public void initBackgrounds() throws SlickException {

@@ -3,7 +3,7 @@ package com.lefrantguillaume.gameComponent.animations;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.EnumObstacles;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
 import com.lefrantguillaume.gameComponent.gameObject.spells.EnumSpells;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class AnimatorGameData {
     private AnimatorFactory animatorFactory;
-    private List<Animator> tankAnimator;
-    private List<Animator> gunAnimator;
+    private List<Animator> tankBodyAnimator;
+    private List<Animator> tankTopAnimator;
     private List<Animator> spellAnimator;
     private List<Animator> shotAnimator;
     private List<Animator> obstacleAnimator;
@@ -23,8 +23,8 @@ public class AnimatorGameData {
 
     public AnimatorGameData() {
         this.animatorFactory = new AnimatorGameFactory();
-        this.tankAnimator = new ArrayList<Animator>();
-        this.gunAnimator = new ArrayList<Animator>();
+        this.tankBodyAnimator = new ArrayList<Animator>();
+        this.tankTopAnimator = new ArrayList<Animator>();
         this.spellAnimator = new ArrayList<Animator>();
         this.shotAnimator = new ArrayList<Animator>();
         this.obstacleAnimator = new ArrayList<Animator>();
@@ -49,9 +49,9 @@ public class AnimatorGameData {
     }
 
     private void initGuns() throws SlickException {
-        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_GUN));
-        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_GUN));
-        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_GUN));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_TOP));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_TOP));
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_TOP));
     }
 
     private void initSpells() throws SlickException {
@@ -67,11 +67,11 @@ public class AnimatorGameData {
     }
 
     public void addTankAnimator(Animator tankAnimator) {
-        this.tankAnimator.add(tankAnimator);
+        this.tankBodyAnimator.add(tankAnimator);
     }
 
     public void addGunAnimator(Animator gunAnimator) {
-        this.gunAnimator.add(gunAnimator);
+        this.tankTopAnimator.add(gunAnimator);
     }
 
     public void addSpellAnimator(Animator spellAnimator) {
@@ -86,20 +86,20 @@ public class AnimatorGameData {
         this.obstacleAnimator.add(obstacleAnimator);
     }
 
-    public Animator getTankAnimator(EnumTanks index) {
-        return new Animator(this.tankAnimator.get(index.getValue()));
+    public Animator getTankBodyAnimator(EnumTanks index) {
+        return new Animator(this.tankBodyAnimator.get(index.getIndex()));
     }
 
-    public Animator getGunAnimator(EnumTanks index) {
-        return new Animator(this.gunAnimator.get(index.getValue()));
+    public Animator getTankTopAnimator(EnumTanks index) {
+        return new Animator(this.tankTopAnimator.get(index.getIndex()));
     }
 
     public Animator getSpellAnimator(EnumSpells index) {
-        return new Animator(this.spellAnimator.get(index.getValue()));
+        return new Animator(this.spellAnimator.get(index.getIndex()));
     }
 
     public Animator getShotAnimator(EnumShots index) {
-        return new Animator(this.shotAnimator.get(index.getValue()));
+        return new Animator(this.shotAnimator.get(index.getIndex()));
     }
 
     public Animator getMapAnimator() {

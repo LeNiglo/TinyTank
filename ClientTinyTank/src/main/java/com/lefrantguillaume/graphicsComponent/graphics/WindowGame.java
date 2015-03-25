@@ -3,6 +3,7 @@ package com.lefrantguillaume.graphicsComponent.graphics;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.Obstacle;
@@ -10,6 +11,8 @@ import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.graphicsComponent.input.*;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -29,10 +32,12 @@ import java.util.Observer;
 public class WindowGame extends BasicGameState {
     private AnimatorGameData animatorGameData;
     private GameController gameController;
+    private InputCheck input;
+
     private GameContainer container;
     private StateBasedGame stateGame;
-    private InputCheck input;
     private int id;
+
     public String tmp = "no input";
 
     public WindowGame(int id, List<Observer> observers, Object gameController) {
@@ -48,7 +53,7 @@ public class WindowGame extends BasicGameState {
 
     @Override
     public int getID() {
-        return id;
+        return this.id;
     }
 
     @Override
@@ -62,6 +67,13 @@ public class WindowGame extends BasicGameState {
         this.animatorGameData.initGame();
         this.gameController.getMapController().setMapAnimator(this.animatorGameData.getMapAnimator());
         this.gameController.setAnimatorGameData(this.animatorGameData);
+        Debug.debug("animator data set");
+        try {
+            JSONObject jsonConfig = new JSONObject(StringTools.readFile("tanks.json"));
+            this.gameController.initTankConfigData(jsonConfig);
+        } catch (JSONException e) {
+            throw new SlickException(e.getMessage());
+        }
     }
 
     @Override
@@ -77,6 +89,7 @@ public class WindowGame extends BasicGameState {
                 this.gameController.getCollisionController().deleteCollisionObject(this.gameController.getShots().get(i).getId());
                 this.gameController.getShots().remove(i);
             } else {
+                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, -1 * current.getShiftOrigin().getV2());
                 current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
                 g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
 
@@ -89,26 +102,32 @@ public class WindowGame extends BasicGameState {
         }
         for (int i = 0; i < this.gameController.getPlayers().size(); ++i) {
             Player current = this.gameController.getPlayers().get(i);
+            current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1, -1 * current.getTank().getTankState().getShiftOrigin().getV2());
             current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setRotation(current.getPlayerState().getDirection().getAngle());
-            g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getPlayerState().getGraphicalX(), current.getPlayerState().getGraphicalY());
-            current.getTank().getGunAnimator().currentAnimation().getCurrentFrame().setRotation(current.getPlayerState().getGunAngle());
-            g.drawAnimation(current.getTank().getGunAnimator().currentAnimation(), current.getPlayerState().getGraphicalX(), current.getPlayerState().getGraphicalY());
+            g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY());
+
+            current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankWeapon().getShiftWeaponOrigin().getV1() * -1, -1 * current.getTank().getTankWeapon().getShiftWeaponOrigin().getV2());
+            current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setRotation(current.getPlayerState().getGunAngle());
+            g.drawAnimation(current.getTank().getTopAnimator().currentAnimation(), current.getTank().getTankWeapon().getGraphicalX(current.getTank().getTankState().getPositions().getV1()),
+                    current.getTank().getTankWeapon().getGraphicalY(current.getTank().getTankState().getPositions().getV2()));
         }
-        for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i){
+        for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
             CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
-            Rectangle r = new Rectangle(current.getX(), current.getY(), current.getSizeX(), current.getSizeY());
-            Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getCenterX(), current.getCenterY()));
+            Rectangle r = new Rectangle(current.getOriginX(), current.getOriginY(), current.getSizeX(), current.getSizeY());
+            Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getX(), current.getY()));
             g.draw(nr);
         }
         //debug
+
         if (CurrentUser.isInGame()) {
             g.drawString(tmp, 100, 50);
-            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getGraphicalX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getGraphicalY() - 2, 5, 5);
-            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getGraphicalY(), 1, 1);
-            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getY() - 2, 5, 5);
-            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getY(), 1, 1);
             g.setColor(Color.red);
+            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY() - 2, 5, 5);
+            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY(), 1, 1);
+            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() - 2, 5, 5);
+            g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), 1, 1);
         }
+
     }
 
     @Override
@@ -120,13 +139,13 @@ public class WindowGame extends BasicGameState {
         this.myMouseMoved(xpos, ypos);
         for (int i = 0; i < this.gameController.getPlayers().size(); ++i) {
             if (this.gameController.getPlayers().get(i).getPlayerState().isMove()) {
-                if (!this.gameController.getCollisionController().checkCollision(this.gameController.getPlayers().get(i).movePredict(delta, true), this.gameController.getPlayers().get(i).getPlayerState().getUser().getId()))
+                if (!this.gameController.getCollisionController().checkCollision(this.gameController.getPlayers().get(i).movePredict(delta), this.gameController.getPlayers().get(i).getPlayerState().getUser().getId()))
                     this.gameController.getPlayers().get(i).move(delta);
             }
         }
         for (int i = 0; i < this.gameController.getShots().size(); ++i) {
             if (!this.gameController.getShots().get(i).getExplode())
-                if (!this.gameController.getCollisionController().checkCollision(this.gameController.getShots().get(i).movePredict(delta, true), this.gameController.getShots().get(i).getId()))
+                if (!this.gameController.getCollisionController().checkCollision(this.gameController.getShots().get(i).movePredict(delta), this.gameController.getShots().get(i).getId()))
                     this.gameController.getShots().get(i).move(delta);
         }
     }
@@ -152,25 +171,43 @@ public class WindowGame extends BasicGameState {
     @Override
     public void mousePressed(int button, int x, int y) {
         if (button == 0) {
-            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState(), x, y, EnumInput.PRESSED);
+            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState(), x, y, EnumInput.PRESSED);
         }
     }
 
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (button == 0) {
-            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()).getPlayerState(), x, y, EnumInput.RELEASED);
+            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState(), x, y, EnumInput.RELEASED);
         }
     }
 
 
     public void myMouseMoved(double newX, double newY) {
         if (CurrentUser.isInGame()) {
-            double x = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getX();
-            double y = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getY();
+            double x = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX();
+            double y = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY();
 
             float angle = MathTools.getAngle(x, y, newX, newY);
-            this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(angle);
+            float newAngle = angle;
+            if (angle < 0)
+                newAngle = 180 + (180 - (angle * -1));
+            float minAngle = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getDirection().getAngle() - 90;
+            float maxAngle = this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().getDirection().getAngle() + 90;
+
+            minAngle = (minAngle < 0 ? 360 + minAngle : minAngle);
+            maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);
+
+            //Debug.debug("max=" + maxAngle + "  min=" + minAngle + "  angle=" + angle + " newAngle=" + newAngle);
+            if (maxAngle < minAngle && ((newAngle >= 0 && newAngle <= maxAngle) || (newAngle >= minAngle && newAngle <= 360))) {
+                this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(angle);
+            } else if (newAngle >= minAngle && newAngle <= maxAngle) {
+                this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(angle);
+            } else if (newAngle < minAngle) {
+                this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(minAngle);
+            } else {
+                this.gameController.getPlayer(CurrentUser.getId()).getPlayerState().setGunAngle(maxAngle);
+            }
         }
     }
 }

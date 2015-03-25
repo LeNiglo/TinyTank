@@ -1,20 +1,14 @@
 package com.lefrantguillaume.gameComponent.controllers;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.animations.EnumInterfaceComponent;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.TankFactory;
-import com.lefrantguillaume.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.gameComponent.playerData.data.User;
 import com.lefrantguillaume.interfaceComponent.AvailableTank;
-import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.state.GameState;
-import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +35,7 @@ public class InterfaceController extends Observable implements Observer {
     }
 
     public void loadGame(){
+        Debug.debug("tank:" + this.availableTank.getCurrentTank());
         MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), this.availableTank.getCurrentTank());
 
         this.setChanged();

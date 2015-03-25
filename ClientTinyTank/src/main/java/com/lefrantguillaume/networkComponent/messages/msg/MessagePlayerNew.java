@@ -1,7 +1,6 @@
 package com.lefrantguillaume.networkComponent.messages.msg;
 
-import com.lefrantguillaume.gameComponent.gameObject.tanks.EnumTanks;
-import com.lefrantguillaume.gameComponent.playerData.data.Player;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
 /**
