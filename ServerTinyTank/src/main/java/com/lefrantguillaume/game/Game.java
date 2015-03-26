@@ -5,6 +5,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.MessageCollision;
 import com.lefrantguillaume.network.clientmsgs.MessagePlayerNew;
+import com.lefrantguillaume.network.clientmsgs.MessagePutObject;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.GameConfig;
 
@@ -104,6 +105,9 @@ public class Game extends Observable implements Observer {
             MessageCollision mc = ((MessageCollisionData)arg).getRequest();
             Log.info("Nouvelle collision (" + mc.getPosX() + ", " + mc.getPosY() + "):" + mc.getShotId());
             collisions.put(mc.getShotId(), mc);
+        } else if (arg instanceof MessagePutObject) {
+            MessagePutObject mpo = ((MessagePutObject) arg);
+            server.getServer().sendToAllTCP(mpo);
         }
         this.setChanged();
         this.notifyObservers(arg);

@@ -50,6 +50,8 @@ public class TinyServer extends Observable {
                         isMessageUpdate(connection, (MessagePlayerUpdatePosition) object);
                     } else if (object instanceof MessageCollision) {
                         isMessageCollision(connection, (MessageCollision) object);
+                    } else if (object instanceof MessagePutObject) {
+                        isMessagePutObject(connection, (MessagePutObject) object);
                     }
                 }
 
@@ -143,6 +145,11 @@ public class TinyServer extends Observable {
         MessageCollisionData mcd = new MessageCollisionData(server, connection, request);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mcd);
+    }
+
+    private void isMessagePutObject(Connection connection, MessagePutObject request) {
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(request);
     }
 }
 
