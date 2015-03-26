@@ -5,9 +5,10 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.EnumTanks;
+import com.lefrantguillaume.network.clientmsgs.*;
+import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.ServerConfig;
 
-import java.io.IOException;
 import java.util.Observable;
 
 /**
@@ -29,35 +30,41 @@ public class TinyServer extends Observable {
                 }
 
                 public void received(Connection connection, Object object) {
-                    if (object instanceof Network.MessageMove) {
-                        isMessageMove(connection, (Network.MessageMove) object);
-                    } else if (object instanceof Network.MessageShoot) {
-                        isMessageShoot(connection, (Network.MessageShoot) object);
-                    } else if (object instanceof Network.MessageConnect) {
-                        isMessageConnect(connection, (Network.MessageConnect) object);
-                    } else if (object instanceof Network.MessageNeedMap) {
-                        isMessageNeedMap(connection, (Network.MessageNeedMap) object);
-                    } else if (object instanceof Network.MessageSpell) {
-                        isMessageSpell(connection, (Network.MessageSpell) object);
-                    } else if (object instanceof Network.MessageChangeTeam) {
-                        isMessageChangeTeam(connection, (Network.MessageChangeTeam) object);
-                    } else if (object instanceof Network.MessageDelete) {
-                        isMessageDelete(connection, (Network.MessageDelete) object);
-                    } else if (object instanceof Network.MessagePlayerNew) {
-                        isMessageTankChoice(connection, (Network.MessagePlayerNew) object);
-                    } else if (object instanceof Network.MessagePlayerUpdatePosition) {
-                        isMessageUpdate(connection, (Network.MessagePlayerUpdatePosition) object);
+                    if (object instanceof MessageMove) {
+                        isMessageMove(connection, (MessageMove) object);
+                    } else if (object instanceof MessageShoot) {
+                        isMessageShoot(connection, (MessageShoot) object);
+                    } else if (object instanceof MessageConnect) {
+                        isMessageConnect(connection, (MessageConnect) object);
+                    } else if (object instanceof MessageNeedMap) {
+                        isMessageNeedMap(connection, (MessageNeedMap) object);
+                    } else if (object instanceof MessageSpell) {
+                        isMessageSpell(connection, (MessageSpell) object);
+                    } else if (object instanceof MessageChangeTeam) {
+                        isMessageChangeTeam(connection, (MessageChangeTeam) object);
+                    } else if (object instanceof MessageDelete) {
+                        isMessageDelete(connection, (MessageDelete) object);
+                    } else if (object instanceof MessagePlayerNew) {
+                        isMessageTankChoice(connection, (MessagePlayerNew) object);
+                    } else if (object instanceof MessagePlayerUpdatePosition) {
+                        isMessageUpdate(connection, (MessagePlayerUpdatePosition) object);
+                    } else if (object instanceof MessageCollision) {
+                        isMessageCollision(connection, (MessageCollision) object);
                     }
                 }
 
                 public void disconnected(Connection connection) {
                     WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
+                    MessageDisconnectData mdd = new MessageDisconnectData(connection);
+                    TinyServer.this.setChanged();
+                    TinyServer.this.notifyObservers(mdd);
                 }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
             WindowController.addConsoleMsg("Server listening on port " + ServerConfig.tcpPort + " (tcp) and " + ServerConfig.udpPort + " (udp).");
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
             server.close();
             return (false);
         }
@@ -73,34 +80,36 @@ public class TinyServer extends Observable {
         return this.server;
     }
 
-    private void isMessageMove(Connection connection, Network.MessageMove request) {
+    private void isMessageMove(Connection connection, MessageMove request) {
         System.out.println("direction recue: " + request.getDirection() + " // move : " + (request.getMove() ? "true" : "false"));
         server.sendToAllTCP(request);
     }
 
-    private void isMessageShoot(Connection connection, Network.MessageShoot request) {
-        System.out.println("tir recu: " + request.getValueKeyPressed() + " / angle: " + request.getAngle());
-        server.sendToAllTCP(request);
+    private void isMessageShoot(Connection connection, MessageShoot request) {
+        System.out.println("tir de " + request.getPseudo() + " / angle: " + request.getAngle());
+        MessageShootRequestData mrd = new MessageShootRequestData(connection, server, request);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mrd);
     }
 
-    private void isMessageConnect(Connection connection, Network.MessageConnect request) {
+    private void isMessageConnect(Connection connection, MessageConnect request) {
         System.out.println("Nouvelle connection: " + request.getPseudo() + " est sous l'id " + request.getId());
         MessageConnectData mcd = new MessageConnectData(server, connection);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mcd);
     }
 
-    private void isMessageSpell(Connection connection, Network.MessageSpell request) {
+    private void isMessageSpell(Connection connection, MessageSpell request) {
         System.out.println("sort de " + request.getPseudo() + ": " + request.getX() + ", " + request.getY());
         server.sendToAllTCP(request);
     }
 
-    private void isMessageChangeTeam(Connection connection, Network.MessageChangeTeam request) {
+    private void isMessageChangeTeam(Connection connection, MessageChangeTeam request) {
         System.out.println(request.getPseudo() + " change de team.");
         server.sendToAllTCP(request);
     }
 
-    private void isMessageDelete(Connection connection, Network.MessageDelete request) {
+    private void isMessageDelete(Connection connection, MessageDelete request) {
         System.out.println(request.getPseudo() + " a envoyé un message DELETE");
         MessageDeleteData mdd = new MessageDeleteData(server, connection, request);
         server.sendToAllTCP(request);
@@ -108,14 +117,14 @@ public class TinyServer extends Observable {
         TinyServer.this.notifyObservers(mdd);
     }
 
-    private void isMessageNeedMap(final Connection connection, Network.MessageNeedMap request) {
+    private void isMessageNeedMap(final Connection connection, MessageNeedMap request) {
         System.out.println("Il a besoin de la map");
         MessageDownloadData mdd = new MessageDownloadData(server, connection);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mdd);
     }
 
-    private void isMessageTankChoice(Connection connection, Network.MessagePlayerNew request) {
+    private void isMessageTankChoice(Connection connection, MessagePlayerNew request) {
         System.out.println("Nouveau joueur: " + request.getPseudo());
         EnumTanks tankId = request.getEnumTanks();
         String tank = (tankId == EnumTanks.RUSHER ? "Rusher" : (tankId == EnumTanks.SNIPER ? "Sniper" : (tankId == EnumTanks.TIGER ? "Tiger" : "NULL")));
@@ -125,9 +134,15 @@ public class TinyServer extends Observable {
         TinyServer.this.notifyObservers(mtd);
     }
 
-    private void isMessageUpdate(Connection connection, Network.MessagePlayerUpdatePosition request) {
+    private void isMessageUpdate(Connection connection, MessagePlayerUpdatePosition request) {
         System.out.println("Update: " + request.getX() + " / " + request.getY());
         server.sendToAllExceptTCP(connection.getID(), request);
+    }
+
+    private void isMessageCollision(Connection connection, MessageCollision request) {
+        MessageCollisionData mcd = new MessageCollisionData(server, connection, request);
+        TinyServer.this.setChanged();
+        TinyServer.this.notifyObservers(mcd);
     }
 }
 

@@ -2,9 +2,9 @@ package com.lefrantguillaume.network.master;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
@@ -12,7 +12,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Styve on 10/03/2015.
@@ -58,8 +60,8 @@ public class Master {
                     }
                 }, 300, 300, TimeUnit.SECONDS);
             }
-        } catch (Exception e) {
-            WindowController.addConsoleMsg("Online server not reachable: " + e.getMessage());
+        } catch (ClientHandlerException e) {
+            WindowController.addConsoleMsg("Online server not reachable: " + e.getCause().getMessage());
             return false;
         }
         return true;

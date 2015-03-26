@@ -1,18 +1,19 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.network.msgdatas;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
+import com.lefrantguillaume.network.clientmsgs.MessageDelete;
 
 /**
  * Created by Styve on 23/03/2015.
  */
-public class MessageTankData {
+public class MessageDeleteData {
     private Server server;
     private Connection connection;
-    private Network.MessagePlayerNew request;
+    private MessageDelete request;
 
-    public MessageTankData() {}
-    public MessageTankData(Server server, Connection connection, Network.MessagePlayerNew request) {
+    public MessageDeleteData() {}
+    public MessageDeleteData(Server server, Connection connection, MessageDelete request) {
         this.server = server;
         this.connection = connection;
         this.request = request;
@@ -20,5 +21,5 @@ public class MessageTankData {
 
     public Connection getConnection() {return connection;}
     public Server getServer() {return server;}
-    public Network.MessagePlayerNew getRequest() {return request;}
+    public MessageDelete getRequest() {return request;}
 }

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.network.msgdatas;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
@@ -12,8 +12,8 @@ public class MessageConnectData {
     private Server server;
     private Connection connection;
 
-    MessageConnectData() {}
-    MessageConnectData(Server server, Connection connection) {
+    public MessageConnectData() {}
+    public MessageConnectData(Server server, Connection connection) {
         this.server = server;
         this.connection = connection;
     }

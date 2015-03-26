@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.network.msgdatas;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;

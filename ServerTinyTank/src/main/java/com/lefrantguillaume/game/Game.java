@@ -2,7 +2,10 @@ package com.lefrantguillaume.game;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.network.*;
+import com.lefrantguillaume.network.TinyServer;
+import com.lefrantguillaume.network.clientmsgs.MessageCollision;
+import com.lefrantguillaume.network.clientmsgs.MessagePlayerNew;
+import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.GameConfig;
 
 import java.util.*;
@@ -16,6 +19,8 @@ public class Game extends Observable implements Observer {
     private GameConfig config;
     private List<String> playerNames = new ArrayList<String>();
     private HashMap<String, Player> players = new HashMap<String, Player>();
+    private HashMap<String, Shot> shots = new HashMap<String, Shot>();
+    private HashMap<String, MessageCollision> collisions = new HashMap<String, MessageCollision>();
 
     public Game() {
         this.server = new TinyServer();
@@ -49,8 +54,6 @@ public class Game extends Observable implements Observer {
         return kicked > 0;
     }
 
-    public List<String> getPlayerNames() {return playerNames;}
-    public HashMap<String, Player> getPlayers() { return players;}
 
     public void updatePlayerList() {
         playerNames.clear();
@@ -68,7 +71,7 @@ public class Game extends Observable implements Observer {
             mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
             players.put(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), mtd.getRequest().getEnumTanks(), mtd.getConnection()));
             for (Map.Entry<String, Player> entry : players.entrySet()) {
-                Network.MessagePlayerNew a = ((MessageTankData) arg).getRequest();
+                MessagePlayerNew a = ((MessageTankData) arg).getRequest();
                 a.setEnumTanks(entry.getValue().getTank());
                 a.setId(entry.getValue().getId());
                 a.setPseudo(entry.getValue().getPseudo());
@@ -79,11 +82,56 @@ public class Game extends Observable implements Observer {
             MessageDeleteData mtd = (MessageDeleteData) arg;
             players.remove(mtd.getRequest().getId());
             updatePlayerList();
+        } else if (arg instanceof MessageShootRequestData) {
+            MessageShootRequestData msd = ((MessageShootRequestData) arg);
+            Shot lastShot = getLastShot(EnumAttack.BASIC, msd.getRequest().getId());
+            if (lastShot == null || System.currentTimeMillis() - lastShot.getTimestamp() > 500) {
+                msd.getRequest().setShootId(UUID.randomUUID().toString());
+                shots.put(msd.getRequest().getShotId(), new Shot(msd.getRequest().getShotId(), msd.getRequest().getId()));
+                msd.getServer().sendToAllTCP(msd.getRequest());
+            }
+        } else if (arg instanceof MessageDisconnectData) {
+            for (Map.Entry<String, Player> entry : players.entrySet()) {
+                if (entry.getValue().getConnection().getID() == ((MessageDisconnectData) arg).getConnection().getID()) {
+                    ((MessageDisconnectData) arg).setPseudo(entry.getValue().getPseudo());
+                    ((MessageDisconnectData) arg).setPlayerId(entry.getValue().getId());
+                    players.remove(entry.getKey());
+                    updatePlayerList();
+                    break;
+                }
+            }
+        } else if (arg instanceof MessageCollisionData) {
+            MessageCollision mc = ((MessageCollisionData)arg).getRequest();
+            Log.info("Nouvelle collision (" + mc.getPosX() + ", " + mc.getPosY() + "):" + mc.getShotId());
+            collisions.put(mc.getShotId(), mc);
         }
         this.setChanged();
         this.notifyObservers(arg);
     }
 
+    public Shot getLastShot(EnumAttack type, String playerId) {
+        Shot shot = null;
+        switch (type) {
+            case BASIC:
+                ArrayList<String> keys = new ArrayList<String>(shots.keySet());
+                for (int i = shots.size() - 1; i >= 0; i--) {
+                    Shot theShot = shots.get(keys.get(i));
+                    if (theShot.getPlayerId().equals(playerId)) {
+                        shot = theShot;
+                        break;
+                    }
+                }
+                break;
+            case SPELL:
+                break;
+            default:
+                break;
+        }
+        return shot;
+    }
+
     public GameConfig getConfig() {return config;}
     public void setConfig(GameConfig config) {this.config = config;}
+    public List<String> getPlayerNames() {return playerNames;}
+    public HashMap<String, Player> getPlayers() { return players;}
 }
