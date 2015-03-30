@@ -1,4 +1,5 @@
 function refreshListServers() {
+	console.log('refreshListServers');
 	Meteor.call("getServersList", function(error, results) {
 		if (error) {
 			myAlert(error, "Warning,", "danger");
@@ -7,9 +8,6 @@ function refreshListServers() {
 		}
 	});
 }
-
-refreshListServers();
-setInterval(refreshListServers, 60000);
 
 Template.serversList.helpers({
 	getServersList: function () {
@@ -25,3 +23,12 @@ Template.serverItem.helpers({
 		return users.length;
 	}
 });
+
+Template.serversList.created = function() {
+	refreshListServers();
+	intervalRefreshListServer = Meteor.setInterval(refreshListServers, 60000);
+}
+
+Template.serversList.destroyed = function() {
+	Meteor.clearInterval(intervalRefreshListServer);
+};

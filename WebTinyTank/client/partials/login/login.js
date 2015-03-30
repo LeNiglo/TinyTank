@@ -15,15 +15,19 @@ Template.login.events({
       login: email,
       password: password
     }, function(error, results) {
+      console.log(error, results);
       if (error) {
-        myAlert(error, "Login failed", "danger");
+        myAlert(error, "Server Error, ", "danger");
+      } else if (results.data.res == false) {
+        myAlert(results.data.err, "Login failed, ", "danger");
       } else {
-        console.log(error, results);
-        Session.set('authToken', results.data.res.token);
-        console.log(Session.get('authToken'));
+        localStorage.setItem('authToken', results.data.res.token);
+        localStorage.setItem('authID', results.data.res._id);
+        localStorage.setItem('authUsername', results.data.res.username);
         //TODO change by profile page and add username to the myAlert
-        //Router.go("home");
-        myAlert("", "Welcome Back !", "success");
+        isUserConnectedDeps.changed();
+        Router.go("profile");
+        myAlert("Happy to see you, "+results.data.res.username+ " !", "Welcome Back !", "success");
       }
     });
 

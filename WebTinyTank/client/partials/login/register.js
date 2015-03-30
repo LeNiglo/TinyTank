@@ -16,14 +16,12 @@ Template.register.events({
     var email = $this.find('input[name="email"]').val();
     var from = $this.find('select[name="from"]').val();
 
-    //TODO Check the username, email and password, to see if they match the correct RegExp, do the same on the server.
     var email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    var password_re = /^[\W\w]{8,99}$/;
-    var username_re = /^[\w\s]{6,20}$/;
+    var password_re = /^[\W\w]{7,99}$/;
+    var username_re = /^[\w\s]{3,20}$/;
 
     if (!(email_re.test(email) && password_re.test(password) && username_re.test(username))) {
-      myAlert("Parameters aren't correct, please try again with others.", "Not enought strength.", "danger");
-      return false;
+      return myAlert("Parameters aren't correct, please try again with others.", "Not enought strength.", "danger");
     }
 
     Meteor.call("myRegister", {
@@ -35,9 +33,9 @@ Template.register.events({
     }, function(error, results) {
       if (!error) {
         Router.go("login");
-        myAlert("You can now login !", "Yeah !", "success");
+        return myAlert("An activation email has been sent to you. (required)", "Congratulations !", "success");
       } else {
-        myAlert(error, null, "danger");
+        return myAlert(error, null, "danger");
       }
     });
 

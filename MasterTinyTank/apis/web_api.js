@@ -21,11 +21,12 @@ WebApi = function(app, db) {
 			} else {
 
 				var email_re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-				var password_re = /^[\W\w]{8,99}$/;
-				var username_re = /^[\w\s]{6,20}$/;
+				var password_re = /^[\W\w]{7,99}$/;
+				var username_re = /^[\w\s]{3,20}$/;
 
 				if (!(email_re.test(req.body.email) && password_re.test(req.body.password) && username_re.test(req.body.username))) {
 					res.status(200).json({name: "register", res: false, err: "Parameters aren't correct, please try again with others."});
+					return false;
 				}
 
 				Users.insert({
@@ -36,13 +37,13 @@ WebApi = function(app, db) {
 					active: false,
 					createdAt: new Date()
 				}, function(err, result) {
-					if (err && !result) {
+					if (err || !result) {
 						res.status(200).json({name: "register", res: false, err: err});
 					} else {
 						res.mailer.send('register', {
 							to: result[0].email,
 							subject: 'Thanks for your registration !',
-							activ_link: WEB_URL+'/account/active',
+							activ_link: WEB_URL+'/active/'+result[0]._id,
 							down_link: WEB_URL+'/download',
 							username: result[0].username
 						}, function (err, message) {
@@ -61,14 +62,18 @@ WebApi = function(app, db) {
 		Users.findOne({
 			$or : [{email: req.body.login.toLowerCase()}, {username: new RegExp('^'+req.body.login+'$', 'i')}]
 		}, function(error, exists) {
-
-			if (!exists) {
+			if (error) {
+				res.status(500).json({name: "login", res: false, err: "Try again."});
+			} else if (!exists) {
 				res.status(200).json({name: "login", res: false, err: "Account doesn't exists."});
+			} else if (exists.active == false) {
+				res.status(200).json({name: "login", res: false, err: "Account not active."});
 			} else {
 				bcrypt.compare(req.body.password, exists.password, function(err, result) {
+
 					if (err) {
 						res.status(200).json({name: "login", res: false, err: err});
-					} else if (res == false) {
+					} else if (result == false) {
 						res.status(200).json({name: "login", res: false, err: "Passwords didn't match."});
 					} else {
 
@@ -87,6 +92,23 @@ WebApi = function(app, db) {
 					}
 				});
 			}
+		});
+	}
+
+	this.active_account = function(req, res) {
+		Users.update({_id: new ObjectID(req.body._idUser)}, {$set: {active: true}}, function(error, exists) {
+			res.status(200).json({name: "active_account", res: exists, err: null});
+		});
+	}
+
+	this.user_profile = function(req, res) {
+		Users.findOne({
+			$or : [{_id: new ObjectID(req.query._idUser)}, {username: req.query._idUser}]
+		}, function(error, exists) {
+
+			//TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
+
+			res.status(200).json({name: "user_profile", res: exists, err: null});
 		});
 	}
 };

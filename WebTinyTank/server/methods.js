@@ -1,35 +1,34 @@
 Meteor.methods({
+  getUserProfile: function(datas) {
+    this.unblock();
+    return myShortHttp("GET", "/user_profile", datas);
+  },
   getServersList: function() {
     this.unblock();
-    try {
-      return Meteor.http.call("GET", process.env.API_URL+"/list_servers", {
-        params: {},
-        auth: process.env.API_AUTH
-      });
-    } catch (e) {
-      return null;
-    }
+    return myShortHttp("GET", "/list_servers");
   },
   myRegister: function(datas) {
     this.unblock();
-    try {
-      return Meteor.http.call("POST", process.env.API_URL+"/register", {
-        params: datas,
-        auth: process.env.API_AUTH
-      });
-    } catch (e) {
-      return null;
-    }
+    return myShortHttp("POST", "/register", datas);
+  },
+  active_account: function(datas) {
+    this.unblock();
+    return myShortHttp("POST", "/active_account", datas);
   },
   myLogin: function(datas) {
     this.unblock();
-    try {
-      return Meteor.http.call("POST", process.env.API_URL+"/login", {
-        params: datas,
-        auth: process.env.API_AUTH
-      });
-    } catch (e) {
-      return null;
-    }
+    return myShortHttp("POST", "/login", datas);
   }
 });
+
+function myShortHttp(method, url, datas) {
+  try {
+    return Meteor.http.call(method, process.env.API_URL+url, {
+      params: datas,
+      auth: process.env.API_AUTH
+    });
+  } catch (e) {
+    console.log(method, url, datas, e);
+    return null;
+  }
+}
