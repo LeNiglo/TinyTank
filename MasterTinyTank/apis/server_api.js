@@ -51,6 +51,11 @@ ServerApi = function(app, db) {
 		});
 	}
 
+	this.add_game_stats = function(req, res) {
+		console.log(req.body, req.query, req.params);
+		res.status(200).json({name: 'add_game_stats', res: true, err: null});
+	}
+
 };
 
 module.exports = ServerApi;

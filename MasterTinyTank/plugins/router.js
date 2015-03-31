@@ -21,6 +21,7 @@ var Router = function(app, db) {
   app.post('/server/change_map', serverApi.change_map);
   app.post('/server/add_user', serverApi.add_user);
   app.post('/server/remove_user', serverApi.remove_user);
+  app.post('/server/add_game_stats', serverApi.add_game_stats);
 
   /*
   **	Client communication

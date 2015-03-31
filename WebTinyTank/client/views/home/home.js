@@ -3,10 +3,17 @@ var tinyHomeMessages = [
   "Get Blasted",
   "Rank Up"
 ];
+var tineHomeColors = [
+  "#7F0000",
+  "#CC0000",
+  "#7F2626"
+]
 var tinyHomeIndex = 0;
 
 function writeHomeMessage() {
-  $('#tinyHomeMessage').text(tinyHomeMessages[tinyHomeIndex]);
+  $('#tinyHomeMessage').css("color", tineHomeColors[tinyHomeIndex]).shuffleLetters({
+    "text": tinyHomeMessages[tinyHomeIndex]
+  });
 }
 
 Template.home.created = function() {

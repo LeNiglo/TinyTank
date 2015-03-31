@@ -77,14 +77,16 @@ WebApi = function(app, db) {
 						res.status(200).json({name: "login", res: false, err: "Passwords didn't match."});
 					} else {
 
-						var expires = moment().add(7, 'days').toDate();
-						var token = jwt.encode({
-							iss: exists._id,
-							exp: expires
-						}, app.get('jwtTokenSecret'));
+						if (!exists.token) {
+							var expires = moment().add(7, 'days').toDate();
+							var token = jwt.encode({
+								iss: exists._id,
+								exp: expires
+							}, app.get('jwtTokenSecret'));
+							exists.token = token;
+						}
 
-						exists.token = token;
-						Users.update({_id: exists._id}, {$set: {token: token}}, function(error, result) {
+						Users.update({_id: exists._id}, {$set: {token: exists.token, updatedAt: new Date()}}, function(error, result) {
 
 							res.status(200).json({name: "login", res: exists, err: null});
 
