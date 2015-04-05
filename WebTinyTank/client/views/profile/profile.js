@@ -7,14 +7,20 @@ function loadUserProfile(_idUser) {
   }
 
   Meteor.call("getUserProfile", {_idUser: _idUser}, function(error, results) {
-		if (error) {
-			myAlert(error, "Warning,", "danger");
-		} else if (!results) {
-      console.log(error);
+    if (error) {
+      myAlert(error, "Warning,", "danger");
+    } else if (!results) {
+      Session.set('loadedUser', null);
     } else {
-			Session.set('loadedUser', JSON.parse(results.content).res);
-		}
-	});
+      var res = JSON.parse(results.content);
+      Session.set('loadedUser', res.res);
+      if (res.res) {
+        document.title = res.res.username+"'s profile on TinyTank";
+      } else {
+        myAlert("Maybe you mispelled it.", "User not found", "danger");
+      }
+    }
+  });
 }
 
 
@@ -23,10 +29,11 @@ Template.profile.helpers({
     return Session.get('loadedUser');
   },
   getFromRegister: function(act) {
-		return moment(act).fromNow();
-	}
+    return moment(act).fromNow();
+  }
 });
 
 Template.profile.created = function() {
-    loadUserProfile(this._id);
+  Session.set('loadedUser', {loading: true});
+  loadUserProfile(this.data._id);
 }

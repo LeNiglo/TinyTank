@@ -11,6 +11,27 @@ WebApi = function(app, db) {
 		});
 	};
 
+	this.get_infos = function(req, res) {
+		//TODO make it work !
+		Users.find({}, {/* orderBy */}, function(err, users) {
+			var last = users[0];
+			var nb_users = users.count();
+				res.status(200).json({name: 'get_infos', res: {last: last, nb_users: nb_users}, err: null})
+		});
+	}
+
+	this.ladder = function(req, res) {
+		//TODO Find a way to calculate through databases !
+		ladder = [
+      {rank: 1, username: "LeNiglo", _id: "551ac68a894afa47ae65e215", gamesPlayed: 1337, killCount: 3214, accuracy: 85.2},
+      {rank: 2, username: "Switi", _id: "551ac68a894afa47ae65e215", gamesPlayed: 1302, killCount: 729, accuracy: 87.8},
+      {rank: 3, username: "DraymZz", _id: "551ac68a894afa47ae65e215", gamesPlayed: 668, killCount: 520, accuracy: 83.0},
+      {rank: 4, username: "La Chose", _id: "551ac68a894afa47ae65e215", gamesPlayed: 932, killCount: 414, accuracy: 91.2},
+      {rank: 5, username: "ZaZa", _id: "551ac68a894afa47ae65e215", gamesPlayed: 204, killCount: 399, accuracy: 80.9}
+    ];
+		res.status(200).json({name: 'ladder', res: ladder, err: null});
+	}
+
 	this.register = function(req, res) {
 		Users.findOne({
 			$or : [{email: req.body.email.toLowerCase()}, {username: new RegExp('^'+req.body.username+'$', 'i')}]
@@ -104,8 +125,15 @@ WebApi = function(app, db) {
 	}
 
 	this.user_profile = function(req, res) {
+		var objId = null;
+		var regUn = new RegExp('^'+req.query._idUser+'$', 'i');
+		try {
+			objId = new ObjectID(req.query._idUser);
+		} catch (e) {
+
+		}
 		Users.findOne({
-			$or : [{_id: new ObjectID(req.query._idUser)}, {username: req.query._idUser}]
+			$or : [{_id: objId}, {username: regUn}]
 		}, function(error, exists) {
 
 			//TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.

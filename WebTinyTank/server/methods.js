@@ -3,9 +3,17 @@ Meteor.methods({
     this.unblock();
     return myShortHttp("GET", "/user_profile", datas);
   },
+  getGlobalInfos: function() {
+    this.unblock();
+    return myShortHttp("GET", "/get_infos");
+  },
   getServersList: function() {
     this.unblock();
     return myShortHttp("GET", "/list_servers");
+  },
+  getLadder: function() {
+    this.unblock();
+    return myShortHttp("GET", "/ladder");
   },
   myRegister: function(datas) {
     this.unblock();

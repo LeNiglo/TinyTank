@@ -1,0 +1,28 @@
+<template name="ladder">
+  <h1>Ladder</h1>
+
+  <table class="table table-hover" id="ladder" style="table-layout: fixed;">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>Username</th>
+        <th>Games Played</th>
+        <th>Kill Count</th>
+        <th>Accuracy</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each getLadder }}
+        <tr>
+          <th class="rank">{{ rank }}</th>
+          <td class="username"><a href="{{ pathFor 'profile' _id}}">{{ username }}</a></td>
+          <td>{{ gamesPlayed }}</td>
+          <td>{{ killCount }}</td>
+          <td>{{ accuracy }} %</td>
+          <td class="medal"></td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>

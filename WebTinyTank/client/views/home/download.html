@@ -1,8 +1,25 @@
 <template name="download">
-  <h1>Download Page</h1>
+  <h1 class="text-center page-header">Download TinyTank Now !</h1>
 
   <div class="container text-center">
-    <a class="btn btn-primary" href="/downloads/TinyTank.zip" target="_blank"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;&nbsp;Get Full Game !</a>
-    <a class="btn btn-info" href="{{ pathFor 'register' }}"><i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;Create an account !</a>
+    <div class="jumbotron text-left">
+
+      <h1>TinyTank</h1>
+      <p>Compete with other people and enjoy your moment !</p>
+
+    </div>
+
+    <div class="col-md-6">
+      <a {{!-- class="btn btn-primary" --}} href="/downloads/TinyTank.zip" target="_blank">
+        <img src="/img/download.png" alt="download" class="img-responsive" />
+        {{!-- <i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;&nbsp;Get Full Game ! --}}
+      </a>
+    </div>
+    <div class="col-md-6">
+      <a {{!-- class="btn btn-info" --}} href="{{ pathFor 'register' }}">
+        <img src="/img/signup.png" alt="register" class="img-responsive" />
+        {{!-- <i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;Create an account ! --}}
+      </a>
+    </div>
   </div>
 </template>

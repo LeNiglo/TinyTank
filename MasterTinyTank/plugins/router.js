@@ -37,7 +37,9 @@ var Router = function(app, db) {
   app.post('/web/login', webApi.login);
   app.post('/web/active_account', webApi.active_account);
   app.get('/web/list_servers', webApi.list_servers);
+  app.get('/web/ladder', webApi.ladder);
   app.get('/web/user_profile', webApi.user_profile);
+  app.get('/web/get_infos', webApi.get_infos);
 
   /*
   **	Error handling

@@ -8,3 +8,20 @@ FEFEFE;               // WHITE
 4A4E4F;               // DARKER
 
 */
+
+table#ladder a {
+  color: #F15841;
+  text-decoration: none;
+}
+
+table#ladder tbody tr:hover td,
+table#ladder tbody tr:hover th {
+  font-size: 120%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+div#home section {
+  margin: 20px 0;
+  font-size: 18px;
+}

@@ -32,7 +32,13 @@ Router.map(function() {
 	this.route('activation', {
 		path: '/active/:_id',
 		onRun: function() {
-			Meteor.call('active_account', {_idUser: this.params._id}, function() { });
+			Meteor.call('active_account', {_idUser: this.params._id}, function(error, result) {
+				if (JSON.parse(result.content).res == 1) {
+					myAlert("Your account has been activated.", "Well Done,", "success");
+				} else {
+					myAlert("Please try again.", "Error, ", "danger");
+				}
+			});
 			this.next();
 		},
 		action: function() {
@@ -42,6 +48,7 @@ Router.map(function() {
 
 
 	this.route('servers-list');
+	this.route('ladder');
 
 	/* Handle 404 */
 	this.route('notFound', {

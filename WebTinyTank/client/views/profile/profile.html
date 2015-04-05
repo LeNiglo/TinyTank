@@ -1,9 +1,23 @@
 <template name="profile">
-  {{#with getUserProfile}}
   <div class="container">
+    {{#with getUserProfile}}
+
+    {{#if loading}}
+    <h2 class="page-header text-center">Loading ...</h2>
+
+    {{else}}
+
     <h2 class="page-header text-center">{{ username }}</h2>
 
-    <p>User since {{ getFromRegister createdAt }}</p>
+    <p>Registered {{ getFromRegister createdAt }} from {{ from }}</p>
+    {{/if}}
+
+    {{else}}
+
+    <h2 class="page-header text-center">User Not Found.</h2>
+
+    {{> search }}
+
+    {{/with}}
   </div>
-  {{/with}}
 </template>

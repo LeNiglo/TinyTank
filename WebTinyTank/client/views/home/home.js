@@ -17,6 +17,7 @@ function writeHomeMessage() {
 }
 
 Template.home.created = function() {
+  document.title = "TinyTank";
   intervalChangeHomeMessage = Meteor.setInterval(function() {
     ++tinyHomeIndex;
     if (tinyHomeIndex == tinyHomeMessages.length) {

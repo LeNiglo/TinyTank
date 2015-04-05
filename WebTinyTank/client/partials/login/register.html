@@ -3,24 +3,20 @@
     <h2 class="page-header">Register</h2>
     <form id="register" role="register">
       <div class="form-group">
-        <input type="email" name="email" class="form-control" placeholder="email" />
+        <input type="email" name="email" class="form-control" placeholder="email" required />
       </div>
       <div class="form-group">
-        <input type="text" name="username" class="form-control" placeholder="username" />
+        <input type="text" name="username" class="form-control" placeholder="username" required />
       </div>
       <div class="form-group">
-        <input type="password" name="password" class="form-control" placeholder="password" />
-        <input type="password" name="password-v" class="form-control" placeholder="confirm" />
+        <input type="password" name="password" class="form-control" placeholder="password" required />
+        <input type="password" name="password-v" class="form-control" placeholder="confirm" required />
       </div>
       <div class="form-group">
         <select name="from" class="form-control">
-          <option value="FR">France</option>
-          <option value="UK">United Kingdom</option>
-          <option value="SP">Spain</option>
-          <option value="DE">Deutschland</option>
-          <option value="BE">Belgium</option>
-          <option value="US">United States</option>
-          <option value="XX">Other</option>
+          {{#each getCountries}}
+          <option value="{{.}}">{{.}}</option>
+          {{/each}}
         </select>
       </div>
       <div class="form-group">

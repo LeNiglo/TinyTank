@@ -1,3 +1,9 @@
+Template.register.helpers({
+  getCountries: function() {
+    return ["France", "United Kingdom", "Spain", "Deutschland", "Belgium", "United States", "Other"];
+  }
+});
+
 Template.register.events({
   "submit form": function(event) {
     event.preventDefault();

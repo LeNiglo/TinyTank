@@ -30,7 +30,7 @@ Matches = db.collection('matches');
 /*
 **	Initializes the APIs
 */
-WEB_URL = process.env.WEB_URL || 'http://localhost:3000';
+WEB_URL = process.env.WEB_URL || 'http://tinytank.dev';
 
 /*
 **	Init Mailer
@@ -55,6 +55,7 @@ app.use(morgan('combined'));
 app.use(cors({
 	allowedOrigins: [
 		"http://localhost",
+		"http://tinytank.dev",
 		"http://lefrantguillaume.com",
 		"http://tinytank.lefrantguillaume.com"
 	]

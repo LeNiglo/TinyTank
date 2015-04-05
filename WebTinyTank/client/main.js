@@ -4,10 +4,15 @@ myAlert = function (message, title, force) {
   if (!message)
   return false;
 
-  $("#errors").append(Blaze.toHTMLWithData(Template.errorItem, {message: message, title: title, force: force}));
+  var $elements = $(Blaze.toHTMLWithData(Template.errorItem, {message: message, title: title, force: force}));
+
+  $("#errors").append($elements);
+  $('html, body').animate({
+    scrollTop: 0
+  }, 250);
   window.setTimeout(function() {
-    $(".alert-".force).alert('close');
-  }, 3000);
+    $elements.remove();
+  }, 5000);
   return false;
 }
 
