@@ -1,14 +1,14 @@
-<template name="infos">
-  {{> infoNbUsers }}
-  {{> infoLastUser }}
-</template>
-
 <template name="infoNbUsers">
-  {{ getNbUsers }} registered users.
+  <p>{{ getNbUsers }} registered users.</p>
 </template>
 
 <template name="infoLastUser">
   {{#with getLastUser }}
-  Greetings to <a href="{{ pathFor 'profile' _id}}">{{ username }}</a>. Joined us {{ getJoinded createdAt }}
+  <p>Greetings to <a href="{{ pathFor 'profile' _id}}">{{ username }}</a>. Joined us {{ getJoined createdAt }}</p>
   {{/with}}
+</template>
+
+<template name="infos">
+  {{> infoNbUsers }}
+  {{> infoLastUser }}
 </template>
