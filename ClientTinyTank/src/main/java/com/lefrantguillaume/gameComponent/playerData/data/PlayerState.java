@@ -6,23 +6,20 @@ import com.lefrantguillaume.gameComponent.playerData.action.EnumDirection;
 /**
  * Created by andres_k on 13/03/2015.
  */
+/*
 public class PlayerState {
     private boolean move;
     private float gunAngle;
     private EnumDirection direction;
-    private User user;
+
 
     public PlayerState(User user) {
-        this.user = user;
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
     }
 
     // GETTERS
-    public User getUser() {
-        return this.user;
-    }
 
     public boolean isMove() {
         return move;
@@ -50,3 +47,4 @@ public class PlayerState {
         this.gunAngle = gunAngle;
     }
 }
+*/

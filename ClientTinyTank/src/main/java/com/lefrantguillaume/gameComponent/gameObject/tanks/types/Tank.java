@@ -11,6 +11,8 @@ import com.lefrantguillaume.gameComponent.gameObject.tanks.tools.TankFactory;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
+import java.util.UUID;
+
 /**
  * Created by andres_k on 13/03/2015.
  */
@@ -32,8 +34,8 @@ public class Tank {
     }
 
     // FUNCTIONS
-    public Shot generateShot(String userId, float angle) {
-        return this.tankWeapon.generateShot(userId, angle, this.tankState.getPositions());
+    public Shot generateShot(String userId, UUID id, float angle) {
+        return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
     }
 
     // GETTERS

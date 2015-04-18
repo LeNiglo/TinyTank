@@ -1,7 +1,6 @@
 package com.lefrantguillaume.networkComponent.messages.msg;
 
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
-import sun.plugin2.message.Message;
 
 /**
  * Created by andres_k on 12/03/2015.

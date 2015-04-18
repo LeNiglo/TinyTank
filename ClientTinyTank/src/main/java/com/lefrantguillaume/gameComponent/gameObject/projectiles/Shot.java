@@ -26,12 +26,12 @@ public class Shot extends Observable implements Observer {
     private boolean explode;
     private List<Rectangle> collisionObject;
 
-    public Shot(String userId, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact) {
+    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact) {
         this.shiftOrigin = shiftOrigin;
         this.shiftToImpact = shiftToImpact;
         this.explode = false;
         this.userId = userId;
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.positions = new Pair<Float, Float>(positioning.getV1(), positioning.getV2());
         this.angle = positioning.getV3();
         this.damage = damage;
@@ -44,7 +44,6 @@ public class Shot extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
 
-        Debug.debug("check Object");
         if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
 //            this.shiftOrigin.setV1(this.shiftToImpact.getV1());
  //           this.shiftOrigin.setV2(this.shiftToImpact.getV2());
@@ -54,10 +53,15 @@ public class Shot extends Observable implements Observer {
 
             //rotate newX et newY
 
-   //         this.positions.setV1(order.getV1());
-     //       this.positions.setV2(order.getV2());
+            this.positions.setV1(order.getV1());
+            this.positions.setV2(order.getV2());
+            this.shiftOrigin.setV1(this.shiftToImpact.getV1());
+            this.shiftOrigin.setV2(this.shiftToImpact.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
+            this.setChanged();
+            Rectangle tmp = null;
+            this.notifyObservers(tmp);
         }
     }
 

@@ -82,11 +82,11 @@ public class AnimatorGameFactory extends AnimatorFactory {
 
     private void rusherAnimator(Animator animator, EnumSprites index) throws SlickException {
         if (index == EnumSprites.RUSHER_BODY) {
-            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherA_1.png", 74, 50);
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherA_1.png", 50, 50);
             animator.addAnimation(this.loadAnimation(spriteSheet, 0, 1, 0, 200));
         }
         else if (index == EnumSprites.RUSHER_TOP){
-            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherA_2.png", 74, 50);
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherA_2.png", 36, 21);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 1, 0, 200));
         }
         else if (index == EnumSprites.RUSHER_HIT) {

@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.gameComponent.playerData.action.EnumDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,9 @@ import java.util.List;
  * Created by andres_k on 18/03/2015.
  */
 public class TankState {
+    private final Pair<Float, Float> shiftOrigin;
+    private Pair<Float, Float> positions;
+    private List<Rectangle> collisionObject;
     private Animator bodyAnimator;
     private Animator topAnimator;
     private EnumTanks tankType;
@@ -22,9 +26,9 @@ public class TankState {
     private float shieldEffect;
     private float slowEffect;
     private float boostEffect;
-    private final Pair<Float, Float> shiftOrigin;
-    private Pair<Float, Float> positions;
-    private List<Rectangle> collisionObject;
+    private boolean move;
+    private float gunAngle;
+    private EnumDirection direction;
 
     public TankState(float speed, float maxLife, float armor, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin) {
         this.bodyAnimator = bodyAnimator;
@@ -35,6 +39,9 @@ public class TankState {
         this.armor = armor;
         this.currentLife = maxLife;
         this.shiftOrigin = shiftOrigin;
+        this.move = false;
+        this.direction = EnumDirection.DOWN;
+        this.gunAngle = this.direction.getAngle();
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
@@ -51,12 +58,15 @@ public class TankState {
         this.armor = tankState.armor;
         this.currentLife = tankState.maxLife;
         this.shiftOrigin = tankState.shiftOrigin;
+        this.move = false;
+        this.direction = EnumDirection.DOWN;
+        this.gunAngle = this.direction.getAngle();
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
         this.positions = new Pair<Float, Float>(0f, 0f);
         this.collisionObject = new ArrayList<Rectangle>();
-        for (int i = 0; i < tankState.collisionObject.size(); ++i){
+        for (int i = 0; i < tankState.collisionObject.size(); ++i) {
             this.collisionObject.add(tankState.collisionObject.get(i));
         }
     }
@@ -132,6 +142,22 @@ public class TankState {
         return this.positions.getV2() + this.shiftOrigin.getV2();
     }
 
+    public Pair<Float, Float> getShiftOrigin() {
+        return this.shiftOrigin;
+    }
+
+    public boolean isMove() {
+        return this.move;
+    }
+
+    public float getGunAngle() {
+        return this.gunAngle;
+    }
+
+    public EnumDirection getDirection() {
+        return this.direction;
+    }
+
     // SETTERS
     public void setCurrentLife(float currentLife) {
         this.currentLife = currentLife;
@@ -177,7 +203,15 @@ public class TankState {
         this.positions.setV2(this.positions.getV2() + y);
     }
 
-    public Pair<Float, Float> getShiftOrigin() {
-        return shiftOrigin;
+    public void setMove(boolean move) {
+        this.move = move;
+    }
+
+    public void setGunAngle(float gunAngle) {
+        this.gunAngle = gunAngle;
+    }
+
+    public void setDirection(EnumDirection direction) {
+        this.direction = direction;
     }
 }

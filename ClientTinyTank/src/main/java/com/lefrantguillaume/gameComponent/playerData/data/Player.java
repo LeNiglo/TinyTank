@@ -23,18 +23,17 @@ public class Player extends Observable implements Observer{
     private UUID idTeam;
     private Tank tank;
     private PlayerActionController playerActionController;
-    private PlayerState playerState;
+    private User user;
     private boolean inGame;
 
     public Player(User user, UUID idTeam, Tank tank, List<Shot> shots, float x, float y) {
+        this.user = user;
         this.inGame = false;
         this.shots = shots;
         this.idTeam = idTeam;
         this.tank = tank;
-        this.playerState = new PlayerState(user);
         this.tank.getTankState().setPositions(new Pair<Float, Float>(x, y));
-        this.playerActionController = new PlayerActionController(this.playerState, this.shots, this.tank);
-        //this.actionController.addObserver();
+        this.playerActionController = new PlayerActionController(this.shots, this.tank);
     }
 
 
@@ -49,7 +48,7 @@ public class Player extends Observable implements Observer{
     }
 
     public void doAction(PlayerAction playerAction, CollisionController collisionController) {
-        this.playerActionController.doAction(playerAction, collisionController);
+        this.playerActionController.doAction(playerAction, collisionController, this);
     }
 
     public void move(int delta) {
@@ -59,7 +58,7 @@ public class Player extends Observable implements Observer{
     }
 
     public Pair<Float, Float> movePredict(int delta) {
-        return MathTools.movePredict(this.getPlayerState().getDirection().getAngle(), this.tank.getTankState().getSpeed(), delta);
+        return MathTools.movePredict(this.tank.getTankState().getDirection().getAngle(), this.tank.getTankState().getSpeed(), delta);
     }
 
     public int getDamage(float damage) {
@@ -71,10 +70,6 @@ public class Player extends Observable implements Observer{
     }
 
     // GETTERS
-
-    public PlayerState getPlayerState() {
-        return this.playerState;
-    }
 
     public Tank getTank() {
         return this.tank;
@@ -94,5 +89,9 @@ public class Player extends Observable implements Observer{
 
     public void setShots(List<Shot> shots) {
         this.shots = shots;
+    }
+
+    public User getUser() {
+        return user;
     }
 }

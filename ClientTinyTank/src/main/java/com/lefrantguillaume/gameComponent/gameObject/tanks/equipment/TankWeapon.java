@@ -3,6 +3,7 @@ package com.lefrantguillaume.gameComponent.gameObject.tanks.equipment;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.RandomTools;
 import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
@@ -10,6 +11,7 @@ import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 18/03/2015.
@@ -62,11 +64,7 @@ public class TankWeapon {
 
     // FUNCTIONS
 
-    public Shot generateShot(String userId, float angle, Pair<Float, Float> coord) {
-/*
-        float x = coord.getV1() + this.canons.get(this.current).getShiftOrigin().getV1();
-        float y = coord.getV2() + this.canons.get(this.current).getShiftOrigin().getV2();
-*/
+    public Shot generateShot(String userId, UUID id, float angle, Pair<Float, Float> coord) {
         float x1 = this.canons.get(this.current).getShiftCanonHead().getV1();
         float y1 = this.canons.get(this.current).getShiftCanonHead().getV2();
         double radAngle = angle * Math.PI / 180;
@@ -74,12 +72,17 @@ public class TankWeapon {
         float x = (float) (x1 * Math.cos(radAngle) - y1 * Math.sin(radAngle) + coord.getV1());
         float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
 
+        if (this.shotType == EnumShots.MACHINE_GUN){
+            angle += RandomTools.getInt(15) - 7;
+        }
         Tuple<Float, Float, Float> newCoord = new Tuple<Float, Float, Float>(x, y, angle);
-        Shot shot = new Shot(userId, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, this.shiftHitOrigin, this.getShiftHitImpact());
+        Shot shot = new Shot(userId, id, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<Float, Float>(this.shiftHitOrigin),
+                new Pair<Float, Float>(this.getShiftHitImpact()));
 
         for (int i = 0; i < this.collisionObject.size(); ++i) {
             shot.addCollisionObject(this.collisionObject.get(i));
         }
+        this.nextCanon();
         return shot;
     }
 

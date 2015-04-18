@@ -27,10 +27,9 @@ public class PlayerAction {
             this.values.add(new Integer(((MessageMove) todo).getDirection()));
         }
         else if (todo instanceof MessageShoot){
-            if (((MessageShoot) todo).getValueKeyPressed() == Input.MOUSE_LEFT_BUTTON) {
                 this.action = EnumActions.SHOOT;
-                this.values.add(((MessageShoot)todo).getAngle());
-            }
+            this.values.add(((MessageShoot)todo).getShotId());
+            this.values.add(((MessageShoot)todo).getAngle());
         }
     }
 

@@ -24,6 +24,7 @@ public class NetworkRegister {
         kryo.register(MessagePlayerNew.class);
         kryo.register(MessagePlayerUpdateState.class);
         kryo.register(MessagePlayerUpdatePosition.class);
+        kryo.register(MessageCollision.class);
         kryo.register(EnumTanks.class);
     }
 }

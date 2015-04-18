@@ -24,6 +24,7 @@ public class CollisionObject extends Observable implements Observer{
     private float angle;
     private float saveX;
     private float saveY;
+    private boolean destroyed = false;
 
     public CollisionObject(boolean solid,Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
         this.solid = solid;
@@ -49,11 +50,13 @@ public class CollisionObject extends Observable implements Observer{
             this.sizes.setV1(coord.getSizes().getV1());
             this.sizes.setV2(coord.getSizes().getV2());
         }
+        else {
+            this.destroyed = true;
+        }
     }
 
     public void notifyCollision(EnumType type) {
         this.setChanged();
-        Debug.debug("obj id:" + id + " idUser:" + idUser + " nbrObservers:" + this.countObservers());
         this.notifyObservers(new Tuple<Float, Float, EnumType>(this.positions.getV1(), this.positions.getV2(), type));
     }
 
@@ -132,4 +135,7 @@ public class CollisionObject extends Observable implements Observer{
         this.positions.setV2(y);
     }
 
+    public boolean isDestroyed() {
+        return destroyed;
+    }
 }

@@ -12,6 +12,10 @@ public class Pair<T1, T2> {
         this.v2 = v2;
     }
 
+    public Pair(Pair<T1, T2> pair){
+        this.v1 = pair.v1;
+        this.v2 = pair.v2;
+    }
     public T1 getV1() {
         return this.v1;
     }
@@ -28,6 +32,7 @@ public class Pair<T1, T2> {
         this.v2 = value;
     }
 
+    @Override
     public String toString(){
         return new String("v1:" + this.getV1() + " v2:"+this.getV2());
     }

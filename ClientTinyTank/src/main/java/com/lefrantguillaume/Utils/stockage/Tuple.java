@@ -25,4 +25,10 @@ public class Tuple<T1, T2, T3> {
     public T3 getV3() {
         return this.v3;
     }
+
+    @Override
+    public String toString(){
+        return new String("v1:" + this.getV1() + " v2:"+this.getV2() + " v3:"+this.getV3());
+    }
+
 }
