@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ClientTinyTank/ClientTinyTank.iml" filepath="$PROJECT_DIR$/ClientTinyTank/ClientTinyTank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MasterTinyTank/MasterTinyTank.iml" filepath="$PROJECT_DIR$/MasterTinyTank/MasterTinyTank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ServerTinyTank/ServerTinyTank.iml" filepath="$PROJECT_DIR$/ServerTinyTank/ServerTinyTank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebTinyTank/WebTinyTank.iml" filepath="$PROJECT_DIR$/WebTinyTank/WebTinyTank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testClient/testClient.iml" filepath="$PROJECT_DIR$/testClient/testClient.iml" />
+    </modules>
+  </component>
+</project>
