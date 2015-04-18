@@ -1,14 +1,10 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
-import com.lefrantguillaume.gameComponent.gameObject.obstacles.Obstacle;
-import com.lefrantguillaume.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.graphicsComponent.input.*;
 import org.codehaus.jettison.json.JSONException;
@@ -38,6 +34,7 @@ public class WindowGame extends BasicGameState {
     private StateBasedGame stateGame;
     private int id;
 
+    private float saveAngle = 0f;
     private long runningTime = 0l;
     public String tmp = "no input";
 
@@ -169,19 +166,15 @@ public class WindowGame extends BasicGameState {
 
             minAngle = (minAngle < 0 ? 360 + minAngle : minAngle);
             maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);
-/*
-            Debug.debug("minAngle: " + minAngle);
-            Debug.debug("maxAngle: " + maxAngle);
-            Debug.debug("newAngle: " + newAngle);
-            */
+
             if (maxAngle < minAngle && ((newAngle >= 0 && newAngle <= maxAngle) || (newAngle >= minAngle && newAngle <= 360))) {
+                this.saveAngle = newAngle;
                 this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(angle);
             } else if (newAngle >= minAngle && newAngle <= maxAngle) {
+                this.saveAngle = newAngle;
                 this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(angle);
-            } else if (newAngle < minAngle) {
-                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(minAngle);
             } else {
-                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(maxAngle);
+                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(this.saveAngle);
             }
         }
     }
