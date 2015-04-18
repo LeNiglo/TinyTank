@@ -28,11 +28,11 @@ public class CollisionObject extends Observable implements Observer{
 
     public CollisionObject(boolean solid,Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
         this.solid = solid;
-        this.shiftOrigin = shiftOrigin;
+        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
+        this.positions = new Pair<Float, Float>(positions);
+        this.sizes = new Pair<Float, Float>(sizes);
         this.type = type;
         this.angle = angle;
-        this.positions = positions;
-        this.sizes = sizes;
         this.saveX = positions.getV1();
         this.saveY = positions.getV2();
         this.idUser = idUser;

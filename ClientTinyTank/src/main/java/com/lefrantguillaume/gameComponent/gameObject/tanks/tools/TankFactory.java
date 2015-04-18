@@ -32,13 +32,12 @@ public class TankFactory {
         EnumShots shot = EnumShots.getEnumByValue(hit.getString("shotType"));
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
-        Debug.debug("sstart");
         Pair<Float, Float> shiftHitImpact = new Pair<Float, Float>(Float.valueOf(hit.getString("shiftXImpact")), Float.valueOf(hit.getString("shiftYImpact")));
-        Debug.debug("end");
         Pair<Float, Float> shiftHitOrigin = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("centerX")), Float.valueOf(hit.getJSONObject("build").getString("centerY")));
-        Pair<Float, Float> shiftWeaponOrigin = new Pair<Float, Float>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitImpact, shiftHitOrigin, animatorGameData.getShotAnimator(shot), shot);
+        Pair<Float, Float> shiftHitHead = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("headX")), Float.valueOf(hit.getJSONObject("build").getString("headY")));
 
+        Pair<Float, Float> shiftWeaponOrigin = new Pair<Float, Float>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitImpact, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shot), shot);
         JSONArray canons = weapon.getJSONArray("canons");
         for (int i = 0; i < canons.length(); ++i){
             JSONObject current = canons.getJSONObject(i);
@@ -46,6 +45,7 @@ public class TankFactory {
             Pair<Float, Float> shiftCanonHead = new Pair<Float, Float>(Float.valueOf(current.getString("shiftXHead")), Float.valueOf(current.getString("shiftYHead")));
             tankWeapon.addCanon(new Canon(shiftOrigin, shiftCanonHead));
         }
+
         JSONArray collisions = hit.getJSONObject("build").getJSONArray("collisions");
         for (int i = 0; i < collisions.length(); ++i){
             JSONObject current = collisions.getJSONObject(i);
@@ -53,6 +53,8 @@ public class TankFactory {
             Pair<Float, Float> sizes= new Pair<Float, Float>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
             tankWeapon.addCollisionObject(new Rectangle(shiftOrigin2, sizes));
         }
+
+
         return tankWeapon;
     }
 

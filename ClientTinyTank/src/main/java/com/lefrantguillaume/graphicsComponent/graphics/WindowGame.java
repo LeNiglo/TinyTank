@@ -38,6 +38,7 @@ public class WindowGame extends BasicGameState {
     private StateBasedGame stateGame;
     private int id;
 
+    private long runningTime = 0l;
     public String tmp = "no input";
 
     public WindowGame(int id, List<Observer> observers, Object gameController) {
@@ -104,16 +105,20 @@ public class WindowGame extends BasicGameState {
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
+        this.runningTime += delta;
+        if (runningTime > 30) {
         /*debug*/
-        Input input = gameContainer.getInput();
-        int xpos = input.getMouseX();
-        int ypos = input.getMouseY();
-        tmp = "MouseSlick position x:" + xpos + " y:" + ypos;
+            Input input = gameContainer.getInput();
+            int xpos = input.getMouseX();
+            int ypos = input.getMouseY();
+            tmp = "MouseSlick position x:" + xpos + " y:" + ypos;
         /**/
 
-        if (this.gameController != null) {
-            this.myMouseMoved(xpos, ypos);
-            this.gameController.updateGame(delta);
+            if (this.gameController != null) {
+                this.myMouseMoved(xpos, ypos);
+                this.gameController.updateGame();
+            }
+            this.runningTime = 0;
         }
     }
 
@@ -164,7 +169,11 @@ public class WindowGame extends BasicGameState {
 
             minAngle = (minAngle < 0 ? 360 + minAngle : minAngle);
             maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);
-
+/*
+            Debug.debug("minAngle: " + minAngle);
+            Debug.debug("maxAngle: " + maxAngle);
+            Debug.debug("newAngle: " + newAngle);
+            */
             if (maxAngle < minAngle && ((newAngle >= 0 && newAngle <= maxAngle) || (newAngle >= minAngle && newAngle <= 360))) {
                 this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(angle);
             } else if (newAngle >= minAngle && newAngle <= maxAngle) {

@@ -13,7 +13,7 @@ import java.util.List;
  * Created by andres_k on 18/03/2015.
  */
 public class TankState {
-    private final Pair<Float, Float> shiftOrigin;
+    private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private List<Rectangle> collisionObject;
     private Animator bodyAnimator;
@@ -38,7 +38,7 @@ public class TankState {
         this.maxLife = maxLife;
         this.armor = armor;
         this.currentLife = maxLife;
-        this.shiftOrigin = shiftOrigin;
+        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
@@ -57,7 +57,7 @@ public class TankState {
         this.maxLife = tankState.maxLife;
         this.armor = tankState.armor;
         this.currentLife = tankState.maxLife;
-        this.shiftOrigin = tankState.shiftOrigin;
+        this.shiftOrigin = new Pair<Float, Float>(tankState.shiftOrigin);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();

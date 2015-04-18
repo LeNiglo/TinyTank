@@ -1,10 +1,7 @@
 package com.lefrantguillaume.graphicsComponent.input;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.gameComponent.playerData.data.PlayerState;
 import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerDelete;

@@ -179,24 +179,23 @@ public class GameController extends Observable implements Observer {
     }
 
     // UPDATE GAME FUNCTIONS
-    public void updateGame(int delta) {
+    public void updateGame() {
         Pair<String, String> impactIds;
 
-        delta = 1;
         if (this.collisionController != null) {
             this.collisionController.cleanCollision();
         }
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getTank().getTankState().isMove()) {
-                if (this.collisionController.checkCollision(this.players.get(i).movePredict(delta), this.players.get(i).getUser().getId()) == null) {
-                    this.players.get(i).move(delta);
+                if (this.collisionController.checkCollision(this.players.get(i).movePredict(), this.players.get(i).getUser().getId()) == null) {
+                    this.players.get(i).move();
                 }
             }
         }
         for (int i = 0; i < this.shots.size(); ++i) {
             if (!this.shots.get(i).getExplode()) {
-                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).movePredict(delta), this.shots.get(i).getId())) == null) {
-                    this.shots.get(i).move(delta);
+                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).movePredict(), this.shots.get(i).getId())) == null) {
+                    this.shots.get(i).move();
                 } else {
                     MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV1(), impactIds.getV2());
                     this.setChanged();
@@ -230,14 +229,14 @@ public class GameController extends Observable implements Observer {
                 this.collisionController.deleteCollisionObject(this.shots.get(i).getId());
                 this.shots.remove(i);
             } else {
-                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, -1 * current.getShiftOrigin().getV2());
+                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
                 current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
                 g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
 
                 // debug
                 g.setColor(Color.black);
                 g.drawRect(current.getX(), current.getY(), 1, 1);
-                g.setColor(Color.red);
+                g.setColor(Color.blue);
                 g.drawRect(current.getGraphicalX(), current.getGraphicalY(), 1, 1);
                 g.setColor(Color.red);
             }

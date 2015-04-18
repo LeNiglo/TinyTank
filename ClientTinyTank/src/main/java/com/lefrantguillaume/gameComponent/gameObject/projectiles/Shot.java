@@ -17,8 +17,9 @@ public class Shot extends Observable implements Observer {
     private final UUID id;
     private final String userId;
     private final Animator animator;
-    private final Pair<Float, Float> shiftOrigin;
+    private final Pair<Float, Float> shiftHead;
     private final Pair<Float, Float> shiftToImpact;
+    private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private float damage;
     private float speed;
@@ -26,9 +27,10 @@ public class Shot extends Observable implements Observer {
     private boolean explode;
     private List<Rectangle> collisionObject;
 
-    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact) {
-        this.shiftOrigin = shiftOrigin;
-        this.shiftToImpact = shiftToImpact;
+    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact, Pair<Float, Float> shiftHead) {
+        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
+        this.shiftToImpact = new Pair<Float, Float>(shiftToImpact);
+        this.shiftHead = new Pair<Float, Float>(shiftHead);
         this.explode = false;
         this.userId = userId;
         this.id = id;
@@ -45,16 +47,12 @@ public class Shot extends Observable implements Observer {
         Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
 
         if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-//            this.shiftOrigin.setV1(this.shiftToImpact.getV1());
- //           this.shiftOrigin.setV2(this.shiftToImpact.getV2());
+            float newX = order.getV1();
+            float newY = order.getV2();
 
-//            Debug.debug("newX= "+order.getV1()+" + " + this.shiftToImpact.getV1()+ " = " + newX);
-  //          Debug.debug("newY= "+order.getV2()+" + " + this.shiftToImpact.getV2() + " = " + newY);
 
-            //rotate newX et newY
-
-            this.positions.setV1(order.getV1());
-            this.positions.setV2(order.getV2());
+            this.positions.setV1(newX);
+            this.positions.setV2(newY);
             this.shiftOrigin.setV1(this.shiftToImpact.getV1());
             this.shiftOrigin.setV2(this.shiftToImpact.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
@@ -66,14 +64,16 @@ public class Shot extends Observable implements Observer {
     }
 
     // FUNCTIONS
-    public void move(int delta) {
-        Pair<Float, Float> coords = MathTools.movePredict(this.angle, this.speed, delta);
-        this.positions.setV1(this.positions.getV1() + coords.getV1());
-        this.positions.setV2(this.positions.getV2() + coords.getV2());
+    public void move() {
+        if (this.explode == false) {
+            Pair<Float, Float> coords = MathTools.movePredict(this.angle, this.speed);
+            this.positions.setV1(this.positions.getV1() + coords.getV1());
+            this.positions.setV2(this.positions.getV2() + coords.getV2());
+        }
     }
 
-    public Pair<Float, Float> movePredict(int delta) {
-        return MathTools.movePredict(this.angle, this.speed, delta);
+    public Pair<Float, Float> movePredict() {
+        return MathTools.movePredict(this.angle, this.speed);
     }
 
     public void addCollisionObject(Rectangle rectangle) {
