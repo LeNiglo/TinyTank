@@ -2,6 +2,7 @@ package com.lefrantguillaume.network.master;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.game.Player;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -12,6 +13,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +29,7 @@ public class Master {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://10.10.253.184:1337/server/";
+        String masterServer = "http://10.10.253.145:1337/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -118,6 +120,32 @@ public class Master {
             DelUserRcv output = response.getEntity(DelUserRcv.class);
             if (!output.getRes()) {
                 Log.error("Master server error: " + output.getErr());
+            }
+        } catch (Exception e) {
+            Log.error(e.getMessage());
+        }
+    }
+
+    public void endMatch(List<Player> player) {
+        try {
+            updateThread.shutdown();
+            SendStatsSnd st = new SendStatsSnd(this.id, player);
+            ClientResponse response = this.getClientResponse(st, "add_game_stats");
+            SendStatsRcv output = response.getEntity(SendStatsRcv.class);
+            if (!output.getRes()) {
+                Log.error("Master server error: " + output.getErr());
+            } else {
+                String users = "";
+                boolean first = true;
+                for (Player entry : player) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        users += ", ";
+                    }
+                    users += entry.getPseudo();
+                }
+                WindowController.addConsoleMsg("Sent player stats for " + users + ".");
             }
         } catch (Exception e) {
             Log.error(e.getMessage());

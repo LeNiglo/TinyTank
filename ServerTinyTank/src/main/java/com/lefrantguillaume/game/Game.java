@@ -18,14 +18,17 @@ import java.util.Map;
 public class Game extends Observable implements Observer {
     private TinyServer server;
     private GameConfig config;
+    private boolean playable;
     private List<String> playerNames = new ArrayList<String>();
     private HashMap<String, Player> players = new HashMap<String, Player>();
     private HashMap<String, Shot> shots = new HashMap<String, Shot>();
-    private HashMap<String, MessageCollision> collisions = new HashMap<String, MessageCollision>();
+    private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<String, HashMap<String, List<List<String>>>>();
+    /////////////// idShot /////// idTarget //////// idPlayer
 
     public Game() {
         this.server = new TinyServer();
         this.server.addObserver(this);
+        this.playable = false;
     }
 
     public void start() {
@@ -34,6 +37,7 @@ public class Game extends Observable implements Observer {
         this.setChanged();
         this.notifyObservers(res);
         WindowController.addConsoleMsg("Game started");
+        playable = true;
     }
 
     public void stop() {
@@ -44,7 +48,7 @@ public class Game extends Observable implements Observer {
 
     public boolean kick(String pseudo) {
         int kicked = 0;
-        for (Map.Entry<String, Player> entry : players.entrySet()){
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
             if (entry.getValue().getPseudo().equals(pseudo)) {
                 players.remove(entry.getValue().getId());
                 entry.getValue().getConnection().close();
@@ -59,7 +63,7 @@ public class Game extends Observable implements Observer {
     public void updatePlayerList() {
         playerNames.clear();
         Log.info("J'efface la liste des joueurs.");
-        for (Map.Entry<String, Player> entry : players.entrySet()){
+        for (Map.Entry<String, Player> entry : players.entrySet()) {
             Log.info("Joueur : " + entry.getValue().getPseudo());
             playerNames.add(entry.getValue().getPseudo());
         }
@@ -84,12 +88,22 @@ public class Game extends Observable implements Observer {
             players.remove(mtd.getRequest().getId());
             updatePlayerList();
         } else if (arg instanceof MessageShootRequestData) {
+            if (!playable) return;
             MessageShootRequestData msd = ((MessageShootRequestData) arg);
-            Shot lastShot = getLastShot(EnumAttack.BASIC, msd.getRequest().getId());
-            if (lastShot == null || System.currentTimeMillis() - lastShot.getTimestamp() > 500) {
+            final Player player = players.get(msd.getRequest().getId());
+            if (player.isCanShoot()) {
+                player.setCanShoot(false);
+                System.out.println("tir de " + msd.getRequest().getPseudo() + " / angle: " + msd.getRequest().getAngle());
                 msd.getRequest().setShootId(UUID.randomUUID().toString());
-                shots.put(msd.getRequest().getShotId(), new Shot(msd.getRequest().getShotId(), msd.getRequest().getId()));
                 msd.getServer().sendToAllTCP(msd.getRequest());
+                TimerTask tt = new TimerTask() {
+                    @Override
+                    public void run() {
+                        player.setCanShoot(true);
+                    }
+                };
+                Timer timer = new Timer();
+                timer.schedule(tt, player.getAmmoCooldown());
             }
         } else if (arg instanceof MessageDisconnectData) {
             for (Map.Entry<String, Player> entry : players.entrySet()) {
@@ -102,9 +116,10 @@ public class Game extends Observable implements Observer {
                 }
             }
         } else if (arg instanceof MessageCollisionData) {
-            MessageCollision mc = ((MessageCollisionData)arg).getRequest();
-            Log.info("Nouvelle collision (" + mc.getPosX() + ", " + mc.getPosY() + "):" + mc.getShotId());
-            collisions.put(mc.getShotId(), mc);
+            if (!playable) return;
+            MessageCollision mc = ((MessageCollisionData) arg).getRequest();
+            Log.info("Nouvelle collision (" + mc.getShotId() + ")");
+            processCollision(mc);
         } else if (arg instanceof MessagePutObject) {
             MessagePutObject mpo = ((MessagePutObject) arg);
             server.getServer().sendToAllTCP(mpo);
@@ -113,29 +128,56 @@ public class Game extends Observable implements Observer {
         this.notifyObservers(arg);
     }
 
-    public Shot getLastShot(EnumAttack type, String playerId) {
-        Shot shot = null;
-        switch (type) {
-            case BASIC:
-                ArrayList<String> keys = new ArrayList<String>(shots.keySet());
-                for (int i = shots.size() - 1; i >= 0; i--) {
-                    Shot theShot = shots.get(keys.get(i));
-                    if (theShot.getPlayerId().equals(playerId)) {
-                        shot = theShot;
+    public void processCollision(MessageCollision mc) {
+        boolean added = false;
+        if (collisions.containsKey(mc.getShotId())) {
+            HashMap<String, List<List<String>>> shootVal = collisions.get(mc.getShotId());
+            if (shootVal.containsKey(mc.getTargetId())) {
+                List<List<String>> targetVal = shootVal.get(mc.getTargetId());
+                for (int i = 0; i > targetVal.size(); ++i) {
+                    List<String> listVal = targetVal.get(i);
+                    if (!listVal.contains(mc.getId())) {
+                        listVal.add(mc.getId());
+                        added = true;
                         break;
                     }
                 }
-                break;
-            case SPELL:
-                break;
-            default:
-                break;
+                if (!added) {
+                    List<String> listVal = new ArrayList<String>();
+                    listVal.add(mc.getId());
+                    targetVal.add(listVal);
+                }
+            } else {
+                List<List<String>> targetVal = new ArrayList<List<String>>();
+                List<String> listVal = new ArrayList<String>();
+                listVal.add(mc.getId());
+                targetVal.add(listVal);
+                shootVal.put(mc.getTargetId(), targetVal);
+            }
+        } else {
+            HashMap<String, List<List<String>>> shootVal = new HashMap<String, List<List<String>>>();
+            List<List<String>> targetVal = new ArrayList<List<String>>();
+            List<String> listVal = new ArrayList<String>();
+            listVal.add(mc.getId());
+            targetVal.add(listVal);
+            shootVal.put(mc.getTargetId(), targetVal);
+            collisions.put(mc.getShotId(), shootVal);
         }
-        return shot;
     }
 
-    public GameConfig getConfig() {return config;}
-    public void setConfig(GameConfig config) {this.config = config;}
-    public List<String> getPlayerNames() {return playerNames;}
-    public HashMap<String, Player> getPlayers() { return players;}
+    public GameConfig getConfig() {
+        return config;
+    }
+
+    public void setConfig(GameConfig config) {
+        this.config = config;
+    }
+
+    public List<String> getPlayerNames() {
+        return playerNames;
+    }
+
+    public HashMap<String, Player> getPlayers() {
+        return players;
+    }
 }

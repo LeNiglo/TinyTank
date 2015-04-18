@@ -26,7 +26,7 @@ public class TinyServer extends Observable {
         try {
             server.addListener(new Listener() {
                 public void connected(Connection connection) {
-                    WindowController.addConsoleMsg("Connected: " + connection.getRemoteAddressTCP().getHostName() + " with Client ID: " + connection.getID());
+                    WindowController.addConsoleMsg("Connected: " + connection.getRemoteAddressTCP().getAddress().getHostAddress() + " with Client ID: " + connection.getID());
                 }
 
                 public void received(Connection connection, Object object) {
@@ -88,7 +88,6 @@ public class TinyServer extends Observable {
     }
 
     private void isMessageShoot(Connection connection, MessageShoot request) {
-        System.out.println("tir de " + request.getPseudo() + " / angle: " + request.getAngle());
         MessageShootRequestData mrd = new MessageShootRequestData(connection, server, request);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mrd);
