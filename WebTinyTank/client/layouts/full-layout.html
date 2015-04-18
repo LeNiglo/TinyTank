@@ -1,0 +1,12 @@
+<template name="fullLayout">
+  {{!-- full width banner here.  In the header template, data-offset must have the height of this element --}}
+  <img src="/img/banner.png" alt="banner" style="width: 100%;" class="img-responsive" />
+
+  {{> header affix="1" }}
+  <div class="container-fluid">
+    <div class="container" id="errors"></div>
+    {{!-- the content must be done for will width --}}
+    {{> yield }}
+  </div>
+  {{> footer}}
+</template>

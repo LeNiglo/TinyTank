@@ -1,0 +1,9 @@
+<template name="profile">
+  {{#with getUserProfile}}
+  <div class="container">
+    <h2 class="page-header text-center">{{ username }}</h2>
+
+    <p>User since {{ getFromRegister createdAt }}</p>
+  </div>
+  {{/with}}
+</template>

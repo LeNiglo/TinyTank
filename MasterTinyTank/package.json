@@ -2,18 +2,27 @@
   "name": "MasterTinyTank",
   "version": "1.0.0",
   "description": "The Master Server of our game is now a Web Service.",
-  "main": "main.js",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/LeNiglo/TinyTank.git"
   },
   "dependencies": {
     "MD5": "*",
+    "background-task": "^0.7.3",
+    "basic-auth-connect": "^1.0.0",
+    "bcrypt": "^0.8.1",
     "body-parser": "^1.12.0",
     "express": "^4.12.2",
     "express-cors": "0.0.3",
+    "express-mailer": "^0.2.4",
+    "jade": "^1.9.2",
+    "jwt-simple": "^0.2.0",
+    "moment": "^2.9.0",
     "mongodb": "^1.4.34",
-    "mongoskin": "^1.4.12"
+    "mongoskin": "^1.4.12",
+    "morgan": "^1.5.2",
+    "rand-token": "^0.2.1"
   },
   "author": "LeNiglo",
   "license": "Apache 2.0",
