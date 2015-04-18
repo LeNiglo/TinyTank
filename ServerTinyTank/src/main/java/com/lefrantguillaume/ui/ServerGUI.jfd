@@ -1,0 +1,228 @@
+JFDML JFormDesigner: "5.2.1.0.138" Java: "1.8.0_25" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq {par t:::p {seq {comp hSpacer1:::p:89:p, space :::p, comp label_server:::p::p, space :::p, comp hSpacer2:::::x}, comp panel1:::p::p}, space :::p, par l {seq {comp separator1:::p:8:p, space :::p, comp panel2:::p::p, space :::p, comp separator2:::p::p}, seq {comp hSpacer3:::p:74:p, space :::p, comp label_server2:::p::p, space :::p, comp hSpacer4:::p:75:p}}, space u:::p, par l {seq {comp hSpacer5:::p:82:p, space :::p, comp label_server3:::p::p, space :::p, comp hSpacer6:::::x}, seq {comp panel3:::::x, space :::p}}}, seq {par l {comp text_input:::::x, comp scroll_console:::::x}, space :::p}}}}"
+			"$verticalGroup": "par l {seq l {space :p:12:p, par b {comp hSpacer1::b:p::p, comp label_server::b:p::p, comp hSpacer2::b:p::p, comp label_server2::b:p::p, comp hSpacer4::b:p::p, comp hSpacer3::b:p::p, comp label_server3::b:p::p, comp hSpacer6:::p::p, comp hSpacer5::b:p::p}, space :::p, par l:::p {comp panel1:::::x, comp separator1::::199:x, comp panel2::l:::x, comp separator2::t:::x, comp panel3::l:::x}, space :::p, comp scroll_console::::294:x, space :::p, comp text_input:::p::p, space :::p}}"
+		} ) {
+			name: "rootPanel"
+			"maximumSize": new java.awt.Dimension( 940, 580 )
+			"minimumSize": new java.awt.Dimension( 1920, 900 )
+			"preferredSize": new java.awt.Dimension( 940, 880 )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {seq {comp label_name:::p:80:p, space :::p, comp field_name:::p:185:p}, seq {par l {comp label_tcp:::p:80:p, comp label_udp::t:p:80:p}, space :::p, par l {comp field_tcp:::p:70:p, comp field_udp:::p:70:p}, space :p:12:p, par l {comp check_noblock:::p::p, comp check_ff:::p::p}}, seq l {comp label_max_players:::p:80:p, space :::p, comp field_max_players:::p:70:p}, seq l {comp label_max_ping:::p:80:p, space :::p, comp field_max_ping:::p:70:p, space u:::p, comp label18:::p::p}}, space :0:9:x}, comp button_save::t::280:x}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, par b {comp label_name::b:p::p, comp field_name::b:p::p}, space :::p, par b {comp field_max_players::b:p::p, comp label_max_players::b:p::p}, space :::p, par b {comp field_max_ping::b:p::p, comp label_max_ping::b:p::p, comp label18::b:p::p}, space :::p, par b {comp label_tcp::b:p::p, comp field_tcp::b:p::p, comp check_ff::b:p::p}, space :::p, par b {comp label_udp::b:p::p, comp field_udp::b:p::p, comp check_noblock::b:p::p}, space ::11:x, comp button_save:::p::p, space :::p}}"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_name"
+					"text": "Game name"
+					"labelFor": new FormReference( "field_name" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_max_players"
+					"text": "Max players"
+					"labelFor": new FormReference( "field_max_players" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_max_ping"
+					"text": "Max ping"
+					"labelFor": new FormReference( "field_max_ping" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_tcp"
+					"text": "TCP port"
+					"labelFor": new FormReference( "field_tcp" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_udp"
+					"text": "UDP port"
+					"labelFor": new FormReference( "field_udp" )
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_name"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_max_players"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_max_ping"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_udp"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_tcp"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "check_ff"
+					"text": "Friendly fire"
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "check_noblock"
+					"text": "Ally noblock"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label18"
+					"text": "ms"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button_save"
+					"text": "Save all changes"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_saveMouseClicked", true ) )
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scroll_console"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "text_console"
+					"editable": false
+					"background": new java.awt.Color( 36, 36, 36, 255 )
+					"foreground": new java.awt.Color( 204, 204, 204, 255 )
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "text_input"
+				"background": new java.awt.Color( 36, 36, 36, 255 )
+				"foreground": new java.awt.Color( 255, 255, 255, 255 )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyPressed", "text_inputKeyPressed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label_server"
+				"text": "Tiny Server"
+				"font": &Font0 new java.awt.Font( "Calibri", 1, 22 )
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator1"
+				"orientation": 1
+				"foreground": new java.awt.Color( 255, 255, 255, 255 )
+			} )
+			add( new FormComponent( "javax.swing.JSeparator" ) {
+				name: "separator2"
+				"orientation": 1
+				"foreground": new java.awt.Color( 255, 255, 255, 255 )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq l {par l {comp button_start:::p::p, comp label_timelimit:::::x}, space :p::p, par l {seq {space :0:196:x, comp button1:::p:36:p}, seq t {comp button_stop:::p::p, space :::p, comp button_froce_change::::172:x}, comp field_timelimit::l::232:x}}, seq l {comp label_mode:::p::p, space :::p, comp combo_mode::::247:x}, seq {comp label_map:::p::p, space :::p, comp combo_map:::p:222:p, space :0:0:x}, seq l {comp label_pts:::p::p, space :::p, comp field_pts::::198:x}}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, par l {comp label_map:::p::p, comp button1::l:p:26:p, comp combo_map::l:::p}, space :::p, par l {comp label_mode:::p::p, comp combo_mode:::p::p}, space :::p, par b {comp label_pts::b:p::p, comp field_pts::b:p::p}, space :::p, par b {comp label_timelimit::b:p::p, comp field_timelimit::b:p::p}, space ::37:x, par b {comp button_start::b:p::p, comp button_stop::b:p::p, comp button_froce_change::b:p::p}, space :::p}}"
+			} ) {
+				name: "panel2"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_map"
+					"text": "Map"
+					"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
+					"labelFor": new FormReference( "combo_map" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_mode"
+					"text": "Mode"
+					"font": #SwingDerivedFont0
+					"labelFor": new FormReference( "combo_mode" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_pts"
+					"text": "Pts (or kills) limit"
+					"labelFor": new FormReference( "field_pts" )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_timelimit"
+					"text": "Time limit"
+					"labelFor": new FormReference( "field_timelimit" )
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "combo_map"
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "combo_mode"
+					"model": new javax.swing.DefaultComboBoxModel {
+						selectedItem: "Free For All"
+						addElement( "Free For All" )
+						addElement( "Team Deathmatch" )
+						addElement( "Capture The Flag" )
+						addElement( "Domination" )
+					}
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_pts"
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "field_timelimit"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button_start"
+					"text": "Start"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_startMouseClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button_stop"
+					"text": "Stop"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_stopMouseClicked", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button_froce_change"
+					"text": "Force change map"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"icon": new com.jformdesigner.model.SwingIcon( 1, "C:\\Users\\Styve\\TinyTank\\ServerTinyTank\\src\\main\\resources\\refresh.png" )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button_refreshMouseClicked", true ) )
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label_server2"
+				"text": "Game preferences"
+				"font": #Font0
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp scroll_players::::312:x, space :::p}, seq l {space :0:222:x, comp label1:::p::p, space :::p, comp label_uptime:::p::p}}}}"
+				"$verticalGroup": "par l {seq l {space :::p, comp scroll_players:::p:115:p, space ::56:x, par b {comp label_uptime::b:p::p, comp label1::b:p::p}, space :::p}}"
+			} ) {
+				name: "panel3"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scroll_players"
+					add( new FormComponent( "javax.swing.JTable" ) {
+						name: "table_players"
+						"selectionMode": 0
+						"enabled": false
+					} )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label_uptime"
+					"text": "0:00:00:00"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "Uptime"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label_server3"
+				"text": "Informations"
+				"font": #Font0
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer1"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer2"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer3"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer4"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer5"
+			} )
+			add( new FormComponent( "com.jformdesigner.designer.wrapper.HSpacer" ) {
+				name: "hSpacer6"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 975, 580 )
+		} )
+	}
+}
