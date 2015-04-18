@@ -1,178 +1,114 @@
 package com.lefrantguillaume.collisionComponent;
 
-import com.lefrantguillaume.Utils.Debug;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.gameComponent.controllers.MapController;
+import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 10/03/2015.
  */
 public class CollisionController {
     private List<CollisionObject> items;
-//    private List<Pair<CollisionObject, List<CollisionObject>>> areas;
 
-    public CollisionController() {
+    public CollisionController(MapController map) {
         this.items = new ArrayList<CollisionObject>();
-/*
-        this.areas = new ArrayList<Pair<CollisionObject, List<CollisionObject>>>();
-        this.areas.add(new Pair<CollisionObject, List<CollisionObject>>(new CollisionObject(0, 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2, -1, -1), new ArrayList<CollisionObject>()));
-        this.areas.add(new Pair<CollisionObject, List<CollisionObject>>(new CollisionObject(WindowConfig.getSizeX() / 2, 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2, -2, -2),
-                new ArrayList<CollisionObject>()));
-        this.areas.add(new Pair<CollisionObject, List<CollisionObject>>(new CollisionObject(0, WindowConfig.getSizeY() / 2, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2, -3, -3),
-                new ArrayList<CollisionObject>()));
-        this.areas.add(new Pair<CollisionObject, List<CollisionObject>>(new CollisionObject(WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2, -4, -4),
-                new ArrayList<CollisionObject>()));
-*/
+        this.createWorld(map);
+    }
+
+    // FUNCTIONS
+    public void createWorld(MapController map) {
+        Pair<Float, Float> pos1 = new Pair<Float, Float>(map.getSizeX() / 2, 0f);
+        Pair<Float, Float> pos2 = new Pair<Float, Float>(map.getSizeX() / 2, map.getSizeY());
+        Pair<Float, Float> pos3 = new Pair<Float, Float>(0f, map.getSizeY() / 2);
+        Pair<Float, Float> pos4 = new Pair<Float, Float>(map.getSizeX(), map.getSizeY() / 2);
+        Pair<Float, Float> size1 = new Pair<Float, Float>(map.getSizeX(), 5f);
+        Pair<Float, Float> size2 = new Pair<Float, Float>(5f, map.getSizeY());
+        Pair<Float, Float> origin1 = new Pair<Float, Float>(-map.getSizeX() / 2, -5f);
+        Pair<Float, Float> origin2 = new Pair<Float, Float>(-map.getSizeX() / 2, 0f);
+        Pair<Float, Float> origin3 = new Pair<Float, Float>(-5f, -map.getSizeY() / 2);
+        Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
+
+        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+
     }
 
     public void addCollisionObject(CollisionObject object) {
         Debug.debug("Add object with user:" + String.valueOf(object.getIdUser() + " and id:" + String.valueOf(object.getId())));
         this.items.add(object);
-/*
-        if (CollisionDetection.checkCollision(areas.get(0).getKey(), object)) {
-            object.addAreaId(0);
-            this.areas.get(0).getValue().add(object);
-        }
-        if (CollisionDetection.checkCollision(areas.get(1).getKey(), object)) {
-            object.addAreaId(1);
-            this.areas.get(1).getValue().add(object);
-        }
-        if (CollisionDetection.checkCollision(areas.get(2).getKey(), object)) {
-            object.addAreaId(2);
-            this.areas.get(2).getValue().add(object);
-        }
-        if (CollisionDetection.checkCollision(areas.get(3).getKey(), object)) {
-            object.addAreaId(3);
-            this.areas.get(3).getValue().add(object);
-        }
-*/
     }
 
-    public void actualiseArea(CollisionObject object) {
-/*
-        if (CollisionDetection.checkCollision(areas.get(0).getKey(), object)) {
-            if (!object.getAreaId().contains(0)) {
-                object.addAreaId(0);
-                this.areas.get(0).getValue().add(object);
-            }
-        } else {
-            if (object.getAreaId().contains(0)) {
-                int index = this.getCollisionObjectIndex(object.getId());
-                Debug.debug("delete index:" + String.valueOf(index));
-                this.areas.get(0).getValue().remove(index);
-            }
-        }
-        if (CollisionDetection.checkCollision(areas.get(1).getKey(), object)) {
-            if (!object.getAreaId().contains(1)) {
-                object.addAreaId(1);
-                this.areas.get(1).getValue().add(object);
-            }
-        } else {
-            if (object.getAreaId().contains(1)) {
-                this.areas.get(1).getValue().remove(this.getCollisionObjectIndex(object.getId()));
-            }
-        }
-        if (CollisionDetection.checkCollision(areas.get(2).getKey(), object)) {
-            if (!object.getAreaId().contains(2)) {
-                Debug.debug("add item");
-                object.addAreaId(2);
-                this.areas.get(2).getValue().add(object);
-            }
-        } else {
-            if (object.getAreaId().contains(2)) {
-                this.areas.get(2).getValue().remove(this.getCollisionObjectIndex(object.getId()));
-            }
-        }
-        if (CollisionDetection.checkCollision(areas.get(3).getKey(), object)) {
-            if (!object.getAreaId().contains(3)) {
-                object.addAreaId(3);
-                this.areas.get(3).getValue().add(object);
-            }
-        } else {
-            if (object.getAreaId().contains(3)) {
-                this.areas.get(3).getValue().remove(this.getCollisionObjectIndex(object.getId()));
-            }
-        }
-  */
-    }
-
-    /*
-        public Pair<CollisionObject, List<CollisionObject>> getArea(int index) {
-            return this.areas.get(index);
-        }
-    */
-    public CollisionObject getCollisionObject(int id) {
+    public void deleteCollisionObject(UUID id) {
         for (int i = 0; i < this.items.size(); ++i) {
             if (this.items.get(i).getId() == id)
-                return this.items.get(i);
-
-/*
-            for (int i2 = 0; i2 < this.areas.get(i).getValue().size(); ++i2) {
-                if (this.areas.get(i).getValue().get(i2).getId() == id)
-                    return this.areas.get(i).getValue().get(i2);
-            }
+                this.items.remove(i);
         }
- */
-        }
-        return null;
     }
 
-    /*
-    public int getCollisionObjectIndex(int id) {
-        for (int i = 0; i < this.areas.size(); ++i) {
-            for (int i2 = 0; i2 < this.areas.get(i).getValue().size(); ++i2) {
-                if (this.areas.get(i).getValue().get(i2).getId() == id) {
-                    return i2;
-                }
-            }
-        }
-        Debug.debug("fail");
-        return -1;
+    public void clearCollisionObjects() {
+        this.items.clear();
     }
-*/
-    public boolean checkCollision(Pair<Float, Float> coords, int id) {
-        CollisionObject object = this.getCollisionObject(id);
-        if (object != null) {
-            object.modifCoord(coords);
-            this.actualiseArea(object);
-            if (this.items.size() != 1) {
-                Debug.debug(String.valueOf(this.items.size()));
-                for (int i = 0; i < this.items.size(); ++i) {
-                    CollisionObject current = this.items.get(i);
-                    if (current.getIdUser() != object.getIdUser()) {
-                        if (CollisionDetection.checkCollision(object, current)) {
-                            object.alertObservers();
-                            object.backToSave();
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-  /*      CollisionObject object = this.getCollisionObject(id);
-        if (object != null) {
-            object.modifCoord(coords);
-            this.actualiseArea(object);
-            for (int i = 0; i < object.getAreaId().size(); ++i) {
-                if (this.areas.get(i).getValue().size() != 1) {
-                    Debug.debug(String.valueOf(this.areas.get(i).getValue().size()));
-                    for (int i2 = 0; i2 < this.areas.get(i).getValue().size(); ++i2) {
-                        CollisionObject current = this.areas.get(i).getValue().get(i2);
-                        if (current.getIdUser() != object.getIdUser()) {
-                            if (CollisionDetection.checkCollision(object, current)) {
-                                object.backToSave();
-                                return true;
+
+    public Pair<String, String> checkCollision(Pair<Float, Float> coords, UUID id) {
+        List<CollisionObject> objects = this.getCollisionObject(id);
+        try {
+            if (!objects.isEmpty()) {
+                for (int i = 0; i < objects.size(); ++i) {
+                    objects.get(i).modifCoord(coords);
+                    if (this.items.size() != 1) {
+                        for (int i2 = 0; i2 < this.items.size(); ++i2) {
+                            CollisionObject current = this.items.get(i2);
+                            if (!current.getIdUser().equals(objects.get(i).getIdUser())) {
+                                if (CollisionDetection.checkCollision(objects.get(i), current)) {
+                                    objects.get(i).notifyCollision(current.getType());
+                                    current.notifyCollision(current.getType());
+                                    if (current.isSolid()) {
+                                        objects.get(i).backToSave();
+                                    }
+                                    return new Pair<String, String>(id.toString(), current.getId().toString());
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        return false;
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
-    */
+
+    public void cleanCollision(){
+        for (int i = 0; i < this.items.size(); ++i){
+            CollisionObject current = this.items.get(i);
+            if (current != null && current.isDestroyed()){
+                this.items.remove(i);
+            }
+        }
+    }
+
+    // GETTERS
+
+    public List<CollisionObject> getCollisionObject(UUID id) {
+        List<CollisionObject> result = new ArrayList<CollisionObject>();
+        for (int i = 0; i < this.items.size(); ++i) {
+            if (this.items.get(i) != null) {
+                if (this.items.get(i).getId() == id)
+                    result.add(this.items.get(i));
+            }
+        }
+        return result;
+    }
+
+    public List<CollisionObject> getCollisionObjects() {
+        return this.items;
+    }
 }

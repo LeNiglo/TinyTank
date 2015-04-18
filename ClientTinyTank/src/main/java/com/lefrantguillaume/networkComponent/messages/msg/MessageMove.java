@@ -2,6 +2,8 @@ package com.lefrantguillaume.networkComponent.messages.msg;
 
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
+import java.util.UUID;
+
 /**
  * Created by andres_k on 12/03/2015.
  */
@@ -10,10 +12,11 @@ public class MessageMove extends MessageModel {
     private boolean move;
 
     public MessageMove(){};
-    public MessageMove(String pseudo, int id, int direction, boolean move){
+    public MessageMove(String pseudo, String id, int direction, boolean move){
         this.pseudo = pseudo;
-        this.direction = direction;
         this.id = id;
+        this.playerAction = true;
+        this.direction = direction;
         this.move = move;
     }
 

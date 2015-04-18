@@ -1,5 +1,6 @@
 package com.lefrantguillaume.gameComponent.animations;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import org.newdawn.slick.Animation;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class Animator implements Observer {
        return this.animations.get(this.index);
     }
 
+    public Pair<Float, Float> currentSizeAnimation(){
+        return new Pair<Float, Float>((float)this.animations.get(this.index).getWidth(), (float)this.animations.get(this.index).getHeight());
+    }
     public void setIndex(int index){
         this.index = index;
     }

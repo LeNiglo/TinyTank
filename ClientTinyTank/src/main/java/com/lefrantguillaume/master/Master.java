@@ -1,123 +1,85 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.Utils.configs.NetworkConfig;
-import com.lefrantguillaume.Utils.configs.User;
-import com.lefrantguillaume.authComponent.AuthenticationController;
-import com.lefrantguillaume.gameComponent.GameController;
-import com.lefrantguillaume.gameComponent.animations.AnimatorData;
-import com.lefrantguillaume.graphicsComponent.input.InputGameObserver;
-import com.lefrantguillaume.graphicsComponent.input.InputHomeObserver;
-import com.lefrantguillaume.graphicsComponent.input.InputObserver;
+import com.lefrantguillaume.Utils.configs.MasterConfig;
+import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
+import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
+import com.lefrantguillaume.gameComponent.controllers.GameController;
+import com.lefrantguillaume.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowFactory;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowGame;
-import com.lefrantguillaume.graphicsComponent.graphics.WindowHome;
 import com.lefrantguillaume.networkComponent.NetworkCall;
 import com.lefrantguillaume.networkComponent.NetworkMessage;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observer;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 10/03/2015.
  */
 public class Master {
-    private User user;
+    private CurrentUser currentUser;
     private GameController gameController;
-    private AuthenticationController authController;
-    private AnimatorData animatorData;
+    private InterfaceController interfaceController;
     private NetworkCall networkCall;
     private NetworkMessage masterRequestQueue;
     private NetworkMessage masterResponseQueue;
     private WindowConfig windowConfig;
-    private NetworkConfig networkConfig;
-    private InputObserver inputGameObserver;
-    private InputObserver inputHomeObserver;
+    private GenericRequestObserver genericRequestObserver;
     private MasterRequestController masterRequestController;
     private MasterResponseController masterResponseController;
 
-    public Master(int x, int y) {
-        init(x, y);
-    }
-
-    private void init(int x, int y) {
-        this.windowConfig = new WindowConfig(x, y);
-        this.user = new User("unknown", 0);
-        this.animatorData = new AnimatorData();
+    public Master() throws SlickException {
+        this.windowConfig = new WindowConfig();
+        this.currentUser = new CurrentUser("unknown", UUID.randomUUID().toString());
         this.initGame();
         this.initNetwork();
         this.initInput();
     }
-    private void initGame(){
+
+    private void initGame() throws SlickException {
         this.gameController = new GameController();
+        this.interfaceController = new InterfaceController();
     }
+
     private void initNetwork() {
         this.masterRequestQueue = new NetworkMessage();
         this.masterResponseQueue = new NetworkMessage();
         this.masterResponseController = new MasterResponseController(this.masterResponseQueue);
-        this.networkConfig = new NetworkConfig();
-        this.networkCall = new NetworkCall(this.networkConfig);
+        this.networkCall = new NetworkCall(new NetworkServerConfig(MasterConfig.getMasterUdpPort(), MasterConfig.getMasterTcpPort(), MasterConfig.getMasterAddress()));
         this.networkCall.addObserver(this.masterResponseController);
         this.masterRequestController = new MasterRequestController(this.masterRequestQueue, this.networkCall);
         this.masterRequestQueue.addObserver(this.masterRequestController);
     }
 
     private void initInput() {
-        this.inputGameObserver = new InputGameObserver(this.masterRequestQueue);
-        this.inputHomeObserver = new InputHomeObserver(this.masterRequestQueue);
+        this.genericRequestObserver = new GenericRequestObserver(this.masterRequestQueue);
     }
 
     public void start() {
- //       if (this.launchHome() == true) {
-            this.launchGame();
- //       }
-    }
-
-    public boolean launchHome() {
         try {
-            List<Observer> observers = new ArrayList<Observer>();
-            observers.add(inputHomeObserver);
-            this.masterResponseController.addObserver(this.authController);
-            AppGameContainer game = WindowFactory.windowFactory(observers, WindowHome.class, this.windowConfig, this.animatorData, this.authController, false);
-            game.start();
+            this.startAuthentication();
+            this.startGame();
         } catch (SlickException e) {
             e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-        this.masterResponseController.deleteObservers();
-        return true;
     }
 
-    public boolean launchGame() {
-        try {
-            List<Observer> observers = new ArrayList<Observer>();
-            observers.add(inputGameObserver);
-            this.masterResponseController.addObserver(this.gameController);
-            AppGameContainer game = WindowFactory.windowFactory(observers, WindowGame.class, this.windowConfig, this.animatorData, this.gameController, false);
-            game.start();
-        } catch (SlickException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        this.masterResponseController.deleteObservers();
-        return true;
+    private void startAuthentication(){
+
+    }
+
+    private void startGame() throws SlickException {
+        List<Observer> observers = new ArrayList<Observer>();
+        observers.add(this.genericRequestObserver);
+        this.masterResponseController.addObserver(this.interfaceController);
+        this.masterResponseController.addObserver(this.gameController);
+        AppGameContainer appGame = new AppGameContainer(new Windows("TinyTank", observers, this.interfaceController, this.gameController));
+        appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
+        appGame.start();
+
     }
 }
