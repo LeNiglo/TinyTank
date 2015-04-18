@@ -1,0 +1,40 @@
+{
+  "name": "Sioupeur",
+  "obstacles": [
+    {
+      "type": "box",
+      "matter": "plastic",
+      "position": {
+        "x": 50,
+        "y": 150
+      },
+      "size": {
+        "x": 20,
+        "y": 20
+      },
+      "health": 100
+    }
+  ],
+  "spawnpoints": [
+    {
+      "team": 1,
+      "x": 15,
+      "y": 20
+    },
+    {
+      "team": 1,
+      "x": 45,
+      "y": 80
+    },
+    {
+      "team": 2,
+      "x": 300,
+      "y": 20
+    },
+    {
+      "team": 2,
+      "x": 330,
+      "y": 80
+    }
+  ]
+}
