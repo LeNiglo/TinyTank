@@ -2,8 +2,8 @@ package com.lefrantguillaume.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.game.EnumObjects;
-import com.lefrantguillaume.game.EnumTanks;
+import com.lefrantguillaume.game.enums.EnumObjects;
+import com.lefrantguillaume.game.enums.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package com.lefrantguillaume.network.clientmsgs;
 
-import com.lefrantguillaume.game.EnumTanks;
+import com.lefrantguillaume.game.enums.EnumTanks;
 
 /**
  * Created by Styve on 25/03/2015.
