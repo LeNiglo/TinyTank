@@ -76,10 +76,19 @@ public class Game extends Observable implements Observer {
         if (arg instanceof MessageTankData) {
             MessageTankData mtd = ((MessageTankData) arg);
             mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
-            players.put(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), mtd.getRequest().getEnumTanks(), mtd.getConnection()));
+            /*
+             * FIX THIS
+             */
+
+            // players.put(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), mtd.getRequest().getEnumTanks(), mtd.getConnection()));
             for (Map.Entry<String, Player> entry : players.entrySet()) {
                 MessagePlayerNew a = ((MessageTankData) arg).getRequest();
-                a.setEnumTanks(entry.getValue().getTank());
+
+                /*
+                 * SAME HERE
+                 */
+
+                // a.setEnumTanks(entry.getValue().getTank());
                 a.setId(entry.getValue().getId());
                 a.setPseudo(entry.getValue().getPseudo());
                 mtd.getServer().sendToTCP(mtd.getConnection().getID(), a);
@@ -207,7 +216,7 @@ public class Game extends Observable implements Observer {
 
     private void gestCollision(String shotId, String targetId) {
 
-
+        WindowController.addConsoleMsg("Shot : "+shotId+", target : "+targetId);
 
     }
 
