@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.enums.EnumTanks;
+import com.lefrantguillaume.game.gameobjects.tanks.types.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.ServerConfig;
@@ -127,12 +127,14 @@ public class TinyServer extends Observable {
 
     private void isMessageTankChoice(Connection connection, MessagePlayerNew request) {
         System.out.println("Nouveau joueur: " + request.getPseudo());
+        /*
         EnumTanks tankId = request.getEnumTanks();
         String tank = (tankId == EnumTanks.RUSHER ? "Rusher" : (tankId == EnumTanks.SNIPER ? "Sniper" : (tankId == EnumTanks.TIGER ? "Tiger" : "NULL")));
         System.out.println(request.getPseudo() + " a choisi le tank: " + tank);
         MessageTankData mtd = new MessageTankData(server, connection, request);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mtd);
+         */
     }
 
     private void isMessageUpdate(Connection connection, MessagePlayerUpdatePosition request) {
