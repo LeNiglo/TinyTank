@@ -2,7 +2,7 @@ package com.lefrantguillaume.network.master;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.Player;
+import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -29,7 +29,7 @@ public class Master {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://10.10.253.145:1337/server/";
+        String masterServer = "http://127.0.0.1:1337/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);

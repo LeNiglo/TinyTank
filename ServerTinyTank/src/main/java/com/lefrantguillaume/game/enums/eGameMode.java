@@ -1,4 +1,4 @@
-package com.lefrantguillaume.game;
+package com.lefrantguillaume.game.enums;
 
 /**
  * Created by Styve on 19/03/2015.

@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.EnumTanks;
+import com.lefrantguillaume.game.enums.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.ServerConfig;

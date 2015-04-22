@@ -1,4 +1,4 @@
-package com.lefrantguillaume.game;
+package com.lefrantguillaume.game.gameobjects.shots;
 
 /**
  * Created by Styve on 25/03/2015.

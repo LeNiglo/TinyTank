@@ -1,7 +1,6 @@
 package com.lefrantguillaume.network.msgdatas;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.lefrantguillaume.game.Player;
 
 /**
  * Created by Styve on 25/03/2015.
