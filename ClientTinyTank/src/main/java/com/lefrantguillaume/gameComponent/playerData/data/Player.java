@@ -43,7 +43,7 @@ public class Player extends Observable implements Observer{
     public void update(Observable o, Object arg) {
         Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
 
-        if (order.getV3() == EnumType.SMOKE) {
+        if (order.getV3() == EnumType.AREA) {
         }
     }
 

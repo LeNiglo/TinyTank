@@ -131,6 +131,7 @@ public class GameController extends Observable implements Observer {
         this.players.add(player);
     }
 
+
     public void changeStatePlayer(MessagePlayerUpdateState task) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
