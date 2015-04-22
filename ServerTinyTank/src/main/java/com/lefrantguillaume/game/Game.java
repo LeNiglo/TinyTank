@@ -194,6 +194,7 @@ public class Game extends Observable implements Observer {
 
     private void addTimer(final String it1, final String it2, final int it3) {
 
+        /*
         Timer timer = new Timer();
 
         timer.schedule(new TimerTask() {
@@ -211,6 +212,7 @@ public class Game extends Observable implements Observer {
 
             }
         }, 150);
+        */
 
     }
 
