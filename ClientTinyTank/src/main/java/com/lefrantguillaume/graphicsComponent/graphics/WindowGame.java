@@ -58,7 +58,6 @@ public class WindowGame extends BasicGameState {
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
-        gameContainer.setAlwaysRender(true);
         this.container.setForceExit(false);
         this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
         this.animatorGameData.initGame();
@@ -70,6 +69,14 @@ public class WindowGame extends BasicGameState {
         } catch (JSONException e) {
             throw new SlickException(e.getMessage());
         }
+    }
+
+    @Override
+    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException{
+        this.container.setTargetFrameRate(80);
+        this.container.setShowFPS(true);
+        this.container.setAlwaysRender(false);
+        this.container.setVSync(false);
     }
 
     @Override

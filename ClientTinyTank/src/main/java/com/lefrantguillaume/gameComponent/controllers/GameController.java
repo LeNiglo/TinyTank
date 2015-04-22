@@ -76,18 +76,21 @@ public class GameController extends Observable implements Observer {
                     MessagePlayerNew task = (MessagePlayerNew) received;
                     if (this.animatorGameData != null && this.tankConfigData.isValid()) {
                         Debug.debug("NEW PLAYER");
-                        this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), 50, 50));
-                        if (task.getId().equals(CurrentUser.getId())) {
-                            CurrentUser.setInGame(true);
-                            this.collisionController.createWorld(this.mapController);
-                        } else {
-                            Debug.debug("My position send -> [" + this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() + "," +
-                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() + "]");
-                            MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
-                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
-                            this.setChanged();
-                            this.notifyObservers(request);
+                        if (CurrentUser.isInGame() == true || CurrentUser.getId().equals(task.getId())) {
+                            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), 50, 50));
+                            if (task.getId().equals(CurrentUser.getId())) {
+                                CurrentUser.setInGame(true);
+                                this.collisionController.createWorld(this.mapController);
+                            } else {
+                                Debug.debug("My position send -> [" + this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() + "," +
+                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() + "]");
+
+                                MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
+                                this.setChanged();
+                                this.notifyObservers(request);
+                            }
                         }
                     }
                 }

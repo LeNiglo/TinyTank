@@ -44,8 +44,12 @@ public class TankConfigData {
     }
 
     public Tank getTank(EnumTanks index) {
-        Debug.debug("index:"+index);
-        return new Tank(this.tanks.get(index.getIndex()));
+        if (this.valid == true && index.getIndex() < this.tanks.size()) {
+            return new Tank(this.tanks.get(index.getIndex()));
+        }
+        else {
+            return null;
+        }
     }
 
     public boolean isValid() {

@@ -51,6 +51,14 @@ public class WindowInterface extends BasicGameState {
     }
 
     @Override
+    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException{
+        this.container.setTargetFrameRate(10);
+        this.container.setShowFPS(false);
+        this.container.setAlwaysRender(false);
+        this.container.setVSync(false);
+    }
+
+    @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         this.interfaceController.drawBackground(g);
         this.interfaceController.drawCurrentTankStat(g);
