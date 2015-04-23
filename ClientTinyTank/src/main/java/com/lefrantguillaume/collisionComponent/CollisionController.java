@@ -33,10 +33,10 @@ public class CollisionController {
         Pair<Float, Float> origin3 = new Pair<Float, Float>(-5f, -map.getSizeY() / 2);
         Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
 
-        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID(), EnumType.OBSTACLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
 
     }
 
@@ -56,7 +56,7 @@ public class CollisionController {
         this.items.clear();
     }
 
-    public Pair<String, String> checkCollision(Pair<Float, Float> coords, UUID id) {
+    public Pair<Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, UUID id) {
         List<CollisionObject> objects = this.getCollisionObject(id);
         try {
             if (!objects.isEmpty()) {
@@ -72,24 +72,26 @@ public class CollisionController {
                                     if (current.isSolid()) {
                                         objects.get(i).backToSave();
                                     }
-                                    return new Pair<String, String>(id.toString(), current.getId().toString());
+                                    if (current.getType() != EnumType.UNBREAKABLE) {
+                                        return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(id.toString(), current.getId().toString()));
+                                    }
+                                    return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(id.toString(), current.getId().toString()));
                                 }
                             }
                         }
                     }
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void cleanCollision(){
-        for (int i = 0; i < this.items.size(); ++i){
+    public void cleanCollision() {
+        for (int i = 0; i < this.items.size(); ++i) {
             CollisionObject current = this.items.get(i);
-            if (current != null && current.isDestroyed()){
+            if (current != null && current.isDestroyed()) {
                 this.items.remove(i);
             }
         }

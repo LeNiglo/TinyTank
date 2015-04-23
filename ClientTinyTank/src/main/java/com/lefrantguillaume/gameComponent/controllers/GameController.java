@@ -184,7 +184,7 @@ public class GameController extends Observable implements Observer {
 
     // UPDATE GAME FUNCTIONS
     public void updateGame() {
-        Pair<String, String> impactIds;
+        Pair<Boolean, Pair<String, String>> impactIds;
 
         if (this.collisionController != null) {
             this.collisionController.cleanCollision();
@@ -201,9 +201,11 @@ public class GameController extends Observable implements Observer {
                 if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).movePredict(), this.shots.get(i).getId())) == null) {
                     this.shots.get(i).move();
                 } else {
-                    MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV1(), impactIds.getV2());
-                    this.setChanged();
-                    this.notifyObservers(request);
+                    if (impactIds.getV1() == true) {
+                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV2().getV1(), impactIds.getV2().getV2());
+                        this.setChanged();
+                        this.notifyObservers(request);
+                    }
                 }
             }
         }

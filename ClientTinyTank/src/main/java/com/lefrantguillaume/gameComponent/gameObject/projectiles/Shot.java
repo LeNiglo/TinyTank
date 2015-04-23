@@ -46,7 +46,7 @@ public class Shot extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
 
-        if (order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
+        if (order.getV3() == EnumType.UNBREAKABLE || order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
             float newX = order.getV1();
             float newY = order.getV2();
 
