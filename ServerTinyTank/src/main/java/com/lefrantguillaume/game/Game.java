@@ -3,34 +3,61 @@ package com.lefrantguillaume.game;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.game.gameobjects.shots.Shot;
+import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.MessageCollision;
 import com.lefrantguillaume.network.clientmsgs.MessagePlayerNew;
 import com.lefrantguillaume.network.clientmsgs.MessagePutObject;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.GameConfig;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.Map;
 
 /**
  * Created by Styve on 10/03/2015.
  */
+
 public class Game extends Observable implements Observer {
     private TinyServer server;
     private GameConfig config;
     private boolean playable;
     private List<String> playerNames = new ArrayList<String>();
-    private HashMap<String, Player> players = new HashMap<String, Player>();
-    private HashMap<String, Player> targets = new HashMap<String, Player>();
-    // private HashMap<String, Shot> shots = new HashMap<String, Shot>();
+    private Target target = null;
+    private TankConfigData tankConfigData = null;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<String, HashMap<String, List<List<String>>>>();
     /////////////// idShot /////// idTarget //////// idPlayer
 
-    public Game() {
+    public Game() throws Exception {
         this.server = new TinyServer();
         this.server.addObserver(this);
         this.playable = false;
+        this.tankConfigData = new TankConfigData();
+        /*
+        TODO Get this from the master.
+         */
+        String content = null;
+        File file = new File("tanks.json");
+        try {
+            FileReader reader = new FileReader(file);
+            char[] chars = new char[(int) file.length()];
+            reader.read(chars);
+            content = new String(chars);
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+        Until here
+         */
+        this.tankConfigData.initTanks(new JSONObject(content));
+        this.target = new Target();
     }
 
     public void start() {
@@ -50,9 +77,9 @@ public class Game extends Observable implements Observer {
 
     public boolean kick(String pseudo) {
         int kicked = 0;
-        for (Map.Entry<String, Player> entry : players.entrySet()) {
+        for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
             if (entry.getValue().getPseudo().equals(pseudo)) {
-                players.remove(entry.getValue().getId());
+                this.target.deletePlayer(entry.getValue().getId());
                 entry.getValue().getConnection().close();
                 updatePlayerList();
                 kicked++;
@@ -65,7 +92,7 @@ public class Game extends Observable implements Observer {
     public void updatePlayerList() {
         playerNames.clear();
         Log.info("J'efface la liste des joueurs.");
-        for (Map.Entry<String, Player> entry : players.entrySet()) {
+        for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
             Log.info("Joueur : " + entry.getValue().getPseudo());
             playerNames.add(entry.getValue().getPseudo());
         }
@@ -76,19 +103,12 @@ public class Game extends Observable implements Observer {
         if (arg instanceof MessageTankData) {
             MessageTankData mtd = ((MessageTankData) arg);
             mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
-            /*
-             * FIX THIS
-             */
 
-            // players.put(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), mtd.getRequest().getEnumTanks(), mtd.getConnection()));
-            for (Map.Entry<String, Player> entry : players.entrySet()) {
+            this.target.addPlayer(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
+
+            for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
                 MessagePlayerNew a = ((MessageTankData) arg).getRequest();
-
-                /*
-                 * SAME HERE
-                 */
-
-                // a.setEnumTanks(entry.getValue().getTank());
+                a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
                 a.setId(entry.getValue().getId());
                 a.setPseudo(entry.getValue().getPseudo());
                 mtd.getServer().sendToTCP(mtd.getConnection().getID(), a);
@@ -96,17 +116,19 @@ public class Game extends Observable implements Observer {
             updatePlayerList();
         } else if (arg instanceof MessageDeleteData) {
             MessageDeleteData mtd = (MessageDeleteData) arg;
-            players.remove(mtd.getRequest().getId());
+            this.target.deletePlayer(mtd.getRequest().getId());
             updatePlayerList();
         } else if (arg instanceof MessageShootRequestData) {
-            if (!playable) return;
+            if (!this.playable) return;
             MessageShootRequestData msd = ((MessageShootRequestData) arg);
-            final Player player = players.get(msd.getRequest().getId());
+            final Player player = this.target.getPlayer(msd.getRequest().getId());
             if (player.isCanShoot()) {
                 player.setCanShoot(false);
                 System.out.println("tir de " + msd.getRequest().getPseudo() + " / angle: " + msd.getRequest().getAngle());
                 msd.getRequest().setShootId(UUID.randomUUID().toString());
+                this.target.addShot(msd.getRequest().getShotId(), player.getTank().getTankWeapon().generateShot(msd.getRequest().getShotId(), player.getId()));
                 msd.getServer().sendToAllTCP(msd.getRequest());
+
                 TimerTask tt = new TimerTask() {
                     @Override
                     public void run() {
@@ -117,11 +139,11 @@ public class Game extends Observable implements Observer {
                 timer.schedule(tt, player.getAmmoCooldown());
             }
         } else if (arg instanceof MessageDisconnectData) {
-            for (Map.Entry<String, Player> entry : players.entrySet()) {
+            for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
                 if (entry.getValue().getConnection().getID() == ((MessageDisconnectData) arg).getConnection().getID()) {
                     ((MessageDisconnectData) arg).setPseudo(entry.getValue().getPseudo());
                     ((MessageDisconnectData) arg).setPlayerId(entry.getValue().getId());
-                    players.remove(entry.getKey());
+                    this.target.deletePlayer(entry.getKey());
                     updatePlayerList();
                     break;
                 }
@@ -194,7 +216,7 @@ public class Game extends Observable implements Observer {
 
     private void addTimer(final String it1, final String it2, final int it3) {
 
-        /*
+
         Timer timer = new Timer();
 
         timer.schedule(new TimerTask() {
@@ -202,7 +224,7 @@ public class Game extends Observable implements Observer {
             public void run() {
 
                 List<String> targeted = collisions.get(it1).get(it2).get(it3);
-                int playerCount = players.size();
+                int playerCount = target.getPlayers().size();
 
                 if (targeted.size() >= playerCount / 2) {
 
@@ -212,13 +234,33 @@ public class Game extends Observable implements Observer {
 
             }
         }, 150);
-        */
+
 
     }
 
     private void gestCollision(String shotId, String targetId) {
 
         WindowController.addConsoleMsg("Shot : "+shotId+", target : "+targetId);
+        //TODO Target.takeDamage(Hunter.getDamage())
+
+        Shot hunter = this.target.getShot(shotId);
+
+
+
+
+
+        /*
+        for (int i = 0; i > targetVal.size(); ++i) {
+            final List<String> listVal = targetVal.get(i);
+            if (!listVal.contains(mc.getId())) {
+                listVal.add(mc.getId());
+                added = true;
+                break;
+            }
+        }
+        */
+
+        //TODO Send message with player informations
 
     }
 
@@ -235,6 +277,6 @@ public class Game extends Observable implements Observer {
     }
 
     public HashMap<String, Player> getPlayers() {
-        return players;
+        return this.target.getPlayers();
     }
 }

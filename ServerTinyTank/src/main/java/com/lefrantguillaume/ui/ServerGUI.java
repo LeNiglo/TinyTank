@@ -52,7 +52,11 @@ public class ServerGUI extends JFrame implements Observer {
 
     public ServerGUI() {
         initComponents();
-        this.game = new Game();
+        try {
+            this.game = new Game();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.game.addObserver(this);
         init();
         this.loadMaps();
@@ -205,6 +209,99 @@ public class ServerGUI extends JFrame implements Observer {
                     WindowController.addConsoleMsg("No such player: '" + pseudo + "'");
                 }
             }
+        }
+    }
+
+    @Override
+    public void update(Observable o, final Object arg) {
+        if (o instanceof Game) {
+            if (arg instanceof Boolean) {
+                if ((Boolean) arg) {
+                    button_start.setEnabled(true);
+                    button_stop.setEnabled(true);
+                    if (button_start.getText().equals("Start")) {
+                        button_start.setText("Restart");
+                        WindowController.addConsoleMsg("Starting server...");
+                    } else {
+                        WindowController.addConsoleMsg("Restarting server...");
+                    }
+                    new Thread("uptime") {
+                        public void run() {
+                            final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
+                            if (t != null) {
+                                t.cancel(true);
+                            }
+                            t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                                public void run() {
+                                    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                                    long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
+                                    String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
+                                    label_uptime.setText(d);
+                                }
+                            }, 0, 1, TimeUnit.SECONDS);
+                        }
+                    }.start();
+                } else {
+                    button_stop.setEnabled(false);
+                    button_start.setText("Start");
+                    WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+                }
+            } else if (arg instanceof MessageDownloadData) {
+                MessageDownload response = new MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
+                ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
+                new Thread("upload") {
+                    public void run() {
+                        try {
+                            new SendFile(currentMap.getFilePath());
+                            MessageDownload response = new MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
+                            ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
+                            new SendFile(currentMap.getImgPath());
+                        } catch (Exception e) {
+                            System.out.println("Cannot send file: " + e.getMessage());
+                        }
+                    }
+                }.start();
+            } else if (arg instanceof MessageConnectData) {
+                System.out.println("J'envoie un message Connect");
+                try {
+                    String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
+                    String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
+                    MessageConnect response = new MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
+                    ((MessageConnectData) arg).getServer().sendToTCP(((MessageConnectData) arg).getConnection().getID(), response);
+                } catch (Exception e) {
+                    Log.error("MD5: " + e.getMessage());
+                }
+            } else if (arg instanceof String) {
+                String data = (String) arg;
+                if (data.equals("stop")) {
+                    t.cancel(true);
+                    master.stopServer();
+                    button_stop.setEnabled(false);
+                    button_start.setText("Start");
+                }
+            } else if (arg instanceof MessageTankData) {
+                Log.info("GUI a recu le nouveau joueur '" + ((MessageTankData) arg).getRequest().getPseudo() + "'");
+                master.addUser(((MessageTankData) arg).getRequest().getPseudo());
+                updatePlayerList();
+            } else if (arg instanceof MessageDeleteData) {
+                Log.info("GUI a remove un joueur.");
+                master.delUser(((MessageDeleteData) arg).getRequest().getPseudo());
+                updatePlayerList();
+            } else if (arg instanceof MessageDisconnectData) {
+                Log.info("GUI a remove un joueur (disconnected).");
+                master.delUser(((MessageDisconnectData) arg).getPseudo());
+                updatePlayerList();
+            }
+        }
+    }
+
+    public void updatePlayerList() {
+        model.setRowCount(0);
+        HashMap<String, Player> players = game.getPlayers();
+        for (java.util.Map.Entry<String, Player> player : players.entrySet()) {
+            Object[] list = new Object[]{player.getValue().getPseudo(), player.getValue().getKills(), player.getValue().getDeaths()};
+            model.addRow(list);
         }
     }
 
@@ -675,99 +772,6 @@ public class ServerGUI extends JFrame implements Observer {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-
-    @Override
-    public void update(Observable o, final Object arg) {
-        if (o instanceof Game) {
-            if (arg instanceof Boolean) {
-                if ((Boolean) arg) {
-                    button_start.setEnabled(true);
-                    button_stop.setEnabled(true);
-                    if (button_start.getText().equals("Start")) {
-                        button_start.setText("Restart");
-                        WindowController.addConsoleMsg("Starting server...");
-                    } else {
-                        WindowController.addConsoleMsg("Restarting server...");
-                    }
-                    new Thread("uptime") {
-                        public void run() {
-                            final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
-                            if (t != null) {
-                                t.cancel(true);
-                            }
-                            t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-                                public void run() {
-                                    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                                    long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
-                                    String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
-                                    label_uptime.setText(d);
-                                }
-                            }, 0, 1, TimeUnit.SECONDS);
-                        }
-                    }.start();
-                } else {
-                    button_stop.setEnabled(false);
-                    button_start.setText("Start");
-                    WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
-                }
-            } else if (arg instanceof MessageDownloadData) {
-                MessageDownload response = new MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
-                ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
-                new Thread("upload") {
-                    public void run() {
-                        try {
-                            new SendFile(currentMap.getFilePath());
-                            MessageDownload response = new MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
-                            ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
-                            new SendFile(currentMap.getImgPath());
-                        } catch (Exception e) {
-                            System.out.println("Cannot send file: " + e.getMessage());
-                        }
-                    }
-                }.start();
-            } else if (arg instanceof MessageConnectData) {
-                System.out.println("J'envoie un message Connect");
-                try {
-                    String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
-                    String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
-                    MessageConnect response = new MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
-                    ((MessageConnectData) arg).getServer().sendToTCP(((MessageConnectData) arg).getConnection().getID(), response);
-                } catch (Exception e) {
-                    Log.error("MD5: " + e.getMessage());
-                }
-            } else if (arg instanceof String) {
-                String data = (String) arg;
-                if (data.equals("stop")) {
-                    t.cancel(true);
-                    master.stopServer();
-                    button_stop.setEnabled(false);
-                    button_start.setText("Start");
-                }
-            } else if (arg instanceof MessageTankData) {
-                Log.info("GUI a recu le nouveau joueur '" + ((MessageTankData) arg).getRequest().getPseudo() + "'");
-                master.addUser(((MessageTankData) arg).getRequest().getPseudo());
-                updatePlayerList();
-            } else if (arg instanceof MessageDeleteData) {
-                Log.info("GUI a remove un joueur.");
-                master.delUser(((MessageDeleteData) arg).getRequest().getPseudo());
-                updatePlayerList();
-            } else if (arg instanceof MessageDisconnectData) {
-                Log.info("GUI a remove un joueur (disconnected).");
-                master.delUser(((MessageDisconnectData) arg).getPseudo());
-                updatePlayerList();
-            }
-        }
-    }
-
-    public void updatePlayerList() {
-        model.setRowCount(0);
-        HashMap<String, Player> players = game.getPlayers();
-        for (java.util.Map.Entry<String, Player> player : players.entrySet()) {
-            Object[] list = new Object[]{player.getValue().getPseudo(), player.getValue().getKills(), player.getValue().getDeaths()};
-            model.addRow(list);
-        }
-    }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner Evaluation license - Styve SIMONNEAU

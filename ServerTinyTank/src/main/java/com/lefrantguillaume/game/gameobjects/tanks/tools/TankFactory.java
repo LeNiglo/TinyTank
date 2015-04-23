@@ -28,7 +28,7 @@ public class TankFactory {
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
 
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shot);
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, 10, shot);
         return tankWeapon;
     }
 

@@ -22,7 +22,7 @@ public class Player {
     private int health = 100;
     private int ammo = 1;
     private int timerAmmo = 2;
-    private int ammoCooldown = 500;
+    private int ammoCooldown = 100;
     private boolean canShoot = true;
 
     public Player(String id, String pseudo, Tank tank, Connection connection) {
