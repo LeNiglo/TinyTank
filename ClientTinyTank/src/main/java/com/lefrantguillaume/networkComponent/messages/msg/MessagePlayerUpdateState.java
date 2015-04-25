@@ -23,7 +23,7 @@ public class MessagePlayerUpdateState extends MessageModel {
         this.boostEffect = boostEffect;
         this.pseudo = pseudo;
         this.id = id;
-        this.playerAction = true;
+        this.playerAction = false;
     }
 
     public float getArmor() {

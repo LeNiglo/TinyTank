@@ -63,8 +63,12 @@ public class CollisionObject extends Observable implements Observer{
     public void modifCoord(Pair<Float, Float> coords) {
         this.saveX = this.positions.getV1();
         this.saveY = this.positions.getV2();
+        /*
         this.positions.setV1(this.positions.getV1() + coords.getV1());
         this.positions.setV2(this.positions.getV2() + coords.getV2());
+    */
+        this.positions.setV1(coords.getV1());
+        this.positions.setV2(coords.getV2());
     }
 
     public void backToSave() {
@@ -133,6 +137,13 @@ public class CollisionObject extends Observable implements Observer{
 
     public void setY(float y){
         this.positions.setV2(y);
+    }
+    public void setSaveX(float x){
+        this.saveX = x;
+    }
+
+    public void setSaveY(float y){
+        this.saveY = y;
     }
 
     public boolean isDestroyed() {

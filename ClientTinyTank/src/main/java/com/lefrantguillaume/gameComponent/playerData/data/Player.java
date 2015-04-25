@@ -51,14 +51,21 @@ public class Player extends Observable implements Observer{
         this.playerActionController.doAction(playerAction, collisionController, this);
     }
 
-    public void move() {
-        Pair<Float, Float> coords = this.movePredict();
+    public void move(float delta) {
+        Pair<Float, Float> coords = this.movePredict(delta);
         this.tank.getTankState().addX(coords.getV1());
         this.tank.getTankState().addY(coords.getV2());
     }
 
-    public Pair<Float, Float> movePredict() {
-        return MathTools.movePredict(this.tank.getTankState().getDirection().getAngle(), this.tank.getTankState().getSpeed());
+    public Pair<Float, Float> movePredict(float delta) {
+        return MathTools.movePredict(this.tank.getTankState().getDirection().getAngle(), this.tank.getTankState().getSpeed(), delta);
+    }
+
+    public Pair<Float, Float> coordPredict(float delta) {
+        Pair<Float, Float> coords = this.movePredict(delta);
+        coords.setV1(coords.getV1() + this.tank.getTankState().getX());
+        coords.setV2(coords.getV2() + this.tank.getTankState().getY());
+        return coords;
     }
 
     public int getDamage(float damage) {

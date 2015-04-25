@@ -47,12 +47,8 @@ public class Shot extends Observable implements Observer {
         Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
 
         if (order.getV3() == EnumType.UNBREAKABLE || order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-            float newX = order.getV1();
-            float newY = order.getV2();
-
-
-            this.positions.setV1(newX);
-            this.positions.setV2(newY);
+            this.positions.setV1(order.getV1());
+            this.positions.setV2(order.getV2());
             this.shiftOrigin.setV1(this.shiftToImpact.getV1());
             this.shiftOrigin.setV2(this.shiftToImpact.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
@@ -64,16 +60,23 @@ public class Shot extends Observable implements Observer {
     }
 
     // FUNCTIONS
-    public void move() {
+    public void move(float delta) {
         if (this.explode == false) {
-            Pair<Float, Float> coords = MathTools.movePredict(this.angle, this.speed);
-            this.positions.setV1(this.positions.getV1() + coords.getV1());
-            this.positions.setV2(this.positions.getV2() + coords.getV2());
+            Pair<Float, Float> coords = this.movePredict(delta);
+            this.positions.setV1(this.getX() + coords.getV1());
+            this.positions.setV2(this.getY() + coords.getV2());
         }
     }
 
-    public Pair<Float, Float> movePredict() {
-        return MathTools.movePredict(this.angle, this.speed);
+    public Pair<Float, Float> movePredict(float delta) {
+        return MathTools.movePredict(this.angle, this.speed, delta);
+    }
+
+    public Pair<Float, Float> coordPredict(float delta) {
+        Pair<Float, Float> coords = this.movePredict(delta);
+        coords.setV1(coords.getV1() + this.getX());
+        coords.setV2(coords.getV2() + this.getY());
+        return coords;
     }
 
     public void addCollisionObject(Rectangle rectangle) {
@@ -130,15 +133,15 @@ public class Shot extends Observable implements Observer {
         return this.positions;
     }
 
-    public Pair<Float, Float> getShiftOrigin(){
+    public Pair<Float, Float> getShiftOrigin() {
         return this.shiftOrigin;
     }
 
-    public Pair<Float, Float> getShiftToImpact(){
+    public Pair<Float, Float> getShiftToImpact() {
         return this.shiftToImpact;
     }
 
-    public List<Rectangle> getCollisionObject(){
+    public List<Rectangle> getCollisionObject() {
         return this.collisionObject;
     }
 }

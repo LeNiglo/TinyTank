@@ -65,8 +65,8 @@ public class CollisionController {
                     if (this.items.size() != 1) {
                         for (int i2 = 0; i2 < this.items.size(); ++i2) {
                             CollisionObject current = this.items.get(i2);
-                            if (!current.getIdUser().equals(objects.get(i).getIdUser())) {
-                                if (CollisionDetection.checkCollision(objects.get(i), current)) {
+                            if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
+                                if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
                                     objects.get(i).notifyCollision(current.getType());
                                     current.notifyCollision(current.getType());
                                     if (current.isSolid()) {

@@ -2,8 +2,10 @@ package com.lefrantguillaume.game;
 
 import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.gameobjects.shots.Shot;
+import com.lefrantguillaume.network.clientmsgs.MessageModel;
 
-import java.util.HashMap;
+import java.util.*;
+import java.util.Map;
 
 /**
  * Created by leniglo on 23/04/15.
@@ -16,6 +18,22 @@ public class Target {
     public Target() {
         this.players = new HashMap<String, Player>();
         this.shots = new HashMap<String, Shot>();
+    }
+
+    public MessageModel doCollision(String shotId, String targetId){
+        MessageModel msg = null;
+
+        if (this.getShot(shotId) != null) {
+            if (this.getPlayer(targetId) != null){
+                msg = this.getPlayer(targetId).getTank().getTankState().getHit(this.getPlayer(targetId).getPseudo(), targetId, this.getShot(shotId));
+            }
+            /* pour box ext
+            else if (this.getBox(targetId) != null){
+                this.getBox(targetId).getHit(this.getShot(shotId));
+            }
+            */
+        }
+        return msg;
     }
 
     public void addPlayer(String k, Player p) {

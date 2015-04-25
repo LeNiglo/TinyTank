@@ -1,6 +1,7 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
@@ -34,6 +35,7 @@ public class WindowGame extends BasicGameState {
     private StateBasedGame stateGame;
     private int id;
 
+    private int frameRate = 80;
     private float saveAngle = 0f;
     private long runningTime = 0l;
     public String tmp = "no input";
@@ -72,10 +74,10 @@ public class WindowGame extends BasicGameState {
     }
 
     @Override
-    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException{
-        this.container.setTargetFrameRate(80);
+    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        this.container.setTargetFrameRate(this.frameRate);
         this.container.setShowFPS(true);
-        this.container.setAlwaysRender(false);
+        this.container.setAlwaysRender(true);
         this.container.setVSync(false);
     }
 
@@ -110,7 +112,8 @@ public class WindowGame extends BasicGameState {
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
         this.runningTime += delta;
-        if (runningTime > 30) {
+        Debug.debug("Delta=" + delta + "   frameRate:" + this.frameRate);
+        if (runningTime > 15) {
         /*debug*/
             Input input = gameContainer.getInput();
             int xpos = input.getMouseX();
@@ -120,7 +123,7 @@ public class WindowGame extends BasicGameState {
 
             if (this.gameController != null) {
                 this.myMouseMoved(xpos, ypos);
-                this.gameController.updateGame();
+                this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
             }
             this.runningTime = 0;
         }
@@ -133,7 +136,17 @@ public class WindowGame extends BasicGameState {
 
     @Override
     public void keyPressed(int key, char c) {
-        input.keyCheck(key, EnumInput.PRESSED);
+        if (key == Input.KEY_ADD) {
+            this.frameRate += 5;
+            this.container.setTargetFrameRate(this.frameRate);
+        } else if (key == Input.KEY_SUBTRACT) {
+            if (this.frameRate > 5) {
+                this.frameRate -= 5;
+                this.container.setTargetFrameRate(this.frameRate);
+            }
+        } else {
+            input.keyCheck(key, EnumInput.PRESSED);
+        }
     }
 
     @Override

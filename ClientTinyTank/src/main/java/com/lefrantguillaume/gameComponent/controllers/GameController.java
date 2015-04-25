@@ -100,7 +100,7 @@ public class GameController extends Observable implements Observer {
                     this.deletePlayer(task.getId());
                 }
                 if (received instanceof MessagePlayerUpdateState) {
-                    Debug.debug("UPDATE PLAYER");
+                    Debug.debug("UPDATE STATE PLAYER");
                     MessagePlayerUpdateState task = (MessagePlayerUpdateState) received;
                     this.changeStatePlayer(task);
                 }
@@ -138,13 +138,12 @@ public class GameController extends Observable implements Observer {
     public void changeStatePlayer(MessagePlayerUpdateState task) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
-                this.players.remove(i);
+                //this.players.remove(i);
                 this.players.get(i).getTank().getTankState().setCurrentLife(task.getCurrentLife());
                 this.players.get(i).getTank().getTankState().setBoostEffect(task.getBoostEffect());
                 this.players.get(i).getTank().getTankState().setShieldEffect(task.getShieldEffect());
                 this.players.get(i).getTank().getTankState().setSlowEffect(task.getSlowEffect());
                 this.players.get(i).getTank().getTankState().setArmor(task.getArmor());
-                this.players.get(i).setShots(this.shots);
                 break;
             }
         }
@@ -160,6 +159,8 @@ public class GameController extends Observable implements Observer {
                 for (int i2 = 0; i2 < objects.size(); ++i2) {
                     objects.get(i2).setX(task.getX());
                     objects.get(i2).setY(task.getY());
+                    objects.get(i2).setSaveX(task.getX());
+                    objects.get(i2).setSaveY(task.getY());
                 }
                 break;
             }
@@ -183,7 +184,7 @@ public class GameController extends Observable implements Observer {
     }
 
     // UPDATE GAME FUNCTIONS
-    public void updateGame() {
+    public void updateGame(float delta) {
         Pair<Boolean, Pair<String, String>> impactIds;
 
         if (this.collisionController != null) {
@@ -191,15 +192,15 @@ public class GameController extends Observable implements Observer {
         }
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getTank().getTankState().isMove()) {
-                if (this.collisionController.checkCollision(this.players.get(i).movePredict(), this.players.get(i).getUser().getId()) == null) {
-                    this.players.get(i).move();
+                if (this.collisionController.checkCollision(this.players.get(i).coordPredict(delta), this.players.get(i).getUser().getId()) == null) {
+                    this.players.get(i).move(delta);
                 }
             }
         }
         for (int i = 0; i < this.shots.size(); ++i) {
             if (!this.shots.get(i).getExplode()) {
-                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).movePredict(), this.shots.get(i).getId())) == null) {
-                    this.shots.get(i).move();
+                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).coordPredict(delta), this.shots.get(i).getId())) == null) {
+                    this.shots.get(i).move(delta);
                 } else {
                     if (impactIds.getV1() == true) {
                         MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV2().getV1(), impactIds.getV2().getV2());

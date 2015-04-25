@@ -14,5 +14,6 @@ public class MessageCollision extends MessageModel {
         this.id = idPlayer;
         this.shotId = shotId;
         this.targetId = targetId;
+        this.playerAction = false;
     }
 }

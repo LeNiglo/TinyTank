@@ -3,15 +3,11 @@ package com.lefrantguillaume.game;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.player.Player;
-import com.lefrantguillaume.game.gameobjects.shots.Shot;
 import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.network.TinyServer;
-import com.lefrantguillaume.network.clientmsgs.MessageCollision;
-import com.lefrantguillaume.network.clientmsgs.MessagePlayerNew;
-import com.lefrantguillaume.network.clientmsgs.MessagePutObject;
+import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.GameConfig;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.io.File;
@@ -241,11 +237,9 @@ public class Game extends Observable implements Observer {
     private void gestCollision(String shotId, String targetId) {
 
         WindowController.addConsoleMsg("Shot : "+shotId+", target : "+targetId);
-        //TODO Target.takeDamage(Hunter.getDamage())
+        MessageModel msg = target.doCollision(shotId, targetId);
 
-        Shot hunter = this.target.getShot(shotId);
-
-
+        this.server.getServer().sendToAllTCP(msg);
 
 
 

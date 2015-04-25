@@ -1,6 +1,8 @@
 package com.lefrantguillaume.game.gameobjects.tanks.equipment;
 
+import com.lefrantguillaume.game.gameobjects.shots.Shot;
 import com.lefrantguillaume.game.gameobjects.tanks.types.EnumTanks;
+import com.lefrantguillaume.network.clientmsgs.MessagePlayerUpdateState;
 
 
 /**
@@ -36,6 +38,17 @@ public class TankState {
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
+    }
+
+    public MessagePlayerUpdateState getHit(String pseudo, String id, Shot shot){
+        MessagePlayerUpdateState msg;
+
+        this.currentLife -= shot.getDamageShot();
+        if (this.currentLife < 0){
+            this.currentLife = 0;
+        }
+        msg = new MessagePlayerUpdateState(pseudo, id, this.currentLife, this.armor, this.shieldEffect, this.slowEffect, this.boostEffect);
+        return msg;
     }
 
     public float getCurrentSpeed() {

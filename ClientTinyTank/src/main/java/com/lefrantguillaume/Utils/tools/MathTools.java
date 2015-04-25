@@ -16,12 +16,13 @@ public class MathTools {
         return (float) angle;
     }
 
-    public static Pair<Float, Float> movePredict(float angle, float speed) {
+    public static Pair<Float, Float> movePredict(float angle, float speed, float delta) {
         double addX = Math.cos(angle * Math.PI / 180);
         double addY = Math.sin(angle * Math.PI / 180);
         float x = ((float) addX * speed / 10);
         float y = ((float) addY * speed / 10);
-        return new Pair<Float, Float>(x, y);
+        Debug.debug("NEW Delta = " + delta);
+        return new Pair<Float, Float>(x * delta, y * delta);
     }
 
     public static Pair<Float, Float> getOrigin(Pair<Float, Float> positions, Pair<Float, Float> shift) {
