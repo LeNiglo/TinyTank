@@ -72,7 +72,7 @@ public class CollisionController {
                                     if (current.isSolid()) {
                                         objects.get(i).backToSave();
                                     }
-                                    if (current.getType() != EnumType.UNBREAKABLE) {
+                                    if (current.getType() == EnumType.UNBREAKABLE) {
                                         return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(id.toString(), current.getId().toString()));
                                     }
                                     return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(id.toString(), current.getId().toString()));

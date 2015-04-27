@@ -203,6 +203,7 @@ public class GameController extends Observable implements Observer {
                     this.shots.get(i).move(delta);
                 } else {
                     if (impactIds.getV1() == true) {
+                        Debug.debug("Collision to Server");
                         MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV2().getV1(), impactIds.getV2().getV2());
                         this.setChanged();
                         this.notifyObservers(request);

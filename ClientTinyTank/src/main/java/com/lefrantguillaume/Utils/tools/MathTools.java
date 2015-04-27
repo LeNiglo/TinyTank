@@ -21,7 +21,6 @@ public class MathTools {
         double addY = Math.sin(angle * Math.PI / 180);
         float x = ((float) addX * speed / 10);
         float y = ((float) addY * speed / 10);
-        Debug.debug("NEW Delta = " + delta);
         return new Pair<Float, Float>(x * delta, y * delta);
     }
 

@@ -112,8 +112,8 @@ public class WindowGame extends BasicGameState {
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
         this.runningTime += delta;
-        Debug.debug("Delta=" + delta + "   frameRate:" + this.frameRate);
-        if (runningTime > 15) {
+//        Debug.debug("Delta=" + delta + "   frameRate:" + this.frameRate);
+        if (runningTime > 30) {
         /*debug*/
             Input input = gameContainer.getInput();
             int xpos = input.getMouseX();
