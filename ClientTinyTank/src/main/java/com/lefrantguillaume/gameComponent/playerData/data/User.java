@@ -8,12 +8,9 @@ import java.util.UUID;
 public class User {
     private String pseudo;
     private final String idUser;
-    private final UUID id;
-
     public User(String pseudo, String idUser) {
         this.pseudo = pseudo;
         this.idUser = idUser;
-        this.id = UUID.randomUUID();
     }
 
     // GETTERS
@@ -26,7 +23,7 @@ public class User {
     }
 
     public UUID getId() {
-        return id;
+        return UUID.fromString(idUser);
     }
 
     // SETTERS

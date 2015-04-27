@@ -3,6 +3,8 @@ package com.lefrantguillaume.networkComponent.messages.msg;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
+import java.util.UUID;
+
 /**
  * Created by andres_k on 12/03/2015.
  */

@@ -82,8 +82,8 @@ public class WindowInterface extends BasicGameState {
     @Override
     public void keyReleased(int key, char c) {
         if (key == Input.KEY_RETURN) {
-            this.stateGame.enterState(EnumWindow.GAME.getValue());
             this.interfaceController.loadGame();
+            this.stateGame.enterState(EnumWindow.GAME.getValue());
         }
         else if (key == Input.KEY_LEFT || key == Input.KEY_RIGHT){
             this.interfaceController.changeCurrentTank(key);

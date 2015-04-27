@@ -18,6 +18,10 @@ public class NetworkCall extends Observable {
     public NetworkCall(NetworkServerConfig config) {
         NetworkRegister.register(client);
         client.start();
+        this.connect(config);
+    }
+
+    public void connect(NetworkServerConfig config){
         try {
             client.connect(5000, config.getAddress(), config.getTcpPort(), config.getUdpPort());
             client.addListener(new Listener() {
@@ -33,6 +37,10 @@ public class NetworkCall extends Observable {
         } catch (IOException e) {
             System.out.println("ERROR: " + e.getMessage());
         }
+    }
+
+    public void disconnect(){
+        client.close();
     }
 
     public void call(MessageModel request) {

@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class CollisionObject extends Observable implements Observer{
+public class CollisionObject extends Observable implements Observer {
     private final boolean solid;
     private final String idUser;
     private final UUID id;
@@ -21,20 +21,18 @@ public class CollisionObject extends Observable implements Observer{
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
     private Pair<Float, Float> shiftOrigin;
+    private Pair<Float, Float> savePositions;
     private float angle;
-    private float saveX;
-    private float saveY;
     private boolean destroyed = false;
 
-    public CollisionObject(boolean solid,Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
+    public CollisionObject(boolean solid, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
         this.solid = solid;
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
         this.positions = new Pair<Float, Float>(positions);
+        this.savePositions = new Pair<Float, Float>(positions);
         this.sizes = new Pair<Float, Float>(sizes);
         this.type = type;
         this.angle = angle;
-        this.saveX = positions.getV1();
-        this.saveY = positions.getV2();
         this.idUser = idUser;
         this.id = id;
     }
@@ -42,15 +40,31 @@ public class CollisionObject extends Observable implements Observer{
     // FUNCTIONS
     @Override
     public void update(Observable o, Object arg) {
-        Rectangle coord = (Rectangle) arg;
 
-        if (coord != null) {
-            this.positions.setV1(coord.getShiftOrigin().getV1());
-            this.positions.setV2(coord.getShiftOrigin().getV2());
-            this.sizes.setV1(coord.getSizes().getV1());
-            this.sizes.setV2(coord.getSizes().getV2());
-        }
-        else {
+        if (arg instanceof Rectangle) {
+            Rectangle coord = (Rectangle) arg;
+
+            if (coord != null) {
+                this.positions.setV1(coord.getShiftOrigin().getV1());
+                this.positions.setV2(coord.getShiftOrigin().getV2());
+                this.sizes.setV1(coord.getSizes().getV1());
+                this.sizes.setV2(coord.getSizes().getV2());
+            }
+        } else if (arg instanceof Tuple) {
+            Tuple<Boolean, Float, Float> values = (Tuple<Boolean, Float, Float>) arg;
+
+            if (values != null) {
+                if (values.getV1() == false) {
+                    this.destroyed = true;
+                } else if (values.getV1() == true) {
+                    this.destroyed = false;
+                    this.savePositions.setV1(values.getV2());
+                    this.savePositions.setV2(values.getV3());
+                    this.positions.setV1(values.getV2());
+                    this.positions.setV2(values.getV3());
+                }
+            }
+        } else {
             this.destroyed = true;
         }
     }
@@ -61,19 +75,15 @@ public class CollisionObject extends Observable implements Observer{
     }
 
     public void modifCoord(Pair<Float, Float> coords) {
-        this.saveX = this.positions.getV1();
-        this.saveY = this.positions.getV2();
-        /*
-        this.positions.setV1(this.positions.getV1() + coords.getV1());
-        this.positions.setV2(this.positions.getV2() + coords.getV2());
-    */
+        this.savePositions.setV1(this.positions.getV1());
+        this.savePositions.setV2(this.positions.getV2());
         this.positions.setV1(coords.getV1());
         this.positions.setV2(coords.getV2());
     }
 
     public void backToSave() {
-        this.positions.setV1(this.saveX);
-        this.positions.setV2(this.saveY);
+        this.positions.setV1(this.savePositions.getV1());
+        this.positions.setV2(this.savePositions.getV2());
     }
 
     // GETTERS
@@ -131,19 +141,20 @@ public class CollisionObject extends Observable implements Observer{
         this.angle = angle;
     }
 
-    public void setX(float x){
+    public void setX(float x) {
         this.positions.setV1(x);
     }
 
-    public void setY(float y){
+    public void setY(float y) {
         this.positions.setV2(y);
     }
-    public void setSaveX(float x){
-        this.saveX = x;
+
+    public void setSaveX(float x) {
+        this.savePositions.setV1(x);
     }
 
-    public void setSaveY(float y){
-        this.saveY = y;
+    public void setSaveY(float y) {
+        this.savePositions.setV1(y);
     }
 
     public boolean isDestroyed() {

@@ -100,7 +100,8 @@ public class Game extends Observable implements Observer {
             MessageTankData mtd = ((MessageTankData) arg);
             mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
 
-            this.target.addPlayer(((MessageTankData) arg).getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
+            WindowController.addConsoleMsg("new Player: " + mtd.getRequest().getId());
+            this.target.addPlayer(mtd.getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
 
             for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
                 MessagePlayerNew a = ((MessageTankData) arg).getRequest();
@@ -122,6 +123,7 @@ public class Game extends Observable implements Observer {
                 player.setCanShoot(false);
                 System.out.println("tir de " + msd.getRequest().getPseudo() + " / angle: " + msd.getRequest().getAngle());
                 msd.getRequest().setShootId(UUID.randomUUID().toString());
+                WindowController.addConsoleMsg("new Shoot : " + msd.getRequest().getShotId());
                 this.target.addShot(msd.getRequest().getShotId(), player.getTank().getTankWeapon().generateShot(msd.getRequest().getShotId(), player.getId()));
                 msd.getServer().sendToAllTCP(msd.getRequest());
 
@@ -238,6 +240,9 @@ public class Game extends Observable implements Observer {
         WindowController.addConsoleMsg("Shot : "+shotId+", target : "+targetId);
         MessageModel msg = target.doCollision(shotId, targetId);
 
+        if (msg == null){
+            WindowController.addConsoleMsg("msg = null");
+        }
         this.server.getServer().sendToAllTCP(msg);
 
 

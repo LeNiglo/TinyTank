@@ -1,5 +1,6 @@
 package com.lefrantguillaume.networkComponent;
 
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
 
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public class NetworkMessage extends Observable {
     }
 
     public void remove(int index) {
-        this.messages.remove(index);
+        try {
+            this.messages.remove(index);
+        } catch (Exception e){
+            Debug.debug(e.getMessage());
+        }
     }
 }

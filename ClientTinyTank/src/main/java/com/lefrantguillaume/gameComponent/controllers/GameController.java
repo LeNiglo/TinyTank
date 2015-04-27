@@ -50,7 +50,7 @@ public class GameController extends Observable implements Observer {
         this.animatorGameData = null;
         this.roundController = new RoundController(this.players, this.teams);
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
-        this.collisionController = new CollisionController(this.mapController);
+        this.collisionController = new CollisionController();
         this.tankConfigData = new TankConfigData();
     }
 
@@ -60,6 +60,10 @@ public class GameController extends Observable implements Observer {
         this.teams.clear();
         this.collisionController.clearCollisionObjects();
         this.mapController.clearObstacles();
+    }
+
+    public void initGame(){
+        this.collisionController.createWorld(this.mapController);
     }
 
     @Override
@@ -76,21 +80,22 @@ public class GameController extends Observable implements Observer {
                     MessagePlayerNew task = (MessagePlayerNew) received;
                     if (this.animatorGameData != null && this.tankConfigData.isValid()) {
                         Debug.debug("NEW PLAYER");
-                        if (CurrentUser.isInGame() == true || CurrentUser.getId().equals(task.getId())) {
-                            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), 50, 50));
-                            if (task.getId().equals(CurrentUser.getId())) {
-                                CurrentUser.setInGame(true);
-                                this.collisionController.createWorld(this.mapController);
-                            } else {
-                                Debug.debug("My position send -> [" + this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() + "," +
-                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() + "]");
+                        this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), 50, 50));
+                        if (task.getId().equals(CurrentUser.getId())) {
+                            CurrentUser.setInGame(true);
+                            this.initGame();
+                            MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
+                            this.setChanged();
+                            this.notifyObservers(request);
+                        } else if (CurrentUser.isInGame() == true) {
 
-                                MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
-                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
-                                this.setChanged();
-                                this.notifyObservers(request);
-                            }
+                            MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
+                            this.setChanged();
+                            this.notifyObservers(request);
                         }
                     }
                 }
@@ -115,14 +120,10 @@ public class GameController extends Observable implements Observer {
 
     // CHANGE FUNCTIONS
     public void addPlayer(Player player) {
-        Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "] ?= [" +
-                player.getTank().getTankState().getGraphicalX() + "," + player.getTank().getTankState().getGraphicalY() + "]");
+        Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
 
         for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i) {
             Rectangle current = player.getTank().getTankState().getCollisionObject().get(i);
-
-            Debug.debug("originCol:" + current.getShiftOrigin().toString());
-            Debug.debug("pos:" + player.getTank().getTankState().getPositions().toString());
             CollisionObject obj = new CollisionObject(true, player.getTank().getTankState().getPositions(), current.getSizes(),
                     current.getShiftOrigin(), player.getUser().getIdUser(),
                     player.getUser().getId(), EnumType.TANK,
@@ -138,12 +139,12 @@ public class GameController extends Observable implements Observer {
     public void changeStatePlayer(MessagePlayerUpdateState task) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
-                //this.players.remove(i);
                 this.players.get(i).getTank().getTankState().setCurrentLife(task.getCurrentLife());
                 this.players.get(i).getTank().getTankState().setBoostEffect(task.getBoostEffect());
                 this.players.get(i).getTank().getTankState().setShieldEffect(task.getShieldEffect());
                 this.players.get(i).getTank().getTankState().setSlowEffect(task.getSlowEffect());
                 this.players.get(i).getTank().getTankState().setArmor(task.getArmor());
+                this.players.get(i).kill();
                 break;
             }
         }
@@ -191,18 +192,20 @@ public class GameController extends Observable implements Observer {
             this.collisionController.cleanCollision();
         }
         for (int i = 0; i < this.players.size(); ++i) {
-            if (this.players.get(i).getTank().getTankState().isMove()) {
-                if (this.collisionController.checkCollision(this.players.get(i).coordPredict(delta), this.players.get(i).getUser().getId()) == null) {
-                    this.players.get(i).move(delta);
+            if (this.players.get(i).getTank().getTankState().isMove() && this.players.get(i).isAlive()) {
+                if ((impactIds = this.collisionController.checkCollision(this.players.get(i).coordPredict(delta), this.players.get(i).getUser().getId())) != null) {
+                    if (impactIds.getV2().getV1().equals("null")) {
+                        this.players.get(i).move(delta);
+                    }
                 }
             }
         }
         for (int i = 0; i < this.shots.size(); ++i) {
             if (!this.shots.get(i).getExplode()) {
-                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).coordPredict(delta), this.shots.get(i).getId())) == null) {
-                    this.shots.get(i).move(delta);
-                } else {
-                    if (impactIds.getV1() == true) {
+                if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).coordPredict(delta), this.shots.get(i).getId())) != null) {
+                    if (impactIds.getV2().getV1().equals("null")) {
+                        this.shots.get(i).move(delta);
+                    } else if (impactIds.getV1() == true && !impactIds.getV2().getV1().equals("null")) {
                         Debug.debug("Collision to Server");
                         MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV2().getV1(), impactIds.getV2().getV2());
                         this.setChanged();
@@ -213,19 +216,22 @@ public class GameController extends Observable implements Observer {
         }
     }
 
+
     // DRAW FUNCTIONS
     public void drawGamePlayers(Graphics g) {
         for (int i = 0; i < this.players.size(); ++i) {
             Player current = this.players.get(i);
-            current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
-                    current.getTank().getTankState().getShiftOrigin().getV2() * -1);
-            current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getDirection().getAngle());
-            g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY());
+            if (current.isAlive()) {
+                current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
+                        current.getTank().getTankState().getShiftOrigin().getV2() * -1);
+                current.getTank().getTankAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getDirection().getAngle());
+                g.drawAnimation(current.getTank().getTankAnimator().currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY());
 
-            current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankWeapon().getShiftWeaponOrigin().getV1() * -1, -1 * current.getTank().getTankWeapon().getShiftWeaponOrigin().getV2());
-            current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getGunAngle());
-            g.drawAnimation(current.getTank().getTopAnimator().currentAnimation(), current.getTank().getTankWeapon().getGraphicalX(current.getTank().getTankState().getPositions().getV1()),
-                    current.getTank().getTankWeapon().getGraphicalY(current.getTank().getTankState().getPositions().getV2()));
+                current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankWeapon().getShiftWeaponOrigin().getV1() * -1, -1 * current.getTank().getTankWeapon().getShiftWeaponOrigin().getV2());
+                current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getGunAngle());
+                g.drawAnimation(current.getTank().getTopAnimator().currentAnimation(), current.getTank().getTankWeapon().getGraphicalX(current.getTank().getTankState().getPositions().getV1()),
+                        current.getTank().getTankWeapon().getGraphicalY(current.getTank().getTankState().getPositions().getV2()));
+            }
         }
     }
 

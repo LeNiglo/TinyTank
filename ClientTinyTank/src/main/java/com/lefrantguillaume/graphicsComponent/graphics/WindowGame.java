@@ -79,6 +79,7 @@ public class WindowGame extends BasicGameState {
         this.container.setShowFPS(true);
         this.container.setAlwaysRender(true);
         this.container.setVSync(false);
+
     }
 
     @Override
@@ -145,13 +146,13 @@ public class WindowGame extends BasicGameState {
                 this.container.setTargetFrameRate(this.frameRate);
             }
         } else {
-            input.keyCheck(key, EnumInput.PRESSED);
+            input.keyCheck(this.gameController.getPlayer(CurrentUser.getId()), key, EnumInput.PRESSED);
         }
     }
 
     @Override
     public void keyReleased(int key, char c) {
-        if (input != null && input.keyCheck(key, EnumInput.RELEASED) == -1 && this.gameController != null) {
+        if (input != null && input.keyCheck(this.gameController.getPlayer(CurrentUser.getId()), key, EnumInput.RELEASED) == -1 && this.gameController != null) {
             this.gameController.clearData();
             this.stateGame.enterState(EnumWindow.INTERFACE.getValue());
         }

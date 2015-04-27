@@ -24,11 +24,11 @@ public class Player extends Observable implements Observer{
     private Tank tank;
     private PlayerActionController playerActionController;
     private User user;
-    private boolean inGame;
+    private boolean alive;
 
     public Player(User user, UUID idTeam, Tank tank, List<Shot> shots, float x, float y) {
         this.user = user;
-        this.inGame = false;
+        this.alive = true;
         this.shots = shots;
         this.idTeam = idTeam;
         this.tank = tank;
@@ -52,9 +52,11 @@ public class Player extends Observable implements Observer{
     }
 
     public void move(float delta) {
-        Pair<Float, Float> coords = this.movePredict(delta);
-        this.tank.getTankState().addX(coords.getV1());
-        this.tank.getTankState().addY(coords.getV2());
+        if (this.alive == true) {
+            Pair<Float, Float> coords = this.movePredict(delta);
+            this.tank.getTankState().addX(coords.getV1());
+            this.tank.getTankState().addY(coords.getV2());
+        }
     }
 
     public Pair<Float, Float> movePredict(float delta) {
@@ -68,15 +70,29 @@ public class Player extends Observable implements Observer{
         return coords;
     }
 
-    public int getDamage(float damage) {
-        return 0;
+    public boolean kill(){
+        if (this.tank.getTankState().getCurrentLife() <= 0) {
+            this.alive = false;
+            this.setChanged();
+            this.notifyObservers(new Tuple<Boolean, Float, Float>(false, 0f, 0f));
+            return true;
+        }
+        return false;
     }
 
-    public int getEffect() {
-        return 0;
+    public void revive(Pair<Float, Float> positions){
+        this.alive = true;
+        this.tank.getTankState().setCurrentLife(this.tank.getTankState().getMaxLife());
+        this.tank.getTankState().setPositions(positions);
+        this.setChanged();
+        this.notifyObservers(new Tuple<Boolean, Float, Float>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
 
     // GETTERS
+
+    public boolean isAlive(){
+        return this.alive;
+    }
 
     public Tank getTank() {
         return this.tank;
@@ -84,14 +100,6 @@ public class Player extends Observable implements Observer{
 
     public UUID getIdTeam() {
         return this.idTeam;
-    }
-
-    public boolean isInGame() {
-        return this.inGame;
-    }
-
-    public void setInGame(boolean inGame) {
-        this.inGame = inGame;
     }
 
     public void setShots(List<Shot> shots) {

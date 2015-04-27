@@ -15,9 +15,8 @@ import java.util.UUID;
 public class CollisionController {
     private List<CollisionObject> items;
 
-    public CollisionController(MapController map) {
+    public CollisionController() {
         this.items = new ArrayList<CollisionObject>();
-        this.createWorld(map);
     }
 
     // FUNCTIONS
@@ -47,7 +46,7 @@ public class CollisionController {
 
     public void deleteCollisionObject(UUID id) {
         for (int i = 0; i < this.items.size(); ++i) {
-            if (this.items.get(i).getId() == id)
+            if (this.items.get(i).getId().equals(id))
                 this.items.remove(i);
         }
     }
@@ -62,25 +61,24 @@ public class CollisionController {
             if (!objects.isEmpty()) {
                 for (int i = 0; i < objects.size(); ++i) {
                     objects.get(i).modifCoord(coords);
-                    if (this.items.size() != 1) {
-                        for (int i2 = 0; i2 < this.items.size(); ++i2) {
-                            CollisionObject current = this.items.get(i2);
-                            if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
-                                if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
-                                    objects.get(i).notifyCollision(current.getType());
-                                    current.notifyCollision(current.getType());
-                                    if (current.isSolid()) {
-                                        objects.get(i).backToSave();
-                                    }
-                                    if (current.getType() == EnumType.UNBREAKABLE) {
-                                        return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(id.toString(), current.getId().toString()));
-                                    }
-                                    return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(id.toString(), current.getId().toString()));
+                    for (int i2 = 0; i2 < this.items.size(); ++i2) {
+                        CollisionObject current = this.items.get(i2);
+                        if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
+                            if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
+                                objects.get(i).notifyCollision(current.getType());
+                                current.notifyCollision(current.getType());
+                                if (current.isSolid()) {
+                                    objects.get(i).backToSave();
                                 }
+                                if (current.getType() == EnumType.UNBREAKABLE) {
+                                    return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
+                                }
+                                return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
                             }
                         }
                     }
                 }
+                return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>("null", "null"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,8 +101,9 @@ public class CollisionController {
         List<CollisionObject> result = new ArrayList<CollisionObject>();
         for (int i = 0; i < this.items.size(); ++i) {
             if (this.items.get(i) != null) {
-                if (this.items.get(i).getId() == id)
+                if (this.items.get(i).getId().equals(id)) {
                     result.add(this.items.get(i));
+                }
             }
         }
         return result;

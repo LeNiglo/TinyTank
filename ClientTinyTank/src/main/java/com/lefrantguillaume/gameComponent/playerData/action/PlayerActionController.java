@@ -7,7 +7,6 @@ import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.gameComponent.playerData.data.User;
 
 import java.util.List;
 import java.util.Observable;

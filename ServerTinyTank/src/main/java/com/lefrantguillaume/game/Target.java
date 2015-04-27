@@ -1,5 +1,6 @@
 package com.lefrantguillaume.game;
 
+import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.gameobjects.shots.Shot;
 import com.lefrantguillaume.network.clientmsgs.MessageModel;
@@ -23,8 +24,11 @@ public class Target {
     public MessageModel doCollision(String shotId, String targetId){
         MessageModel msg = null;
 
+        WindowController.addConsoleMsg("shots:" + this.shots.size() + "SHOT_ID:" + shotId);
         if (this.getShot(shotId) != null) {
+            WindowController.addConsoleMsg("players:"+ this.players.size() + "PLAYER_ID: " + targetId);
             if (this.getPlayer(targetId) != null){
+                WindowController.addConsoleMsg("player find");
                 msg = this.getPlayer(targetId).getTank().getTankState().getHit(this.getPlayer(targetId).getPseudo(), targetId, this.getShot(shotId));
             }
             /* pour box ext
