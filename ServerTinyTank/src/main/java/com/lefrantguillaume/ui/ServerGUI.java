@@ -280,9 +280,9 @@ public class ServerGUI extends JFrame implements Observer {
                     button_stop.setEnabled(false);
                     button_start.setText("Start");
                 }
-            } else if (arg instanceof MessageTankData) {
-                Log.info("GUI a recu le nouveau joueur '" + ((MessageTankData) arg).getRequest().getPseudo() + "'");
-                master.addUser(((MessageTankData) arg).getRequest().getPseudo());
+            } else if (arg instanceof MessagePlayerNewData) {
+                Log.info("GUI a recu le nouveau joueur '" + ((MessagePlayerNewData) arg).getRequest().getPseudo() + "'");
+                master.addUser(((MessagePlayerNewData) arg).getRequest().getPseudo());
                 updatePlayerList();
             } else if (arg instanceof MessageDeleteData) {
                 Log.info("GUI a remove un joueur.");

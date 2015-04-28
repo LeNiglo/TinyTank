@@ -7,6 +7,7 @@ import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
+import com.lefrantguillaume.network.msgdatas.MessagePlayerNewData;
 import com.lefrantguillaume.utils.GameConfig;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -25,7 +26,7 @@ public class Game extends Observable implements Observer {
     private GameConfig config;
     private boolean playable;
     private List<String> playerNames = new ArrayList<String>();
-    private Target target = null;
+    private Targets targets = null;
     private TankConfigData tankConfigData = null;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<String, HashMap<String, List<List<String>>>>();
     /////////////// idShot /////// idTarget //////// idPlayer
@@ -53,7 +54,7 @@ public class Game extends Observable implements Observer {
         Until here
          */
         this.tankConfigData.initTanks(new JSONObject(content));
-        this.target = new Target();
+        this.targets = new Targets();
     }
 
     public void start() {
@@ -73,9 +74,9 @@ public class Game extends Observable implements Observer {
 
     public boolean kick(String pseudo) {
         int kicked = 0;
-        for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
+        for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             if (entry.getValue().getPseudo().equals(pseudo)) {
-                this.target.deletePlayer(entry.getValue().getId());
+                this.targets.deletePlayer(entry.getValue().getId());
                 entry.getValue().getConnection().close();
                 updatePlayerList();
                 kicked++;
@@ -88,7 +89,7 @@ public class Game extends Observable implements Observer {
     public void updatePlayerList() {
         playerNames.clear();
         Log.info("J'efface la liste des joueurs.");
-        for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
+        for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             Log.info("Joueur : " + entry.getValue().getPseudo());
             playerNames.add(entry.getValue().getPseudo());
         }
@@ -96,35 +97,41 @@ public class Game extends Observable implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        if (arg instanceof MessageTankData) {
-            MessageTankData mtd = ((MessageTankData) arg);
-            mtd.getServer().sendToAllExceptTCP(mtd.getConnection().getID(), mtd.getRequest());
+        if (arg instanceof MessagePlayerNewData) {
+            MessagePlayerNewData mtd = ((MessagePlayerNewData) arg);
+            mtd.getRequest().setPosX(50f);
+            mtd.getRequest().setPosY(50f);
+            mtd.getServer().sendToAllTCP(mtd.getRequest());
 
-            WindowController.addConsoleMsg("new Player: " + mtd.getRequest().getId());
-            this.target.addPlayer(mtd.getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
-
-            for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
-                MessagePlayerNew a = ((MessageTankData) arg).getRequest();
+            WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
+            for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+                MessagePlayerNew a = new MessagePlayerNew(mtd.getRequest());
                 a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
                 a.setId(entry.getValue().getId());
                 a.setPseudo(entry.getValue().getPseudo());
+                a.setPosX(-50f);
+                a.setPosY(-50f);
                 mtd.getServer().sendToTCP(mtd.getConnection().getID(), a);
             }
+
+            WindowController.addConsoleMsg("new Player: " + mtd.getRequest().getId());
+            this.targets.addPlayer(mtd.getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
             updatePlayerList();
         } else if (arg instanceof MessageDeleteData) {
             MessageDeleteData mtd = (MessageDeleteData) arg;
-            this.target.deletePlayer(mtd.getRequest().getId());
+            this.targets.deletePlayer(mtd.getRequest().getId());
             updatePlayerList();
         } else if (arg instanceof MessageShootRequestData) {
             if (!this.playable) return;
             MessageShootRequestData msd = ((MessageShootRequestData) arg);
-            final Player player = this.target.getPlayer(msd.getRequest().getId());
-            if (player.isCanShoot()) {
+            WindowController.addConsoleMsg("nbShooter: " + this.targets.getPlayers().size());
+            final Player player = this.targets.getPlayer(msd.getRequest().getId());
+            if (player != null && player.isCanShoot()) {
                 player.setCanShoot(false);
                 System.out.println("tir de " + msd.getRequest().getPseudo() + " / angle: " + msd.getRequest().getAngle());
                 msd.getRequest().setShootId(UUID.randomUUID().toString());
                 WindowController.addConsoleMsg("new Shoot : " + msd.getRequest().getShotId());
-                this.target.addShot(msd.getRequest().getShotId(), player.getTank().getTankWeapon().generateShot(msd.getRequest().getShotId(), player.getId()));
+                this.targets.addShot(msd.getRequest().getShotId(), player.getTank().getTankWeapon().generateShot(msd.getRequest().getShotId(), player.getId()));
                 msd.getServer().sendToAllTCP(msd.getRequest());
 
                 TimerTask tt = new TimerTask() {
@@ -137,11 +144,11 @@ public class Game extends Observable implements Observer {
                 timer.schedule(tt, player.getAmmoCooldown());
             }
         } else if (arg instanceof MessageDisconnectData) {
-            for (Map.Entry<String, Player> entry : this.target.getPlayers().entrySet()) {
+            for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
                 if (entry.getValue().getConnection().getID() == ((MessageDisconnectData) arg).getConnection().getID()) {
                     ((MessageDisconnectData) arg).setPseudo(entry.getValue().getPseudo());
                     ((MessageDisconnectData) arg).setPlayerId(entry.getValue().getId());
-                    this.target.deletePlayer(entry.getKey());
+                    this.targets.deletePlayer(entry.getKey());
                     updatePlayerList();
                     break;
                 }
@@ -209,57 +216,56 @@ public class Game extends Observable implements Observer {
 
         }
 
-        this.addTimer(it1, it2, it3);
+        this.addCollisionTimer(it1, it2, it3);
     }
 
-    private void addTimer(final String it1, final String it2, final int it3) {
-
+    private void addCollisionTimer(final String it1, final String it2, final int it3) {
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-
                 List<String> targeted = collisions.get(it1).get(it2).get(it3);
-                int playerCount = target.getPlayers().size();
-
+                int playerCount = targets.getPlayers().size();
                 if (targeted.size() >= playerCount / 2) {
-
                     gestCollision(it1, it2);
-
                 }
-
             }
         }, 150);
+    }
 
+    private void addReviveTimer(final MessageModel values) {
 
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                MessageModel msg = new MessagePlayerRevive(values.getPseudo(), values.getId(), 100, 100);
+                targets.getPlayer(values.getId()).revive();
+                server.getServer().sendToAllTCP(msg);
+            }
+        }, 3000);
     }
 
     private void gestCollision(String shotId, String targetId) {
 
-        WindowController.addConsoleMsg("Shot : "+shotId+", target : "+targetId);
-        MessageModel msg = target.doCollision(shotId, targetId);
+        WindowController.addConsoleMsg("Shot : " + shotId + ", target : " + targetId);
+        MessageModel msg = targets.doCollision(shotId, targetId);
 
-        if (msg == null){
+        if (msg != null) {
+            WindowController.addConsoleMsg("nb connect :" + this.server.getServer().getConnections().length);
+            if (((MessagePlayerUpdateState)msg).getCurrentLife() <= 0) {
+                Player tmp = this.targets.getPlayer(targetId);
+                if (tmp != null) {
+                    tmp.addDeath();
+                    this.targets.getPlayer(this.targets.getShot(shotId).getPlayerId()).addKill();
+                    this.addReviveTimer(msg);
+                }
+            }
+            this.server.getServer().sendToAllTCP(msg);
+        } else {
             WindowController.addConsoleMsg("msg = null");
         }
-        this.server.getServer().sendToAllTCP(msg);
-
-
-
-        /*
-        for (int i = 0; i > targetVal.size(); ++i) {
-            final List<String> listVal = targetVal.get(i);
-            if (!listVal.contains(mc.getId())) {
-                listVal.add(mc.getId());
-                added = true;
-                break;
-            }
-        }
-        */
-
-        //TODO Send message with player informations
-
     }
 
     public GameConfig getConfig() {
@@ -275,6 +281,6 @@ public class Game extends Observable implements Observer {
     }
 
     public HashMap<String, Player> getPlayers() {
-        return this.target.getPlayers();
+        return this.targets.getPlayers();
     }
 }

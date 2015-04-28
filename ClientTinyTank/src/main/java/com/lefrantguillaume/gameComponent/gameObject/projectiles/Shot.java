@@ -1,6 +1,5 @@
 package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.MathTools;
@@ -18,7 +17,7 @@ public class Shot extends Observable implements Observer {
     private final String userId;
     private final Animator animator;
     private final Pair<Float, Float> shiftHead;
-    private final Pair<Float, Float> shiftToImpact;
+    private final Pair<Float, Float> shiftToExplode;
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private float damage;
@@ -27,9 +26,9 @@ public class Shot extends Observable implements Observer {
     private boolean explode;
     private List<Rectangle> collisionObject;
 
-    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToImpact, Pair<Float, Float> shiftHead) {
+    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
-        this.shiftToImpact = new Pair<Float, Float>(shiftToImpact);
+        this.shiftToExplode = new Pair<Float, Float>(shiftToExplode);
         this.shiftHead = new Pair<Float, Float>(shiftHead);
         this.explode = false;
         this.userId = userId;
@@ -49,12 +48,12 @@ public class Shot extends Observable implements Observer {
         if (order.getV3() == EnumType.UNBREAKABLE || order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
             this.positions.setV1(order.getV1());
             this.positions.setV2(order.getV2());
-            this.shiftOrigin.setV1(this.shiftToImpact.getV1());
-            this.shiftOrigin.setV2(this.shiftToImpact.getV2());
+            this.shiftOrigin.setV1(this.shiftToExplode.getV1());
+            this.shiftOrigin.setV2(this.shiftToExplode.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
-            this.setChanged();
             Rectangle tmp = null;
+            this.setChanged();
             this.notifyObservers(tmp);
         }
     }
@@ -137,8 +136,8 @@ public class Shot extends Observable implements Observer {
         return this.shiftOrigin;
     }
 
-    public Pair<Float, Float> getShiftToImpact() {
-        return this.shiftToImpact;
+    public Pair<Float, Float> getShiftToExplode() {
+        return this.shiftToExplode;
     }
 
     public List<Rectangle> getCollisionObject() {

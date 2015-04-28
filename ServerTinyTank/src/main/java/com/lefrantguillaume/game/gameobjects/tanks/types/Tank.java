@@ -27,6 +27,14 @@ public class Tank {
         this.tankSpell = new TankSpell(tank.tankSpell);
     }
 
+    // FUNCTIONS
+
+    public void revive(){
+        this.tankState.init();
+    }
+
+    // GETTERS
+
     public TankWeapon getTankWeapon(){
         return this.tankWeapon;
     }

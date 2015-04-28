@@ -14,18 +14,30 @@ import java.util.Observer;
 public class Animator implements Observer {
     private List<Animation> animations;
     private int index;
+    private boolean printable;
 
     public Animator() {
         this.animations = new ArrayList<Animation>();
         this.index = 0;
+        this.printable = true;
     }
+
     public Animator(Animator animator){
         this.animations = new ArrayList<Animation>();
         for (int i = 0; i < animator.animations.size(); ++i) {
             this.animations.add(animator.animations.get(i).copy());
         }
         this.index = animator.index;
+        this.printable = animator.printable;
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (arg instanceof Integer) {
+            this.index = (Integer) arg;
+        }
+    }
+
     public Animation getAnimation(int index) {
         return animations.get(index);
     }
@@ -44,8 +56,12 @@ public class Animator implements Observer {
     public void setIndex(int index){
         this.index = index;
     }
-    @Override
-    public void update(Observable o, Object arg) {
-        this.index = (Integer)arg;
+
+    public boolean isPrintable() {
+        return this.printable;
+    }
+
+    public void setPrintable(boolean printable) {
+        this.printable = printable;
     }
 }

@@ -2,7 +2,6 @@ package com.lefrantguillaume.collisionComponent;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 
@@ -24,6 +23,7 @@ public class CollisionObject extends Observable implements Observer {
     private Pair<Float, Float> savePositions;
     private float angle;
     private boolean destroyed = false;
+    private boolean alive = true;
 
     public CollisionObject(boolean solid, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
         this.solid = solid;
@@ -41,23 +41,25 @@ public class CollisionObject extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        if (arg instanceof Rectangle) {
+        if (arg instanceof Rectangle) { // modifier la position/size de la collision
             Rectangle coord = (Rectangle) arg;
 
             if (coord != null) {
+                this.savePositions.setV1(coord.getShiftOrigin().getV1());
+                this.savePositions.setV2(coord.getShiftOrigin().getV2());
                 this.positions.setV1(coord.getShiftOrigin().getV1());
                 this.positions.setV2(coord.getShiftOrigin().getV2());
                 this.sizes.setV1(coord.getSizes().getV1());
                 this.sizes.setV2(coord.getSizes().getV2());
             }
-        } else if (arg instanceof Tuple) {
+        } else if (arg instanceof Tuple) { //changer la position/revive
             Tuple<Boolean, Float, Float> values = (Tuple<Boolean, Float, Float>) arg;
 
             if (values != null) {
                 if (values.getV1() == false) {
-                    this.destroyed = true;
+                    this.alive = false;
                 } else if (values.getV1() == true) {
-                    this.destroyed = false;
+                    this.alive = true;
                     this.savePositions.setV1(values.getV2());
                     this.savePositions.setV2(values.getV3());
                     this.positions.setV1(values.getV2());
@@ -65,6 +67,7 @@ public class CollisionObject extends Observable implements Observer {
                 }
             }
         } else {
+            this.alive = false;
             this.destroyed = true;
         }
     }
@@ -157,7 +160,11 @@ public class CollisionObject extends Observable implements Observer {
         this.savePositions.setV1(y);
     }
 
+    public boolean isAlive() {
+        return this.alive;
+    }
+
     public boolean isDestroyed() {
-        return destroyed;
+        return this.destroyed;
     }
 }

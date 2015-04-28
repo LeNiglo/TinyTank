@@ -1,7 +1,5 @@
 package com.lefrantguillaume.gameComponent.gameObject.spells;
 
-import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
-
 /**
  * Created by andres_k on 13/03/2015.
  */

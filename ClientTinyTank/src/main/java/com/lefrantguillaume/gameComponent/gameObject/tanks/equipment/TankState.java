@@ -15,6 +15,8 @@ import java.util.List;
 public class TankState {
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
+    private Pair<Float, Float> shiftOriginSave;
+    private Pair<Float, Float> shiftToExplode;
     private List<Rectangle> collisionObject;
     private Animator bodyAnimator;
     private Animator topAnimator;
@@ -30,7 +32,7 @@ public class TankState {
     private float gunAngle;
     private EnumDirection direction;
 
-    public TankState(float speed, float maxLife, float armor, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin) {
+    public TankState(float speed, float maxLife, float armor, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
         this.bodyAnimator = bodyAnimator;
         this.topAnimator = topAnimator;
         this.tankType = tankType;
@@ -39,6 +41,8 @@ public class TankState {
         this.armor = armor;
         this.currentLife = maxLife;
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
+        this.shiftOriginSave = new Pair<Float, Float>(shiftOrigin);
+        this.shiftToExplode = new Pair<Float, Float>(shiftToExplode);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
@@ -58,6 +62,8 @@ public class TankState {
         this.armor = tankState.armor;
         this.currentLife = tankState.maxLife;
         this.shiftOrigin = new Pair<Float, Float>(tankState.shiftOrigin);
+        this.shiftOriginSave = new Pair<Float, Float>(tankState.shiftOrigin);
+        this.shiftToExplode = new Pair<Float, Float>(tankState.shiftToExplode);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
@@ -75,6 +81,26 @@ public class TankState {
 
     public void addCollisionObject(Rectangle rectangle) {
         this.collisionObject.add(rectangle);
+    }
+
+    public void explode(){
+        this.topAnimator.setPrintable(false);
+        this.bodyAnimator.setIndex(EnumAnimationTank.EXPLODE.getValue());
+        this.shiftOrigin.setV1(this.shiftToExplode.getV1());
+        this.shiftOrigin.setV2(this.shiftToExplode.getV2());
+    }
+
+    public void init(Pair<Float, Float> positions){
+        this.move = false;
+        this.shieldEffect = 0;
+        this.slowEffect = 0;
+        this.boostEffect = 0;
+        this.positions = new Pair<Float, Float>(positions);
+        this.currentLife = this.maxLife;
+        this.bodyAnimator.setIndex(EnumAnimationTank.BASIC.getValue());
+        this.bodyAnimator.setPrintable(true);
+        this.topAnimator.setPrintable(true);
+        this.shiftOrigin = new Pair<Float, Float>(this.shiftOriginSave);
     }
 
     // GETTERS
@@ -213,5 +239,9 @@ public class TankState {
 
     public void setDirection(EnumDirection direction) {
         this.direction = direction;
+    }
+
+    public Pair<Float, Float> getShiftToExplode() {
+        return this.shiftToExplode;
     }
 }

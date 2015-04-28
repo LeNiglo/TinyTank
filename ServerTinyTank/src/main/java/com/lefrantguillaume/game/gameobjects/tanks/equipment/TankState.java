@@ -23,10 +23,10 @@ public class TankState {
         this.maxLife = maxLife;
         this.armor = armor;
         this.currentLife = maxLife;
+        this.tankType = tankType;
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.tankType = tankType;
     }
 
     public TankState(TankState tankState) {
@@ -40,6 +40,8 @@ public class TankState {
         this.boostEffect = 0;
     }
 
+    // FUNCTIONS
+
     public MessagePlayerUpdateState getHit(String pseudo, String id, Shot shot){
         MessagePlayerUpdateState msg;
 
@@ -50,6 +52,14 @@ public class TankState {
         msg = new MessagePlayerUpdateState(pseudo, id, this.currentLife, this.armor, this.shieldEffect, this.slowEffect, this.boostEffect);
         return msg;
     }
+
+    public void init(){
+        this.shieldEffect = 0;
+        this.slowEffect = 0;
+        this.boostEffect = 0;
+        this.currentLife = this.maxLife;
+    }
+    // GETTERS
 
     public float getCurrentSpeed() {
         return this.speed - (this.slowEffect * this.speed / 100) + (this.boostEffect * this.speed / 100);

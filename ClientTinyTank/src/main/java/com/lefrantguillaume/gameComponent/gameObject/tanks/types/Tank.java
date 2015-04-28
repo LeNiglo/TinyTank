@@ -1,9 +1,10 @@
 package com.lefrantguillaume.gameComponent.gameObject.tanks.types;
 
-import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.animations.Animator;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.EnumAnimationTank;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankWeapon;
@@ -38,8 +39,16 @@ public class Tank {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
     }
 
+    public void explode(){
+        this.tankState.explode();
+    }
+
+    public void revive(Pair<Float, Float> positions){
+        this.tankState.init(positions);
+    }
+
     // GETTERS
-    public Animator getTankAnimator() {
+    public Animator getBodyAnimator() {
         return this.getTankState().getBodyAnimator();
     }
 

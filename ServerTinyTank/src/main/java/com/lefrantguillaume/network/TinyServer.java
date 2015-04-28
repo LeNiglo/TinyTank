@@ -7,6 +7,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.tanks.types.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
+import com.lefrantguillaume.network.msgdatas.MessagePlayerNewData;
 import com.lefrantguillaume.utils.ServerConfig;
 
 import java.util.Observable;
@@ -44,10 +45,10 @@ public class TinyServer extends Observable {
                         isMessageChangeTeam(connection, (MessageChangeTeam) object);
                     } else if (object instanceof MessageDelete) {
                         isMessageDelete(connection, (MessageDelete) object);
-                    } else if (object instanceof MessagePlayerNew) {
-                        isMessageTankChoice(connection, (MessagePlayerNew) object);
+                    } else if (object instanceof com.lefrantguillaume.network.clientmsgs.MessagePlayerNew) {
+                        isMessagePlayerNew(connection, (com.lefrantguillaume.network.clientmsgs.MessagePlayerNew) object);
                     } else if (object instanceof MessagePlayerUpdatePosition) {
-                        isMessageUpdate(connection, (MessagePlayerUpdatePosition) object);
+                        isMessagePlayerUpdatePosition(connection, (MessagePlayerUpdatePosition) object);
                     } else if (object instanceof MessageCollision) {
                         isMessageCollision(connection, (MessageCollision) object);
                     } else if (object instanceof MessagePutObject) {
@@ -125,17 +126,14 @@ public class TinyServer extends Observable {
         TinyServer.this.notifyObservers(mdd);
     }
 
-    private void isMessageTankChoice(Connection connection, MessagePlayerNew request) {
-        System.out.println("Nouveau joueur: " + request.getPseudo());
-        EnumTanks tankId = request.getEnumTanks();
-        String tank = tankId.getValue();
-        System.out.println(request.getPseudo() + " a choisi le tank: " + tank);
-        MessageTankData mtd = new MessageTankData(server, connection, request);
+    private void isMessagePlayerNew(Connection connection, com.lefrantguillaume.network.clientmsgs.MessagePlayerNew request) {
+        System.out.println("Nouveau joueur: " + request.getPseudo() + " with :" + request.getEnumTanks().getValue());
+        MessagePlayerNewData mtd = new MessagePlayerNewData(server, connection, request);
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(mtd);
     }
 
-    private void isMessageUpdate(Connection connection, MessagePlayerUpdatePosition request) {
+    private void isMessagePlayerUpdatePosition(Connection connection, MessagePlayerUpdatePosition request) {
         System.out.println("Update: " + request.getX() + " / " + request.getY());
         server.sendToAllExceptTCP(connection.getID(), request);
     }

@@ -11,12 +11,12 @@ import java.util.Map;
 /**
  * Created by leniglo on 23/04/15.
  */
-public class Target {
+public class Targets {
 
     private HashMap<String, Player> players = null;
     private HashMap<String, Shot> shots = null;
 
-    public Target() {
+    public Targets() {
         this.players = new HashMap<String, Player>();
         this.shots = new HashMap<String, Shot>();
     }

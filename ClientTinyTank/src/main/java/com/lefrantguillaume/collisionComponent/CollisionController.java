@@ -63,17 +63,19 @@ public class CollisionController {
                     objects.get(i).modifCoord(coords);
                     for (int i2 = 0; i2 < this.items.size(); ++i2) {
                         CollisionObject current = this.items.get(i2);
-                        if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
-                            if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
-                                objects.get(i).notifyCollision(current.getType());
-                                current.notifyCollision(current.getType());
-                                if (current.isSolid()) {
-                                    objects.get(i).backToSave();
+                        if (current.isAlive()) {
+                            if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
+                                if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
+                                    objects.get(i).notifyCollision(current.getType());
+                                    current.notifyCollision(current.getType());
+                                    if (current.isSolid()) {
+                                        objects.get(i).backToSave();
+                                    }
+                                    if (current.getType() == EnumType.UNBREAKABLE) {
+                                        return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
+                                    }
+                                    return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
                                 }
-                                if (current.getType() == EnumType.UNBREAKABLE) {
-                                    return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
-                                }
-                                return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
                             }
                         }
                     }

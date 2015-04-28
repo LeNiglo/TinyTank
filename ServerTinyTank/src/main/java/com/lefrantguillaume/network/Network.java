@@ -30,6 +30,7 @@ public class Network {
         kryo.register(MessagePlayerNew.class);
         kryo.register(MessagePlayerUpdateState.class);
         kryo.register(MessagePlayerUpdatePosition.class);
+        kryo.register(MessagePlayerRevive.class);
         kryo.register(MessageCollision.class);
         //kryo.register(MessagePutObject.class);
         kryo.register(EnumTanks.class);

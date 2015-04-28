@@ -1,7 +1,6 @@
 package com.lefrantguillaume.gameComponent.gameObject.tanks.tools;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.Rectangle;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
@@ -32,12 +31,12 @@ public class TankFactory {
         EnumShots shot = EnumShots.getEnumByValue(hit.getString("shotType"));
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
-        Pair<Float, Float> shiftHitImpact = new Pair<Float, Float>(Float.valueOf(hit.getString("shiftXImpact")), Float.valueOf(hit.getString("shiftYImpact")));
+        Pair<Float, Float> shiftHitExplode = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("shiftXExplode")), Float.valueOf(hit.getJSONObject("build").getString("shiftYExplode")));
         Pair<Float, Float> shiftHitOrigin = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("centerX")), Float.valueOf(hit.getJSONObject("build").getString("centerY")));
         Pair<Float, Float> shiftHitHead = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("headX")), Float.valueOf(hit.getJSONObject("build").getString("headY")));
 
         Pair<Float, Float> shiftWeaponOrigin = new Pair<Float, Float>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitImpact, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shot), shot);
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shot), shot);
         JSONArray canons = weapon.getJSONArray("canons");
         for (int i = 0; i < canons.length(); ++i){
             JSONObject current = canons.getJSONObject(i);
@@ -63,9 +62,10 @@ public class TankFactory {
 
         JSONObject build = config.getJSONObject("build");
         Pair<Float, Float> shiftOrigin = new Pair<Float, Float>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
+        Pair<Float, Float> shiftHitExplode = new Pair<Float, Float>(Float.valueOf(build.getString("shiftXExplode")), Float.valueOf(build.getString("shiftYExplode")));
 
         TankState tankState = new TankState(Float.valueOf(config.getString("speed")), Float.valueOf(config.getString("life")), Float.valueOf(config.getString("armor")),
-                animatorGameData.getTankBodyAnimator(tank), animatorGameData.getTankTopAnimator(tank), tank, shiftOrigin);
+                animatorGameData.getTankBodyAnimator(tank), animatorGameData.getTankTopAnimator(tank), tank, shiftOrigin, shiftHitExplode);
         JSONArray collisions = build.getJSONArray("collisions");
         for (int i = 0; i < collisions.length(); ++i){
             JSONObject current = collisions.getJSONObject(i);

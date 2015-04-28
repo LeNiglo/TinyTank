@@ -1,6 +1,5 @@
 package com.lefrantguillaume.gameComponent.gameObject.tanks.tools;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;

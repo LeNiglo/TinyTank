@@ -1,7 +1,6 @@
 package com.lefrantguillaume.gameComponent.controllers;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.animations.Animator;

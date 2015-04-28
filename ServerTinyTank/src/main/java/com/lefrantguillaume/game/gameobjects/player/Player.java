@@ -38,11 +38,17 @@ public class Player {
     public void addShoot() {nbShots += 1;}
     public void addhitSomebody() {nbHitSomebody += 1;}
     public void addGameObjectDestroyed() {nbGameObjectsDestroyed += 1;}
+    public void revive(){
+        this.getTank().revive();
+    }
+
+    // SETTERS
     public void setTank(Tank tank) {this.tank = tank;}
     public void setConnection(Connection connectionID) {this.connection = connectionID;}
     public void setCanShoot(boolean canShoot) {this.canShoot = canShoot;}
     public void setAmmo(int ammo) {this.ammo = ammo;}
 
+    // GETTERS
     public String getId() {return id;}
     public String getPseudo() {return pseudo;}
     public int getKills() {return nbPeopleKilled;}

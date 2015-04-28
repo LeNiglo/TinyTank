@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.EnumAnimationTank;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerActionController;
@@ -72,7 +73,7 @@ public class Player extends Observable implements Observer{
 
     public boolean kill(){
         if (this.tank.getTankState().getCurrentLife() <= 0) {
-            this.alive = false;
+            this.tank.explode();
             this.setChanged();
             this.notifyObservers(new Tuple<Boolean, Float, Float>(false, 0f, 0f));
             return true;
@@ -80,10 +81,13 @@ public class Player extends Observable implements Observer{
         return false;
     }
 
+    public void die(){
+        this.alive = false;
+    }
+
     public void revive(Pair<Float, Float> positions){
         this.alive = true;
-        this.tank.getTankState().setCurrentLife(this.tank.getTankState().getMaxLife());
-        this.tank.getTankState().setPositions(positions);
+        this.getTank().revive(positions);
         this.setChanged();
         this.notifyObservers(new Tuple<Boolean, Float, Float>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
