@@ -10,7 +10,7 @@ public class User {
     private final String idUser;
     public User(String pseudo, String idUser) {
         this.pseudo = pseudo;
-        this.idUser = l;
+        this.idUser = idUser;
     }
 
     // GETTERS

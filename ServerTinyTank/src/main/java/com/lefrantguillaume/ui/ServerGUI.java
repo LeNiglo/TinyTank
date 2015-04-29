@@ -10,6 +10,7 @@ import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.network.*;
 import com.lefrantguillaume.network.clientmsgs.MessageConnect;
 import com.lefrantguillaume.network.clientmsgs.MessageDownload;
+import com.lefrantguillaume.network.clientmsgs.MessageModel;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.Callback;
@@ -291,6 +292,8 @@ public class ServerGUI extends JFrame implements Observer {
             } else if (arg instanceof MessageDisconnectData) {
                 Log.info("GUI a remove un joueur (disconnected).");
                 master.delUser(((MessageDisconnectData) arg).getPseudo());
+                updatePlayerList();
+            } else if (arg instanceof MessageModel) {
                 updatePlayerList();
             }
         }

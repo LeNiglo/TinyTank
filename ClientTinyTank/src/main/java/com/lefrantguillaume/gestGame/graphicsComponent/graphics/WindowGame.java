@@ -34,10 +34,9 @@ public class WindowGame extends BasicGameState {
     private StateBasedGame stateGame;
     private int id;
 
-    private int frameRate = 80;
+    private int frameRate = 60;
     private float saveAngle = 0f;
     private long runningTime = 0l;
-    public String tmp = "no input";
 
     public WindowGame(int id, List<Observer> observers, Object gameController) {
         this.id = id;
@@ -101,7 +100,6 @@ public class WindowGame extends BasicGameState {
             }
             //debug
             if (CurrentUser.isInGame()) {
-                g.drawString(tmp, 100, 50);
                 g.setColor(Color.red);
                 g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY() - 2, 5, 5);
                 g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY(), 1, 1);
@@ -116,12 +114,10 @@ public class WindowGame extends BasicGameState {
         this.runningTime += delta;
 //        Debug.debug("Delta=" + delta + "   frameRate:" + this.frameRate);
         if (runningTime > 30) {
-        /*debug*/
             Input input = gameContainer.getInput();
             int xpos = input.getMouseX();
             int ypos = input.getMouseY();
-            tmp = "MouseSlick position x:" + xpos + " y:" + ypos;
-        /**/
+
 
             if (this.gameController != null) {
                 this.myMouseMoved(xpos, ypos);
@@ -185,6 +181,7 @@ public class WindowGame extends BasicGameState {
                 newAngle = 180 + (180 - (angle * -1));
             float minAngle = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getDirection().getAngle() - 90;
             float maxAngle = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getDirection().getAngle() + 90;
+            //TODO Change 90 with a tank variable.
 
             minAngle = (minAngle < 0 ? 360 + minAngle : minAngle);
             maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);

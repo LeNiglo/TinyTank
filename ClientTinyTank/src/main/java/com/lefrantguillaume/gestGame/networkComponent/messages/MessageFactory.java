@@ -24,7 +24,8 @@ public class MessageFactory {
 
     public static MessageModel createObject(int value, EnumInput mode, float x, float y, float angleDirection) {
         MessageModel object = null;
-         if (value == Input.MOUSE_LEFT_BUTTON&& mode == EnumInput.RELEASED) {
+
+        if (value == Input.MOUSE_LEFT_BUTTON&& mode == EnumInput.RELEASED) {
             object = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), angleDirection);
         }
         return object;

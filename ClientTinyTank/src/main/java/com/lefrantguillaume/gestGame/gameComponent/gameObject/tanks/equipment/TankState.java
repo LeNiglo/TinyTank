@@ -83,7 +83,7 @@ public class TankState {
         this.collisionObject.add(rectangle);
     }
 
-    public void explode(){
+    public void explode() {
         this.topAnimator.setPrintable(false);
         this.bodyAnimator.setIndex(EnumAnimationTank.EXPLODE.getValue());
         this.shiftOrigin.setV1(this.shiftToExplode.getV1());
@@ -97,6 +97,7 @@ public class TankState {
         this.boostEffect = 0;
         this.positions = new Pair<Float, Float>(positions);
         this.currentLife = this.maxLife;
+        this.bodyAnimator.currentAnimation().restart();
         this.bodyAnimator.setIndex(EnumAnimationTank.BASIC.getValue());
         this.bodyAnimator.setPrintable(true);
         this.topAnimator.setPrintable(true);
