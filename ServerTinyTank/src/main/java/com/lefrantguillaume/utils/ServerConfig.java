@@ -25,7 +25,7 @@ public class ServerConfig {
             Properties props = new Properties();
             props.load(reader);
 
-            gameName = props.getProperty("gameName", "My First TinyTank Game");
+            gameName = props.getProperty("gameName", "My First TinyTank game");
             tcpPort = Integer.valueOf(props.getProperty("tcpPort", "13333"));
             udpPort = Integer.valueOf(props.getProperty("udpPort", "13444"));
             maxAllowedPlayers = Integer.valueOf(props.getProperty("maxAllowedPlayers", "8"));
@@ -53,7 +53,7 @@ public class ServerConfig {
             props.setProperty("maxAllowedPlayers", "8");
             props.setProperty("udpPort", "13444");
             props.setProperty("tcpPort", "13333");
-            props.setProperty("gameName", "My TinyTank Game");
+            props.setProperty("gameName", "My TinyTank game");
             props.getProperty("friendlyFire", "0");
             props.getProperty("allyNoBlock", "1");
             init();
@@ -71,7 +71,7 @@ public class ServerConfig {
     }
 
     private static void init() {
-        gameName = "My First TinyTank Game";
+        gameName = "My First TinyTank game";
         tcpPort = 13333;
         udpPort = 13444;
         maxAllowedPlayers = 8;
