@@ -75,9 +75,6 @@ public class TankWeapon {
         float x = (float) (x1 * Math.cos(radAngle) - y1 * Math.sin(radAngle) + coord.getV1());
         float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
 
-        if (this.shotType == EnumShots.MACHINE_GUN){
-            angle += RandomTools.getInt(15) - 7;
-        }
         Tuple<Float, Float, Float> newCoord = new Tuple<Float, Float, Float>(x, y, angle);
         Shot shot = new Shot(userId, id, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<Float, Float>(this.shiftHitOrigin),
                 new Pair<Float, Float>(this.getShiftHitExplode()), new Pair<Float, Float>(this.shiftHitHead));

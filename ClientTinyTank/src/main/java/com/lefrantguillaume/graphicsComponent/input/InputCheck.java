@@ -1,6 +1,8 @@
 package com.lefrantguillaume.graphicsComponent.input;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.tools.RandomTools;
+import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.networkComponent.messages.MessageFactory;
 import com.lefrantguillaume.networkComponent.messages.MessageModel;
@@ -33,7 +35,12 @@ public class InputCheck extends Observable {
 
     public int mouseClickCheck(Player player, int x, int y, EnumInput mode) {
         if (player != null && player.isAlive()) {
-            MessageModel request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, player.getTank().getTankState().getGunAngle());
+            float newAngle = player.getTank().getTankState().getGunAngle();
+            if (player.getTank().getTankWeapon().getShotType() == EnumShots.MACHINE_GUN){
+                newAngle += RandomTools.getInt(15) - 7.5;
+                //TODO mettre cet angle dans les variables de tank
+            }
+            MessageModel request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, newAngle);
             this.setChanged();
             this.notifyObservers(request);
             return 0;

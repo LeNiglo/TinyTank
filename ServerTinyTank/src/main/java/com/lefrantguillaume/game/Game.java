@@ -216,7 +216,8 @@ public class Game extends Observable implements Observer {
 
         }
 
-        this.addCollisionTimer(it1, it2, it3);
+        if (!added)
+            this.addCollisionTimer(it1, it2, it3);
     }
 
     private void addCollisionTimer(final String it1, final String it2, final int it3) {
@@ -237,6 +238,8 @@ public class Game extends Observable implements Observer {
     private void addReviveTimer(final MessageModel values) {
 
         Timer timer = new Timer();
+        this.setChanged();
+        this.notifyObservers(values);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

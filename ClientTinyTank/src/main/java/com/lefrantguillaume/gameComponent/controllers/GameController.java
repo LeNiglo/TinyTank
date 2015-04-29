@@ -142,14 +142,14 @@ public class GameController extends Observable implements Observer {
 
 
     public void changeStatePlayer(MessagePlayerUpdateState task) {
-        for (int i = 0; i < this.players.size(); ++i) {
-            if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
-                this.players.get(i).getTank().getTankState().setCurrentLife(task.getCurrentLife());
-                this.players.get(i).getTank().getTankState().setBoostEffect(task.getBoostEffect());
-                this.players.get(i).getTank().getTankState().setShieldEffect(task.getShieldEffect());
-                this.players.get(i).getTank().getTankState().setSlowEffect(task.getSlowEffect());
-                this.players.get(i).getTank().getTankState().setArmor(task.getArmor());
-                this.players.get(i).kill();
+        for (Player player : this.players) {
+            if (player.getUser().getIdUser().equals(task.getId())) {
+                player.getTank().getTankState().setCurrentLife(task.getCurrentLife());
+                player.getTank().getTankState().setBoostEffect(task.getBoostEffect());
+                player.getTank().getTankState().setShieldEffect(task.getShieldEffect());
+                player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
+                player.getTank().getTankState().setArmor(task.getArmor());
+                player.kill();
                 break;
             }
         }
@@ -157,16 +157,16 @@ public class GameController extends Observable implements Observer {
 
     public void changePositionPlayer(MessagePlayerUpdatePosition task) {
         Debug.debug("new pos [" + task.getX() + "," + task.getY() + "] : id=" + task.getId());
-        for (int i = 0; i < this.players.size(); ++i) {
-            if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
-                this.players.get(i).getTank().getTankState().setX(task.getX());
-                this.players.get(i).getTank().getTankState().setY(task.getY());
-                List<CollisionObject> objects = this.collisionController.getCollisionObject(this.players.get(i).getUser().getId());
-                for (int i2 = 0; i2 < objects.size(); ++i2) {
-                    objects.get(i2).setX(task.getX());
-                    objects.get(i2).setY(task.getY());
-                    objects.get(i2).setSaveX(task.getX());
-                    objects.get(i2).setSaveY(task.getY());
+        for (Player player : this.players) {
+            if (player.getUser().getIdUser().equals(task.getId())) {
+                player.getTank().getTankState().setX(task.getX());
+                player.getTank().getTankState().setY(task.getY());
+                List<CollisionObject> objects = this.collisionController.getCollisionObject(player.getUser().getId());
+                for (CollisionObject object : objects) {
+                    object.setX(task.getX());
+                    object.setY(task.getY());
+                    object.setSaveX(task.getX());
+                    object.setSaveY(task.getY());
                 }
                 break;
             }
