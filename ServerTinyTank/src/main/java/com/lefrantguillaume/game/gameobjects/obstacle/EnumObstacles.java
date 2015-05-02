@@ -1,10 +1,10 @@
-package com.lefrantguillaume.gestGame.gameComponent.gameObject.obstacles;
+package com.lefrantguillaume.game.gameobjects.obstacle;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public enum EnumObstacles {
-    WALL_WOOD(0);
+    BOX(0);
 
     private final int index;
 

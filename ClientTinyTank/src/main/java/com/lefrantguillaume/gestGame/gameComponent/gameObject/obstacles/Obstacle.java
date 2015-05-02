@@ -13,19 +13,35 @@ public class Obstacle {
     private String userId;
     private UUID id;
     private Animator animator;
-    private EnumType type;
+    private EnumObstacles type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
     private Pair<Float, Float> shiftOrigin;
+    private float angle;
+    private boolean created;
 
-    public Obstacle(float x, float y, float sizeX, float sizeY, String userId, Animator animator, EnumType type, Pair<Float, Float> shiftOrigin) {
-        this.userId = userId;
-        this.shiftOrigin = shiftOrigin;
-        this.id = UUID.randomUUID();
+    public Obstacle(Animator animator, EnumObstacles type, Pair<Float, Float> size, Pair<Float, Float> shiftOrigin) {
         this.animator = animator;
         this.type = type;
-        this.positions = new Pair<Float, Float>(x, y);
-        this.sizes = new Pair<Float, Float>(sizeX, sizeY);
+        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
+        this.sizes = new Pair<Float, Float>(size);
+        this.created = false;
+    }
+
+    public Obstacle(Obstacle obstacle) {
+        this.animator = new Animator(obstacle.animator);
+        this.type = obstacle.type;
+        this.shiftOrigin = new Pair<Float, Float>(obstacle.shiftOrigin);
+        this.sizes = new Pair<Float, Float>(obstacle.sizes);
+        this.created = obstacle.created;
+    }
+
+    public void createObstacle(String userId, String id, float angle, float posX, float posY){
+        this.userId = userId;
+        this.angle = angle;
+        this.id = UUID.fromString(id);
+        this.positions = new Pair<Float, Float>(posX, posY);
+        this.created = true;
     }
 
     // GETTERS
@@ -49,7 +65,7 @@ public class Obstacle {
         return animator;
     }
 
-    public EnumType getType() {
+    public EnumObstacles getType() {
         return type;
     }
 
@@ -63,6 +79,10 @@ public class Obstacle {
 
     public Pair<Float, Float> getShiftOrigin() {
         return shiftOrigin;
+    }
+
+    public float getAngle() {
+        return this.angle;
     }
 
     // SETTERS
@@ -86,4 +106,7 @@ public class Obstacle {
         this.animator = animator;
     }
 
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
 }

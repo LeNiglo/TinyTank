@@ -6,6 +6,7 @@
         "life": "40.0",
         "speed": "80.0",
         "armor": "0.0",
+        "accuracy": "100",
         "build": {
           "centerX": "-22.0", //centre arbitraire du tank (là où on pose le centre arbitraire du top)
           "centerY": "-22.0", // décallage de mon bot en x - cenetrX y -centerY pour affichae
@@ -66,6 +67,7 @@
         "life": "30.0",
         "speed": "70.0",
         "armor": "0.0",
+        "accuracy": "100",
         "build": {
           "centerX": "-22.0",
           "centerY": "-22.0",
@@ -126,6 +128,7 @@
         "life": "30.0",
         "speed": "100.0",
         "armor": "0.0",
+        "accuracy": "80",
         "build": {
           "centerX": "-35.0",
           "centerY": "-25.0",

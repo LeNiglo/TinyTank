@@ -4,7 +4,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.gameobjects.tanks.types.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.network.msgdatas.MessagePlayerNewData;
@@ -51,8 +50,8 @@ public class TinyServer extends Observable {
                         isMessagePlayerUpdatePosition(connection, (MessagePlayerUpdatePosition) object);
                     } else if (object instanceof MessageCollision) {
                         isMessageCollision(connection, (MessageCollision) object);
-                    } else if (object instanceof MessagePutObject) {
-                        isMessagePutObject(connection, (MessagePutObject) object);
+                    } else if (object instanceof MessagePutObstacle) {
+                        isMessagePutObject(connection, (MessagePutObstacle) object);
                     }
                 }
 
@@ -144,7 +143,7 @@ public class TinyServer extends Observable {
         TinyServer.this.notifyObservers(mcd);
     }
 
-    private void isMessagePutObject(Connection connection, MessagePutObject request) {
+    private void isMessagePutObject(Connection connection, MessagePutObstacle request) {
         TinyServer.this.setChanged();
         TinyServer.this.notifyObservers(request);
     }

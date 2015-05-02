@@ -1,6 +1,7 @@
 package com.lefrantguillaume.gestGame.gameComponent.gameObject.tanks.types;
 
 import com.lefrantguillaume.gestGame.Utils.stockage.Pair;
+import com.lefrantguillaume.gestGame.Utils.tools.RandomTools;
 import com.lefrantguillaume.gestGame.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gestGame.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gestGame.gameComponent.animations.Animator;
@@ -36,6 +37,16 @@ public class Tank {
     // FUNCTIONS
     public Shot generateShot(String userId, UUID id, float angle) {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
+    }
+
+    public float predictAngleHit(){
+        float angle = this.tankState.getGunAngle();
+        float deviate = (100 - this.tankState.getAccuracy()) * 90 / 100;
+
+        if (deviate != 0) {
+            angle += RandomTools.getInt((int) deviate) - (deviate / 2);
+        }
+        return angle;
     }
 
     public void explode(){

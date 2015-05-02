@@ -91,6 +91,18 @@ public class Player extends Observable implements Observer{
         this.notifyObservers(new Tuple<Boolean, Float, Float>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
 
+    public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController){
+        Tuple<Float, Float, Float> boxValues = new Tuple<Float, Float, Float>(0f, 0f, 0f);
+        float canonAngle = this.tank.getTankState().getGunAngle();
+        double boxAngle = canonAngle + 90;
+        //TODO check collision
+        //TODO trouver un new point
+        boxValues.setV1(15f);
+        boxValues.setV2(15f);
+        boxValues.setV3((float)boxAngle);
+        return boxValues;
+    }
+
     // GETTERS
 
     public boolean isAlive(){

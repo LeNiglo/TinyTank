@@ -158,8 +158,8 @@ public class Game extends Observable implements Observer {
             MessageCollision mc = ((MessageCollisionData) arg).getRequest();
             Log.info("Nouvelle collision (" + mc.getShotId() + ")");
             processCollision(mc);
-        } else if (arg instanceof MessagePutObject) {
-            MessagePutObject mpo = ((MessagePutObject) arg);
+        } else if (arg instanceof MessagePutObstacle) {
+            MessagePutObstacle mpo = ((MessagePutObstacle) arg);
             server.getServer().sendToAllTCP(mpo);
         }
         this.setChanged();

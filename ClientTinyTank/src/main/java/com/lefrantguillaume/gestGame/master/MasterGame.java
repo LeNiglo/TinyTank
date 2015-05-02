@@ -2,6 +2,7 @@ package com.lefrantguillaume.gestGame.master;
 
 import com.lefrantguillaume.gestGame.Utils.configs.MasterConfig;
 import com.lefrantguillaume.gestGame.Utils.configs.NetworkServerConfig;
+import com.lefrantguillaume.gestGame.Utils.tools.Debug;
 import com.lefrantguillaume.gestGame.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.gestGame.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gestGame.graphicsComponent.graphics.Windows;
@@ -66,7 +67,8 @@ public class MasterGame {
         observers.add(this.genericRequestObserver);
         this.masterResponseController.addObserver(this.interfaceController);
         this.masterResponseController.addObserver(this.gameController);
-        AppGameContainer appGame = new AppGameContainer(new Windows("TinyTank", observers, this.interfaceController, this.gameController));
+        AppGameContainer appGame = new AppGameContainer(new Windows("TinyTank Game", observers, this.interfaceController, this.gameController));
+        Debug.debug("["+WindowConfig.getSizeX()+","+WindowConfig.getSizeY()+"]");
         appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
         appGame.start();
 

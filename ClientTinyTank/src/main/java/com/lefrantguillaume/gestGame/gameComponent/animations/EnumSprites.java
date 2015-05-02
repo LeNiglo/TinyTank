@@ -1,28 +1,35 @@
 package com.lefrantguillaume.gestGame.gameComponent.animations;
 
-import com.lefrantguillaume.gestGame.gameComponent.gameObject.tanks.types.EnumTanks;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public enum EnumSprites {
+    //index
+    TIGER(1),
+    SNIPER(2),
+    RUSHER(3),
+    WALL(4),
+    //interface
     BACKGROUND(-1), BUTTONS(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),
     PREVIEW_TIGER(-1), PREVIEW_SNIPER(-1), PREVIEW_RUSHER(-1),
+    //game
     MAP(-1),
-    TIGER_BODY(EnumTanks.TIGER.getIndex()), TIGER_TOP(EnumTanks.TIGER.getIndex()), TIGER_SPELL(EnumTanks.TIGER.getIndex()), TIGER_HIT(EnumTanks.TIGER.getIndex()),
-    SNIPER_BODY(EnumTanks.SNIPER.getIndex()), SNIPER_TOP(EnumTanks.SNIPER.getIndex()), SNIPER_SPELL(EnumTanks.SNIPER.getIndex()), SNIPER_HIT(EnumTanks.SNIPER.getIndex()),
-    RUSHER_BODY(EnumTanks.RUSHER.getIndex()), RUSHER_TOP(EnumTanks.RUSHER.getIndex()), RUSHER_SPELL(EnumTanks.RUSHER.getIndex()), RUSHER_HIT(EnumTanks.RUSHER.getIndex());
+    WALL_WOOD(WALL.getIndex()),
+    TIGER_BODY(TIGER.getIndex()), TIGER_TOP(TIGER.getIndex()), TIGER_SPELL(TIGER.getIndex()), TIGER_HIT(TIGER.getIndex()),
+    SNIPER_BODY(SNIPER.getIndex()), SNIPER_TOP(SNIPER.getIndex()), SNIPER_SPELL(SNIPER.getIndex()), SNIPER_HIT(SNIPER.getIndex()),
+    RUSHER_BODY(RUSHER.getIndex()), RUSHER_TOP(RUSHER.getIndex()), RUSHER_SPELL(RUSHER.getIndex()), RUSHER_HIT(RUSHER.getIndex());
 
 
 
-    private final int id;
+    private final int index;
 
-    EnumSprites(int id) {
-        this.id = id;
+    EnumSprites(int index) {
+        this.index = index;
     }
 
-    public int getId() {
-        return id;
+    public int getIndex() {
+        return index;
     }
 }

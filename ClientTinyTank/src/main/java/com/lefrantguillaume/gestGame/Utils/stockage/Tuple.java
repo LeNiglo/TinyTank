@@ -26,6 +26,18 @@ public class Tuple<T1, T2, T3> {
         return this.v3;
     }
 
+    public void setV1(T1 value){
+        this.v1 = value;
+    }
+
+    public void setV2(T2 value){
+        this.v2 = value;
+    }
+
+    public void setV3(T3 value){
+        this.v3 = value;
+    }
+
     @Override
     public String toString(){
         return new String("v1:" + this.getV1() + " v2:"+this.getV2() + " v3:"+this.getV3());

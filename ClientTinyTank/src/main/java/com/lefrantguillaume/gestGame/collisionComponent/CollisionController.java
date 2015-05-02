@@ -25,11 +25,11 @@ public class CollisionController {
         Pair<Float, Float> pos2 = new Pair<Float, Float>(map.getSizeX() / 2, map.getSizeY());
         Pair<Float, Float> pos3 = new Pair<Float, Float>(0f, map.getSizeY() / 2);
         Pair<Float, Float> pos4 = new Pair<Float, Float>(map.getSizeX(), map.getSizeY() / 2);
-        Pair<Float, Float> size1 = new Pair<Float, Float>(map.getSizeX(), 5f);
-        Pair<Float, Float> size2 = new Pair<Float, Float>(5f, map.getSizeY());
-        Pair<Float, Float> origin1 = new Pair<Float, Float>(-map.getSizeX() / 2, -5f);
+        Pair<Float, Float> size1 = new Pair<Float, Float>(map.getSizeX(), 10f);
+        Pair<Float, Float> size2 = new Pair<Float, Float>(10f, map.getSizeY());
+        Pair<Float, Float> origin1 = new Pair<Float, Float>(-map.getSizeX() / 2, -10f);
         Pair<Float, Float> origin2 = new Pair<Float, Float>(-map.getSizeX() / 2, 0f);
-        Pair<Float, Float> origin3 = new Pair<Float, Float>(-5f, -map.getSizeY() / 2);
+        Pair<Float, Float> origin3 = new Pair<Float, Float>(-10f, -map.getSizeY() / 2);
         Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
 
         this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));

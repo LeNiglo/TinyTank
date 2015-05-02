@@ -2,7 +2,7 @@ package com.lefrantguillaume;
 
 import com.lefrantguillaume.gestGame.Utils.configs.CurrentUser;
 import com.lefrantguillaume.gestGame.Utils.configs.WindowConfig;
-import com.lefrantguillaume.gestAccount.MasterLauncher;
+import com.lefrantguillaume.gestGame.master.MasterGame;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -16,8 +16,8 @@ public class Main {
 
         windowConfig = new WindowConfig();
         try {
-            MasterLauncher launcher = new MasterLauncher();
-            launcher.start();
+            MasterGame game = new MasterGame();
+            game.start();
         } catch (SlickException e) {
             e.printStackTrace();
         }

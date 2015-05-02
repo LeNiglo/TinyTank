@@ -23,8 +23,10 @@ public class TankState {
     private EnumTanks tankType;
     private final float speed;
     private final float maxLife;
-    private float armor;
+    private final float maxArmor;
+    private final float accuracy;
     private float currentLife;
+    private float currentArmor;
     private float shieldEffect;
     private float slowEffect;
     private float boostEffect;
@@ -32,14 +34,16 @@ public class TankState {
     private float gunAngle;
     private EnumDirection direction;
 
-    public TankState(float speed, float maxLife, float armor, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
+    public TankState(float speed, float maxLife, float maxArmor, float accuracy, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
         this.bodyAnimator = bodyAnimator;
         this.topAnimator = topAnimator;
         this.tankType = tankType;
         this.speed = speed;
         this.maxLife = maxLife;
-        this.armor = armor;
+        this.maxArmor = maxArmor;
+        this.accuracy = accuracy;
         this.currentLife = maxLife;
+        this.currentArmor = maxArmor;
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
         this.shiftOriginSave = new Pair<Float, Float>(shiftOrigin);
         this.shiftToExplode = new Pair<Float, Float>(shiftToExplode);
@@ -59,8 +63,10 @@ public class TankState {
         this.tankType = tankState.tankType;
         this.speed = tankState.speed;
         this.maxLife = tankState.maxLife;
-        this.armor = tankState.armor;
+        this.maxArmor = tankState.maxArmor;
+        this.accuracy = tankState.accuracy;
         this.currentLife = tankState.maxLife;
+        this.currentArmor = tankState.maxArmor;
         this.shiftOrigin = new Pair<Float, Float>(tankState.shiftOrigin);
         this.shiftOriginSave = new Pair<Float, Float>(tankState.shiftOrigin);
         this.shiftToExplode = new Pair<Float, Float>(tankState.shiftToExplode);
@@ -90,7 +96,7 @@ public class TankState {
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
     }
 
-    public void init(Pair<Float, Float> positions){
+    public void init(Pair<Float, Float> positions) {
         this.move = false;
         this.shieldEffect = 0;
         this.slowEffect = 0;
@@ -121,12 +127,20 @@ public class TankState {
         return this.currentLife;
     }
 
+    public float getCurrentArmor() {
+        return this.currentArmor;
+    }
+
     public float getMaxLife() {
         return this.maxLife;
     }
 
-    public float getArmor() {
-        return this.armor;
+    public float getMaxArmor() {
+        return this.maxArmor;
+    }
+
+    public float getAccuracy() {
+        return this.accuracy;
     }
 
     public float getBoostEffect() {
@@ -190,6 +204,10 @@ public class TankState {
         this.currentLife = currentLife;
     }
 
+    public void setCurrentArmor(float currentArmor) {
+        this.currentArmor = currentArmor;
+    }
+
     public void setShieldEffect(float shieldEffect) {
         this.shieldEffect = shieldEffect;
     }
@@ -200,10 +218,6 @@ public class TankState {
 
     public void setBoostEffect(float boostEffect) {
         this.boostEffect = boostEffect;
-    }
-
-    public void setArmor(float armor) {
-        this.armor = armor;
     }
 
     public EnumTanks getTankType() {

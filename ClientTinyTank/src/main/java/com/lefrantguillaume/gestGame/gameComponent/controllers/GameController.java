@@ -12,6 +12,7 @@ import com.lefrantguillaume.gestGame.gameComponent.RoundData.Team;
 import com.lefrantguillaume.gestGame.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gestGame.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gestGame.gameComponent.gameObject.obstacles.Obstacle;
+import com.lefrantguillaume.gestGame.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gestGame.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gestGame.gameComponent.gameObject.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gestGame.gameComponent.playerData.action.PlayerAction;
@@ -42,6 +43,7 @@ public class GameController extends Observable implements Observer {
     private RoundController roundController;
     private AnimatorGameData animatorGameData;
     private TankConfigData tankConfigData;
+    private ObstacleConfigData obstaclesConfigData;
 
     public GameController() throws SlickException {
         this.players = new ArrayList<Player>();
@@ -52,6 +54,7 @@ public class GameController extends Observable implements Observer {
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.collisionController = new CollisionController();
         this.tankConfigData = new TankConfigData();
+        this.obstaclesConfigData = new ObstacleConfigData();
     }
 
     public void clearData() {
@@ -119,6 +122,11 @@ public class GameController extends Observable implements Observer {
                     MessagePlayerRevive task = (MessagePlayerRevive) received;
                     this.revivePlayer(task);
                 }
+                if (received instanceof MessagePutObstacle) {
+                    Debug.debug("PUT OBJECT");
+                    MessagePutObstacle task = (MessagePutObstacle) received;
+                    this.putObject(task);
+                }
             }
         }
     }
@@ -148,7 +156,7 @@ public class GameController extends Observable implements Observer {
                 player.getTank().getTankState().setBoostEffect(task.getBoostEffect());
                 player.getTank().getTankState().setShieldEffect(task.getShieldEffect());
                 player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
-                player.getTank().getTankState().setArmor(task.getArmor());
+                player.getTank().getTankState().setCurrentArmor(task.getArmor());
                 player.kill();
                 break;
             }
@@ -183,6 +191,30 @@ public class GameController extends Observable implements Observer {
         }
     }
 
+    public void putObject(MessagePutObstacle task){
+        Obstacle obstacle = this.obstaclesConfigData.getNewObstacle(task.getType().getIndex());
+        obstacle.createObstacle(task.getId(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
+        this.mapController.addObstacle(obstacle);
+    }
+
+    // FUNCTIONS
+    public void initConfigData(JSONObject config) throws JSONException {
+        this.initTankConfigData(config);
+        this.initObstacleConfigData(config);
+    }
+
+    public void initTankConfigData(JSONObject config) throws JSONException {
+        if (this.animatorGameData == null)
+            throw new JSONException("tankConfigData failed");
+        this.tankConfigData.initTanks(config, this.animatorGameData);
+    }
+
+    public void initObstacleConfigData(JSONObject config) throws JSONException {
+        if (this.animatorGameData == null)
+            throw new JSONException("obstacleConfigData failed");
+        this.obstaclesConfigData.initObstacles(config, this.animatorGameData);
+    }
+
     public void deletePlayer(String id) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(id)) {
@@ -191,12 +223,6 @@ public class GameController extends Observable implements Observer {
                 break;
             }
         }
-    }
-
-    public void initTankConfigData(JSONObject config) throws JSONException {
-        if (this.animatorGameData == null)
-            throw new JSONException("tankConfigData failed");
-        this.tankConfigData.initTanks(config, this.animatorGameData);
     }
 
     // UPDATE GAME FUNCTIONS

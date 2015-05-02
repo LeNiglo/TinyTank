@@ -16,12 +16,14 @@ public class Windows extends StateBasedGame {
 
     public Windows(String name, List<Observer> observers, InterfaceController interfaceController, GameController gameController) {
         super(name);
+        this.addState(new WindowLogin(EnumWindow.LOGIN.getValue()));
+        this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue()));
         this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), observers, interfaceController));
         this.addState(new WindowGame(EnumWindow.GAME.getValue(), observers, gameController));
     }
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        this.enterState(EnumWindow.INTERFACE.getValue());
+        this.enterState(EnumWindow.LOGIN.getValue());
     }
 }

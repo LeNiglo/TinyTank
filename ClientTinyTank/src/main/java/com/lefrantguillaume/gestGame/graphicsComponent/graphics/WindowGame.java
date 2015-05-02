@@ -65,7 +65,7 @@ public class WindowGame extends BasicGameState {
         this.gameController.setAnimatorGameData(this.animatorGameData);
         try {
             JSONObject jsonConfig = new JSONObject(StringTools.readFile("tanks.json"));
-            this.gameController.initTankConfigData(jsonConfig);
+            this.gameController.initConfigData(jsonConfig);
         } catch (JSONException e) {
             throw new SlickException(e.getMessage());
         }
@@ -77,6 +77,10 @@ public class WindowGame extends BasicGameState {
         this.container.setShowFPS(true);
         this.container.setAlwaysRender(true);
         this.container.setVSync(false);
+    }
+
+    @Override
+    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
 
     }
 
@@ -129,7 +133,6 @@ public class WindowGame extends BasicGameState {
 
     @Override
     public void mouseWheelMoved(int change) {
-        System.out.println(change);
     }
 
     @Override
@@ -143,29 +146,35 @@ public class WindowGame extends BasicGameState {
                 this.container.setTargetFrameRate(this.frameRate);
             }
         } else {
-            input.keyCheck(this.gameController.getPlayer(CurrentUser.getId()), key, EnumInput.PRESSED);
+            input.gestInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
         }
     }
 
     @Override
     public void keyReleased(int key, char c) {
-        if (input != null && input.keyCheck(this.gameController.getPlayer(CurrentUser.getId()), key, EnumInput.RELEASED) == -1 && this.gameController != null) {
-            this.gameController.clearData();
-            this.stateGame.enterState(EnumWindow.INTERFACE.getValue());
+        if (input != null && this.gameController != null) {
+            if (input.gestInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY()) == -1) {
+                this.gameController.clearData();
+                this.stateGame.enterState(EnumWindow.INTERFACE.getValue());
+            }
         }
     }
 
     @Override
     public void mousePressed(int button, int x, int y) {
         if (input != null && button == 0) {
-            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()), x, y, EnumInput.PRESSED);
+            input.gestInput(this.gameController, Input.MOUSE_LEFT_BUTTON, EnumInput.PRESSED, x, y);
+        } else if (input != null && button == 1) {
+            input.gestInput(this.gameController, Input.MOUSE_RIGHT_BUTTON, EnumInput.PRESSED, x, y);
         }
     }
 
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (input != null && button == 0) {
-            input.mouseClickCheck(this.gameController.getPlayer(CurrentUser.getId()), x, y, EnumInput.RELEASED);
+            input.gestInput(this.gameController, Input.MOUSE_LEFT_BUTTON, EnumInput.RELEASED, x, y);
+        } else if (input != null && button == 1) {
+            input.gestInput(this.gameController, Input.MOUSE_RIGHT_BUTTON, EnumInput.RELEASED, x, y);
         }
     }
 

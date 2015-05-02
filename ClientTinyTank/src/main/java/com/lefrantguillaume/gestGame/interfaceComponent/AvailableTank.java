@@ -14,6 +14,7 @@ import java.util.List;
 public class AvailableTank {
     private List<Animator> tankStatAnimator;
     private List<Animator> tankPreviewAnimator;
+    private List<Boolean> available;
     private EnumInterfaceComponent currentTankStat;
     private final float xStat;
     private final float yStat;
@@ -21,10 +22,15 @@ public class AvailableTank {
     private final float yPreview;
 
     public AvailableTank() {
+//TODO faire en sorte que les tanks disponible soit passé en paramètre (List<> available)
         this.xStat = 450;
         this.yStat = 450;
         this.xPreview = 500;
         this.yPreview = 300;
+        this.available = new ArrayList<Boolean>();
+        this.available.add(true);
+        this.available.add(false);
+        this.available.add(true);
         this.tankStatAnimator = new ArrayList<Animator>();
         this.tankPreviewAnimator = new ArrayList<Animator>();
         this.currentTankStat = EnumInterfaceComponent.SNIPER;
@@ -70,7 +76,10 @@ public class AvailableTank {
         this.currentTankStat = values[index];
     }
 
-    public EnumTanks getCurrentTank(){
-        return EnumTanks.getEnumByIndex(this.currentTankStat.getIndex());
+    public EnumTanks getCurrentTank() {
+        if (this.currentTankStat.getIndex() < this.available.size() && this.available.get(this.currentTankStat.getIndex()).equals(true)) {
+            return EnumTanks.getEnumByIndex(this.currentTankStat.getIndex());
+        }
+        return EnumTanks.NULL;
     }
 }

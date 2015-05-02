@@ -35,6 +35,7 @@ public class AnimatorGameData {
         this.initGuns();
         this.initShots();
         this.initSpells();
+        this.initObstacles();
     }
 
     public void initMap(String configMapFile) throws SlickException {
@@ -64,6 +65,11 @@ public class AnimatorGameData {
         this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_HIT));
         this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_HIT));
         this.addShotAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_HIT));
+    }
+
+    private void initObstacles() throws SlickException {
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.WALL_WOOD));
+
     }
 
     public void addTankAnimator(Animator tankAnimator) {
@@ -107,6 +113,6 @@ public class AnimatorGameData {
     }
 
     public Animator getObstacleAnimator(EnumObstacles index) {
-        return new Animator(this.obstacleAnimator.get(index.getValue()));
+        return new Animator(this.obstacleAnimator.get(index.getIndex()));
     }
 }

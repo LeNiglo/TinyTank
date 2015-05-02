@@ -32,12 +32,11 @@ public class Network {
         kryo.register(MessagePlayerUpdatePosition.class);
         kryo.register(MessagePlayerRevive.class);
         kryo.register(MessageCollision.class);
-        //kryo.register(MessagePutObject.class);
+        kryo.register(MessagePutObstacle.class);
         kryo.register(EnumTanks.class);
         kryo.register(EnumObjects.class);
         kryo.register(MessageNeedMap.class);
         kryo.register(MessageDownload.class);
         kryo.register(ArrayList.class);
-        kryo.register(MessageGameObjects.class);
     }
 }

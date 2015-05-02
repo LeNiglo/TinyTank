@@ -1,6 +1,5 @@
 package com.lefrantguillaume.gestGame.gameComponent.animations;
 
-import com.lefrantguillaume.gestGame.gameComponent.gameObject.tanks.types.EnumTanks;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -14,19 +13,40 @@ public class AnimatorGameFactory extends AnimatorFactory {
     public Animator getAnimator(EnumSprites index) throws SlickException {
         Animator animator = new Animator();
 
-        if (index == EnumSprites.MAP){
+        if (index == EnumSprites.MAP) {
             this.mapLoad(animator);
         }
-        if (index.getId() == EnumTanks.TIGER.getIndex()){
+        if (index.getIndex() == EnumSprites.TIGER.getIndex()) {
             this.panzerAnimator(animator, index);
         }
-        if (index.getId() == EnumTanks.SNIPER.getIndex()){
+        if (index.getIndex() == EnumSprites.SNIPER.getIndex()) {
             this.sniperAnimator(animator, index);
         }
-        if (index.getId() == EnumTanks.RUSHER.getIndex()){
+        if (index.getIndex() == EnumSprites.RUSHER.getIndex()) {
             this.rusherAnimator(animator, index);
         }
+        if (index.getIndex() == EnumSprites.WALL.getIndex()) {
+            this.wallAnimator(animator, index);
+        }
         return animator;
+    }
+
+    private void wallAnimator(Animator animator, EnumSprites index) throws SlickException {
+        if (index == EnumSprites.WALL_WOOD) {
+            Animation animation = new Animation();
+            Image img1 = new Image("assets/img/game/box/box1.png");
+            animation.addFrame(img1, 150);
+            Image img2 = new Image("assets/img/game/box/box2.png");
+            animation.addFrame(img2, 150);
+            Image img3 = new Image("assets/img/game/box/box3.png");
+            animation.addFrame(img3, 150);
+            animator.addAnimation(animation);
+
+            SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/box/boomBox.png", 88, 63);
+            Animation animation2 = this.loadAnimation(spriteSheet2, 0, 3, 0, 1, 200);
+            animation2.setLooping(false);
+            animator.addAnimation(animation2);
+        }
     }
 
     private void panzerAnimator(Animator animator, EnumSprites index) throws SlickException {
@@ -37,12 +57,10 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
             animation.setLooping(false);
             animator.addAnimation(animation);
-        }
-        else if (index == EnumSprites.TIGER_TOP){
+        } else if (index == EnumSprites.TIGER_TOP) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/tigerA_2.png", 44, 24);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
-        }
-        else if (index == EnumSprites.TIGER_HIT) {
+        } else if (index == EnumSprites.TIGER_HIT) {
             Animation animation = new Animation();
             Image img1 = new Image("assets/img/game/effect/rocket0.png");
             animation.addFrame(img1, 150);
@@ -55,12 +73,12 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation2 = this.loadAnimation(spriteSheet, 0, 5, 0, 1, 150);
             animation2.setLooping(false);
             animator.addAnimation(animation2);
-        }
-        else if (index == EnumSprites.TIGER_SPELL){
+        } else if (index == EnumSprites.TIGER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/tiger_shield.png", 90, 90);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
         }
     }
+
     private void sniperAnimator(Animator animator, EnumSprites index) throws SlickException {
         if (index == EnumSprites.SNIPER_BODY) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/sniperA_1.png", 80, 48);
@@ -69,20 +87,17 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
             animation.setLooping(false);
             animator.addAnimation(animation);
-        }
-        else if (index == EnumSprites.SNIPER_TOP){
+        } else if (index == EnumSprites.SNIPER_TOP) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/sniperA_2.png", 80, 48);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
-        }
-        else if (index == EnumSprites.SNIPER_HIT) {
+        } else if (index == EnumSprites.SNIPER_HIT) {
             SpriteSheet spriteSheet1 = new SpriteSheet("assets/img/game/effect/snipeHit0.png", 22, 22);
             animator.addAnimation(loadAnimation(spriteSheet1, 0, 1, 0, 1, 200));
             SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/effect/explosionSniper.png", 47, 47);
             Animation animation2 = this.loadAnimation(spriteSheet2, 0, 4, 0, 1, 150);
             animation2.setLooping(false);
             animator.addAnimation(animation2);
-        }
-        else if (index == EnumSprites.SNIPER_SPELL){
+        } else if (index == EnumSprites.SNIPER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/snipe_fufu.png", 119, 100);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 4, 0, 1, 200));
         }
@@ -96,12 +111,10 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
             animation.setLooping(false);
             animator.addAnimation(animation);
-        }
-        else if (index == EnumSprites.RUSHER_TOP){
+        } else if (index == EnumSprites.RUSHER_TOP) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherA_2.png", 36, 21);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
-        }
-        else if (index == EnumSprites.RUSHER_HIT) {
+        } else if (index == EnumSprites.RUSHER_HIT) {
             Animation animation = new Animation();
             Image img1 = new Image("assets/img/game/effect/bullet0.png");
             animation.addFrame(img1, 300);
@@ -114,8 +127,7 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation2 = this.loadAnimation(spriteSheet, 0, 3, 0, 1, 150);
             animation2.setLooping(false);
             animator.addAnimation(animation2);
-        }
-        else if (index == EnumSprites.RUSHER_SPELL){
+        } else if (index == EnumSprites.RUSHER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/rusher_circle.png", 200, 200);
             animator.addAnimation(loadAnimation(spriteSheet, 0, 3, 0, 1, 200));
         }

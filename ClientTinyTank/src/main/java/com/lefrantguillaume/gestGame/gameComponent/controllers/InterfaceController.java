@@ -4,6 +4,7 @@ import com.lefrantguillaume.gestGame.Utils.configs.CurrentUser;
 import com.lefrantguillaume.gestGame.Utils.tools.Debug;
 import com.lefrantguillaume.gestGame.gameComponent.animations.Animator;
 import com.lefrantguillaume.gestGame.gameComponent.animations.EnumInterfaceComponent;
+import com.lefrantguillaume.gestGame.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.gestGame.interfaceComponent.AvailableTank;
 import com.lefrantguillaume.gestGame.networkComponent.messages.MessageModel;
 import com.lefrantguillaume.gestGame.networkComponent.messages.msg.MessagePlayerNew;
@@ -34,12 +35,17 @@ public class InterfaceController extends Observable implements Observer {
 
     }
 
-    public void loadGame(){
-        Debug.debug("tank:" + this.availableTank.getCurrentTank());
-        MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), this.availableTank.getCurrentTank());
+    public boolean loadGame() {
+        EnumTanks tankChoice = this.availableTank.getCurrentTank();
+        if (tankChoice != EnumTanks.NULL) {
+            Debug.debug("tank:" + tankChoice);
+            MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), tankChoice);
 
-        this.setChanged();
-        this.notifyObservers(request);
+            this.setChanged();
+            this.notifyObservers(request);
+            return true;
+        }
+        return false;
     }
 
     public void drawBackground(Graphics g){

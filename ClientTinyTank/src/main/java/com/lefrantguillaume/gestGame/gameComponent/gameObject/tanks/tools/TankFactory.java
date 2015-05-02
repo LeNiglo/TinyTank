@@ -64,7 +64,7 @@ public class TankFactory {
         Pair<Float, Float> shiftOrigin = new Pair<Float, Float>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
         Pair<Float, Float> shiftHitExplode = new Pair<Float, Float>(Float.valueOf(build.getString("shiftXExplode")), Float.valueOf(build.getString("shiftYExplode")));
 
-        TankState tankState = new TankState(Float.valueOf(config.getString("speed")), Float.valueOf(config.getString("life")), Float.valueOf(config.getString("armor")),
+        TankState tankState = new TankState(Float.valueOf(config.getString("speed")), Float.valueOf(config.getString("life")), Float.valueOf(config.getString("armor")), Float.valueOf(config.getString("accuracy")),
                 animatorGameData.getTankBodyAnimator(tank), animatorGameData.getTankTopAnimator(tank), tank, shiftOrigin, shiftHitExplode);
         JSONArray collisions = build.getJSONArray("collisions");
         for (int i = 0; i < collisions.length(); ++i){
