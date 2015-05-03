@@ -18,6 +18,7 @@ public class WindowLogin extends BasicGameState {
     private StateBasedGame stateGame;
     private InputCheck input;
     private int id;
+    private Image background = null;
 
     private Animation tmp;
 
@@ -38,9 +39,7 @@ public class WindowLogin extends BasicGameState {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
-//        Image img = new Image("assets/img/game/effect/account");
-  //      tmp.addFrame(img, 150);
-
+        this.background = new Image("assets/img/login.png");
     }
 
     @Override
@@ -58,7 +57,7 @@ public class WindowLogin extends BasicGameState {
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
-    //    g.drawAnimation(tmp, 0, 0);
+        g.drawImage(this.background, 0, 0);
     }
 
     @Override

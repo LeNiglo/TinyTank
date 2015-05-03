@@ -2,10 +2,7 @@ package com.lefrantguillaume.gestGame.graphicsComponent.graphics;
 
 import com.lefrantguillaume.gestGame.Utils.tools.Debug;
 import com.lefrantguillaume.gestGame.graphicsComponent.input.InputCheck;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -17,6 +14,7 @@ public class WindowAccount extends BasicGameState {
     private GameContainer container;
     private StateBasedGame stateGame;
     private InputCheck input;
+    private Image background = null;
     private int id;
 
     public WindowAccount(int id) {
@@ -34,6 +32,7 @@ public class WindowAccount extends BasicGameState {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
+        this.background = new Image("assets/img/ex_acc.png");
     }
 
     @Override
@@ -51,6 +50,7 @@ public class WindowAccount extends BasicGameState {
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
+        g.drawImage(this.background, 0, 0);
     }
 
     @Override
