@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -44,6 +47,7 @@ public class GameController extends Observable implements Observer {
     private AnimatorGameData animatorGameData;
     private TankConfigData tankConfigData;
     private ObstacleConfigData obstaclesConfigData;
+    public final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public GameController() throws SlickException {
         this.players = new ArrayList<Player>();
@@ -61,12 +65,14 @@ public class GameController extends Observable implements Observer {
         this.players.clear();
         this.shots.clear();
         this.teams.clear();
+        this.scheduler.shutdown();
         this.collisionController.clearCollisionObjects();
         this.mapController.clearObstacles();
     }
 
     public void initGame() {
         this.collisionController.createWorld(this.mapController);
+        this.scheduleToSendCurrentPlayerPosition();
     }
 
     @Override
@@ -87,13 +93,8 @@ public class GameController extends Observable implements Observer {
                         if (task.getId().equals(CurrentUser.getId())) {
                             CurrentUser.setInGame(true);
                             this.initGame();
-                            MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
-                                    this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
-                            this.setChanged();
-                            this.notifyObservers(request);
-                        } else if (CurrentUser.isInGame() == true) {
-
+                        }
+                        if (CurrentUser.isInGame() == true) {
                             MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
                                     this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
                                     this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
@@ -181,7 +182,7 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void revivePlayer(MessagePlayerRevive task){
+    public void revivePlayer(MessagePlayerRevive task) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
                 Debug.debug("Revive ok");
@@ -191,7 +192,8 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void putObject(MessagePutObstacle task){
+    public void putObject(MessagePutObstacle task) {
+
         Obstacle obstacle = this.obstaclesConfigData.getNewObstacle(task.getType().getIndex());
         obstacle.createObstacle(task.getId(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
         this.mapController.addObstacle(obstacle);
@@ -257,6 +259,20 @@ public class GameController extends Observable implements Observer {
         }
     }
 
+    public void scheduleToSendCurrentPlayerPosition() {
+        this.scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                Debug.debug("TEEEEEEEST");
+                Player currentPlayer = getPlayer(CurrentUser.getId());
+                if (currentPlayer != null && currentPlayer.isAlive()) {
+                    MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(), currentPlayer.getTank().getTankState().getX(), currentPlayer.getTank().getTankState().getY());
+                    Debug.debug("send UpdatePos");
+                    setChanged();
+                    notifyObservers(request);
+                }
+            }
+        }, 300, 300, TimeUnit.MILLISECONDS);
+    }
 
     // DRAW FUNCTIONS
     public void drawGamePlayers(Graphics g) {

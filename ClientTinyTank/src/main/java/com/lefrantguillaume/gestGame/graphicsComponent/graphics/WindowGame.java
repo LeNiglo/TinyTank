@@ -81,7 +81,7 @@ public class WindowGame extends BasicGameState {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-
+        this.gameController.clearData();
     }
 
     @Override
@@ -154,7 +154,6 @@ public class WindowGame extends BasicGameState {
     public void keyReleased(int key, char c) {
         if (input != null && this.gameController != null) {
             if (input.gestInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY()) == -1) {
-                this.gameController.clearData();
                 this.stateGame.enterState(EnumWindow.INTERFACE.getValue());
             }
         }
