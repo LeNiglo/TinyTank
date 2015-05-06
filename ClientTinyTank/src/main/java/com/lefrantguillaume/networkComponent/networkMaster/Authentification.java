@@ -33,10 +33,12 @@ class AuthRcv {
 class AuthSnd {
     private String login;
     private String password;
+    private String secret;
 
-    public AuthSnd(String l, String p) {
+    public AuthSnd(String l, String p, String s) {
         this.login = l;
         this.password = p;
+        this.secret = s;
     }
 
     public AuthSnd() {}

@@ -28,6 +28,7 @@ var Router = function(app, db) {
   */
 
   app.post('/client/login', clientApi.login);
+  app.post('/client/list_servers', clientApi.list_servers);
 
   /*
   **	Web communication

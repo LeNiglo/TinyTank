@@ -42,7 +42,7 @@ public class Master {
     public boolean authentification() {
         try {
             // TODO user login or email as first param and password as second
-            AuthSnd st = new AuthSnd("Draym", "superDraym");
+            AuthSnd st = new AuthSnd("Draym", "superDraym", "TheSecretStringIsMuchStrongerThanOneMillionOfTanks");
 
             ClientResponse response = this.getClientResponse(st, "login");
             AuthRcv output = response.getEntity(AuthRcv.class);

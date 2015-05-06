@@ -1,9 +1,14 @@
 var http = require('http');
 var url = require('url');
-var jwt = require('jwt-simple');
 
 
 ClientApi = function(app, db) {
+
+  this.list_servers = function (req, res) {
+    Servers.find().toArray(function (err, result) {
+      res.status(200).json({name: 'list_servers', res: result, err: err});
+    });
+  };
 
   this.login = function() {
     Users.findOne({
