@@ -50,6 +50,7 @@ public class Master {
             InitServerRcv output = response.getEntity(InitServerRcv.class);
             if (!output.getRes()) {
                 Log.error("Master server error: " + output.getErr());
+                //TODO no exit 0 but display error message then quit
                 System.exit(0);
             } else {
                 this.id = output.getId();

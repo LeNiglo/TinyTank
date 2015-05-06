@@ -1,8 +1,8 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.gestGame.Utils.configs.CurrentUser;
-import com.lefrantguillaume.gestGame.Utils.configs.WindowConfig;
-import com.lefrantguillaume.gestGame.master.MasterGame;
+import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.configs.WindowConfig;
+import com.lefrantguillaume.master.MasterGame;
 import org.newdawn.slick.SlickException;
 
 /**
