@@ -17,6 +17,10 @@ public class PlayerAction {
     public PlayerAction(MessageModel todo) {
         this.action = EnumActions.NOTHING;
         this.values = new ArrayList<Object>();
+        this.createAction(todo);
+    }
+
+    public void createAction(MessageModel todo){
         if (todo instanceof MessageMove) {
             if (((MessageMove) todo).isMove() == true) {
                 this.action = EnumActions.MOVE;
@@ -26,7 +30,7 @@ public class PlayerAction {
             this.values.add(new Integer(((MessageMove) todo).getDirection()));
         }
         else if (todo instanceof MessageShoot){
-                this.action = EnumActions.SHOOT;
+            this.action = EnumActions.SHOOT;
             this.values.add(((MessageShoot)todo).getShotId());
             this.values.add(((MessageShoot)todo).getAngle());
         }
