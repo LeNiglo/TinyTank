@@ -32,7 +32,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by andres_k on 13/03/2015.
