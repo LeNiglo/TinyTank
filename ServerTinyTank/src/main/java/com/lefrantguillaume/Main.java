@@ -1,12 +1,8 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.network.TinyServer;
-import com.lefrantguillaume.ui.Console;
+import com.lefrantguillaume.ui.UserIO;
 import com.lefrantguillaume.ui.ServerGUI;
 import com.lefrantguillaume.utils.ServerConfig;
-
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Styve on 10/03/2015.
@@ -15,7 +11,7 @@ import java.util.Observer;
 public class Main {
 
     private ServerGUI gui = null;
-    private Console csl = null;
+    private UserIO uio = null;
 
     public static void main(String args[]) {
         if (!ServerConfig.loadConfig())
