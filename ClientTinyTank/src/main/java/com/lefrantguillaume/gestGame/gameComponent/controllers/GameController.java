@@ -260,18 +260,18 @@ public class GameController extends Observable implements Observer {
     }
 
     public void scheduleToSendCurrentPlayerPosition() {
+        /*
         this.scheduler.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                Debug.debug("TEEEEEEEST");
                 Player currentPlayer = getPlayer(CurrentUser.getId());
                 if (currentPlayer != null && currentPlayer.isAlive()) {
                     MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(), currentPlayer.getTank().getTankState().getX(), currentPlayer.getTank().getTankState().getY());
-                    Debug.debug("send UpdatePos");
                     setChanged();
                     notifyObservers(request);
                 }
             }
         }, 300, 300, TimeUnit.MILLISECONDS);
+*/
     }
 
     // DRAW FUNCTIONS
