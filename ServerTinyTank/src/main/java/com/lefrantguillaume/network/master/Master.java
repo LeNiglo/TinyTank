@@ -81,7 +81,7 @@ public class Master {
                 Log.info("Sent alive signal to master server.");
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Master: " + e.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class Master {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Master: " + e.getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ public class Master {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Master: " + e.getMessage());
         }
     }
 
@@ -123,7 +123,7 @@ public class Master {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Master: " + e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class Master {
                 WindowController.addConsoleMsg("Sent player stats for " + users + ".");
             }
         } catch (Exception e) {
-            Log.error(e.getMessage());
+            Log.error("Master: " + e.getMessage());
         }
     }
 }
