@@ -1,6 +1,9 @@
 package com.lefrantguillaume.ui;
 
 import java.awt.event.*;
+
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.Game;
@@ -8,9 +11,7 @@ import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.enums.eGameMode;
 import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.network.*;
-import com.lefrantguillaume.network.clientmsgs.MessageConnect;
-import com.lefrantguillaume.network.clientmsgs.MessageDownload;
-import com.lefrantguillaume.network.clientmsgs.MessageModel;
+import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.Callback;
@@ -248,30 +249,51 @@ public class ServerGUI extends JFrame implements Observer {
                     button_start.setText("Start");
                     WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                 }
-            } else if (arg instanceof MessageDownloadData) {
-                MessageDownload response = new MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
-                ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
-                new Thread("upload") {
-                    public void run() {
-                        try {
-                            new SendFile(currentMap.getFilePath());
-                            MessageDownload response = new MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
-                            ((MessageDownloadData) arg).getServer().sendToTCP(((MessageDownloadData) arg).getConnection().getID(), response);
-                            new SendFile(currentMap.getImgPath());
-                        } catch (Exception e) {
-                            System.out.println("Cannot send file: " + e.getMessage());
-                        }
+            } else if (arg instanceof MessageData) {
+                MessageModel mm = ((MessageData) arg).getRequest();
+                final Server server = ((MessageData) arg).getServer();
+                final Connection connection = ((MessageData) arg).getConnection();
+                if (mm instanceof MessageConnect) {
+                    MessageConnect msg = (MessageConnect) mm;
+                    System.out.println("J'envoie un message Connect");
+                    try {
+                        String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
+                        String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
+                        MessageConnect response = new MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
+                        server.sendToTCP(connection.getID(), response);
+                    } catch (Exception e) {
+                        Log.error("MD5: " + e.getMessage());
                     }
-                }.start();
-            } else if (arg instanceof MessageConnectData) {
-                System.out.println("J'envoie un message Connect");
-                try {
-                    String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
-                    String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
-                    MessageConnect response = new MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
-                    ((MessageConnectData) arg).getServer().sendToTCP(((MessageConnectData) arg).getConnection().getID(), response);
-                } catch (Exception e) {
-                    Log.error("MD5: " + e.getMessage());
+                } else if (mm instanceof MessageDownload) {
+                    MessageDownload response = new MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
+                    server.sendToTCP(connection.getID(), response);
+                    new Thread("upload") {
+                        public void run() {
+                            try {
+                                new SendFile(currentMap.getFilePath());
+                                MessageDownload response = new MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
+                                server.sendToTCP(connection.getID(), response);
+                                new SendFile(currentMap.getImgPath());
+                            } catch (Exception e) {
+                                System.out.println("Cannot send file: " + e.getMessage());
+                            }
+                        }
+                    }.start();
+                } else if (mm instanceof MessagePlayerNew) {
+                    MessagePlayerNew msg = (MessagePlayerNew) mm;
+                    Log.info("GUI a recu le nouveau joueur '" + msg.getPseudo() + "'");
+                    master.addUser(msg.getPseudo());
+                    updatePlayerList();
+                } else if (mm instanceof MessageDelete) {
+                    MessageDelete msg = (MessageDelete) mm;
+                    Log.info("GUI a remove un joueur.");
+                    master.delUser(msg.getPseudo());
+                    updatePlayerList();
+                } else if (mm instanceof MessageDisconnect) {
+                    MessageDisconnect msg = (MessageDisconnect) mm;
+                    Log.info("GUI a remove un joueur (disconnected).");
+                    master.delUser(msg.getPseudo());
+                    updatePlayerList();
                 }
             } else if (arg instanceof String) {
                 String data = (String) arg;
@@ -281,18 +303,6 @@ public class ServerGUI extends JFrame implements Observer {
                     button_stop.setEnabled(false);
                     button_start.setText("Start");
                 }
-            } else if (arg instanceof MessagePlayerNewData) {
-                Log.info("GUI a recu le nouveau joueur '" + ((MessagePlayerNewData) arg).getRequest().getPseudo() + "'");
-                master.addUser(((MessagePlayerNewData) arg).getRequest().getPseudo());
-                updatePlayerList();
-            } else if (arg instanceof MessageDeleteData) {
-                Log.info("GUI a remove un joueur.");
-                master.delUser(((MessageDeleteData) arg).getRequest().getPseudo());
-                updatePlayerList();
-            } else if (arg instanceof MessageDisconnectData) {
-                Log.info("GUI a remove un joueur (disconnected).");
-                master.delUser(((MessageDisconnectData) arg).getPseudo());
-                updatePlayerList();
             } else if (arg instanceof MessageModel) {
                 updatePlayerList();
             }
@@ -368,10 +378,15 @@ public class ServerGUI extends JFrame implements Observer {
 
             // JFormDesigner evaluation mark
             rootPanel.setBorder(new javax.swing.border.CompoundBorder(
-                new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                    "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                    javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                    java.awt.Color.red), rootPanel.getBorder())); rootPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                            "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                            java.awt.Color.red), rootPanel.getBorder()));
+            rootPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+                public void propertyChange(java.beans.PropertyChangeEvent e) {
+                    if ("border".equals(e.getPropertyName())) throw new RuntimeException();
+                }
+            });
 
 
             //======== panel1 ========
@@ -418,71 +433,71 @@ public class ServerGUI extends JFrame implements Observer {
                 GroupLayout panel1Layout = new GroupLayout(panel1);
                 panel1.setLayout(panel1Layout);
                 panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
-                        .addGroup(panel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel1Layout.createParallelGroup()
+                        panel1Layout.createParallelGroup()
                                 .addGroup(panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                        .addGroup(panel1Layout.createSequentialGroup()
-                                            .addComponent(label_name, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(field_name, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(panel1Layout.createSequentialGroup()
-                                            .addGroup(panel1Layout.createParallelGroup()
-                                                .addComponent(label_tcp, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(label_udp, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addGroup(panel1Layout.createParallelGroup()
-                                                .addComponent(field_tcp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(field_udp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-                                            .addGap(12, 12, 12)
-                                            .addGroup(panel1Layout.createParallelGroup()
-                                                .addComponent(check_noblock)
-                                                .addComponent(check_ff)))
-                                        .addGroup(panel1Layout.createSequentialGroup()
-                                            .addComponent(label_max_players, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(field_max_players, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(panel1Layout.createSequentialGroup()
-                                            .addComponent(label_max_ping, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(field_max_ping, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                            .addComponent(label18)))
-                                    .addGap(0, 9, Short.MAX_VALUE))
-                                .addComponent(button_save, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
-                            .addContainerGap())
+                                        .addContainerGap()
+                                        .addGroup(panel1Layout.createParallelGroup()
+                                                .addGroup(panel1Layout.createSequentialGroup()
+                                                        .addGroup(panel1Layout.createParallelGroup()
+                                                                .addGroup(panel1Layout.createSequentialGroup()
+                                                                        .addComponent(label_name, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(field_name, GroupLayout.PREFERRED_SIZE, 185, GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(panel1Layout.createSequentialGroup()
+                                                                        .addGroup(panel1Layout.createParallelGroup()
+                                                                                .addComponent(label_tcp, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(label_udp, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addGroup(panel1Layout.createParallelGroup()
+                                                                                .addComponent(field_tcp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                                                                                .addComponent(field_udp, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+                                                                        .addGap(12, 12, 12)
+                                                                        .addGroup(panel1Layout.createParallelGroup()
+                                                                                .addComponent(check_noblock)
+                                                                                .addComponent(check_ff)))
+                                                                .addGroup(panel1Layout.createSequentialGroup()
+                                                                        .addComponent(label_max_players, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(field_max_players, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(panel1Layout.createSequentialGroup()
+                                                                        .addComponent(label_max_ping, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(field_max_ping, GroupLayout.PREFERRED_SIZE, 70, GroupLayout.PREFERRED_SIZE)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                        .addComponent(label18)))
+                                                        .addGap(0, 9, Short.MAX_VALUE))
+                                                .addComponent(button_save, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+                                        .addContainerGap())
                 );
                 panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup()
-                        .addGroup(panel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_name)
-                                .addComponent(field_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(field_max_players, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label_max_players))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(field_max_ping, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label_max_ping)
-                                .addComponent(label18))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_tcp)
-                                .addComponent(field_tcp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(check_ff))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_udp)
-                                .addComponent(field_udp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(check_noblock))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                            .addComponent(button_save)
-                            .addContainerGap())
+                        panel1Layout.createParallelGroup()
+                                .addGroup(panel1Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_name)
+                                                .addComponent(field_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(field_max_players, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(label_max_players))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(field_max_ping, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(label_max_ping)
+                                                .addComponent(label18))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_tcp)
+                                                .addComponent(field_tcp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(check_ff))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_udp)
+                                                .addComponent(field_udp, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(check_noblock))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                                        .addComponent(button_save)
+                                        .addContainerGap())
                 );
             }
 
@@ -540,11 +555,11 @@ public class ServerGUI extends JFrame implements Observer {
                 label_timelimit.setLabelFor(field_timelimit);
 
                 //---- combo_mode ----
-                combo_mode.setModel(new DefaultComboBoxModel(new String[] {
-                    "Free For All",
-                    "Team Deathmatch",
-                    "Capture The Flag",
-                    "Domination"
+                combo_mode.setModel(new DefaultComboBoxModel(new String[]{
+                        "Free For All",
+                        "Team Deathmatch",
+                        "Capture The Flag",
+                        "Domination"
                 }));
 
                 //---- button_start ----
@@ -580,65 +595,65 @@ public class ServerGUI extends JFrame implements Observer {
                 GroupLayout panel2Layout = new GroupLayout(panel2);
                 panel2.setLayout(panel2Layout);
                 panel2Layout.setHorizontalGroup(
-                    panel2Layout.createParallelGroup()
-                        .addGroup(panel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel2Layout.createParallelGroup()
+                        panel2Layout.createParallelGroup()
                                 .addGroup(panel2Layout.createSequentialGroup()
-                                    .addGroup(panel2Layout.createParallelGroup()
-                                            .addComponent(button_start)
-                                            .addComponent(label_timelimit, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(panel2Layout.createParallelGroup()
-                                            .addGroup(panel2Layout.createSequentialGroup()
-                                                    .addGap(0, 196, Short.MAX_VALUE)
-                                                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                                    .addComponent(button_stop)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(button_froce_change, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
-                                            .addComponent(field_timelimit, GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_mode)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(combo_mode, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_map)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(combo_map, GroupLayout.PREFERRED_SIZE, 222, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(label_pts)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(field_pts, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)))
-                            .addContainerGap())
+                                        .addContainerGap()
+                                        .addGroup(panel2Layout.createParallelGroup()
+                                                .addGroup(panel2Layout.createSequentialGroup()
+                                                        .addGroup(panel2Layout.createParallelGroup()
+                                                                .addComponent(button_start)
+                                                                .addComponent(label_timelimit, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addGroup(panel2Layout.createParallelGroup()
+                                                                .addGroup(panel2Layout.createSequentialGroup()
+                                                                        .addGap(0, 196, Short.MAX_VALUE)
+                                                                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
+                                                                        .addComponent(button_stop)
+                                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(button_froce_change, GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
+                                                                .addComponent(field_timelimit, GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)))
+                                                .addGroup(panel2Layout.createSequentialGroup()
+                                                        .addComponent(label_mode)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(combo_mode, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE))
+                                                .addGroup(panel2Layout.createSequentialGroup()
+                                                        .addComponent(label_map)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(combo_map, GroupLayout.PREFERRED_SIZE, 222, GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(0, 0, Short.MAX_VALUE))
+                                                .addGroup(panel2Layout.createSequentialGroup()
+                                                        .addComponent(label_pts)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(field_pts, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)))
+                                        .addContainerGap())
                 );
                 panel2Layout.setVerticalGroup(
-                    panel2Layout.createParallelGroup()
-                        .addGroup(panel2Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel2Layout.createParallelGroup()
-                                .addComponent(label_map)
-                                .addComponent(button1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(combo_map, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel2Layout.createParallelGroup()
-                                .addComponent(label_mode)
-                                .addComponent(combo_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_pts)
-                                .addComponent(field_pts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_timelimit)
-                                .addComponent(field_timelimit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(button_start)
-                                .addComponent(button_stop)
-                                .addComponent(button_froce_change))
-                            .addContainerGap())
+                        panel2Layout.createParallelGroup()
+                                .addGroup(panel2Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(panel2Layout.createParallelGroup()
+                                                .addComponent(label_map)
+                                                .addComponent(button1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(combo_map, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel2Layout.createParallelGroup()
+                                                .addComponent(label_mode)
+                                                .addComponent(combo_mode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_pts)
+                                                .addComponent(field_pts, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_timelimit)
+                                                .addComponent(field_timelimit, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(button_start)
+                                                .addComponent(button_stop)
+                                                .addComponent(button_froce_change))
+                                        .addContainerGap())
                 );
             }
 
@@ -667,29 +682,29 @@ public class ServerGUI extends JFrame implements Observer {
                 GroupLayout panel3Layout = new GroupLayout(panel3);
                 panel3.setLayout(panel3Layout);
                 panel3Layout.setHorizontalGroup(
-                    panel3Layout.createParallelGroup()
-                        .addGroup(panel3Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(panel3Layout.createParallelGroup()
+                        panel3Layout.createParallelGroup()
                                 .addGroup(panel3Layout.createSequentialGroup()
-                                    .addComponent(scroll_players, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
-                                    .addContainerGap())
-                                .addGroup(panel3Layout.createSequentialGroup()
-                                    .addGap(0, 222, Short.MAX_VALUE)
-                                    .addComponent(label1)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(label_uptime))))
+                                        .addContainerGap()
+                                        .addGroup(panel3Layout.createParallelGroup()
+                                                .addGroup(panel3Layout.createSequentialGroup()
+                                                        .addComponent(scroll_players, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                                                        .addContainerGap())
+                                                .addGroup(panel3Layout.createSequentialGroup()
+                                                        .addGap(0, 222, Short.MAX_VALUE)
+                                                        .addComponent(label1)
+                                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(label_uptime))))
                 );
                 panel3Layout.setVerticalGroup(
-                    panel3Layout.createParallelGroup()
-                        .addGroup(panel3Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(scroll_players, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
-                            .addGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(label_uptime)
-                                .addComponent(label1))
-                            .addContainerGap())
+                        panel3Layout.createParallelGroup()
+                                .addGroup(panel3Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(scroll_players, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                                        .addGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                .addComponent(label_uptime)
+                                                .addComponent(label1))
+                                        .addContainerGap())
                 );
             }
 
@@ -700,131 +715,131 @@ public class ServerGUI extends JFrame implements Observer {
             GroupLayout rootPanelLayout = new GroupLayout(rootPanel);
             rootPanel.setLayout(rootPanelLayout);
             rootPanelLayout.setHorizontalGroup(
-                rootPanelLayout.createParallelGroup()
-                    .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(rootPanelLayout.createParallelGroup()
+                    rootPanelLayout.createParallelGroup()
                             .addGroup(rootPanelLayout.createSequentialGroup()
-                                .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(rootPanelLayout.createParallelGroup()
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server2)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(rootPanelLayout.createParallelGroup()
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label_server3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                        .addGroup(rootPanelLayout.createSequentialGroup()
-                                                .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addContainerGap())))
-                            .addGroup(rootPanelLayout.createSequentialGroup()
-                                .addGroup(rootPanelLayout.createParallelGroup()
-                                        .addComponent(text_input)
-                                        .addComponent(scroll_console))
-                                .addContainerGap())))
+                                    .addContainerGap()
+                                    .addGroup(rootPanelLayout.createParallelGroup()
+                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                    .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                                    .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(label_server)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(hSpacer2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                            .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(rootPanelLayout.createParallelGroup()
+                                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                                    .addComponent(separator1, GroupLayout.PREFERRED_SIZE, 8, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(separator2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                                    .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, 74, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(label_server2)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)))
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                    .addGroup(rootPanelLayout.createParallelGroup()
+                                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                                    .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(label_server3)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(hSpacer6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                                    .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                    .addContainerGap())))
+                                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                                    .addGroup(rootPanelLayout.createParallelGroup()
+                                                            .addComponent(text_input)
+                                                            .addComponent(scroll_console))
+                                                    .addContainerGap())))
             );
             rootPanelLayout.setVerticalGroup(
-                rootPanelLayout.createParallelGroup()
-                    .addGroup(rootPanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server)
-                            .addComponent(hSpacer2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server2)
-                            .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label_server3)
-                            .addComponent(hSpacer6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                            .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(separator2, GroupLayout.Alignment.TRAILING)
-                            .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scroll_console, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(text_input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                    rootPanelLayout.createParallelGroup()
+                            .addGroup(rootPanelLayout.createSequentialGroup()
+                                    .addGap(12, 12, 12)
+                                    .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                            .addComponent(hSpacer1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label_server)
+                                            .addComponent(hSpacer2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label_server2)
+                                            .addComponent(hSpacer4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(hSpacer3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label_server3)
+                                            .addComponent(hSpacer6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(hSpacer5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(rootPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(separator1, GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                                            .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(separator2, GroupLayout.Alignment.TRAILING)
+                                            .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(scroll_console, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(text_input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addContainerGap())
             );
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Styve SIMONNEAU
-    private JPanel rootPanel;
-    private JPanel panel1;
-    private JLabel label_name;
-    private JLabel label_max_players;
-    private JLabel label_max_ping;
-    private JLabel label_tcp;
-    private JLabel label_udp;
-    private JTextField field_name;
-    private JTextField field_max_players;
-    private JTextField field_max_ping;
-    private JTextField field_udp;
-    private JTextField field_tcp;
-    private JCheckBox check_ff;
-    private JCheckBox check_noblock;
-    private JLabel label18;
-    private JButton button_save;
-    private JScrollPane scroll_console;
-    private JTextArea text_console;
-    private JTextField text_input;
-    private JLabel label_server;
-    private JSeparator separator1;
-    private JSeparator separator2;
-    private JPanel panel2;
-    private JLabel label_map;
-    private JLabel label_mode;
-    private JLabel label_pts;
-    private JLabel label_timelimit;
-    private JComboBox combo_map;
-    private JComboBox combo_mode;
-    private JTextField field_pts;
-    private JTextField field_timelimit;
-    private JButton button_start;
-    private JButton button_stop;
-    private JButton button_froce_change;
-    private JButton button1;
-    private JLabel label_server2;
-    private JPanel panel3;
-    private JScrollPane scroll_players;
-    private JTable table_players;
-    private JLabel label_uptime;
-    private JLabel label1;
-    private JLabel label_server3;
-    private JPanel hSpacer1;
-    private JPanel hSpacer2;
-    private JPanel hSpacer3;
-    private JPanel hSpacer4;
-    private JPanel hSpacer5;
-    private JPanel hSpacer6;
+// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+// Generated using JFormDesigner Evaluation license - Styve SIMONNEAU
+private JPanel rootPanel;
+private JPanel panel1;
+private JLabel label_name;
+private JLabel label_max_players;
+private JLabel label_max_ping;
+private JLabel label_tcp;
+private JLabel label_udp;
+private JTextField field_name;
+private JTextField field_max_players;
+private JTextField field_max_ping;
+private JTextField field_udp;
+private JTextField field_tcp;
+private JCheckBox check_ff;
+private JCheckBox check_noblock;
+private JLabel label18;
+private JButton button_save;
+private JScrollPane scroll_console;
+private JTextArea text_console;
+private JTextField text_input;
+private JLabel label_server;
+private JSeparator separator1;
+private JSeparator separator2;
+private JPanel panel2;
+private JLabel label_map;
+private JLabel label_mode;
+private JLabel label_pts;
+private JLabel label_timelimit;
+private JComboBox combo_map;
+private JComboBox combo_mode;
+private JTextField field_pts;
+private JTextField field_timelimit;
+private JButton button_start;
+private JButton button_stop;
+private JButton button_froce_change;
+private JButton button1;
+private JLabel label_server2;
+private JPanel panel3;
+private JScrollPane scroll_players;
+private JTable table_players;
+private JLabel label_uptime;
+private JLabel label1;
+private JLabel label_server3;
+private JPanel hSpacer1;
+private JPanel hSpacer2;
+private JPanel hSpacer3;
+private JPanel hSpacer4;
+private JPanel hSpacer5;
+private JPanel hSpacer6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

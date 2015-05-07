@@ -1,13 +1,14 @@
 package com.lefrantguillaume.game;
 
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
-import com.lefrantguillaume.network.msgdatas.*;
-import com.lefrantguillaume.network.msgdatas.MessagePlayerNewData;
+import com.lefrantguillaume.network.msgdatas.MessageData;
 import com.lefrantguillaume.utils.GameConfig;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -97,70 +98,103 @@ public class Game extends Observable implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        if (arg instanceof MessagePlayerNewData) {
-            MessagePlayerNewData mtd = ((MessagePlayerNewData) arg);
-            mtd.getRequest().setPosX(50f);
-            mtd.getRequest().setPosY(50f);
-            mtd.getServer().sendToAllTCP(mtd.getRequest());
+        if (arg instanceof MessageData) {
+            MessageModel mm = ((MessageData) arg).getRequest();
+            Server theServer = ((MessageData) arg).getServer();
+            Connection connection = ((MessageData) arg).getConnection();
+            if (mm instanceof MessagePlayerNew) {
+                MessagePlayerNew msg = ((MessagePlayerNew) mm);
+                System.out.println("Nouveau joueur: " + msg.getPseudo() + " with :" + msg.getEnumTanks().getValue());
+                msg.setPosX(50f);
+                msg.setPosY(50f);
+                theServer.sendToAllTCP(msg);
 
-            WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
-            for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-                MessagePlayerNew a = new MessagePlayerNew(mtd.getRequest());
-                a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
-                a.setId(entry.getValue().getId());
-                a.setPseudo(entry.getValue().getPseudo());
-                a.setPosX(-50f);
-                a.setPosY(-50f);
-                mtd.getServer().sendToTCP(mtd.getConnection().getID(), a);
-            }
-
-            WindowController.addConsoleMsg("new Player: " + mtd.getRequest().getId());
-            this.targets.addPlayer(mtd.getRequest().getId(), new Player(mtd.getRequest().getId(), mtd.getRequest().getPseudo(), this.tankConfigData.getTank(mtd.getRequest().getEnumTanks()), mtd.getConnection()));
-            updatePlayerList();
-        } else if (arg instanceof MessageDeleteData) {
-            MessageDeleteData mtd = (MessageDeleteData) arg;
-            this.targets.deletePlayer(mtd.getRequest().getId());
-            updatePlayerList();
-        } else if (arg instanceof MessageShootRequestData) {
-            if (!this.playable) return;
-            MessageShootRequestData msd = ((MessageShootRequestData) arg);
-            WindowController.addConsoleMsg("nbShooter: " + this.targets.getPlayers().size());
-            final Player player = this.targets.getPlayer(msd.getRequest().getId());
-            if (player != null && player.isCanShoot()) {
-                player.setCanShoot(false);
-                System.out.println("tir de " + msd.getRequest().getPseudo() + " / angle: " + msd.getRequest().getAngle());
-                msd.getRequest().setShootId(UUID.randomUUID().toString());
-                WindowController.addConsoleMsg("new Shoot : " + msd.getRequest().getShotId());
-                this.targets.addShot(msd.getRequest().getShotId(), player.getTank().getTankWeapon().generateShot(msd.getRequest().getShotId(), player.getId()));
-                msd.getServer().sendToAllTCP(msd.getRequest());
-
-                TimerTask tt = new TimerTask() {
-                    @Override
-                    public void run() {
-                        player.setCanShoot(true);
-                    }
-                };
-                Timer timer = new Timer();
-                timer.schedule(tt, player.getAmmoCooldown());
-            }
-        } else if (arg instanceof MessageDisconnectData) {
-            for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-                if (entry.getValue().getConnection().getID() == ((MessageDisconnectData) arg).getConnection().getID()) {
-                    ((MessageDisconnectData) arg).setPseudo(entry.getValue().getPseudo());
-                    ((MessageDisconnectData) arg).setPlayerId(entry.getValue().getId());
-                    this.targets.deletePlayer(entry.getKey());
-                    updatePlayerList();
-                    break;
+                WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
+                for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+                    MessagePlayerNew a = new MessagePlayerNew(msg);
+                    a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
+                    a.setId(entry.getValue().getId());
+                    a.setPseudo(entry.getValue().getPseudo());
+                    a.setPosX(-50f);
+                    a.setPosY(-50f);
+                    theServer.sendToTCP(connection.getID(), a);
                 }
+
+                WindowController.addConsoleMsg("new Player: " + msg.getId());
+                this.targets.addPlayer(msg.getId(), new Player(msg.getId(), msg.getPseudo(), this.tankConfigData.getTank(msg.getEnumTanks()), connection));
+                updatePlayerList();
+            } else if (mm instanceof MessageDelete) {
+                MessageDelete msg = (MessageDelete) mm;
+                System.out.println(msg.getPseudo() + " a envoyé un message DELETE");
+                theServer.sendToAllTCP(msg);
+                this.targets.deletePlayer(msg.getId());
+                updatePlayerList();
+            } else if (mm instanceof MessageShoot) {
+                MessageShoot msg = ((MessageShoot) mm);
+                if (!this.playable) return;
+                WindowController.addConsoleMsg("nbShooter: " + this.targets.getPlayers().size());
+                final Player player = this.targets.getPlayer(msg.getId());
+                if (player != null && player.isCanShoot()) {
+                    player.setCanShoot(false);
+                    System.out.println("tir de " + msg.getPseudo() + " / angle: " + msg.getAngle());
+                    msg.setShootId(UUID.randomUUID().toString());
+                    WindowController.addConsoleMsg("new Shoot : " + msg.getShotId());
+                    this.targets.addShot(msg.getShotId(), player.getTank().getTankWeapon().generateShot(msg.getShotId(), player.getId()));
+                    theServer.sendToAllTCP(msg);
+
+                    TimerTask tt = new TimerTask() {
+                        @Override
+                        public void run() {
+                            player.setCanShoot(true);
+                        }
+                    };
+                    Timer timer = new Timer();
+                    timer.schedule(tt, player.getAmmoCooldown());
+                }
+            } else if (mm instanceof MessageDisconnect) {
+                // msg useless
+                //MessageDisconnect msg = (MessageDisconnect) mm;
+                WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
+                for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+                    if (entry.getValue().getConnection().getID() == connection.getID()) {
+                        //msg.setPseudo(entry.getValue().getPseudo());
+                        //msg.setPlayerId(entry.getValue().getId());
+                        this.targets.deletePlayer(entry.getKey());
+                        updatePlayerList();
+                        break;
+                    }
+                }
+            } else if (mm instanceof MessageCollision) {
+                MessageCollision msg = (MessageCollision) mm;
+                if (!playable) return;
+                Log.info("Nouvelle collision (" + msg.getShotId() + ")");
+                processCollision(msg);
+            } else if (mm instanceof MessagePutObstacle) {
+                MessagePutObstacle msg = (MessagePutObstacle) mm;
+                theServer.sendToAllTCP(msg);
+            } else if (mm instanceof MessagePlayerUpdatePosition) {
+                MessagePlayerUpdatePosition msg = (MessagePlayerUpdatePosition) mm;
+                System.out.println("Update: " + msg.getX() + " / " + msg.getY());
+                theServer.sendToAllExceptTCP(connection.getID(), msg);
+            } else if (mm instanceof MessageMove) {
+                MessageMove msg = (MessageMove) mm;
+                System.out.println("direction recue: " + msg.getDirection() + " // move : " + (msg.getMove() ? "true" : "false"));
+                theServer.sendToAllTCP(msg);
+            } else if (mm instanceof MessageChangeTeam) {
+                MessageChangeTeam msg = (MessageChangeTeam) mm;
+                System.out.println(msg.getPseudo() + " change de team.");
+                theServer.sendToAllTCP(msg);
+            } else if (mm instanceof MessageSpell) {
+                MessageSpell msg = (MessageSpell) mm;
+                System.out.println("sort de " + msg.getPseudo() + ": " + msg.getX() + ", " + msg.getY());
+                theServer.sendToAllTCP(msg);
+            } else if (mm instanceof MessageNeedMap) {
+                MessageNeedMap msg = (MessageNeedMap) mm;
+                System.out.println("Il a besoin de la map");
+            } else if (mm instanceof MessageConnect) {
+                MessageConnect msg = (MessageConnect) mm;
+                System.out.println("Nouvelle connection: " + msg.getPseudo() + " est sous l'id " + msg.getId());
             }
-        } else if (arg instanceof MessageCollisionData) {
-            if (!playable) return;
-            MessageCollision mc = ((MessageCollisionData) arg).getRequest();
-            Log.info("Nouvelle collision (" + mc.getShotId() + ")");
-            processCollision(mc);
-        } else if (arg instanceof MessagePutObstacle) {
-            MessagePutObstacle mpo = ((MessagePutObstacle) arg);
-            server.getServer().sendToAllTCP(mpo);
         }
         this.setChanged();
         this.notifyObservers(arg);

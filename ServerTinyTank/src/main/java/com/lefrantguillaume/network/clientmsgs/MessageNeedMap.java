@@ -4,7 +4,7 @@ package com.lefrantguillaume.network.clientmsgs;
  * Created by Styve on 25/03/2015.
  */
 
-public class MessageNeedMap {
+public class MessageNeedMap extends MessageModel {
     private boolean value;
 
     public MessageNeedMap() {}
