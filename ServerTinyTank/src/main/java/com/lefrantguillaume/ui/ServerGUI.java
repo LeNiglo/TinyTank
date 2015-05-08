@@ -289,11 +289,6 @@ public class ServerGUI extends JFrame implements Observer {
                     Log.info("GUI a remove un joueur.");
                     master.delUser(msg.getPseudo());
                     updatePlayerList();
-                } else if (mm instanceof MessageDisconnect) {
-                    MessageDisconnect msg = (MessageDisconnect) mm;
-                    Log.info("GUI a remove un joueur (disconnected).");
-                    master.delUser(msg.getPseudo());
-                    updatePlayerList();
                 }
             } else if (arg instanceof String) {
                 String data = (String) arg;

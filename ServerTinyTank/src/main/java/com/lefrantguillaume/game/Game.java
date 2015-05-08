@@ -94,7 +94,6 @@ public class Game extends Observable implements Observer {
             Log.info("Joueur : " + entry.getValue().getPseudo());
             playerNames.add(entry.getValue().getPseudo());
         }
-        Log.info("\n");
     }
 
     public void update(Observable o, Object arg) {
@@ -152,13 +151,9 @@ public class Game extends Observable implements Observer {
                     timer.schedule(tt, player.getAmmoCooldown());
                 }
             } else if (mm instanceof MessageDisconnect) {
-                // msg useless
-                //MessageDisconnect msg = (MessageDisconnect) mm;
                 WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
                 for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
                     if (entry.getValue().getConnection().getID() == connection.getID()) {
-                        //msg.setPseudo(entry.getValue().getPseudo());
-                        //msg.setPlayerId(entry.getValue().getId());
                         this.targets.deletePlayer(entry.getKey());
                         updatePlayerList();
                         break;
