@@ -14,7 +14,7 @@ public class GameConfig {
 
     public GameConfig() {}
 
-    public GameConfig(int ptsLimit, int timeLimit, Map map, eGameMode gameMode) {
+    public GameConfig(int ptsLimit, int timeLimit, eGameMode gameMode) {
         this.ptsLimit = ptsLimit;
         this.timeLimit = timeLimit;
         this.gameMode = gameMode;
@@ -23,8 +23,10 @@ public class GameConfig {
     public int getPtsLimit() {return ptsLimit;}
     public int getTimeLimit() {return timeLimit;}
     public eGameMode getGameMode() {return gameMode;}
+    public Map getMap() { return map; }
 
     public void setPtsLimit(int ptsLimit) {this.ptsLimit = ptsLimit;}
     public void setTimeLimit(int timeLimit) {this.timeLimit = timeLimit;}
     public void setGameMode(eGameMode gameMode) {this.gameMode = gameMode;}
+    public void setMap(Map map) {this.map = map;}
 }

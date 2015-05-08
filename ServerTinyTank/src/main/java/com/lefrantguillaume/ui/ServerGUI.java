@@ -7,33 +7,23 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.Game;
-import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.enums.eGameMode;
-import com.lefrantguillaume.game.Map;
+import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.network.*;
 import com.lefrantguillaume.network.clientmsgs.*;
-import com.lefrantguillaume.network.master.Master;
-import com.lefrantguillaume.network.msgdatas.*;
-import com.lefrantguillaume.utils.Callback;
-import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.MD5;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import javafx.scene.input.KeyCode;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.lang.management.ManagementFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -42,27 +32,38 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 12/03/2015.
  */
-public class ServerGUI extends JFrame implements Observer {
+public class ServerGUI extends JFrame implements IInterface {
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     private ScheduledFuture<?> t = null;
-    private Game game = null;
-    private GameConfig config = new GameConfig();
-    private List<Map> maps = new ArrayList<Map>();
-    private Map currentMap = null;
     private DefaultTableModel model = new DefaultTableModel();
-    private Master master = new Master();
+    private GUITalker talker = null;
 
-    public ServerGUI() {
+    public ServerGUI(Observer o) {
+        talker = new GUITalker(o);
         initComponents();
-        try {
-            this.game = new Game();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.game.addObserver(this);
         init();
-        this.loadMaps();
         setVisible(true);
+    }
+
+    private class GUITalker extends Observable {
+        public GUITalker(Observer o) {
+            this.addObserver(o);
+        }
+
+        public void askStartGame() {
+            this.setChanged();
+            this.notifyObservers("start game");
+        }
+
+        public void askStopGame() {
+            this.setChanged();
+            this.notifyObservers("stop game");
+        }
+
+        public void reloadMaps() {
+            this.setChanged();
+            this.notifyObservers("reload maps");
+        }
     }
 
     public void init() {
@@ -93,89 +94,32 @@ public class ServerGUI extends JFrame implements Observer {
         text_console.append(msg + "\n");
     }
 
-    @SuppressWarnings("unchecked")
-    public void loadMaps() {
-        maps.clear();
+    public void clearMapList() {
         combo_map.removeAllItems();
-        currentMap = null;
-        File dir = new File("maps");
-        File[] files = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(".json");
-            }
-        });
-
-        if (files != null && files.length > 0) {
-            for (File file : files) {
-                String name = file.getName().substring(0, file.getName().lastIndexOf("."));
-                if (new File("maps/" + name + ".jpg").exists()) {
-                    this.parseJSON(file, name);
-                } else {
-                    System.out.println("not valid");
-                }
-            }
-            for (Map map : maps) {
-                combo_map.addItem(map.getName());
-            }
-        }
     }
 
-    public void parseJSON(File file, String name) {
-        JSONParser parser = new JSONParser();
-        try {
-            FileReader reader = new FileReader(file);
-            JSONObject object = (JSONObject) parser.parse(reader);
-            Map map = new Map();
-            map.setFileNameNoExt(name);
-            map.setName((String) (object.get("name") != null ? object.get("name") : name));
-            map.setFilePath(file.getAbsolutePath());
-            map.setFileName(file.getName());
-            map.setFileLength(file.length());
-            file = new File("maps/" + name + ".jpg");
-            map.setImgName(file.getName());
-            map.setImgPath(file.getPath());
-            map.setImgLength(file.length());
-            maps.add(map);
-        } catch (Exception e) {
-            System.out.println("Parse JSON: " + e.getMessage());
-        }
+    public void addMap(String mapName) {
+        combo_map.addItem(mapName);
     }
 
-    public void newGame() {
-        if (combo_map.getItemCount() > 0) {
-            new Thread() {
-                public void run() {
-                    new CallbackTask(new Runnable() {
-                        public void run() {
-                            WindowController.addConsoleMsg("Connecting to the master server...");
-                            if (master.initServer()) {
-                                WindowController.addConsoleMsg("Connected to master server !");
-                            }
-                        }
-                    }, new Callback() {
-                        @Override
-                        public void complete() {
-                            currentMap = maps.get((combo_map.getSelectedIndex()));
-                            config = new GameConfig(Integer.valueOf(field_pts.getText()), Integer.valueOf(field_timelimit.getText()), currentMap, (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
-                            ServerGUI.this.game.setConfig(config);
-                            ServerGUI.this.game.start();
-                        }
-                    }).run();
-                }
-            }.start();
-        } else {
-            JOptionPane.showMessageDialog(null, "Please check that your maps folder exists and is not empty.\n" +
-                    "For more information, read the docs @ http://blablabl.com\n\n" +
-                    "Once you've added a map, press the Refresh button.", "No map found", JOptionPane.WARNING_MESSAGE);
-        }
+    public void tellNoMap() {
+        JOptionPane.showMessageDialog(null, "Please check that your maps folder exists and is not empty.\n" +
+                "For more information, read the docs @ http://blablabl.com\n\n" +
+                "Once you've added a map, press the Refresh button.", "No map found", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public int getSelectedMapIndex() {
+        return combo_map.getSelectedIndex();
+    }
+
+    public GameConfig getGameConfig() {
+        return new GameConfig(Integer.valueOf(field_pts.getText()),
+                Integer.valueOf(field_timelimit.getText()),
+                (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
     }
 
     private void button_startMouseClicked(MouseEvent e) {
-        new Thread() {
-            public void run() {
-                ServerGUI.this.newGame();
-            }
-        }.start();
+        talker.askStartGame();
     }
 
     private void button_saveMouseClicked(MouseEvent e) {
@@ -190,127 +134,63 @@ public class ServerGUI extends JFrame implements Observer {
 
     private void button_stopMouseClicked(MouseEvent e) {
         if (button_stop.isEnabled()) {
-            this.game.stop();
+            talker.askStopGame();
         }
     }
 
     private void button_refreshMouseClicked(MouseEvent e) {
-        loadMaps();
+        talker.reloadMaps();
+    }
+
+    public void gameStarted() {
+        button_start.setEnabled(true);
+        button_stop.setEnabled(true);
+        if (button_start.getText().equals("Start")) {
+            button_start.setText("Restart");
+        }
+        new Thread("uptime") {
+            public void run() {
+                final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
+                if (t != null) {
+                    t.cancel(true);
+                }
+                t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+                    public void run() {
+                        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+                        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
+                        String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
+                        label_uptime.setText(d);
+                    }
+                }, 0, 1, TimeUnit.SECONDS);
+            }
+        }.start();
+    }
+
+    public void gameStopped() {
+        t.cancel(true);
+        button_stop.setEnabled(false);
+        button_start.setText("Start");
+    }
+
+    public void addPlayer(String pseudo) {
+        Object[] list = new Object[]{pseudo, 0, 0};
+        model.addRow(list);
+    }
+    public void delPlayer(String pseudo) {
+        for (int i = 0; i < model.getRowCount(); ++i) {
+            if (model.getValueAt(i, 0).equals(pseudo)) {
+                model.removeRow(i);
+                break;
+            }
+        }
+    }
+
+    public void clearPlayerList() {
+        model.setRowCount(0);
     }
 
     private void text_inputKeyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            String text = text_input.getText();
-            text_input.setText("");
-            WindowController.addConsoleMsg("> " + text);
-            if (text.matches("^kick\\s+.+$")) {
-                String pseudo = text.replace("kick ", "");
-                if (game.kick(pseudo)) {
-                    WindowController.addConsoleMsg("Player '" + pseudo + "' was kicked from the server.");
-                } else {
-                    WindowController.addConsoleMsg("No such player: '" + pseudo + "'");
-                }
-            }
-        }
-    }
-
-    @Override
-    public void update(Observable o, final Object arg) {
-        if (o instanceof Game) {
-            if (arg instanceof Boolean) {
-                if ((Boolean) arg) {
-                    button_start.setEnabled(true);
-                    button_stop.setEnabled(true);
-                    if (button_start.getText().equals("Start")) {
-                        button_start.setText("Restart");
-                        WindowController.addConsoleMsg("Starting server...");
-                    } else {
-                        WindowController.addConsoleMsg("Restarting server...");
-                    }
-                    new Thread("uptime") {
-                        public void run() {
-                            final long uptime1 = ManagementFactory.getRuntimeMXBean().getUptime();
-                            if (t != null) {
-                                t.cancel(true);
-                            }
-                            t = scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-                                public void run() {
-                                    DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-                                    dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-                                    long uptime = ManagementFactory.getRuntimeMXBean().getUptime() - uptime1;
-                                    String d = uptime / (3600 * 1000 * 24) + ":" + dateFormat.format(uptime);
-                                    label_uptime.setText(d);
-                                }
-                            }, 0, 1, TimeUnit.SECONDS);
-                        }
-                    }.start();
-                } else {
-                    button_stop.setEnabled(false);
-                    button_start.setText("Start");
-                    WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
-                }
-            } else if (arg instanceof MessageData) {
-                MessageModel mm = ((MessageData) arg).getRequest();
-                final Server server = ((MessageData) arg).getServer();
-                final Connection connection = ((MessageData) arg).getConnection();
-                if (mm instanceof MessageConnect) {
-                    MessageConnect msg = (MessageConnect) mm;
-                    System.out.println("J'envoie un message Connect");
-                    try {
-                        String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
-                        String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
-                        MessageConnect response = new MessageConnect(currentMap.getName(), currentMap.getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
-                        server.sendToTCP(connection.getID(), response);
-                    } catch (Exception e) {
-                        Log.error("MD5: " + e.getMessage());
-                    }
-                } else if (mm instanceof MessageDownload) {
-                    MessageDownload response = new MessageDownload(currentMap.getFileName(), currentMap.getFileLength());
-                    server.sendToTCP(connection.getID(), response);
-                    new Thread("upload") {
-                        public void run() {
-                            try {
-                                new SendFile(currentMap.getFilePath());
-                                MessageDownload response = new MessageDownload(currentMap.getImgName(), currentMap.getImgLength());
-                                server.sendToTCP(connection.getID(), response);
-                                new SendFile(currentMap.getImgPath());
-                            } catch (Exception e) {
-                                System.out.println("Cannot send file: " + e.getMessage());
-                            }
-                        }
-                    }.start();
-                } else if (mm instanceof MessagePlayerNew) {
-                    MessagePlayerNew msg = (MessagePlayerNew) mm;
-                    Log.info("GUI a recu le nouveau joueur '" + msg.getPseudo() + "'");
-                    master.addUser(msg.getPseudo());
-                    updatePlayerList();
-                } else if (mm instanceof MessageDelete) {
-                    MessageDelete msg = (MessageDelete) mm;
-                    Log.info("GUI a remove un joueur.");
-                    master.delUser(msg.getPseudo());
-                    updatePlayerList();
-                }
-            } else if (arg instanceof String) {
-                String data = (String) arg;
-                if (data.equals("stop")) {
-                    t.cancel(true);
-                    master.stopServer();
-                    button_stop.setEnabled(false);
-                    button_start.setText("Start");
-                }
-            } else if (arg instanceof MessageModel) {
-                updatePlayerList();
-            }
-        }
-    }
-
-    public void updatePlayerList() {
-        model.setRowCount(0);
-        HashMap<String, Player> players = game.getPlayers();
-        for (java.util.Map.Entry<String, Player> player : players.entrySet()) {
-            Object[] list = new Object[]{player.getValue().getPseudo(), player.getValue().getKills(), player.getValue().getDeaths()};
-            model.addRow(list);
-        }
     }
 
     private void initComponents() {
@@ -370,18 +250,6 @@ public class ServerGUI extends JFrame implements Observer {
             rootPanel.setMaximumSize(new Dimension(940, 580));
             rootPanel.setMinimumSize(new Dimension(1920, 900));
             rootPanel.setPreferredSize(new Dimension(940, 880));
-
-            // JFormDesigner evaluation mark
-            rootPanel.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                            "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
-                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                            java.awt.Color.red), rootPanel.getBorder()));
-            rootPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    if ("border".equals(e.getPropertyName())) throw new RuntimeException();
-                }
-            });
 
 
             //======== panel1 ========
@@ -785,7 +653,6 @@ public class ServerGUI extends JFrame implements Observer {
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
-
 // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
 // Generated using JFormDesigner Evaluation license - Styve SIMONNEAU
 private JPanel rootPanel;
@@ -815,7 +682,7 @@ private JLabel label_map;
 private JLabel label_mode;
 private JLabel label_pts;
 private JLabel label_timelimit;
-private JComboBox combo_map;
+private JComboBox<String> combo_map;
 private JComboBox combo_mode;
 private JTextField field_pts;
 private JTextField field_timelimit;

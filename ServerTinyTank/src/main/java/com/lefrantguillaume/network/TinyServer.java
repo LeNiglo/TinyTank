@@ -3,10 +3,8 @@ package com.lefrantguillaume.network;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.network.clientmsgs.*;
-import com.lefrantguillaume.network.msgdatas.*;
 import com.lefrantguillaume.utils.ServerConfig;
 
 import java.util.Observable;

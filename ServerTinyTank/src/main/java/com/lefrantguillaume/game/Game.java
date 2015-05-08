@@ -8,7 +8,7 @@ import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
-import com.lefrantguillaume.network.msgdatas.MessageData;
+import com.lefrantguillaume.network.MessageData;
 import com.lefrantguillaume.utils.GameConfig;
 import org.codehaus.jettison.json.JSONObject;
 

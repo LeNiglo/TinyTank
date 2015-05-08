@@ -5,7 +5,7 @@ import java.util.Observer;
 public class WindowController {
     private static WindowControllerObserver messages;
 
-    WindowController(Observer o) {
+    public WindowController(Observer o) {
         messages = new WindowControllerObserver();
         messages.addObserver(o);
     }

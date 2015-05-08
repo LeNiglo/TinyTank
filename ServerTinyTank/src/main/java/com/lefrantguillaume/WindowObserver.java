@@ -1,6 +1,6 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.ui.ServerGUI;
+import com.lefrantguillaume.ui.IInterface;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -10,15 +10,15 @@ import java.util.Observer;
  */
 
 
-class WindowObserver implements Observer {
-    private final ServerGUI window;
+public class WindowObserver implements Observer {
+    private final IInterface theInterface;
 
-    public WindowObserver(ServerGUI window) {
-        this.window = window;
+    public WindowObserver(IInterface window) {
+        this.theInterface = window;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        window.addToConsoleLog((String) arg);
+        theInterface.addToConsoleLog((String) arg);
     }
 }
