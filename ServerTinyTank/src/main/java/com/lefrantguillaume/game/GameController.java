@@ -197,7 +197,7 @@ public class GameController implements Observer {
                 server.getServer().sendToAllTCP(arg);
             } else if (arg instanceof MessageData) {
                 Connection connection = ((MessageData) arg).getConnection();
-                server.getServer().sendToTCP(connection.getID(), arg);
+                server.getServer().sendToTCP(connection.getID(), ((MessageData) arg).getRequest());
             }
         } else if (o instanceof TinyServer) {
             if (arg instanceof MessageData) {
