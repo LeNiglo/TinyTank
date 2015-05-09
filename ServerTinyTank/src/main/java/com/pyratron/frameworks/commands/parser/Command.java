@@ -127,12 +127,14 @@ public class Command implements IArguable {
     public String generateUsage(String alias) {
         StringBuilder sb = new StringBuilder();
         if (aliases.size() == 0) return ""; //If no aliases, a usage cannot be determined
-        if (arguments.size() == 0) return aliases.get(0); //If no arguments, simply return the command name
+        if (arguments.size() == 0) return aliases.toString() + " - " + description; //If no arguments, simply return the command name
 
         //create usage string with main alias and arguments
-        return sb.append(alias.equals("") ? aliases.get(0) : alias)
+        return sb.append(alias.equals("") ? aliases.toString() : alias)
                 .append(' ')
                 .append(Argument.generateArgumentString(arguments))
+                .append(" - ")
+                .append(description)
                 .toString();
     }
 

@@ -1,15 +1,12 @@
 package com.lefrantguillaume.game;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.game.gameobjects.tanks.tools.TankConfigData;
-import com.lefrantguillaume.network.TinyServer;
-import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.MessageData;
-import com.lefrantguillaume.utils.GameConfig;
+import com.lefrantguillaume.network.clientmsgs.*;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.io.File;
@@ -23,7 +20,6 @@ import java.util.Map;
  */
 
 public class Game extends Observable {
-    private GameConfig config;
     private boolean playable;
     private List<String> playerNames = new ArrayList<String>();
     private Targets targets = null;
@@ -262,14 +258,6 @@ public class Game extends Observable {
         } else {
             WindowController.addConsoleMsg("msg = null");
         }
-    }
-
-    public GameConfig getConfig() {
-        return config;
-    }
-
-    public void setConfig(GameConfig config) {
-        this.config = config;
     }
 
     public List<String> getPlayerNames() {

@@ -3,13 +3,16 @@ package com.lefrantguillaume.ui;
 import com.lefrantguillaume.game.GameController;
 import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.GameConfig;
+import com.lefrantguillaume.utils.ServerConfig;
 import com.pyratron.frameworks.commands.parser.Argument;
 import com.pyratron.frameworks.commands.parser.Command;
 import com.pyratron.frameworks.commands.parser.CommandParser;
 import com.pyratron.frameworks.commands.parser.ValidationRule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Scanner;
 
@@ -24,9 +27,9 @@ public class UserIO extends Observable implements IInterface {
         parent = o;
         this.addObserver(o);
         parser = CommandParser.createNew().usePrefix("").onError(message -> onParseError(message));
-        parser.addCommand(Command.create("Help").addAlias("help")
+        parser.addCommand(Command.create("Help").addAlias("help", "commands")
                 .setDescription("Display the list of available commands")
-                .setAction(args -> parser.getCommands().stream().forEachOrdered(command -> System.out.println(command.showHelp()))));
+                .setAction(args -> parser.getCommands().stream().forEachOrdered(command -> System.out.println(command.generateUsage()))));
 
         parser.addCommand(Command.create("Start Game").addAlias("start")
                         .setDescription("Start the game with specified options")
@@ -40,9 +43,24 @@ public class UserIO extends Observable implements IInterface {
                         .addArgument(Argument.create("ally_noblock [0|1]").setValidator(ValidationRule.Binary))
         );
 
-        parser.addCommand(Command.create("List players").addAlias("list", "players")
+        parser.addCommand(Command.create("Stop game").addAlias("stop")
+                        .setDescription("Stop the game")
+                        .setAction(args -> askStopGame(args))
+        );
+
+        parser.addCommand(Command.create("List players").addAlias("players", "player", "p")
                         .setDescription("Display the list of players on the server")
                         .setAction(args -> onListPlayers(args))
+        );
+
+        parser.addCommand(Command.create("List maps").addAlias("maps", "map", "m")
+                        .setDescription("Display the list of maps on the server")
+                        .setAction(args -> onListMaps(args))
+        );
+
+        parser.addCommand(Command.create("Reload maps").addAlias("reload", "reload_maps")
+                        .setDescription("Reloads your maps folder")
+                        .setAction(args -> onReloadMaps(args))
         );
     }
 
@@ -63,6 +81,9 @@ public class UserIO extends Observable implements IInterface {
                 this.parse(input);
             } catch (IllegalStateException e) {
                 addToConsoleLog(e.getMessage() + " Try 'help' to show more informations.");
+                try {
+                    Thread.sleep(10);
+                } catch (Exception ignored) {}
             }
         }
     }
@@ -72,13 +93,13 @@ public class UserIO extends Observable implements IInterface {
     }
 
     private void askStartGame(ArrayList<Argument> args) {
-        System.out.println(Argument.fromName(args, "game_title"));
-        System.out.println(Argument.fromName(args, "max_players"));
-        System.out.println(Argument.fromName(args, "max_ping"));
-        System.out.println(Argument.fromName(args, "tcp_port"));
-        System.out.println(Argument.fromName(args, "udp_port"));
-        System.out.println(Argument.fromName(args, "friendlyfire [0|1]"));
-        System.out.println(Argument.fromName(args, "ally_noblock [0|1]"));
+        ServerConfig.gameName = (Argument.fromName(args, "game_title"));
+        ServerConfig.maxAllowedPlayers = Integer.valueOf(Argument.fromName(args, "max_players"));
+        ServerConfig.maxAllowedPing = Integer.valueOf(Argument.fromName(args, "max_ping"));
+        ServerConfig.tcpPort = Integer.valueOf(Argument.fromName(args, "tcp_port"));
+        ServerConfig.udpPort = Integer.valueOf(Argument.fromName(args, "udp_port"));
+        ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire [0|1]").equals("1"));
+        ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock [0|1]").equals("1"));
         this.setChanged();
         this.notifyObservers("start game");
     }
@@ -89,9 +110,71 @@ public class UserIO extends Observable implements IInterface {
     }
 
     private void onListPlayers(ArrayList<Argument> args) {
+        System.out.println("+---------------------+---------+---------+");
+        System.out.println("| Pseudo              | Kills   | Deaths  |");
+        System.out.println("+---------------------+---------+---------+");
         if (args.isEmpty()) {
-
+            HashMap<String, Player> players = parent.getPlayers();
+            for (java.util.Map.Entry<String, Player> p : players.entrySet()) {
+                System.out.print("| " + p.getValue().getPseudo());
+                for (int i = p.getValue().getPseudo().length(); i < 19; ++i) {
+                    System.out.print(" ");
+                }
+                System.out.print(" | " + p.getValue().getKills());
+                for (int i = String.valueOf(p.getValue().getKills()).length(); i < 7; ++i) {
+                    System.out.print(" ");
+                }
+                System.out.print(" | " + p.getValue().getKills());
+                for (int i = String.valueOf(p.getValue().getDeaths()).length(); i < 7; ++i) {
+                    System.out.print(" ");
+                }
+                System.out.println(" |");
+            }
         }
+        System.out.println("+---------------------+---------+---------+");
+    }
+
+    private void onListMaps(ArrayList<Argument> args) {
+        ArrayList<Map> maps = parent.getMaps();
+        int maxNameLength = 8;
+        int maxIdLength = String.valueOf(maps.size()).length();
+        int j = 0;
+        maxIdLength = maxIdLength == 1 ? 2 : maxIdLength;
+        for (Map map : maps) {
+            maxNameLength = map.getName().length() > maxNameLength ? map.getName().length() : maxNameLength;
+        }
+        for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
+            System.out.print("=");
+        System.out.println();
+        System.out.print("== ID == MAP NAME");
+        for (int i = 8; i < maxNameLength; ++i)
+            System.out.print(" ");
+        System.out.println(" ==");
+        for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
+            System.out.print("=");
+        System.out.println();
+        for (Map map : maps) {
+            System.out.print("== " + j);
+            for (int i = String.valueOf(j).length(); i < maxIdLength; ++i)
+                System.out.print(" ");
+            System.out.print(" == " + map.getName());
+            for (int i = map.getName().length(); i < maxNameLength; ++i)
+                System.out.print(" ");
+            System.out.println(" ==");
+            ++j;
+        }
+        for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
+            System.out.print("=");
+        System.out.println();
+    }
+
+    private void onReloadMaps(ArrayList<Argument> args) {
+        ArrayList<Map> maps = parent.getMaps();
+        for (Map map : maps) {
+            System.out.println(map.getName());
+        }
+        this.setChanged();
+        this.notifyObservers("reload maps");
     }
 
     public void tellNoMap() {

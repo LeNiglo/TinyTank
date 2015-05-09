@@ -47,8 +47,13 @@ public class GameController implements Observer {
         if (type.equals("GUI")) {
             this.theInterface = new ServerGUI(this);
         } else if (type.equals("Console")) {
-            this.theInterface = new UserIO(this);
-            ((UserIO) this.theInterface).fromConsole();
+            this.theInterface = new UserIO(GameController.this);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ((UserIO) GameController.this.theInterface).fromConsole();
+                }
+            }).start();
         }
         WindowObserver a = new WindowObserver(theInterface);
         new WindowController(a);
@@ -122,9 +127,8 @@ public class GameController implements Observer {
                         @Override
                         public void complete() {
                             currentMap = maps.get(theInterface.getSelectedMapIndex());
-                            config = theInterface.getGameConfig();
-                            config.setMap(currentMap);
-                            GameController.this.game.setConfig(config);
+                            //config = theInterface.getGameConfig();
+                            //config.setMap(currentMap);
                             if (GameController.this.server.start()) {
                                 GameController.this.game.onGameStart();
                                 if (!gameStarted) {
