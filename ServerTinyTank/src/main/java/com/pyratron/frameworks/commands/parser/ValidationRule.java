@@ -28,11 +28,18 @@ public class ValidationRule {
     public final static ValidationRule AlphaNumerical;
 
     /**
+     * A rule that only allows binary values.
+     */
+    public final static ValidationRule Binary;
+
+    /**
      * Rule that always returns true. This is the default rule for arguments.
      */
     public final static ValidationRule AlwaysTrue;
 
-    private static final String AlphaNumericRegex = "^[a-zA-Z][a-zA-Z0-9]*$", EmailRegex = "^[A-Z0-9._%+-]+@[A-Z]{1}[A-Z0-9.-]+\\.[A-Z]{2,26}$";
+    private static final String AlphaNumericRegex = "^[a-zA-Z][a-zA-Z0-9]*$",
+            EmailRegex = "^[A-Z0-9._%+-]+@[A-Z]{1}[A-Z0-9.-]+\\.[A-Z]{2,26}$",
+            BinaryRegex = "^[0|1]$";
 
     /**
      * A user friendly name that will be displayed in an error.
@@ -70,6 +77,8 @@ public class ValidationRule {
         Email = new ValidationRule("Email", s -> s.matches(EmailRegex));
 
         AlphaNumerical = new ValidationRule("Alphanumeric string", s -> s.matches(AlphaNumericRegex));
+
+        Binary = new ValidationRule("Binary number", s -> s.matches(BinaryRegex));
     }
 
     /**

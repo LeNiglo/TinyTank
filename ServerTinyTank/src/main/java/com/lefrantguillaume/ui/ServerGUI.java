@@ -1,29 +1,27 @@
 package com.lefrantguillaume.ui;
 
-import java.awt.event.*;
-
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.minlog.Log;
-import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.Game;
+import com.lefrantguillaume.game.GameController;
+import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.game.enums.eGameMode;
 import com.lefrantguillaume.game.gameobjects.player.Player;
-import com.lefrantguillaume.network.*;
-import com.lefrantguillaume.network.clientmsgs.*;
+import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.GameConfig;
-import com.lefrantguillaume.utils.MD5;
-import javafx.scene.input.KeyCode;
+import com.lefrantguillaume.utils.ServerConfig;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.management.ManagementFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -37,8 +35,10 @@ public class ServerGUI extends JFrame implements IInterface {
     private ScheduledFuture<?> t = null;
     private DefaultTableModel model = new DefaultTableModel();
     private GUITalker talker = null;
+    private GameController parent;
 
-    public ServerGUI(Observer o) {
+    public ServerGUI(GameController o) {
+        parent = o;
         talker = new GUITalker(o);
         initComponents();
         init();
@@ -67,6 +67,8 @@ public class ServerGUI extends JFrame implements IInterface {
     }
 
     public void init() {
+        if (!ServerConfig.loadConfig())
+            ServerConfig.writeConfig();
         model.addColumn("Player");
         model.addColumn("Kills");
         model.addColumn("Deaths");
@@ -92,14 +94,6 @@ public class ServerGUI extends JFrame implements IInterface {
 
     public void addToConsoleLog(String msg) {
         text_console.append(msg + "\n");
-    }
-
-    public void clearMapList() {
-        combo_map.removeAllItems();
-    }
-
-    public void addMap(String mapName) {
-        combo_map.addItem(mapName);
     }
 
     public void tellNoMap() {
@@ -173,21 +167,21 @@ public class ServerGUI extends JFrame implements IInterface {
         button_start.setText("Start");
     }
 
-    public void addPlayer(String pseudo) {
-        Object[] list = new Object[]{pseudo, 0, 0};
-        model.addRow(list);
-    }
-    public void delPlayer(String pseudo) {
-        for (int i = 0; i < model.getRowCount(); ++i) {
-            if (model.getValueAt(i, 0).equals(pseudo)) {
-                model.removeRow(i);
-                break;
-            }
+    public void refreshPlayers() {
+        model.setRowCount(0);
+        ArrayList<Player> players = parent.getPlayers();
+        for (Player p : players) {
+            Object[] list = new Object[]{p.getPseudo(), p.getKills(), p.getDeaths()};
+            model.addRow(list);
         }
     }
 
-    public void clearPlayerList() {
-        model.setRowCount(0);
+    public void refreshMaps() {
+        combo_map.removeAllItems();
+        ArrayList<Map> maps = parent.getMaps();
+        for (Map m : maps) {
+            combo_map.addItem(m.getName());
+        }
     }
 
     private void text_inputKeyPressed(KeyEvent e) {

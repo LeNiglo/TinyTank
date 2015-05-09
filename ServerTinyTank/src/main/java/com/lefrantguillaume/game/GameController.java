@@ -5,6 +5,7 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.WindowObserver;
+import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.network.MessageData;
 import com.lefrantguillaume.network.SendFile;
 import com.lefrantguillaume.network.clientmsgs.*;
@@ -23,7 +24,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,7 +33,8 @@ import java.util.Observer;
 public class GameController implements Observer {
     private Game game = null;
     private GameConfig config = new GameConfig();
-    private List<Map> maps = new ArrayList<Map>();
+    private ArrayList<Map> maps = new ArrayList<>();
+    private ArrayList<Player> players = new ArrayList<>();
     private Map currentMap = null;
     private Master master = new Master();
     private IInterface theInterface = null;
@@ -59,7 +60,6 @@ public class GameController implements Observer {
 
     public void loadMaps() {
         maps.clear();
-        theInterface.clearMapList();
         currentMap = null;
         File dir = new File("maps");
         File[] files = dir.listFiles(new FilenameFilter() {
@@ -77,10 +77,8 @@ public class GameController implements Observer {
                     System.out.println("not valid");
                 }
             }
-            for (Map map : maps) {
-                theInterface.addMap(map.getName());
-            }
         }
+        theInterface.refreshMaps();
     }
 
     public void parseJSON(File file, String name) {
@@ -132,39 +130,55 @@ public class GameController implements Observer {
         }
     }
 
+    public ArrayList<Map> getMaps() {
+        return this.maps;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return this.players;
+    }
+
     public void update(Observable o, Object arg) {
         if (arg instanceof String) {
             String msg = (String) arg;
-            if (msg.equals("start game")) {
-                new Thread() {
-                    public void run() {
-                        GameController.this.newGame();
-                    }
-                }.start();
-            } else if (msg.equals("stop")) {
-                gameStarted = false;
-                theInterface.gameStopped();
-                theInterface.clearPlayerList();
-                master.stopServer();
-            } else if (msg.equals("stop game")) {
-                game.stop();
-                gameStarted = false;
-                theInterface.gameStopped();
-                theInterface.clearPlayerList();
-                master.stopServer();
+            switch (msg) {
+                case "start game":
+                    new Thread() {
+                        public void run() {
+                            GameController.this.newGame();
+                        }
+                    }.start();
+                    break;
+                case "stop":
+                    gameStarted = false;
+                    theInterface.gameStopped();
+                    master.stopServer();
+                    break;
+                case "stop game":
+                    game.stop();
+                    gameStarted = false;
+                    theInterface.gameStopped();
+                    master.stopServer();
+                    break;
+                case "reload maps":
+                    loadMaps();
+                    break;
+                default:
+                    WindowController.addConsoleMsg("Not handled: " + msg);
+                    break;
             }
         } else if (o instanceof Game) {
             if (arg instanceof Boolean) {
                 if ((Boolean) arg) {
-                    if (!gameStarted)
+                    if (!gameStarted) {
                         gameStarted = true;
                         WindowController.addConsoleMsg("Starting server...");
                     } else {
                         WindowController.addConsoleMsg("Restarting server...");
                     }
                     theInterface.gameStarted();
-            } else {
-                gameStarted = false;
+                } else {
+                    gameStarted = false;
                     theInterface.gameStopped();
                     WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                 }
@@ -201,14 +215,16 @@ public class GameController implements Observer {
                 } else if (mm instanceof MessagePlayerNew) {
                     MessagePlayerNew msg = (MessagePlayerNew) mm;
                     Log.info("GameController a recu le nouveau joueur '" + msg.getPseudo() + "'");
+                    players.add(new Player(msg.getId(), msg.getPseudo(), msg., connection));
+                    theInterface.refreshPlayers();
                     master.addUser(msg.getPseudo());
-                    theInterface.addPlayer(msg.getPseudo());
                 } else if (mm instanceof MessageDelete) {
                     MessageDelete msg = (MessageDelete) mm;
                     Log.info("GameController a remove un joueur.");
+                    theInterface.refreshPlayers();
                     master.delUser(msg.getPseudo());
-                    theInterface.delPlayer(msg.getPseudo());
                 }
             }
         }
     }
+}

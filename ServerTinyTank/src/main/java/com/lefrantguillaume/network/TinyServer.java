@@ -32,10 +32,10 @@ public class TinyServer extends Observable {
                         MessageData msg = new MessageData(server, connection, (MessageModel) object);
                         TinyServer.this.setChanged();
                         TinyServer.this.notifyObservers(msg);
-                    } else {
+                    } /*else {
                         TinyServer.this.setChanged();
                         TinyServer.this.notifyObservers(object);
-                    }
+                    }*/
                 }
 
                 public void disconnected(Connection connection) {
