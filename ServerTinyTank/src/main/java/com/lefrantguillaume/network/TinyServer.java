@@ -7,6 +7,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.utils.ServerConfig;
 
+import java.net.BindException;
 import java.util.Observable;
 
 /**
@@ -46,8 +47,7 @@ public class TinyServer extends Observable {
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
             WindowController.addConsoleMsg("Server listening on port " + ServerConfig.tcpPort + " (tcp) and " + ServerConfig.udpPort + " (udp).");
         } catch (Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
-            e.printStackTrace();
+            WindowController.addConsoleErr(e.getMessage());
             server.close();
             return (false);
         }

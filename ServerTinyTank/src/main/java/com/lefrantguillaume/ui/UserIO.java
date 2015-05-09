@@ -1,9 +1,9 @@
 package com.lefrantguillaume.ui;
 
+import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.GameController;
 import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.game.gameobjects.player.Player;
-import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.pyratron.frameworks.commands.parser.Argument;
@@ -22,6 +22,7 @@ import java.util.Scanner;
 public class UserIO extends Observable implements IInterface {
     private CommandParser parser;
     private GameController parent;
+    private boolean console;
 
     public UserIO(GameController o) {
         parent = o;
@@ -29,7 +30,7 @@ public class UserIO extends Observable implements IInterface {
         parser = CommandParser.createNew().usePrefix("").onError(message -> onParseError(message));
         parser.addCommand(Command.create("Help").addAlias("help", "commands")
                 .setDescription("Display the list of available commands")
-                .setAction(args -> parser.getCommands().stream().forEachOrdered(command -> System.out.println(command.generateUsage()))));
+                .setAction(args -> parser.getCommands().stream().forEachOrdered(command -> WindowController.addConsoleMsg(command.generateUsage()))));
 
         parser.addCommand(Command.create("Start Game").addAlias("start")
                         .setDescription("Start the game with specified options")
@@ -69,7 +70,7 @@ public class UserIO extends Observable implements IInterface {
     }
 
     public void addToConsoleLog(String msg) {
-        System.out.println("- " + msg);
+        System.out.println(msg);
     }
 
     public void fromConsole() {
@@ -83,13 +84,18 @@ public class UserIO extends Observable implements IInterface {
                 addToConsoleLog(e.getMessage() + " Try 'help' to show more informations.");
                 try {
                     Thread.sleep(10);
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
             }
         }
     }
 
+    public void addToConsoleErr(String msg) {
+        System.err.println(msg);
+    }
+
     private void onParseError(String message) {
-        System.err.println(message);
+        WindowController.addConsoleErr(message);
     }
 
     private void askStartGame(ArrayList<Argument> args) {
@@ -110,28 +116,30 @@ public class UserIO extends Observable implements IInterface {
     }
 
     private void onListPlayers(ArrayList<Argument> args) {
-        System.out.println("+---------------------+---------+---------+");
-        System.out.println("| Pseudo              | Kills   | Deaths  |");
-        System.out.println("+---------------------+---------+---------+");
+        WindowController.addConsoleMsg("+---------------------+---------+---------+");
+        WindowController.addConsoleMsg("| Pseudo              | Kills   | Deaths  |");
+        WindowController.addConsoleMsg("+---------------------+---------+---------+");
         if (args.isEmpty()) {
             HashMap<String, Player> players = parent.getPlayers();
             for (java.util.Map.Entry<String, Player> p : players.entrySet()) {
-                System.out.print("| " + p.getValue().getPseudo());
+                String buff = "";
+                buff += ("| " + p.getValue().getPseudo());
                 for (int i = p.getValue().getPseudo().length(); i < 19; ++i) {
                     System.out.print(" ");
                 }
-                System.out.print(" | " + p.getValue().getKills());
+                buff += (" | " + p.getValue().getKills());
                 for (int i = String.valueOf(p.getValue().getKills()).length(); i < 7; ++i) {
                     System.out.print(" ");
                 }
-                System.out.print(" | " + p.getValue().getKills());
+                buff += (" | " + p.getValue().getKills());
                 for (int i = String.valueOf(p.getValue().getDeaths()).length(); i < 7; ++i) {
                     System.out.print(" ");
                 }
-                System.out.println(" |");
+                buff += (" |");
+                WindowController.addConsoleMsg(buff);
             }
         }
-        System.out.println("+---------------------+---------+---------+");
+        WindowController.addConsoleMsg("+---------------------+---------+---------+");
     }
 
     private void onListMaps(ArrayList<Argument> args) {
@@ -143,36 +151,39 @@ public class UserIO extends Observable implements IInterface {
         for (Map map : maps) {
             maxNameLength = map.getName().length() > maxNameLength ? map.getName().length() : maxNameLength;
         }
+        String buff = "";
         for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
-            System.out.print("=");
-        System.out.println();
-        System.out.print("== ID == MAP NAME");
+            buff += ("=");
+        WindowController.addConsoleMsg(buff);
+        buff = "";
+        buff += ("== ID == MAP NAME");
         for (int i = 8; i < maxNameLength; ++i)
-            System.out.print(" ");
-        System.out.println(" ==");
+            buff += (" ");
+        buff += (" ==");
+        WindowController.addConsoleMsg(buff);
+        buff = "";
         for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
-            System.out.print("=");
-        System.out.println();
+            buff += ("=");
+        WindowController.addConsoleMsg(buff);
         for (Map map : maps) {
-            System.out.print("== " + j);
+            buff = "";
+            buff += ("== " + j);
             for (int i = String.valueOf(j).length(); i < maxIdLength; ++i)
-                System.out.print(" ");
-            System.out.print(" == " + map.getName());
+                buff += (" ");
+            buff += (" == " + map.getName());
             for (int i = map.getName().length(); i < maxNameLength; ++i)
-                System.out.print(" ");
-            System.out.println(" ==");
+                buff += (" ");
+            buff += (" ==");
+            WindowController.addConsoleMsg(buff);
             ++j;
         }
+        buff = "";
         for (int i = 0; i < maxIdLength + 10 + maxNameLength; ++i)
-            System.out.print("=");
-        System.out.println();
+            buff += ("=");
+        WindowController.addConsoleMsg(buff);
     }
 
     private void onReloadMaps(ArrayList<Argument> args) {
-        ArrayList<Map> maps = parent.getMaps();
-        for (Map map : maps) {
-            System.out.println(map.getName());
-        }
         this.setChanged();
         this.notifyObservers("reload maps");
     }

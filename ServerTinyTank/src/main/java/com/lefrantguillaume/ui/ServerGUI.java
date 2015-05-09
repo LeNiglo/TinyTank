@@ -34,9 +34,11 @@ public class ServerGUI extends JFrame implements IInterface {
     private DefaultTableModel model = new DefaultTableModel();
     private GUITalker talker = null;
     private GameController parent;
+    private UserIO parser;
 
     public ServerGUI(GameController o) {
         parent = o;
+        parser = new UserIO(parent);
         talker = new GUITalker(o);
         initComponents();
         init();
@@ -65,8 +67,8 @@ public class ServerGUI extends JFrame implements IInterface {
 
         public void tellNoMap() {}
         public void addToConsoleLog(String msg) {}
+        public void addToConsoleErr(String msg) {}
         public int getSelectedMapIndex() { return 0; }
-        public GameConfig getGameConfig() { return null; }
         public void gameStarted() {}
         public void gameStopped() {}
         public void refreshPlayers() {}
@@ -101,6 +103,10 @@ public class ServerGUI extends JFrame implements IInterface {
 
     public void addToConsoleLog(String msg) {
         text_console.append(msg + "\n");
+    }
+
+    public void addToConsoleErr(String msg) {
+        text_console.append("ERR: " + msg + "\n");
     }
 
     public void tellNoMap() {
@@ -169,7 +175,8 @@ public class ServerGUI extends JFrame implements IInterface {
     }
 
     public void gameStopped() {
-        t.cancel(true);
+        if (t != null)
+            t.cancel(true);
         button_stop.setEnabled(false);
         button_start.setText("Start");
     }
@@ -192,6 +199,11 @@ public class ServerGUI extends JFrame implements IInterface {
     }
 
     private void text_inputKeyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            text_console.append(">> " + text_input.getText() + "\n");
+            parser.parse(text_input.getText());
+            text_input.setText("");
+        }
     }
 
     private void initComponents() {

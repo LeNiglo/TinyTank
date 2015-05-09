@@ -19,6 +19,15 @@ public class WindowObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        theInterface.addToConsoleLog((String) arg);
+        String msg = (String) arg;
+        String sub = msg.substring(1);
+        switch (msg.charAt(0)) {
+            case 'i':
+                theInterface.addToConsoleLog(sub);
+                break;
+            case 'e':
+                theInterface.addToConsoleErr(sub);
+                break;
+        }
     }
 }

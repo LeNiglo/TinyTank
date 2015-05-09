@@ -133,15 +133,15 @@ public class GameController implements Observer {
                                 GameController.this.game.onGameStart();
                                 if (!gameStarted) {
                                     gameStarted = true;
-                                    WindowController.addConsoleMsg("Starting server...");
+                                    //WindowController.addConsoleMsg("Starting server...");
                                 } else {
-                                    WindowController.addConsoleMsg("Restarting server...");
+                                    //WindowController.addConsoleMsg("Restarting server...");
                                 }
                                 theInterface.gameStarted();
                             } else {
                                 gameStarted = false;
                                 theInterface.gameStopped();
-                                WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+                                //WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                             }
 
 

@@ -7,8 +7,12 @@ import java.util.Observable;
  */
 
 class WindowControllerObserver extends Observable {
-    public void addMessage(String msg) {
+    public void addInfo(String msg) {
         this.setChanged();
-        this.notifyObservers(msg);
+        this.notifyObservers("i" + msg);
+    }
+    public void addError(String msg) {
+        this.setChanged();
+        this.notifyObservers("e" + msg);
     }
 }
