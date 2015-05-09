@@ -8,6 +8,7 @@ import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.network.MessageData;
 import com.lefrantguillaume.network.SendFile;
+import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.master.Master;
 import com.lefrantguillaume.ui.IInterface;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -36,6 +38,7 @@ public class GameController implements Observer {
     private ArrayList<Map> maps = new ArrayList<>();
     private ArrayList<Player> players = new ArrayList<>();
     private Map currentMap = null;
+    private TinyServer server;
     private Master master = new Master();
     private IInterface theInterface = null;
     private boolean gameStarted = false;
@@ -55,6 +58,8 @@ public class GameController implements Observer {
             e.printStackTrace();
         }
         this.game.addObserver(this);
+        this.server = new TinyServer();
+        this.server.addObserver(this);
         this.loadMaps();
     }
 
@@ -120,7 +125,22 @@ public class GameController implements Observer {
                             config = theInterface.getGameConfig();
                             config.setMap(currentMap);
                             GameController.this.game.setConfig(config);
-                            GameController.this.game.start();
+                            if (GameController.this.server.start()) {
+                                GameController.this.game.onGameStart();
+                                if (!gameStarted) {
+                                    gameStarted = true;
+                                    WindowController.addConsoleMsg("Starting server...");
+                                } else {
+                                    WindowController.addConsoleMsg("Restarting server...");
+                                }
+                                theInterface.gameStarted();
+                            } else {
+                                gameStarted = false;
+                                theInterface.gameStopped();
+                                WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+                            }
+
+
                         }
                     }).run();
                 }
@@ -130,65 +150,59 @@ public class GameController implements Observer {
         }
     }
 
+    public void stopGame() {
+        gameStarted = false;
+        theInterface.gameStopped();
+        master.stopServer();
+        game.onGameStop();
+    }
+
     public ArrayList<Map> getMaps() {
         return this.maps;
     }
 
-    public ArrayList<Player> getPlayers() {
-        return this.players;
+    public HashMap<String, Player> getPlayers() {
+        return this.game.getPlayers();
     }
 
     public void update(Observable o, Object arg) {
-        if (arg instanceof String) {
-            String msg = (String) arg;
-            switch (msg) {
-                case "start game":
-                    new Thread() {
-                        public void run() {
-                            GameController.this.newGame();
-                        }
-                    }.start();
-                    break;
-                case "stop":
-                    gameStarted = false;
-                    theInterface.gameStopped();
-                    master.stopServer();
-                    break;
-                case "stop game":
-                    game.stop();
-                    gameStarted = false;
-                    theInterface.gameStopped();
-                    master.stopServer();
-                    break;
-                case "reload maps":
-                    loadMaps();
-                    break;
-                default:
-                    WindowController.addConsoleMsg("Not handled: " + msg);
-                    break;
+        if (o instanceof IInterface) {
+            if (arg instanceof String) {
+                String msg = (String) arg;
+                switch (msg) {
+                    case "start game":
+                        new Thread() {
+                            public void run() {
+                                GameController.this.newGame();
+                            }
+                        }.start();
+                        break;
+                    case "stop game":
+                        stopGame();
+                        break;
+                    case "reload maps":
+                        loadMaps();
+                        break;
+                    default:
+                        WindowController.addConsoleMsg("Not handled: " + msg);
+                        break;
+                }
             }
         } else if (o instanceof Game) {
-            if (arg instanceof Boolean) {
-                if ((Boolean) arg) {
-                    if (!gameStarted) {
-                        gameStarted = true;
-                        WindowController.addConsoleMsg("Starting server...");
-                    } else {
-                        WindowController.addConsoleMsg("Restarting server...");
-                    }
-                    theInterface.gameStarted();
-                } else {
-                    gameStarted = false;
-                    theInterface.gameStopped();
-                    WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
-                }
+            if (arg instanceof MessageModel) {
+                server.getServer().sendToAllTCP(arg);
             } else if (arg instanceof MessageData) {
+                Connection connection = ((MessageData) arg).getConnection();
+                server.getServer().sendToTCP(connection.getID(), arg);
+            }
+        } else if (o instanceof TinyServer) {
+            if (arg instanceof MessageData) {
                 MessageModel mm = ((MessageData) arg).getRequest();
-                final Server server = ((MessageData) arg).getServer();
+                final Server server = this.server.getServer();
                 final Connection connection = ((MessageData) arg).getConnection();
                 if (mm instanceof MessageConnect) {
                     MessageConnect msg = (MessageConnect) mm;
-                    System.out.println("J'envoie un message Connect");
+                    WindowController.addConsoleMsg("Nouvelle connection: " + msg.getPseudo() + " est sous l'id " + msg.getId());
                     try {
                         String encodedMap = MD5.getMD5Checksum(currentMap.getImgPath());
                         String encodedJson = MD5.getMD5Checksum(currentMap.getFilePath());
@@ -214,15 +228,49 @@ public class GameController implements Observer {
                     }.start();
                 } else if (mm instanceof MessagePlayerNew) {
                     MessagePlayerNew msg = (MessagePlayerNew) mm;
-                    Log.info("GameController a recu le nouveau joueur '" + msg.getPseudo() + "'");
-                    players.add(new Player(msg.getId(), msg.getPseudo(), msg., connection));
+                    System.out.println("Nouveau joueur: " + msg.getPseudo() + " with :" + msg.getEnumTanks().getValue());
+                    game.playerConnect(msg, connection);
                     theInterface.refreshPlayers();
                     master.addUser(msg.getPseudo());
                 } else if (mm instanceof MessageDelete) {
                     MessageDelete msg = (MessageDelete) mm;
-                    Log.info("GameController a remove un joueur.");
+                    System.out.println(msg.getPseudo() + " a envoyé un message DELETE");
+                    game.playerDelete(msg);
                     theInterface.refreshPlayers();
                     master.delUser(msg.getPseudo());
+                } else if (mm instanceof MessageDisconnect) {
+                    WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
+                    game.playerDisconnect(connection);
+                    theInterface.refreshPlayers();
+                } else if (mm instanceof MessageCollision) {
+                    MessageCollision msg = (MessageCollision) mm;
+                    Log.info("Nouvelle collision (" + msg.getShotId() + ")");
+                    game.processCollision(msg);
+                } else if (mm instanceof MessagePutObstacle) {
+                    MessagePutObstacle msg = (MessagePutObstacle) mm;
+                    server.sendToAllTCP(msg);
+                } else if (mm instanceof MessagePlayerUpdatePosition) {
+                    MessagePlayerUpdatePosition msg = (MessagePlayerUpdatePosition) mm;
+                    System.out.println("Update: " + msg.getX() + " / " + msg.getY());
+                    server.sendToAllExceptTCP(connection.getID(), msg);
+                } else if (mm instanceof MessageMove) {
+                    MessageMove msg = (MessageMove) mm;
+                    System.out.println("direction recue: " + msg.getDirection() + " // move : " + (msg.getMove() ? "true" : "false"));
+                    server.sendToAllTCP(msg);
+                } else if (mm instanceof MessageChangeTeam) {
+                    MessageChangeTeam msg = (MessageChangeTeam) mm;
+                    System.out.println(msg.getPseudo() + " change de team.");
+                    server.sendToAllTCP(msg);
+                } else if (mm instanceof MessageSpell) {
+                    MessageSpell msg = (MessageSpell) mm;
+                    System.out.println("sort de " + msg.getPseudo() + ": " + msg.getX() + ", " + msg.getY());
+                    server.sendToAllTCP(msg);
+                } else if (mm instanceof MessageNeedMap) {
+                    MessageNeedMap msg = (MessageNeedMap) mm;
+                    System.out.println("Il a besoin de la map");
+                } else if (mm instanceof MessageShoot) {
+                    MessageShoot msg = ((MessageShoot) mm);
+                    game.playerShoot(msg);
                 }
             }
         }

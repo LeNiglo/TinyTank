@@ -7,6 +7,7 @@ import com.lefrantguillaume.game.gameobjects.player.Player;
 import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,10 +19,7 @@ import java.awt.event.MouseEvent;
 import java.lang.management.ManagementFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -45,7 +43,7 @@ public class ServerGUI extends JFrame implements IInterface {
         setVisible(true);
     }
 
-    private class GUITalker extends Observable {
+    private class GUITalker extends Observable implements IInterface {
         public GUITalker(Observer o) {
             this.addObserver(o);
         }
@@ -64,6 +62,15 @@ public class ServerGUI extends JFrame implements IInterface {
             this.setChanged();
             this.notifyObservers("reload maps");
         }
+
+        public void tellNoMap() {}
+        public void addToConsoleLog(String msg) {}
+        public int getSelectedMapIndex() { return 0; }
+        public GameConfig getGameConfig() { return null; }
+        public void gameStarted() {}
+        public void gameStopped() {}
+        public void refreshPlayers() {}
+        public void refreshMaps() {}
     }
 
     public void init() {
@@ -169,9 +176,9 @@ public class ServerGUI extends JFrame implements IInterface {
 
     public void refreshPlayers() {
         model.setRowCount(0);
-        ArrayList<Player> players = parent.getPlayers();
-        for (Player p : players) {
-            Object[] list = new Object[]{p.getPseudo(), p.getKills(), p.getDeaths()};
+        HashMap<String, Player> players = parent.getPlayers();
+        for (java.util.Map.Entry<String, Player> p : players.entrySet()) {
+            Object[] list = new Object[]{p.getValue().getPseudo(), p.getValue().getKills(), p.getValue().getDeaths()};
             model.addRow(list);
         }
     }

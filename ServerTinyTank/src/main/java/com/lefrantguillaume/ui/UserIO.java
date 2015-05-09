@@ -83,6 +83,11 @@ public class UserIO extends Observable implements IInterface {
         this.notifyObservers("start game");
     }
 
+    private void askStopGame(ArrayList<Argument> args) {
+        this.setChanged();
+        this.notifyObservers("stop game");
+    }
+
     private void onListPlayers(ArrayList<Argument> args) {
         if (args.isEmpty()) {
 

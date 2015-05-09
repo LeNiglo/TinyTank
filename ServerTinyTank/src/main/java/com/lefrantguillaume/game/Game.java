@@ -22,8 +22,7 @@ import java.util.Map;
  * Created by Styve on 10/03/2015.
  */
 
-public class Game extends Observable implements Observer {
-    private TinyServer server;
+public class Game extends Observable {
     private GameConfig config;
     private boolean playable;
     private List<String> playerNames = new ArrayList<String>();
@@ -33,8 +32,6 @@ public class Game extends Observable implements Observer {
     /////////////// idShot /////// idTarget //////// idPlayer
 
     public Game() throws Exception {
-        this.server = new TinyServer();
-        this.server.addObserver(this);
         this.playable = false;
         this.tankConfigData = new TankConfigData();
         /*
@@ -58,19 +55,13 @@ public class Game extends Observable implements Observer {
         this.targets = new Targets();
     }
 
-    public void start() {
-        server.stop();
-        boolean res = server.start();
-        this.setChanged();
-        this.notifyObservers(res);
+    public void onGameStart() {
         WindowController.addConsoleMsg("Game started");
         playable = true;
     }
 
-    public void stop() {
-        server.stop();
-        this.setChanged();
-        this.notifyObservers("stop");
+    public void onGameStop() {
+        WindowController.addConsoleMsg("Game stopped");
     }
 
     public boolean kick(String pseudo) {
@@ -96,106 +87,74 @@ public class Game extends Observable implements Observer {
         }
     }
 
-    public void update(Observable o, Object arg) {
-        if (arg instanceof MessageData) {
-            MessageModel mm = ((MessageData) arg).getRequest();
-            Server theServer = ((MessageData) arg).getServer();
-            Connection connection = ((MessageData) arg).getConnection();
-            if (mm instanceof MessagePlayerNew) {
-                MessagePlayerNew msg = ((MessagePlayerNew) mm);
-                System.out.println("Nouveau joueur: " + msg.getPseudo() + " with :" + msg.getEnumTanks().getValue());
-                msg.setPosX(50f);
-                msg.setPosY(50f);
-                theServer.sendToAllTCP(msg);
+    public void playerConnect(MessagePlayerNew msg, Connection connection) {
+        msg.setPosX(50f);
+        msg.setPosY(50f);
+        this.setChanged();
+        this.notifyObservers(msg);
+        WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+            MessagePlayerNew a = new MessagePlayerNew(msg);
+            a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
+            a.setId(entry.getValue().getId());
+            a.setPseudo(entry.getValue().getPseudo());
+            a.setPosX(-50f);
+            a.setPosY(-50f);
+            this.setChanged();
+            this.notifyObservers(new MessageData(connection, a));
+        }
 
-                WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
-                for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-                    MessagePlayerNew a = new MessagePlayerNew(msg);
-                    a.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
-                    a.setId(entry.getValue().getId());
-                    a.setPseudo(entry.getValue().getPseudo());
-                    a.setPosX(-50f);
-                    a.setPosY(-50f);
-                    theServer.sendToTCP(connection.getID(), a);
-                }
+        WindowController.addConsoleMsg("new Player: " + msg.getId());
+        this.targets.addPlayer(msg.getId(), new Player(msg.getId(), msg.getPseudo(), this.tankConfigData.getTank(msg.getEnumTanks()), connection));
+        updatePlayerList();
+    }
 
-                WindowController.addConsoleMsg("new Player: " + msg.getId());
-                this.targets.addPlayer(msg.getId(), new Player(msg.getId(), msg.getPseudo(), this.tankConfigData.getTank(msg.getEnumTanks()), connection));
+    public void playerDisconnect(Connection connection) {
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+            if (entry.getValue().getConnection().getID() == connection.getID()) {
+                this.targets.deletePlayer(entry.getKey());
                 updatePlayerList();
-            } else if (mm instanceof MessageDelete) {
-                MessageDelete msg = (MessageDelete) mm;
-                System.out.println(msg.getPseudo() + " a envoyé un message DELETE");
-                theServer.sendToAllTCP(msg);
-                this.targets.deletePlayer(msg.getId());
-                updatePlayerList();
-            } else if (mm instanceof MessageShoot) {
-                MessageShoot msg = ((MessageShoot) mm);
-                if (!this.playable) return;
-                WindowController.addConsoleMsg("nbShooter: " + this.targets.getPlayers().size());
-                final Player player = this.targets.getPlayer(msg.getId());
-                if (player != null && player.isCanShoot()) {
-                    player.setCanShoot(false);
-                    System.out.println("tir de " + msg.getPseudo() + " / angle: " + msg.getAngle());
-                    msg.setShootId(UUID.randomUUID().toString());
-                    WindowController.addConsoleMsg("new Shoot : " + msg.getShotId());
-                    this.targets.addShot(msg.getShotId(), player.getTank().getTankWeapon().generateShot(msg.getShotId(), player.getId()));
-                    theServer.sendToAllTCP(msg);
-
-                    TimerTask tt = new TimerTask() {
-                        @Override
-                        public void run() {
-                            player.setCanShoot(true);
-                        }
-                    };
-                    Timer timer = new Timer();
-                    timer.schedule(tt, player.getAmmoCooldown());
-                }
-            } else if (mm instanceof MessageDisconnect) {
-                WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
-                for (Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-                    if (entry.getValue().getConnection().getID() == connection.getID()) {
-                        this.targets.deletePlayer(entry.getKey());
-                        updatePlayerList();
-                        break;
-                    }
-                }
-            } else if (mm instanceof MessageCollision) {
-                MessageCollision msg = (MessageCollision) mm;
-                if (!playable) return;
-                Log.info("Nouvelle collision (" + msg.getShotId() + ")");
-                processCollision(msg);
-            } else if (mm instanceof MessagePutObstacle) {
-                MessagePutObstacle msg = (MessagePutObstacle) mm;
-                theServer.sendToAllTCP(msg);
-            } else if (mm instanceof MessagePlayerUpdatePosition) {
-                MessagePlayerUpdatePosition msg = (MessagePlayerUpdatePosition) mm;
-                System.out.println("Update: " + msg.getX() + " / " + msg.getY());
-                theServer.sendToAllExceptTCP(connection.getID(), msg);
-            } else if (mm instanceof MessageMove) {
-                MessageMove msg = (MessageMove) mm;
-                System.out.println("direction recue: " + msg.getDirection() + " // move : " + (msg.getMove() ? "true" : "false"));
-                theServer.sendToAllTCP(msg);
-            } else if (mm instanceof MessageChangeTeam) {
-                MessageChangeTeam msg = (MessageChangeTeam) mm;
-                System.out.println(msg.getPseudo() + " change de team.");
-                theServer.sendToAllTCP(msg);
-            } else if (mm instanceof MessageSpell) {
-                MessageSpell msg = (MessageSpell) mm;
-                System.out.println("sort de " + msg.getPseudo() + ": " + msg.getX() + ", " + msg.getY());
-                theServer.sendToAllTCP(msg);
-            } else if (mm instanceof MessageNeedMap) {
-                MessageNeedMap msg = (MessageNeedMap) mm;
-                System.out.println("Il a besoin de la map");
-            } else if (mm instanceof MessageConnect) {
-                MessageConnect msg = (MessageConnect) mm;
-                System.out.println("Nouvelle connection: " + msg.getPseudo() + " est sous l'id " + msg.getId());
+                this.setChanged();
+                this.notifyObservers(new MessageDelete(entry.getKey(), entry.getValue().getPseudo()));
+                break;
             }
         }
+    }
+
+    public void playerDelete(MessageDelete msg) {
+        this.targets.deletePlayer(msg.getId());
+        updatePlayerList();
         this.setChanged();
-        this.notifyObservers(arg);
+        this.notifyObservers(msg);
+    }
+
+    public void playerShoot(MessageShoot msg) {
+        if (!this.playable) return;
+        WindowController.addConsoleMsg("nbShooter: " + this.targets.getPlayers().size());
+        final Player player = this.targets.getPlayer(msg.getId());
+        if (player != null && player.isCanShoot()) {
+            player.setCanShoot(false);
+            //System.out.println("tir de " + msg.getPseudo() + " / angle: " + msg.getAngle());
+            msg.setShootId(UUID.randomUUID().toString());
+            WindowController.addConsoleMsg("new Shoot : " + msg.getShotId());
+            this.targets.addShot(msg.getShotId(), player.getTank().getTankWeapon().generateShot(msg.getShotId(), player.getId()));
+
+            this.setChanged();
+            this.notifyObservers(msg);
+
+            TimerTask tt = new TimerTask() {
+                @Override
+                public void run() {
+                    player.setCanShoot(true);
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(tt, player.getAmmoCooldown());
+        }
     }
 
     public void processCollision(final MessageCollision mc) {
+        if (!playable) return;
         boolean added = false;
 
         String it1 = mc.getShotId();
@@ -267,14 +226,17 @@ public class Game extends Observable implements Observer {
     private void addReviveTimer(final MessageModel values) {
 
         Timer timer = new Timer();
-        this.setChanged();
-        this.notifyObservers(values);
+        // Pourquoi ça ici ?
+        //this.setChanged();
+        //this.notifyObservers(values);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 MessageModel msg = new MessagePlayerRevive(values.getPseudo(), values.getId(), 100, 100);
                 targets.getPlayer(values.getId()).revive();
-                server.getServer().sendToAllTCP(msg);
+                //server.getServer().sendToAllTCP(msg);
+                Game.this.setChanged();
+                Game.this.notifyObservers(msg);
             }
         }, 3000);
     }
@@ -285,7 +247,7 @@ public class Game extends Observable implements Observer {
         MessageModel msg = targets.doCollision(shotId, targetId);
 
         if (msg != null) {
-            WindowController.addConsoleMsg("nb connect :" + this.server.getServer().getConnections().length);
+            //WindowController.addConsoleMsg("nb connect :" + this.server.getServer().getConnections().length);
             if (((MessagePlayerUpdateState)msg).getCurrentLife() <= 0) {
                 Player tmp = this.targets.getPlayer(targetId);
                 if (tmp != null) {
@@ -294,7 +256,9 @@ public class Game extends Observable implements Observer {
                     this.addReviveTimer(msg);
                 }
             }
-            this.server.getServer().sendToAllTCP(msg);
+            //this.server.getServer().sendToAllTCP(msg);
+            this.setChanged();
+            this.notifyObservers(msg);
         } else {
             WindowController.addConsoleMsg("msg = null");
         }

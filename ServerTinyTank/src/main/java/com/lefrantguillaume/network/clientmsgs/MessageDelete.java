@@ -6,4 +6,5 @@ package com.lefrantguillaume.network.clientmsgs;
 
 public class MessageDelete extends MessageModel {
     public MessageDelete() {}
+    public MessageDelete(String id, String pseudo) { this.id = id; this.pseudo = pseudo; }
 }

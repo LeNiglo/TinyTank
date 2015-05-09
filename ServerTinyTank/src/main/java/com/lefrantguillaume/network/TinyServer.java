@@ -29,7 +29,7 @@ public class TinyServer extends Observable {
 
                 public void received(Connection connection, Object object) {
                     if (object instanceof MessageModel) {
-                        MessageData msg = new MessageData(server, connection, (MessageModel) object);
+                        MessageData msg = new MessageData(connection, (MessageModel) object);
                         TinyServer.this.setChanged();
                         TinyServer.this.notifyObservers(msg);
                     } /*else {
@@ -40,7 +40,7 @@ public class TinyServer extends Observable {
 
                 public void disconnected(Connection connection) {
                     TinyServer.this.setChanged();
-                    TinyServer.this.notifyObservers(new MessageData(server, connection, new MessageDisconnect()));
+                    TinyServer.this.notifyObservers(new MessageData(connection, new MessageDisconnect()));
                 }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
