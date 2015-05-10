@@ -11,6 +11,7 @@ public class Command implements IArguable {
     private ArrayList<String> aliases;
     private Function<Command, String> canExecute;
     private String description;
+    private String extendedDescription = "No specific help for this command";
     private String name;
     private ArrayList<Argument> arguments;
 
@@ -139,6 +140,32 @@ public class Command implements IArguable {
     }
 
     /**
+     * Generates help text defining the usage of the command and its arguments in extended version.
+     */
+    public String generateExtendedUsage() {
+        return generateExtendedUsage("");
+    }
+
+    /**
+     * Generates help text defining the usage of the command and its arguments in extended version.
+     *
+     * @param alias Custom alias to use in the message. (Example, if user inputs "banuser" as an alias, but the real input is "ban", make sure we use the alias in the message.)
+     */
+    public String generateExtendedUsage(String alias) {
+        StringBuilder sb = new StringBuilder();
+        if (aliases.size() == 0) return ""; //If no aliases, a usage cannot be determined
+
+        //create usage string with main alias and arguments
+        return sb.append(alias.equals("") ? aliases.toString() : alias)
+                .append(" - ")
+                .append(description)
+                .append('\n')
+                //.append(Argument.generateArgumentString(arguments))
+                .append(extendedDescription)
+                .toString();
+    }
+
+    /**
      * Sets a friendly name for the command.
      * Note that the actual "/command" is defined as an alias.
      */
@@ -182,6 +209,16 @@ public class Command implements IArguable {
      */
     public Command setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    /**
+     * Sets a description for the command.
+     *
+     * @param description Describes the command and provides basic information about it.
+     */
+    public Command setExtendedDescription(String description) {
+        this.extendedDescription = description;
         return this;
     }
 

@@ -11,10 +11,7 @@ import com.pyratron.frameworks.commands.parser.Command;
 import com.pyratron.frameworks.commands.parser.CommandParser;
 import com.pyratron.frameworks.commands.parser.ValidationRule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Observable;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by leniglo on 06/05/15.
@@ -30,18 +27,45 @@ public class UserIO extends Observable implements IInterface {
         parser = CommandParser.createNew().usePrefix("").onError(message -> onParseError(message));
         parser.addCommand(Command.create("Help").addAlias("help", "commands")
                 .setDescription("Display the list of available commands")
-                .setAction(args -> parser.getCommands().stream().forEachOrdered(command -> WindowController.addConsoleMsg(command.generateUsage()))));
+                .setAction(args -> askHelp(args))
+                .addArgument(Argument.create("command")
+                        .makeOptional()
+                        .setDefault("all")));
 
         parser.addCommand(Command.create("Start Game").addAlias("start")
                         .setDescription("Start the game with specified options")
+                        .setExtendedDescription("<game_title> : title of the game. Spaces are forbidden\n" +
+                                        "<max_players> : max number of players your server can handle\n" +
+                                        "<max_ping> : max ping tolerated in ms\n" +
+                                        "<tcp_port> : TCP port that will be used for communication with clients\n" +
+                                        "<udp_port> : UDP port that will be used for communication with clients\n" +
+                                        "<friendlyfire> : can you shoot your allies ? yes 'ff' else 'noff'\n" +
+                                        "<ally_noblock> : can you go through your allies ? yes 'noblock' else 'block'"
+                        )
                         .setAction(argues -> askStartGame(argues))
-                        .addArgument(Argument.create("game_title").setValidator(ValidationRule.AlphaNumerical))
-                        .addArgument(Argument.create("max_players").setValidator(ValidationRule.Integer))
-                        .addArgument(Argument.create("max_ping").setValidator(ValidationRule.Integer))
-                        .addArgument(Argument.create("tcp_port").setValidator(ValidationRule.Integer))
-                        .addArgument(Argument.create("udp_port").setValidator(ValidationRule.Integer))
-                        .addArgument(Argument.create("friendlyfire [0|1]").setValidator(ValidationRule.Binary))
-                        .addArgument(Argument.create("ally_noblock [0|1]").setValidator(ValidationRule.Binary))
+                        .addArgument(Argument.create("game_title")
+                                .makeOptional().setDefault("My TinyTank Game")
+                                .setValidator(ValidationRule.AlphaNumerical))
+                        .addArgument(Argument.create("max_players")
+                                .makeOptional().setDefault("8")
+                                .setValidator(ValidationRule.Integer))
+                        .addArgument(Argument.create("max_ping")
+                                .makeOptional().setDefault("100")
+                                .setValidator(ValidationRule.Integer))
+                        .addArgument(Argument.create("tcp_port")
+                                .makeOptional().setDefault("13333")
+                                .setValidator(ValidationRule.Integer))
+                        .addArgument(Argument.create("udp_port")
+                                .makeOptional().setDefault("13444")
+                                .setValidator(ValidationRule.Integer))
+                        .addArgument(Argument.create("friendlyfire")
+                                .makeOptional().setDefault("noff")
+                                .addOption(Argument.create("noff"))
+                                .addOption(Argument.create("ff")))
+                        .addArgument(Argument.create("ally_noblock")
+                                .makeOptional().setDefault("block")
+                                .addOption(Argument.create("noblock"))
+                                .addOption(Argument.create("block")))
         );
 
         parser.addCommand(Command.create("Stop game").addAlias("stop")
@@ -63,6 +87,11 @@ public class UserIO extends Observable implements IInterface {
                         .setDescription("Reloads your maps folder")
                         .setAction(args -> onReloadMaps(args))
         );
+
+        parser.addCommand(Command.create("Exit program").addAlias("exit", "quit")
+                        .setDescription("Exit the program")
+                        .setAction(args -> System.exit(0))
+        );
     }
 
     public void parse(String msg) {
@@ -77,15 +106,18 @@ public class UserIO extends Observable implements IInterface {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.print("$ ");
-            String input = scanner.nextLine();
             try {
+                String input = scanner.nextLine();
                 this.parse(input);
-            } catch (IllegalStateException e) {
-                addToConsoleLog(e.getMessage() + " Try 'help' to show more informations.");
                 try {
                     Thread.sleep(10);
                 } catch (Exception ignored) {
                 }
+            } catch (IllegalStateException e) {
+                addToConsoleLog(e.getMessage() + " Try 'help' to show more informations.");
+            } catch (NoSuchElementException e) {
+                WindowController.addConsoleMsg("\nInterrupted. use 'exit' next time !\n");
+                System.exit(1);
             }
         }
     }
@@ -98,14 +130,26 @@ public class UserIO extends Observable implements IInterface {
         WindowController.addConsoleErr(message);
     }
 
+    private void askHelp(ArrayList<Argument> args) {
+        if (Argument.fromName(args, "command").equals("all")) {
+            parser.getCommands().stream().forEachOrdered(command -> WindowController.addConsoleMsg(command.generateUsage()));
+        } else {
+            for (Command command : parser.getCommands()) {
+                if (command.getAliases().contains((Argument.fromName(args, "command")))) {
+                    WindowController.addConsoleMsg(command.generateExtendedUsage());
+                }
+            }
+        }
+    }
+
     private void askStartGame(ArrayList<Argument> args) {
         ServerConfig.gameName = (Argument.fromName(args, "game_title"));
         ServerConfig.maxAllowedPlayers = Integer.valueOf(Argument.fromName(args, "max_players"));
         ServerConfig.maxAllowedPing = Integer.valueOf(Argument.fromName(args, "max_ping"));
         ServerConfig.tcpPort = Integer.valueOf(Argument.fromName(args, "tcp_port"));
         ServerConfig.udpPort = Integer.valueOf(Argument.fromName(args, "udp_port"));
-        ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire [0|1]").equals("1"));
-        ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock [0|1]").equals("1"));
+        ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire").equals("ff"));
+        ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock").equals("noblock"));
         this.setChanged();
         this.notifyObservers("start game");
     }

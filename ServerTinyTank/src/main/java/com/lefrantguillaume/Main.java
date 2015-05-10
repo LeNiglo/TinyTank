@@ -32,7 +32,7 @@ public class Main  {
                 Log.info("GUI mode");
                 new GameController("GUI");
             } else {
-                System.out.println("TinyTank - Console mode. type 'help' to get available commands.");
+                System.out.println("TinyTank - Console mode. type 'help' to get available commands or 'help <command>' to get help about a specific command.");
                 new GameController("Console");
             }
         } catch (CmdLineException e) {
