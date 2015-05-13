@@ -1,13 +1,11 @@
-package com.lefrantguillaume.ui;
+package com.lefrantguillaume.interfaces;
 
 import com.lefrantguillaume.game.GameController;
 import com.lefrantguillaume.game.Map;
 import com.lefrantguillaume.game.enums.eGameMode;
 import com.lefrantguillaume.game.gameobjects.player.Player;
-import com.lefrantguillaume.network.Network;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
-import javafx.util.Pair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -28,24 +26,24 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 12/03/2015.
  */
-public class ServerGUI extends JFrame implements IInterface {
+public class GraphicalInterface extends JFrame implements Interface {
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     private ScheduledFuture<?> t = null;
     private DefaultTableModel model = new DefaultTableModel();
     private GUITalker talker = null;
     private GameController parent;
-    private UserIO parser;
+    private ConsoleInterface parser;
 
-    public ServerGUI(GameController o) {
+    public GraphicalInterface(GameController o) {
         parent = o;
-        parser = new UserIO(parent);
+        parser = new ConsoleInterface(parent);
         talker = new GUITalker(o);
         initComponents();
         init();
         setVisible(true);
     }
 
-    private class GUITalker extends Observable implements IInterface {
+    private class GUITalker extends Observable implements Interface {
         public GUITalker(Observer o) {
             this.addObserver(o);
         }

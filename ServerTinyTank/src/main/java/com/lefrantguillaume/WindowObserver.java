@@ -1,6 +1,6 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.ui.IInterface;
+import com.lefrantguillaume.interfaces.Interface;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -11,9 +11,9 @@ import java.util.Observer;
 
 
 public class WindowObserver implements Observer {
-    private final IInterface theInterface;
+    private final Interface theInterface;
 
-    public WindowObserver(IInterface window) {
+    public WindowObserver(Interface window) {
         this.theInterface = window;
     }
 

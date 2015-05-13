@@ -1,9 +1,9 @@
-package com.lefrantguillaume.ui;
+package com.lefrantguillaume.interfaces;
 
 /**
  * Created by Styve on 08/05/2015.
  */
-public interface IInterface {
+public interface Interface {
     public abstract void addToConsoleLog(String msg);
     public abstract void addToConsoleErr(String msg);
     public abstract void tellNoMap();

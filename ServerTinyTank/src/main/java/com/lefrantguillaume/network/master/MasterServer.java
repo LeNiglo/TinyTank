@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 10/03/2015.
  */
-public class Master {
+public class MasterServer {
     private String id = null;
     private ScheduledExecutorService updateThread;
 
-    public Master() {
+    public MasterServer() {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {

@@ -10,10 +10,10 @@ import com.lefrantguillaume.network.MessageData;
 import com.lefrantguillaume.network.SendFile;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
-import com.lefrantguillaume.network.master.Master;
-import com.lefrantguillaume.ui.IInterface;
-import com.lefrantguillaume.ui.ServerGUI;
-import com.lefrantguillaume.ui.UserIO;
+import com.lefrantguillaume.network.master.MasterServer;
+import com.lefrantguillaume.interfaces.Interface;
+import com.lefrantguillaume.interfaces.GraphicalInterface;
+import com.lefrantguillaume.interfaces.ConsoleInterface;
 import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
@@ -36,22 +36,21 @@ public class GameController implements Observer {
     private Game game = null;
     private GameConfig config = new GameConfig();
     private ArrayList<Map> maps = new ArrayList<>();
-    private ArrayList<Player> players = new ArrayList<>();
     private Map currentMap = null;
     private TinyServer server;
-    private Master master = new Master();
-    private IInterface theInterface = null;
+    private MasterServer masterServer = new MasterServer();
+    private Interface theInterface = null;
     private boolean gameStarted = false;
 
     public GameController(String type) {
         if (type.equals("GUI")) {
-            this.theInterface = new ServerGUI(this);
+            this.theInterface = new GraphicalInterface(this);
         } else if (type.equals("Console")) {
-            this.theInterface = new UserIO(GameController.this);
+            this.theInterface = new ConsoleInterface(GameController.this);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ((UserIO) GameController.this.theInterface).fromConsole();
+                    ((ConsoleInterface) GameController.this.theInterface).fromConsole();
                 }
             }).start();
         }
@@ -119,7 +118,7 @@ public class GameController implements Observer {
                     new CallbackTask(new Runnable() {
                         public void run() {
                             WindowController.addConsoleMsg("Connecting to the master server...");
-                            if (master.initServer()) {
+                            if (masterServer.initServer()) {
                                 WindowController.addConsoleMsg("Connected to master server !");
                             }
                         }
@@ -157,7 +156,7 @@ public class GameController implements Observer {
     public void stopGame() {
         gameStarted = false;
         theInterface.gameStopped();
-        master.stopServer();
+        masterServer.stopServer();
         game.onGameStop();
     }
 
@@ -170,7 +169,7 @@ public class GameController implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        if (o instanceof IInterface) {
+        if (o instanceof Interface) {
             if (arg instanceof String) {
                 String msg = (String) arg;
                 switch (msg) {
@@ -235,13 +234,13 @@ public class GameController implements Observer {
                     System.out.println("Nouveau joueur: " + msg.getPseudo() + " with :" + msg.getEnumTanks().getValue());
                     game.playerConnect(msg, connection);
                     theInterface.refreshPlayers();
-                    master.addUser(msg.getPseudo());
+                    masterServer.addUser(msg.getPseudo());
                 } else if (mm instanceof MessageDelete) {
                     MessageDelete msg = (MessageDelete) mm;
                     System.out.println(msg.getPseudo() + " a envoyé un message DELETE");
                     game.playerDelete(msg);
                     theInterface.refreshPlayers();
-                    master.delUser(msg.getPseudo());
+                    masterServer.delUser(msg.getPseudo());
                 } else if (mm instanceof MessageDisconnect) {
                     WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
                     game.playerDisconnect(connection);

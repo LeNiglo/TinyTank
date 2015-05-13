@@ -1,4 +1,4 @@
-package com.lefrantguillaume.ui;
+package com.lefrantguillaume.interfaces;
 
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.game.GameController;
@@ -16,12 +16,12 @@ import java.util.*;
 /**
  * Created by leniglo on 06/05/15.
  */
-public class UserIO extends Observable implements IInterface {
+public class ConsoleInterface extends Observable implements Interface {
     private CommandParser parser;
     private GameController parent;
     private boolean console;
 
-    public UserIO(GameController o) {
+    public ConsoleInterface(GameController o) {
         parent = o;
         this.addObserver(o);
         parser = CommandParser.createNew().usePrefix("").onError(message -> onParseError(message));
