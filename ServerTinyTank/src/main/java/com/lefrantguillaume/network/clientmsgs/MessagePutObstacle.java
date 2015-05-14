@@ -1,6 +1,6 @@
 package com.lefrantguillaume.network.clientmsgs;
 
-import com.lefrantguillaume.game.gameobjects.obstacle.EnumObstacles;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacle.EnumObstacles;
 
 /**
  * Created by Styve on 26/03/2015.

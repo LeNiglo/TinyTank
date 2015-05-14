@@ -1,9 +1,9 @@
 package com.lefrantguillaume.interfaces;
 
-import com.lefrantguillaume.game.GameController;
-import com.lefrantguillaume.game.Map;
-import com.lefrantguillaume.game.enums.eGameMode;
-import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.game.GameController;
+import com.lefrantguillaume.gameComponent.maps.Map;
+import com.lefrantguillaume.gameComponent.enums.EnumGameMode;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
 
@@ -18,6 +18,7 @@ import java.lang.management.ManagementFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -50,12 +51,12 @@ public class GraphicalInterface extends JFrame implements Interface {
 
         public void askStartGame() {
             this.setChanged();
-            this.notifyObservers("start game");
+            this.notifyObservers("start gameComponent");
         }
 
         public void askStopGame() {
             this.setChanged();
-            this.notifyObservers("stop game");
+            this.notifyObservers("stop gameComponent");
         }
 
         public void reloadMaps() {
@@ -120,7 +121,7 @@ public class GraphicalInterface extends JFrame implements Interface {
     public GameConfig getGameConfig() {
         return new GameConfig(Integer.valueOf(field_pts.getText()),
                 Integer.valueOf(field_timelimit.getText()),
-                (combo_mode.getName() != null ? eGameMode.FFA : eGameMode.FFA));
+                (combo_mode.getName() != null ? EnumGameMode.FreeForAll : EnumGameMode.FreeForAll));
     }
 
     private void button_startMouseClicked(MouseEvent e) {
@@ -190,7 +191,7 @@ public class GraphicalInterface extends JFrame implements Interface {
 
     public void refreshMaps() {
         combo_map.removeAllItems();
-        ArrayList<Map> maps = parent.getMaps();
+        List<Map> maps = parent.getMaps();
         for (Map m : maps) {
             combo_map.addItem(m.getName());
         }
@@ -267,7 +268,7 @@ public class GraphicalInterface extends JFrame implements Interface {
             {
 
                 //---- label_name ----
-                label_name.setText("game name");
+                label_name.setText("gameComponent name");
                 label_name.setLabelFor(field_name);
 
                 //---- label_max_players ----
@@ -532,7 +533,7 @@ public class GraphicalInterface extends JFrame implements Interface {
             }
 
             //---- label_server2 ----
-            label_server2.setText("game preferences");
+            label_server2.setText("gameComponent preferences");
             label_server2.setFont(new Font("Calibri", Font.BOLD, 22));
 
             //======== panel3 ========

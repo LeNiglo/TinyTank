@@ -2,7 +2,7 @@ package com.lefrantguillaume.network.master;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;

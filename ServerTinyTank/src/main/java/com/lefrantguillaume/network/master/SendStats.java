@@ -1,6 +1,6 @@
 package com.lefrantguillaume.network.master;
 
-import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 
 import java.util.List;
 

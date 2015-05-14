@@ -1,7 +1,7 @@
 package com.lefrantguillaume.network.clientmsgs;
 
 
-import com.lefrantguillaume.game.gameobjects.tanks.types.EnumTanks;
+import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
 
 /**
  * Created by Styve on 25/03/2015.
