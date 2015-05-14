@@ -7,7 +7,7 @@ Template.search.events({
     //TODO correct the bug with Router.go profile if already on profile, simply reload withour window.location.
 
     Router.go('profile', {_id: query});
-    window.location.reload();
+    // window.location.reload();
     return false;
   },
   'keyup input[name="search"]': function(e) {

@@ -24,7 +24,6 @@ Template.login.events({
         localStorage.setItem('authToken', results.data.res.token);
         localStorage.setItem('authID', results.data.res._id);
         localStorage.setItem('authUsername', results.data.res.username);
-        //TODO change by profile page and add username to the myAlert
         isUserConnectedDeps.changed();
         Router.go("profile");
         myAlert("Happy to see you, "+results.data.res.username+ " !", "Welcome Back !", "success");

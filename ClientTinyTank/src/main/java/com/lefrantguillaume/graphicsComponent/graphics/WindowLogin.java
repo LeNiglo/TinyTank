@@ -1,19 +1,13 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import org.newdawn.slick.*;
-import org.newdawn.slick.Font;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
-import org.newdawn.slick.gui.AbstractComponent;
-import org.newdawn.slick.gui.ComponentListener;
-import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.awt.*;
 import java.util.UUID;
 
 
@@ -53,7 +47,7 @@ public class WindowLogin extends BasicGameState {
     }
 
     @Override
-    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException{
+    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container.setTargetFrameRate(10);
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
@@ -68,7 +62,8 @@ public class WindowLogin extends BasicGameState {
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         //TODO animation in background ? a better UI plz
         //TODO SCALE THIS PLLZZZZZZ
-        g.drawImage(this.logo, 320, 100);
+        g.setBackground(org.newdawn.slick.Color.white);
+        this.logo.draw(320, 100, 0.5f);
         this.fLogin.render(gameContainer, g);
         this.fPassword.render(gameContainer, g);
     }
@@ -78,27 +73,29 @@ public class WindowLogin extends BasicGameState {
     }
 
     @Override
-    public void mouseWheelMoved(int change) {
-    }
-
-    @Override
     public void keyPressed(int key, char c) {
     }
 
     @Override
     public void keyReleased(int key, char c) {
         if (key == Input.KEY_RETURN) {
-            CurrentUser.setId(UUID.randomUUID().toString());
-            CurrentUser.setPseudo("Kevin");
-            this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+            if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
+
+                CurrentUser.setId(UUID.randomUUID().toString());
+                //TODO this is supposed to be the result of the login action. the "_id" variable.
+                CurrentUser.setPseudo(this.fLogin.getText());
+                this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+
+            } else {
+                Debug.debug("Login :\nUsername = " + this.fLogin.getText() + "\nPassword = " + this.fPassword.getText());
+            }
         } else if (key == Input.KEY_TAB) {
             if (this.fLogin.hasFocus())
                 this.fPassword.setFocus(true);
             else if (this.fPassword.hasFocus()) {
 
             }
-        }
-        else if (key == Input.KEY_ESCAPE) {
+        } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
         }
     }
