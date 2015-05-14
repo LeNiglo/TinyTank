@@ -1,9 +1,9 @@
 package com.lefrantguillaume.interfaces;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.game.GameController;
-import com.lefrantguillaume.game.Map;
-import com.lefrantguillaume.game.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.game.GameController;
+import com.lefrantguillaume.gameComponent.maps.Map;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.pyratron.frameworks.commands.parser.Argument;
@@ -33,8 +33,8 @@ public class ConsoleInterface extends Observable implements Interface {
                         .setDefault("all")));
 
         parser.addCommand(Command.create("Start Game").addAlias("start")
-                        .setDescription("Start the game with specified options")
-                        .setExtendedDescription("<game_title> : title of the game. Spaces are forbidden\n" +
+                        .setDescription("Start the gameComponent with specified options")
+                        .setExtendedDescription("<game_title> : title of the gameComponent. Spaces are forbidden\n" +
                                         "<max_players> : max number of players your server can handle\n" +
                                         "<max_ping> : max ping tolerated in ms\n" +
                                         "<tcp_port> : TCP port that will be used for communication with clients\n" +
@@ -68,8 +68,8 @@ public class ConsoleInterface extends Observable implements Interface {
                                 .addOption(Argument.create("block")))
         );
 
-        parser.addCommand(Command.create("Stop game").addAlias("stop")
-                        .setDescription("Stop the game")
+        parser.addCommand(Command.create("Stop gameComponent").addAlias("stop")
+                        .setDescription("Stop the gameComponent")
                         .setAction(args -> askStopGame(args))
         );
 
@@ -151,12 +151,12 @@ public class ConsoleInterface extends Observable implements Interface {
         ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire").equals("ff"));
         ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock").equals("noblock"));
         this.setChanged();
-        this.notifyObservers("start game");
+        this.notifyObservers("start gameComponent");
     }
 
     private void askStopGame(ArrayList<Argument> args) {
         this.setChanged();
-        this.notifyObservers("stop game");
+        this.notifyObservers("stop gameComponent");
     }
 
     private void onListPlayers(ArrayList<Argument> args) {
@@ -187,7 +187,7 @@ public class ConsoleInterface extends Observable implements Interface {
     }
 
     private void onListMaps(ArrayList<Argument> args) {
-        ArrayList<Map> maps = parent.getMaps();
+        List<Map> maps = parent.getMaps();
         int maxNameLength = 8;
         int maxIdLength = String.valueOf(maps.size()).length();
         int j = 0;
