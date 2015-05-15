@@ -3,6 +3,7 @@ package com.lefrantguillaume.gameComponent.game;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.target.Targets;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.tools.TankConfigData;
@@ -20,7 +21,8 @@ import java.util.Map;
 
 public class Game extends Observable {
     private boolean playable;
-    private List<String> playerNames = new ArrayList<String>();
+    private List<String> playerNames = new ArrayList<>();
+    private GameModeController gameModeController;
     private Targets targets = null;
     private TankConfigData tankConfigData = null;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<String, HashMap<String, List<List<String>>>>();
@@ -31,6 +33,8 @@ public class Game extends Observable {
         this.tankConfigData = new TankConfigData();
         this.tankConfigData.initTanks(configFile);
         this.targets = new Targets();
+        this.gameModeController = new GameModeController();
+        this.addObserver(this.gameModeController);
     }
 
     public void onGameStart() {

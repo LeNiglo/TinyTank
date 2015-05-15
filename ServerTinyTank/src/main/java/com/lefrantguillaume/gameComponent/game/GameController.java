@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.WindowObserver;
-import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.maps.MapController;
@@ -14,9 +13,9 @@ import com.lefrantguillaume.network.SendFile;
 import com.lefrantguillaume.network.TinyServer;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.network.master.MasterServer;
-import com.lefrantguillaume.interfaces.Interface;
-import com.lefrantguillaume.interfaces.GraphicalInterface;
-import com.lefrantguillaume.interfaces.ConsoleInterface;
+import com.lefrantguillaume.userInterface.UserInterface;
+import com.lefrantguillaume.userInterface.GraphicalUserInterface;
+import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.MD5;
@@ -36,10 +35,9 @@ import java.util.*;
 public class GameController extends Observable implements Observer{
     private MasterServer masterServer;
     private MapController mapController;
-    private GameModeController gameModeController;
     private Game game = null;
     private TinyServer server;
-    private Interface theInterface = null;
+    private UserInterface userInterface = null;
     private boolean gameStarted = false;
 
     public GameController(String type) throws JSONException {
@@ -61,8 +59,6 @@ public class GameController extends Observable implements Observer{
         Until here
          */
         this.initInterface(type);
-        this.gameModeController = new GameModeController();
-        this.addObserver(this.gameModeController);
         this.game = new Game(new JSONObject(content));
         this.masterServer = new MasterServer();
         this.mapController = new MapController();
@@ -74,17 +70,17 @@ public class GameController extends Observable implements Observer{
 
     public void initInterface(String type){
         if (type.equals("GUI")) {
-            this.theInterface = new GraphicalInterface(this);
+            this.userInterface = new GraphicalUserInterface(this);
         } else if (type.equals("Console")) {
-            this.theInterface = new ConsoleInterface(GameController.this);
+            this.userInterface = new ConsoleUserInterface(GameController.this);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ((ConsoleInterface) GameController.this.theInterface).fromConsole();
+                    ((ConsoleUserInterface) GameController.this.userInterface).fromConsole();
                 }
             }).start();
         }
-        WindowObserver a = new WindowObserver(theInterface);
+        WindowObserver a = new WindowObserver(userInterface);
         new WindowController(a);
 
 
@@ -108,7 +104,7 @@ public class GameController extends Observable implements Observer{
                 }
             }
         }
-        theInterface.refreshMaps();
+        userInterface.refreshMaps();
     }
 
     public void parseJsonMap(File file, String name) {
@@ -146,7 +142,7 @@ public class GameController extends Observable implements Observer{
                     }, new Callback() {
                         @Override
                         public void complete() {
-                            mapController.setCurrentMapIndex(theInterface.getSelectedMapIndex());
+                            mapController.setCurrentMapIndex(userInterface.getSelectedMapIndex());
                             //config = theInterface.getGameConfig();
                             //config.setMap(currentMap);
                             if (GameController.this.server.start()) {
@@ -157,10 +153,10 @@ public class GameController extends Observable implements Observer{
                                 } else {
                                     //WindowController.addConsoleMsg("Restarting server...");
                                 }
-                                theInterface.gameStarted();
+                                userInterface.gameStarted();
                             } else {
                                 gameStarted = false;
-                                theInterface.gameStopped();
+                                userInterface.gameStopped();
                                 //WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                             }
 
@@ -170,13 +166,13 @@ public class GameController extends Observable implements Observer{
                 }
             }.start();
         } else {
-            theInterface.tellNoMap();
+            userInterface.tellNoMap();
         }
     }
 
     public void stopGame() {
         gameStarted = false;
-        theInterface.gameStopped();
+        userInterface.gameStopped();
         masterServer.stopServer();
         game.onGameStop();
     }
@@ -190,7 +186,7 @@ public class GameController extends Observable implements Observer{
     }
 
     public void update(Observable o, Object arg) {
-        if (o instanceof Interface) {
+        if (o instanceof UserInterface) {
             if (arg instanceof String) {
                 String msg = (String) arg;
                 switch (msg) {
@@ -254,18 +250,18 @@ public class GameController extends Observable implements Observer{
                     MessagePlayerNew msg = (MessagePlayerNew) mm;
                     System.out.println("Nouveau joueur: " + msg.getPseudo() + " with :" + msg.getEnumTanks().getValue());
                     game.playerConnect(msg, connection);
-                    theInterface.refreshPlayers();
+                    userInterface.refreshPlayers();
                     masterServer.addUser(msg.getPseudo());
                 } else if (mm instanceof MessageDelete) {
                     MessageDelete msg = (MessageDelete) mm;
                     System.out.println(msg.getPseudo() + " a envoyé un message DELETE");
                     game.playerDelete(msg);
-                    theInterface.refreshPlayers();
+                    userInterface.refreshPlayers();
                     masterServer.delUser(msg.getPseudo());
                 } else if (mm instanceof MessageDisconnect) {
                     WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
                     game.playerDisconnect(connection);
-                    theInterface.refreshPlayers();
+                    userInterface.refreshPlayers();
                 } else if (mm instanceof MessageCollision) {
                     MessageCollision msg = (MessageCollision) mm;
                     Log.info("Nouvelle collision (" + msg.getShotId() + ")");
@@ -300,3 +296,19 @@ public class GameController extends Observable implements Observer{
         }
     }
 }
+
+/* NEW update(o, arg){
+    Pair<EnumMaster, Object> task = (Pair...)arg;
+
+    if (task.getKey().equals(EnumMaster.GAME){
+        this.game.update(o, task.getValue());
+    }
+    else if (task.getKey().equals(EnumMaster.NETWORK){
+        this.masterServer.update(o, task.getValue());
+    }
+    else if (task.getKey().equals(EnumMaster.USER_INTERFACE){
+        this.userInterface.update(o, task.getValue());
+    }
+
+}
+*/

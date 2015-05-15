@@ -1,4 +1,4 @@
-package com.lefrantguillaume.interfaces;
+package com.lefrantguillaume.userInterface;
 
 import com.lefrantguillaume.gameComponent.game.GameController;
 import com.lefrantguillaume.gameComponent.maps.Map;
@@ -27,24 +27,24 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 12/03/2015.
  */
-public class GraphicalInterface extends JFrame implements Interface {
+public class GraphicalUserInterface extends JFrame implements UserInterface {
     private ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(5);
     private ScheduledFuture<?> t = null;
     private DefaultTableModel model = new DefaultTableModel();
     private GUITalker talker = null;
-    private GameController parent;
-    private ConsoleInterface parser;
+    private GameController gameController;
+    private ConsoleUserInterface consoleUserInterface;
 
-    public GraphicalInterface(GameController o) {
-        parent = o;
-        parser = new ConsoleInterface(parent);
+    public GraphicalUserInterface(GameController o) {
+        gameController = o;
+        consoleUserInterface = new ConsoleUserInterface(gameController);
         talker = new GUITalker(o);
         initComponents();
         init();
         setVisible(true);
     }
 
-    private class GUITalker extends Observable implements Interface {
+    private class GUITalker extends Observable implements UserInterface {
         public GUITalker(Observer o) {
             this.addObserver(o);
         }
@@ -182,7 +182,7 @@ public class GraphicalInterface extends JFrame implements Interface {
 
     public void refreshPlayers() {
         model.setRowCount(0);
-        HashMap<String, Player> players = parent.getPlayers();
+        HashMap<String, Player> players = gameController.getPlayers();
         for (java.util.Map.Entry<String, Player> p : players.entrySet()) {
             Object[] list = new Object[]{p.getValue().getPseudo(), p.getValue().getKills(), p.getValue().getDeaths()};
             model.addRow(list);
@@ -191,7 +191,7 @@ public class GraphicalInterface extends JFrame implements Interface {
 
     public void refreshMaps() {
         combo_map.removeAllItems();
-        List<Map> maps = parent.getMaps();
+        List<Map> maps = gameController.getMaps();
         for (Map m : maps) {
             combo_map.addItem(m.getName());
         }
@@ -200,7 +200,7 @@ public class GraphicalInterface extends JFrame implements Interface {
     private void text_inputKeyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             text_console.append(">> " + text_input.getText() + "\n");
-            parser.parse(text_input.getText());
+            consoleUserInterface.parse(text_input.getText());
             text_input.setText("");
         }
     }
