@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.enums;
+package com.lefrantguillaume.gameComponent.gameMode;
 
 /**
  * Created by Styve on 19/03/2015.

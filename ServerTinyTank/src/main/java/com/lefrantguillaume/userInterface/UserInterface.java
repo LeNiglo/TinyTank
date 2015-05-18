@@ -1,5 +1,7 @@
 package com.lefrantguillaume.userInterface;
 
+import java.util.Observable;
+
 /**
  * Created by Styve on 08/05/2015.
  */

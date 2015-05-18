@@ -1,7 +1,7 @@
 package com.lefrantguillaume.utils;
 
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.gameComponent.enums.EnumGameMode;
+import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 
 /**
  * Created by Styve on 19/03/2015.

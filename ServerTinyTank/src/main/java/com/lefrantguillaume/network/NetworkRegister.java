@@ -2,7 +2,7 @@ package com.lefrantguillaume.network;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.gameComponent.enums.EnumObjects;
+import com.lefrantguillaume.gameComponent.gameobjects.EnumObjects;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
 import com.lefrantguillaume.network.clientmsgs.*;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 
 // This class is a convenient place to keep things common to both the client and server.
-public class Network {
+public class NetworkRegister {
 
     // This registers objects that are going to be sent over the network.
     static public void register (EndPoint endPoint) {

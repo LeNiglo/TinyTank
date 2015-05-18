@@ -4,10 +4,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.master.EnumController;
 import com.lefrantguillaume.network.clientmsgs.*;
 import com.lefrantguillaume.utils.ServerConfig;
+import javafx.util.Pair;
 
-import java.net.BindException;
 import java.util.Observable;
 
 /**
@@ -17,7 +18,18 @@ public class TinyServer extends Observable {
     private Server server = new Server();
 
     public TinyServer() {
-        Network.register(server);
+        NetworkRegister.register(server);
+    }
+
+    // FUNCTIONS
+
+    public void doTask(Observable o, Object arg){
+        if (arg instanceof MessageModel) {
+            this.server.sendToAllTCP(arg);
+        } else if (arg instanceof MessageData) {
+            Connection connection = ((MessageData) arg).getConnection();
+            this.server.sendToTCP(connection.getID(), ((MessageData) arg).getRequest());
+        }
     }
 
     public boolean start() {
@@ -32,16 +44,14 @@ public class TinyServer extends Observable {
                     if (object instanceof MessageModel) {
                         MessageData msg = new MessageData(connection, (MessageModel) object);
                         TinyServer.this.setChanged();
-                        TinyServer.this.notifyObservers(msg);
-                    } /*else {
-                        TinyServer.this.setChanged();
-                        TinyServer.this.notifyObservers(object);
-                    }*/
+                        TinyServer.this.notifyObservers(new Pair<>(EnumController.GAME, msg));
+                    }
                 }
 
+                // TODO: à quoi ça sert ça ?
                 public void disconnected(Connection connection) {
                     TinyServer.this.setChanged();
-                    TinyServer.this.notifyObservers(new MessageData(connection, new MessageDisconnect()));
+                    TinyServer.this.notifyObservers(new Pair<>(EnumController.UNKNOWN, new MessageData(connection, new MessageDisconnect())));
                 }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
@@ -59,6 +69,7 @@ public class TinyServer extends Observable {
         WindowController.addConsoleMsg("Server stopped.");
     }
 
+    // GETTERS
     public Server getServer() {
         return this.server;
     }

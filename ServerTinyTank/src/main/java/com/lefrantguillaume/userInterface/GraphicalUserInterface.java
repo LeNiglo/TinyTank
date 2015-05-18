@@ -1,11 +1,14 @@
 package com.lefrantguillaume.userInterface;
 
-import com.lefrantguillaume.gameComponent.game.GameController;
+import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.MasterController;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.gameComponent.enums.EnumGameMode;
+import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -32,12 +35,12 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
     private ScheduledFuture<?> t = null;
     private DefaultTableModel model = new DefaultTableModel();
     private GUITalker talker = null;
-    private GameController gameController;
+    private MasterController masterController;
     private ConsoleUserInterface consoleUserInterface;
 
-    public GraphicalUserInterface(GameController o) {
-        gameController = o;
-        consoleUserInterface = new ConsoleUserInterface(gameController);
+    public GraphicalUserInterface(MasterController o) {
+        masterController = o;
+        consoleUserInterface = new ConsoleUserInterface(masterController);
         talker = new GUITalker(o);
         initComponents();
         init();
@@ -51,17 +54,17 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
 
         public void askStartGame() {
             this.setChanged();
-            this.notifyObservers("start gameComponent");
+            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "start game"));
         }
 
         public void askStopGame() {
             this.setChanged();
-            this.notifyObservers("stop gameComponent");
+            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
         }
 
         public void reloadMaps() {
             this.setChanged();
-            this.notifyObservers("reload maps");
+            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "reload maps"));
         }
 
         public void tellNoMap() {}
@@ -73,6 +76,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
         public void refreshPlayers() {}
         public void refreshMaps() {}
     }
+
 
     public void init() {
         if (!ServerConfig.loadConfig())
@@ -182,7 +186,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
 
     public void refreshPlayers() {
         model.setRowCount(0);
-        HashMap<String, Player> players = gameController.getPlayers();
+        HashMap<String, Player> players = masterController.getPlayers();
         for (java.util.Map.Entry<String, Player> p : players.entrySet()) {
             Object[] list = new Object[]{p.getValue().getPseudo(), p.getValue().getKills(), p.getValue().getDeaths()};
             model.addRow(list);
@@ -191,7 +195,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
 
     public void refreshMaps() {
         combo_map.removeAllItems();
-        List<Map> maps = gameController.getMaps();
+        List<Map> maps = masterController.getMaps();
         for (Map m : maps) {
             combo_map.addItem(m.getName());
         }

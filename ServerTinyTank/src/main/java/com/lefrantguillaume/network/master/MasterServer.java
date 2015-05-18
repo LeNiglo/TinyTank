@@ -14,6 +14,7 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +29,9 @@ public class MasterServer {
     public MasterServer() {
     }
 
+    public void doTask(Observable o, Object arg){
+
+    }
     private ClientResponse getClientResponse(Object st, String path) {
         String masterServer = "http://127.0.0.1:1337/server/";
 

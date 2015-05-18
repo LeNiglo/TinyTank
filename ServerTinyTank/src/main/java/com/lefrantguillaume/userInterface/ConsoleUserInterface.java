@@ -1,7 +1,8 @@
 package com.lefrantguillaume.userInterface;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.gameComponent.game.GameController;
+import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.MasterController;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.utils.GameConfig;
@@ -10,6 +11,7 @@ import com.pyratron.frameworks.commands.parser.Argument;
 import com.pyratron.frameworks.commands.parser.Command;
 import com.pyratron.frameworks.commands.parser.CommandParser;
 import com.pyratron.frameworks.commands.parser.ValidationRule;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -18,10 +20,10 @@ import java.util.*;
  */
 public class ConsoleUserInterface extends Observable implements UserInterface {
     private CommandParser parser;
-    private GameController parent;
+    private MasterController parent;
     private boolean console;
 
-    public ConsoleUserInterface(GameController o) {
+    public ConsoleUserInterface(MasterController o) {
         parent = o;
         this.addObserver(o);
         parser = CommandParser.createNew().usePrefix("").onError(message -> onParseError(message));
@@ -151,12 +153,12 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
         ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire").equals("ff"));
         ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock").equals("noblock"));
         this.setChanged();
-        this.notifyObservers("start gameComponent");
+        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "start game"));
     }
 
     private void askStopGame(ArrayList<Argument> args) {
         this.setChanged();
-        this.notifyObservers("stop gameComponent");
+        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
     }
 
     private void onListPlayers(ArrayList<Argument> args) {
@@ -229,7 +231,7 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
 
     private void onReloadMaps(ArrayList<Argument> args) {
         this.setChanged();
-        this.notifyObservers("reload maps");
+        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "reload maps"));
     }
 
     public void tellNoMap() {
