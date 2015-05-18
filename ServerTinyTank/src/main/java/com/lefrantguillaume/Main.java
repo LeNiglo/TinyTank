@@ -2,6 +2,7 @@ package com.lefrantguillaume;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.gameComponent.game.GameController;
+import org.codehaus.jettison.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -40,6 +41,8 @@ public class Main  {
             System.err.println("java -jar "+ new java.io.File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName() +" [options]");
             parser.printUsage(System.err);
             System.err.println();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

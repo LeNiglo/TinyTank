@@ -93,7 +93,7 @@ public class WindowLogin extends BasicGameState {
             if (this.fLogin.hasFocus())
                 this.fPassword.setFocus(true);
             else if (this.fPassword.hasFocus()) {
-
+                this.fLogin.setFocus(true);
             }
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
