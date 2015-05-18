@@ -55,6 +55,7 @@ public class Targets {
         this.shots.remove(shotId);
     }
 
+    // GETTERS
     public Player getPlayer(String playerId) {
         return this.players.get(playerId);
     }
@@ -71,4 +72,12 @@ public class Targets {
         return this.shots;
     }
 
+    public List<String> getPlayersName(){
+        List<String> playersName = new ArrayList<>();
+
+        for (int i = 0; i < this.players.size(); ++i){
+            playersName.add(this.players.get(i).getPseudo());
+        }
+        return playersName;
+    }
 }

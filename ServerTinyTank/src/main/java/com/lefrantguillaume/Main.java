@@ -1,7 +1,7 @@
 package com.lefrantguillaume;
 
 import com.esotericsoftware.minlog.Log;
-import com.lefrantguillaume.gameComponent.game.GameController;
+import com.lefrantguillaume.master.MasterController;
 import org.codehaus.jettison.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -31,10 +31,10 @@ public class Main  {
             }
             if (!console) {
                 Log.info("Graphical interface");
-                new GameController("GUI");
+                new MasterController("GUI");
             } else {
                 System.out.println("TinyTank - Console interface. type 'help' to get available commands or 'help <command>' to get help about a specific command.");
-                new GameController("Console");
+                new MasterController("Console");
             }
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());

@@ -1,6 +1,6 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.interfaces.Interface;
+import com.lefrantguillaume.userInterface.UserInterface;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -11,10 +11,10 @@ import java.util.Observer;
 
 
 public class WindowObserver implements Observer {
-    private final Interface theInterface;
+    private final UserInterface userInterface;
 
-    public WindowObserver(Interface window) {
-        this.theInterface = window;
+    public WindowObserver(UserInterface window) {
+        this.userInterface = window;
     }
 
     @Override
@@ -23,10 +23,10 @@ public class WindowObserver implements Observer {
         String sub = msg.substring(1);
         switch (msg.charAt(0)) {
             case 'i':
-                theInterface.addToConsoleLog(sub);
+                userInterface.addToConsoleLog(sub);
                 break;
             case 'e':
-                theInterface.addToConsoleErr(sub);
+                userInterface.addToConsoleErr(sub);
                 break;
         }
     }

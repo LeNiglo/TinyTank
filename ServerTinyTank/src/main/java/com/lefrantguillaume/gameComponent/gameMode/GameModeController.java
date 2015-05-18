@@ -1,6 +1,5 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
-import com.lefrantguillaume.gameComponent.enums.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
 
 import java.util.*;
