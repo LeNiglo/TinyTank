@@ -1,8 +1,8 @@
 package com.lefrantguillaume.gameComponent.playerData.action;
 
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
-import com.lefrantguillaume.networkComponent.messages.msg.MessageMove;
-import com.lefrantguillaume.networkComponent.messages.msg.MessageShoot;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageMove;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageShoot;
 
 import java.util.ArrayList;
 import java.util.List;

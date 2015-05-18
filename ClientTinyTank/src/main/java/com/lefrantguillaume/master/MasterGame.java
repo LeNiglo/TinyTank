@@ -7,8 +7,8 @@ import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.networkComponent.NetworkCall;
-import com.lefrantguillaume.networkComponent.NetworkMessage;
+import com.lefrantguillaume.networkComponent.networkGame.NetworkCall;
+import com.lefrantguillaume.networkComponent.networkGame.NetworkMessage;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 

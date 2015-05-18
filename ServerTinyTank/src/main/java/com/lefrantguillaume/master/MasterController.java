@@ -15,7 +15,6 @@ import com.lefrantguillaume.utils.CallbackTask;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.io.FileReader;
@@ -74,7 +73,7 @@ public class MasterController extends Observable implements Observer {
     }
 
     public void loadMaps() {
-        WindowController.addConsoleMsg("load maps");
+        WindowController.addConsoleMsg("load maps from : " + System.getProperty("user.dir") + "/maps");
         this.gameController.getMapController().clearMaps();
         File dir = new File("maps");
         File[] files = dir.listFiles(new FilenameFilter() {
@@ -99,8 +98,7 @@ public class MasterController extends Observable implements Observer {
     public void parseJsonMap(File file, String name) {
         try {
             FileReader reader = new FileReader(file);
-            JSONParser parser = new JSONParser();
-            JSONObject object = (JSONObject) parser.parse(reader);
+            JSONObject object = (reader.);
             Map map = new Map();
             map.setFileNameNoExt(name);
             map.setName((String) (object.get("name") != null ? object.get("name") : name));

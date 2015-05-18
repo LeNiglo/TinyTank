@@ -6,8 +6,8 @@ import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.animations.EnumInterfaceComponent;
 import com.lefrantguillaume.interfaceComponent.AvailableTank;
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
-import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerNew;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePlayerNew;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 

@@ -3,6 +3,7 @@ package com.lefrantguillaume.graphicsComponent.graphics;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
+import com.lefrantguillaume.networkComponent.networkData.DataServer;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
@@ -60,8 +61,6 @@ public class WindowLogin extends BasicGameState {
     }
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
-        //TODO animation in background ? a better UI plz
-        //TODO SCALE THIS PLLZZZZZZ
         g.setBackground(org.newdawn.slick.Color.white);
         this.logo.draw(320, 100, 0.5f);
         this.fLogin.render(gameContainer, g);
@@ -88,6 +87,9 @@ public class WindowLogin extends BasicGameState {
 
             } else {
                 Debug.debug("Login :\nUsername = " + this.fLogin.getText() + "\nPassword = " + this.fPassword.getText());
+
+                Object res = DataServer.authentification(this.fLogin.getText(), this.fPassword.getText());
+                Debug.debug(res.toString());
             }
         } else if (key == Input.KEY_TAB) {
             if (this.fLogin.hasFocus())

@@ -1,10 +1,10 @@
-package com.lefrantguillaume.networkComponent;
+package com.lefrantguillaume.networkComponent.networkGame;
 
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
 
 import java.io.IOException;
 import java.util.Observable;

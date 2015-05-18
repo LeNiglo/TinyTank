@@ -6,11 +6,11 @@ import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.gameObject.obstacles.EnumObstacles;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
-import com.lefrantguillaume.networkComponent.messages.msg.MessageMove;
-import com.lefrantguillaume.networkComponent.messages.msg.MessagePlayerDelete;
-import com.lefrantguillaume.networkComponent.messages.msg.MessagePutObstacle;
-import com.lefrantguillaume.networkComponent.messages.msg.MessageShoot;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageMove;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePlayerDelete;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePutObstacle;
+import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageShoot;
 import org.newdawn.slick.Input;
 
 import java.util.Observable;

@@ -1,7 +1,7 @@
-package com.lefrantguillaume.networkComponent;
+package com.lefrantguillaume.networkComponent.networkGame;
 
 import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
 
 import java.util.ArrayList;
 import java.util.List;

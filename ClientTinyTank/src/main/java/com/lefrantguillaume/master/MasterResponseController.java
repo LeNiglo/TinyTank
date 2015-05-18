@@ -1,7 +1,7 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.networkComponent.NetworkMessage;
-import com.lefrantguillaume.networkComponent.messages.MessageModel;
+import com.lefrantguillaume.networkComponent.networkGame.NetworkMessage;
+import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
 
 import java.util.Observable;
 import java.util.Observer;

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.networkComponent.messages;
+package com.lefrantguillaume.networkComponent.networkGame.messages;
 
 /**
  * Created by andres_k on 13/03/2015.
