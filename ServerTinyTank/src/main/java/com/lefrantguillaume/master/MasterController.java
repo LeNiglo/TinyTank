@@ -5,56 +5,48 @@ import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.game.GameController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.network.TinyServer;
-import com.lefrantguillaume.network.master.MasterServer;
-import com.lefrantguillaume.userInterface.UserInterface;
-import com.lefrantguillaume.userInterface.GraphicalUserInterface;
+import com.lefrantguillaume.networkComponent.gameServer.GameServer;
+import com.lefrantguillaume.networkComponent.dataServer.DataServer;
 import com.lefrantguillaume.userInterface.ConsoleUserInterface;
+import com.lefrantguillaume.userInterface.GraphicalUserInterface;
+import com.lefrantguillaume.userInterface.UserInterface;
 import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
+import com.lefrantguillaume.utils.StringTools;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Styve on 08/05/2015.
  */
 public class MasterController extends Observable implements Observer {
-    private MasterServer masterServer;
+    private DataServer dataServer;
     private GameController gameController = null;
-    private TinyServer server;
+    private GameServer server;
     private UserInterface userInterface = null;
     private boolean gameStarted = false;
 
     public MasterController(String type) throws JSONException {
         /*
-        TODO Get this from the master.
+        TODO Get this from the data.
         */
-        String content = null;
-        File file = new File("tanks.json");
-        try {
-            FileReader reader = new FileReader(file);
-            char[] chars = new char[(int) file.length()];
-            reader.read(chars);
-            content = new String(chars);
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String content = StringTools.readFile("tanks.json");
         /*
         Until here
          */
         this.initInterface(type);
         this.gameController = new GameController(new JSONObject(content));
-        this.masterServer = new MasterServer();
+        this.dataServer = new DataServer();
         this.gameController.addObserver(this);
-        this.server = new TinyServer();
+        this.server = new GameServer();
         this.server.addObserver(this);
         this.loadMaps();
     }
@@ -85,6 +77,7 @@ public class MasterController extends Observable implements Observer {
         if (files != null && files.length > 0) {
             for (File file : files) {
                 String name = file.getName().substring(0, file.getName().lastIndexOf("."));
+                WindowController.addConsoleMsg("mapName: " + name);
                 if (new File("maps/" + name + ".jpg").exists()) {
                     this.parseJsonMap(file, name);
                 } else {
@@ -97,11 +90,10 @@ public class MasterController extends Observable implements Observer {
 
     public void parseJsonMap(File file, String name) {
         try {
-            FileReader reader = new FileReader(file);
-            JSONObject object = (reader.);
+            JSONObject object = new JSONObject(StringTools.readFile(file.getAbsolutePath()));
             Map map = new Map();
             map.setFileNameNoExt(name);
-            map.setName((String) (object.get("name") != null ? object.get("name") : name));
+            map.setName(object.get("name") != null ? object.getString("name") : name);
             map.setFilePath(file.getAbsolutePath());
             map.setFileName(file.getName());
             map.setFileLength(file.length());
@@ -109,9 +101,9 @@ public class MasterController extends Observable implements Observer {
             map.setImgName(file.getName());
             map.setImgPath(file.getPath());
             map.setImgLength(file.length());
-            this.gameController.getMapController().addMap(map);
+            this.gameController.addMap(map);
         } catch (Exception e) {
-            System.out.println("Parse JSON: " + e.getMessage());
+            System.out.println("Error in parseJson: " + e.getMessage());
         }
     }
 
@@ -121,9 +113,9 @@ public class MasterController extends Observable implements Observer {
                 public void run() {
                     new CallbackTask(new Runnable() {
                         public void run() {
-                            WindowController.addConsoleMsg("Connecting to the master server...");
-                            if (masterServer.initServer()) {
-                                WindowController.addConsoleMsg("Connected to master server !");
+                            WindowController.addConsoleMsg("Connecting to the data server...");
+                            if (dataServer.initServer()) {
+                                WindowController.addConsoleMsg("Connected to data server !");
                             }
                         }
                     }, new Callback() {
@@ -160,7 +152,7 @@ public class MasterController extends Observable implements Observer {
     public void stopGame() {
         gameStarted = false;
         userInterface.gameStopped();
-        masterServer.stopServer();
+        dataServer.stopServer();
         gameController.onGameStop();
     }
 
@@ -180,10 +172,10 @@ public class MasterController extends Observable implements Observer {
         } else if (task.getKey().equals(EnumController.NETWORK)) {
             this.server.doTask(o, task.getValue());
         } else if (task.getKey().equals(EnumController.MASTER_SERVER)) {
-            this.masterServer.doTask(o, task.getValue());
+            this.dataServer.doTask(o, task.getValue());
             this.userInterface.refreshPlayers();
         } else if (task.getKey().equals(EnumController.MASTER_CONTROLLER)) {
-            this.doTask(o, arg);
+            this.doTask(o, task.getValue());
         }
     }
 

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.master;
+package com.lefrantguillaume.networkComponent.dataServer;
 
 /**
  * Created by Styve on 24/03/2015.
@@ -30,7 +30,7 @@ class DelUserSnd {
     private String serverId;
 
     DelUserSnd() {}
-    DelUserSnd(String serverId, String username) {
+    public DelUserSnd(String serverId, String username) {
         this.serverId = serverId;
         this.username = username;
     }

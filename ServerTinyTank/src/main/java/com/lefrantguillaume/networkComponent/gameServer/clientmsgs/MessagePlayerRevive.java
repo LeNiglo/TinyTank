@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.clientmsgs;
+package com.lefrantguillaume.networkComponent.gameServer.clientmsgs;
 
 /**
  * Created by andres_k on 28/04/2015.

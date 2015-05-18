@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.networkComponent.gameServer;
 
 import java.io.*;
 import java.net.ServerSocket;

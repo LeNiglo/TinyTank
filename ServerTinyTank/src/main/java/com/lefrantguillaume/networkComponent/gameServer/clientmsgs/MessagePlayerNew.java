@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.clientmsgs;
+package com.lefrantguillaume.networkComponent.gameServer.clientmsgs;
 
 
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;

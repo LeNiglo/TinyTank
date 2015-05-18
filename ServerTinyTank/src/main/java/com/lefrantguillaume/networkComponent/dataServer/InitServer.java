@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.master;
+package com.lefrantguillaume.networkComponent.dataServer;
 
 /**
  * Created by Styve on 10/03/2015.

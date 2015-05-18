@@ -1,11 +1,11 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.networkComponent.gameServer;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.master.EnumController;
-import com.lefrantguillaume.network.clientmsgs.*;
+import com.lefrantguillaume.networkComponent.gameServer.clientmsgs.*;
 import com.lefrantguillaume.utils.ServerConfig;
 import javafx.util.Pair;
 
@@ -14,21 +14,23 @@ import java.util.Observable;
 /**
  * Created by Styve on 10/03/2015.
  */
-public class TinyServer extends Observable {
+public class GameServer extends Observable {
     private Server server = new Server();
 
-    public TinyServer() {
+    public GameServer() {
         NetworkRegister.register(server);
     }
 
     // FUNCTIONS
 
-    public void doTask(Observable o, Object arg){
-        if (arg instanceof MessageModel) {
-            this.server.sendToAllTCP(arg);
-        } else if (arg instanceof MessageData) {
-            Connection connection = ((MessageData) arg).getConnection();
-            this.server.sendToTCP(connection.getID(), ((MessageData) arg).getRequest());
+    public void doTask(Observable o, Object arg) {
+        if (arg instanceof Request) {
+            Connection connection = ((Request) arg).getConnection();
+            if (connection == null) {
+                this.server.sendToAllTCP(arg);
+            } else {
+                this.server.sendToTCP(connection.getID(), ((Request) arg).getRequest());
+            }
         }
     }
 
@@ -42,16 +44,15 @@ public class TinyServer extends Observable {
 
                 public void received(Connection connection, Object object) {
                     if (object instanceof MessageModel) {
-                        MessageData msg = new MessageData(connection, (MessageModel) object);
-                        TinyServer.this.setChanged();
-                        TinyServer.this.notifyObservers(new Pair<>(EnumController.GAME, msg));
+                        Request msg = new Request(connection, (MessageModel) object);
+                        GameServer.this.setChanged();
+                        GameServer.this.notifyObservers(new Pair<>(EnumController.GAME, msg));
                     }
                 }
 
-                // TODO: à quoi ça sert ça ?
                 public void disconnected(Connection connection) {
-                    TinyServer.this.setChanged();
-                    TinyServer.this.notifyObservers(new Pair<>(EnumController.UNKNOWN, new MessageData(connection, new MessageDisconnect())));
+                    GameServer.this.setChanged();
+                    GameServer.this.notifyObservers(new Pair<>(EnumController.MASTER_SERVER, new Request(connection, new MessageDisconnect())));
                 }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);

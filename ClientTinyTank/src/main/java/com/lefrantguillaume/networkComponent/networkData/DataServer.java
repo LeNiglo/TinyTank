@@ -55,7 +55,7 @@ public class DataServer {
                 */
             }
         } catch (ClientHandlerException e) {
-            // TODO on the client, display a fatal error if no auth to master
+            // TODO on the client, display a fatal error if no auth to data
             // WindowController.addConsoleMsg("Online server not reachable: " + e.getCause().getMessage());
             return false;
         }

@@ -1,21 +1,21 @@
-package com.lefrantguillaume.network.master;
+package com.lefrantguillaume.networkComponent.dataServer;
 
 /**
- * Created by Styve on 24/03/2015.
+ * Created by Styve on 11/03/2015.
  */
 
-class StopServerRcv {
+class UpdateServerRcv {
     private String name;
     private boolean res;
     private String err;
 
-    StopServerRcv() {}
+    UpdateServerRcv() {}
 
     public String getName() { return name; }
     public boolean getRes() { return res; }
     public String getErr() { return err; }
 
-    public void setName(String name) { this.name = name;}
+    public void setName(String name) { this.name = name; }
     public void setRes(boolean res) { this.res = res; }
     public void setErr(String err) { this.err = err; }
 
@@ -25,11 +25,11 @@ class StopServerRcv {
     }
 }
 
-class StopServerSnd {
+class UpdateServerSnd {
     private String serverId;
 
-    StopServerSnd() {}
-    StopServerSnd(String serverId) { this.serverId = serverId; }
+    UpdateServerSnd() {}
+    public UpdateServerSnd(String serverId) { this.serverId = serverId; }
 
     public String getServerId() { return serverId; }
     public void setServerId(String serverId) { this.serverId = serverId; }

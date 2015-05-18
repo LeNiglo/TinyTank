@@ -3,7 +3,7 @@ package com.lefrantguillaume.gameComponent.target;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
-import com.lefrantguillaume.network.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServer.clientmsgs.MessageModel;
 
 import java.util.*;
 
