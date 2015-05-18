@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.master;
+package com.lefrantguillaume.networkComponent.dataServer;
 
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 
@@ -34,7 +34,7 @@ class SendStatsSnd {
     private List<Player> players;
 
     SendStatsSnd() {}
-    SendStatsSnd(String serverId, List<Player> players) {
+    public SendStatsSnd(String serverId, List<Player> players) {
         this.serverId = serverId;
         this.players = players;
     }

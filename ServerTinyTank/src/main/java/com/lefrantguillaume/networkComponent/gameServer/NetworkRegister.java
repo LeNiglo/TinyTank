@@ -1,10 +1,10 @@
-package com.lefrantguillaume.network;
+package com.lefrantguillaume.networkComponent.gameServer;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
 import com.lefrantguillaume.gameComponent.gameobjects.EnumObjects;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
-import com.lefrantguillaume.network.clientmsgs.*;
+import com.lefrantguillaume.networkComponent.gameServer.clientmsgs.*;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class NetworkRegister {
         kryo.register(MessageShoot.class);
         kryo.register(MessageSpell.class);
         kryo.register(MessageChangeTeam.class);
-        kryo.register(MessageDelete.class);
+        kryo.register(MessagePlayerDelete.class);
         kryo.register(MessagePlayerNew.class);
         kryo.register(MessagePlayerUpdateState.class);
         kryo.register(MessagePlayerUpdatePosition.class);

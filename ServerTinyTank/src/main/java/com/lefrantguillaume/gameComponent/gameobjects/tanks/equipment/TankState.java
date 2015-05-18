@@ -2,7 +2,7 @@ package com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment;
 
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
-import com.lefrantguillaume.network.clientmsgs.MessagePlayerUpdateState;
+import com.lefrantguillaume.networkComponent.gameServer.clientmsgs.MessagePlayerUpdateState;
 
 
 /**

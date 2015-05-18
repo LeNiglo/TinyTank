@@ -1,4 +1,4 @@
-package com.lefrantguillaume.network.master;
+package com.lefrantguillaume.networkComponent.dataServer;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
@@ -22,11 +22,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Styve on 10/03/2015.
  */
-public class MasterServer {
+public class DataServer {
     private String id = null;
     private ScheduledExecutorService updateThread;
 
-    public MasterServer() {
+    public DataServer() {
     }
 
     public void doTask(Observable o, Object arg){
@@ -82,7 +82,7 @@ public class MasterServer {
             if (!output.getRes()) {
                 Log.error("Master server error: " + output.getErr());
             } else {
-                Log.info("Sent alive signal to master server.");
+                Log.info("Sent alive signal to data server.");
             }
         } catch (Exception e) {
             Log.error("Master: " + e.getMessage());

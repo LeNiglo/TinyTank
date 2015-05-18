@@ -1,11 +1,10 @@
 package com.lefrantguillaume.userInterface;
 
-import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.master.EnumController;
-import com.lefrantguillaume.master.MasterController;
-import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.maps.Map;
+import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.MasterController;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
 import javafx.util.Pair;
