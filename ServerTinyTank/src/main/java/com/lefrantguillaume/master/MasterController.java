@@ -68,10 +68,8 @@ public class MasterController extends Observable implements Observer {
         WindowController.addConsoleMsg("load maps from : " + System.getProperty("user.dir") + "/maps");
         this.gameController.getMapController().clearMaps();
         File dir = new File("maps");
-        File[] files = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(".json");
-            }
+        File[] files = dir.listFiles((dir1, filename) -> {
+            return filename.endsWith(".json");
         });
 
         if (files != null && files.length > 0) {

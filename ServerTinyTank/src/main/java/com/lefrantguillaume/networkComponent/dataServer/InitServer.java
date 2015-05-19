@@ -40,8 +40,6 @@ class InitServerSnd {
         this.udpPort = udpPort;
     }
 
-    public InitServerSnd() {}
-
     public String getGameName() { return gameName; }
     public int getTcpPort() { return tcpPort; }
     public int getUdpPort() { return udpPort; }

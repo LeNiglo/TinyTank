@@ -1,9 +1,12 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.networkComponent.networkData.DataServer;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
@@ -80,16 +83,33 @@ public class WindowLogin extends BasicGameState {
         if (key == Input.KEY_RETURN) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
 
+                // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                //TODO this is supposed to be the result of the login action. the "_id" variable.
                 CurrentUser.setPseudo(this.fLogin.getText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
 
             } else {
-                Debug.debug("Login :\nUsername = " + this.fLogin.getText() + "\nPassword = " + this.fPassword.getText());
+                try {
+                    Pair<Boolean, String> p = DataServer.authentification(this.fLogin.getText(), this.fPassword.getText());
 
-                Object res = DataServer.authentification(this.fLogin.getText(), this.fPassword.getText());
-                Debug.debug(res.toString());
+                    if (p.getV1()) {
+
+                        JSONObject object = new JSONObject(p.getV2());
+
+                        Debug.debug("my id = " + object.get("_id"));
+
+                        CurrentUser.setId(object.get("_id").toString());
+                        CurrentUser.setPseudo(object.get("username").toString());
+                        this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+                    } else {
+
+                        // TODO Display message on client.
+                        Debug.debug("Error Login : " + p.getV2());
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else if (key == Input.KEY_TAB) {
             if (this.fLogin.hasFocus())
