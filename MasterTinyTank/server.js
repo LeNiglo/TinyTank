@@ -56,6 +56,7 @@ app.use(cors({
 	allowedOrigins: [
 		"http://localhost",
 		"http://tinytank.dev",
+		"http://tinytank.com",
 		"http://lefrantguillaume.com",
 		"http://tinytank.lefrantguillaume.com"
 	]
