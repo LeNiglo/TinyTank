@@ -4,6 +4,8 @@ import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.slick2d.NiftyBasicGameState;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -38,35 +40,35 @@ public class WindowInterface extends BasicGameState {
         return this.id;
     }
 
-    public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
+    {
         Debug.debug("init Home");
-        this.container = gameContainer;
-        this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
         this.animatorData.init();
         this.interfaceController.initAnimator(this.animatorData.getBackgroundAnimators(), this.animatorData.getButtonAnimators(),
                 this.animatorData.getTankStatAnimators(), this.animatorData.getTankPreviewAnimators());
     }
 
-    @Override
-    public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+    public void enter(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
+        container = gameContainer;
         this.container.setTargetFrameRate(10);
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-    }
 
-    @Override
-    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
 
     }
 
-    public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
+    public void leave(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
+
+    }
+
+    public void render(GameContainer gameContainer, StateBasedGame sbg, Graphics g) throws SlickException {
         this.interfaceController.drawBackground(g);
         this.interfaceController.drawCurrentTankStat(g);
     }
 
-    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
+    public void update(GameContainer gameContainer, StateBasedGame sbg, int i) throws SlickException {
 
     }
 
