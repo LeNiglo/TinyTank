@@ -10,24 +10,24 @@ ClientApi = function(app, db) {
     });
   };
 
-  this.login = function() {
+  this.login = function(req, res) {
     Users.findOne({
-      $or : [{email: req.body.login.toLowerCase()}, {username: new RegExp('^'+req.body.login+'$', 'i')}]
+      $or : [{email: req.body.login.toString().toLowerCase()}, {username: new RegExp('^'+req.body.login.toString()+'$', 'i')}]
     }, function(error, exists) {
 
       if (!exists) {
         res.status(200).json({name: "login", res: null, err: "Account doesn't exists."});
       } else {
-        bcrypt.compare(req.body.password, exists.password, function(err, res) {
+        bcrypt.compare(req.body.password.toString(), exists.password, function(err, result) {
           if (err) {
             res.status(200).json({name: "login", res: null, err: err});
-          } else if (res == false) {
+          } else if (result == false) {
             res.status(200).json({name: "login", res: null, err: "Passwords didn't match."});
           } else {
-            if (!req.body.secret.equals(app.get('jwtTokenSecret'))) {
+            if (!app.get('jwtTokenSecret') == req.body.secret.toString()) {
               res.status(200).json({name: "login", res: null, err: "You are a cheater."});
             } else {
-              res.status(200).json({name: "login", res: exists, err: null});
+              res.status(200).json({name: "login", res: JSON.stringify(exists), err: null});
             }
           }
         });

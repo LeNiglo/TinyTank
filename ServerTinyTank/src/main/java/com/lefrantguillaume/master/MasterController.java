@@ -5,8 +5,8 @@ import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.game.GameController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.networkComponent.gameServer.GameServer;
 import com.lefrantguillaume.networkComponent.dataServer.DataServer;
+import com.lefrantguillaume.networkComponent.gameServer.GameServer;
 import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.userInterface.GraphicalUserInterface;
 import com.lefrantguillaume.userInterface.UserInterface;
@@ -18,7 +18,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -68,10 +67,8 @@ public class MasterController extends Observable implements Observer {
         WindowController.addConsoleMsg("load maps from : " + System.getProperty("user.dir") + "/maps");
         this.gameController.getMapController().clearMaps();
         File dir = new File("maps");
-        File[] files = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(".json");
-            }
+        File[] files = dir.listFiles((dir1, filename) -> {
+            return filename.endsWith(".json");
         });
 
         if (files != null && files.length > 0) {

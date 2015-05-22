@@ -56,6 +56,7 @@ app.use(cors({
 	allowedOrigins: [
 		"http://localhost",
 		"http://tinytank.dev",
+		"http://tinytank.com",
 		"http://lefrantguillaume.com",
 		"http://tinytank.lefrantguillaume.com"
 	]
@@ -87,5 +88,4 @@ var server = app.listen(process.env.PORT || 1337, function () {
 	var host = server.address().address
 	var port = server.address().port
 
-	console.log('Example app listening at http://%s:%s', host, port)
 })
