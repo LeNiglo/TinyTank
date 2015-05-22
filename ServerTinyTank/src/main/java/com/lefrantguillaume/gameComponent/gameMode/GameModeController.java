@@ -1,13 +1,14 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
 import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
+import javafx.util.Pair;
 
 import java.util.*;
 
 /**
  * Created by andres_k on 13/05/2015.
  */
-public class GameModeController implements Observer {
+public class GameModeController{
     private List<GameMode> gameModes;
     private EnumGameMode currentGameMode;
 
@@ -18,9 +19,8 @@ public class GameModeController implements Observer {
     }
 
     // FUNCTIONS
-    @Override
-    public void update(Observable o, Object arg) {
-        this.getCurrentMode().update(o, arg);
+    public void doTask(Pair<EnumAction, Object> task) {
+        this.getCurrentMode().doTask(task);
     }
 
     public UUID isWinnerTeam(){

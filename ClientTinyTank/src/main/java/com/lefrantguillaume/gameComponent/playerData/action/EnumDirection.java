@@ -1,12 +1,12 @@
 package com.lefrantguillaume.gameComponent.playerData.action;
 
-import org.newdawn.slick.Input;
+import com.lefrantguillaume.graphicsComponent.input.EnumInput;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public enum EnumDirection {
-    NOTHING(0, 0), UP(Input.KEY_UP, 270), DOWN(Input.KEY_DOWN, 90), LEFT(Input.KEY_LEFT, 180), RIGHT(Input.KEY_RIGHT, 0);
+    NOTHING(-1, 0), UP(EnumInput.MOVE_UP.getIndex(), 270), DOWN(EnumInput.MOVE_DOWN.getIndex(), 90), LEFT(EnumInput.MOVE_LEFT.getIndex(), 180), RIGHT(EnumInput.MOVE_RIGHT.getIndex(), 0);
 
     private final int value;
     private final float angle;

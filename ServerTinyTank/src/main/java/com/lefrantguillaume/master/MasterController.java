@@ -5,8 +5,8 @@ import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.game.GameController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.networkComponent.gameServer.GameServer;
 import com.lefrantguillaume.networkComponent.dataServer.DataServer;
+import com.lefrantguillaume.networkComponent.gameServer.GameServer;
 import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.userInterface.GraphicalUserInterface;
 import com.lefrantguillaume.userInterface.UserInterface;
@@ -18,7 +18,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -166,6 +165,7 @@ public class MasterController extends Observable implements Observer {
         Pair<EnumController, Object> task = (Pair<EnumController, Object>) arg;
 
         if (task.getKey().equals(EnumController.GAME)) {
+            WindowController.addConsoleMsg("bip");
             this.gameController.doTask(o, task.getValue());
         } else if (task.getKey().equals(EnumController.NETWORK)) {
             this.server.doTask(o, task.getValue());

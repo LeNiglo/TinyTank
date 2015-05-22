@@ -1,6 +1,8 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -16,9 +18,9 @@ public class WindowAccount extends BasicGameState {
     private Image background = null;
     private int id;
 
-    public WindowAccount(int id) {
+    public WindowAccount(int id) throws JSONException {
         this.id = id;
-        this.input = new InputCheck();
+        this.input = new InputCheck(StringTools.readFile("configInput.json"));
     }
 
     @Override

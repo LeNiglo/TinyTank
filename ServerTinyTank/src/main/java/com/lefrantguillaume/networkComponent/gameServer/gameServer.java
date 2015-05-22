@@ -25,11 +25,12 @@ public class GameServer extends Observable {
 
     public void doTask(Observable o, Object arg) {
         if (arg instanceof Request) {
+            MessageModel message = ((Request) arg).getRequest();
             Connection connection = ((Request) arg).getConnection();
             if (connection == null) {
-                this.server.sendToAllTCP(arg);
+                this.server.sendToAllTCP(message);
             } else {
-                this.server.sendToTCP(connection.getID(), ((Request) arg).getRequest());
+                this.server.sendToTCP(connection.getID(), message);
             }
         }
     }
@@ -44,9 +45,9 @@ public class GameServer extends Observable {
 
                 public void received(Connection connection, Object object) {
                     if (object instanceof MessageModel) {
-                        Request msg = new Request(connection, (MessageModel) object);
+                        Request task = new Request(connection, (MessageModel) object);
                         GameServer.this.setChanged();
-                        GameServer.this.notifyObservers(new Pair<>(EnumController.GAME, msg));
+                        GameServer.this.notifyObservers(new Pair<>(EnumController.GAME, task));
                     }
                 }
 

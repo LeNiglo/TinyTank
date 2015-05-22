@@ -11,6 +11,7 @@ import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageMov
 import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePlayerDelete;
 import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePutObstacle;
 import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageShoot;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Input;
 
 import java.util.Observable;
@@ -19,11 +20,24 @@ import java.util.Observable;
  * Created by andres_k on 11/03/2015.
  */
 public class InputCheck extends Observable {
+    private InputData inputData;
 
-    public int gestInput(GameController gameController, int key, EnumInput mode, int posX, int posY) {
+    public InputCheck(String configsFile) throws JSONException {
+        this.inputData = new InputData(configsFile);
+    }
+
+    public int checkInput(GameController gameController, int key, EnumInput mode, int posX, int posY) {
         MessageModel request = null;
+        String keyName;
 
-        if (Input.KEY_ESCAPE == key) {
+        if (key == -2) {
+            keyName = "MOUSE_LEFT_BUTTON";
+        } else if (key == -3) {
+            keyName = "MOUSE_RIGHT_BUTTON";
+        } else {
+            keyName = Input.getKeyName(key);
+        }
+        if (keyName.equals(this.inputData.getInputValue(EnumInput.ESCAPE)) && mode == EnumInput.RELEASED) {
             request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
             CurrentUser.setInGame(false);
             this.setChanged();
@@ -32,7 +46,7 @@ public class InputCheck extends Observable {
         } else {
             Player player = gameController.getPlayer(CurrentUser.getId());
             if (player != null && player.isAlive()) {
-                request = createMessageByInput(gameController.getCollisionController(), player, key, mode, posX, posY);
+                request = createMessageByInput(gameController.getCollisionController(), player, keyName, mode, posX, posY);
             }
             if (request != null) {
                 this.setChanged();
@@ -42,61 +56,22 @@ public class InputCheck extends Observable {
         }
     }
 
-    public MessageModel createMessageByInput(CollisionController collisionController, Player player, int key, EnumInput mode, int posX, int posY) {
+    public MessageModel createMessageByInput(CollisionController collisionController, Player player, String keyName, EnumInput mode, int posX, int posY) {
         MessageModel message = null;
 
-        if (key == Input.KEY_DOWN || key == Input.KEY_UP || key == Input.KEY_LEFT || key == Input.KEY_RIGHT) {
+        if (keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_UP)) || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_DOWN))
+                || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_RIGHT)) || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_LEFT))) {
             if (mode == EnumInput.PRESSED) {
-                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), key, true);
+                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), true);
             } else {
-                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), key, false);
+                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), false);
             }
-        } else if (key == Input.MOUSE_LEFT_BUTTON && mode == EnumInput.RELEASED) {
+        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SHOOT)) && mode == EnumInput.RELEASED) {
             message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
-        } else if (key == Input.KEY_B && mode == EnumInput.RELEASED) {
+        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
             Tuple<Float, Float, Float> boxValues = player.predictCreateBox(collisionController);
             message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumObstacles.WALL_WOOD, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
         }
         return message;
     }
-/*
-
-    public int keyCheck(Player player, int key, EnumInput mode) {
-        MessageModel request = null;
-
-        if (Input.KEY_ESCAPE == key) {
-            request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
-            CurrentUser.setInGame(false);
-            this.setChanged();
-            this.notifyObservers(request);
-            return -1;
-        } else if (player.isAlive()) {
-            request = MessageFactory.createObject(key, mode);
-            if (request != null) {
-                this.setChanged();
-                this.notifyObservers(request);
-            }
-        }
-        return 0;
-    }
-
-    public int mouseClickCheck(Player player, int x, int y, EnumInput mode) {
-        MessageModel request = null;
-
-        if (player != null && player.isAlive()) {
-            float newAngle = player.getTank().getTankState().getGunAngle();
-            if (player.getTank().getTankWeapon().getShotType() == EnumShots.MACHINE_GUN) {
-                newAngle += RandomTools.getInt(15) - 7.5;
-                //TODO mettre cet angle dans les variables de tank
-            }
-            request = MessageFactory.createObject(Input.MOUSE_LEFT_BUTTON, mode, x, y, newAngle);
-            if (request != null) {
-                this.setChanged();
-                this.notifyObservers(request);
-                return 0;
-            }
-        }
-        return -1;
-    }
-    */
 }

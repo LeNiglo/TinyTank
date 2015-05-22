@@ -2,6 +2,7 @@ package com.lefrantguillaume.graphicsComponent.graphics;
 
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,7 +15,7 @@ import java.util.Observer;
  */
 public class Windows extends StateBasedGame {
 
-    public Windows(String name, List<Observer> observers, InterfaceController interfaceController, GameController gameController) {
+    public Windows(String name, List<Observer> observers, InterfaceController interfaceController, GameController gameController) throws JSONException {
         super(name);
         this.addState(new WindowLogin(EnumWindow.LOGIN.getValue()));
         this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue()));

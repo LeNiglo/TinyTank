@@ -9,6 +9,7 @@ import com.lefrantguillaume.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.networkComponent.networkGame.NetworkCall;
 import com.lefrantguillaume.networkComponent.networkGame.NetworkMessage;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
@@ -59,10 +60,12 @@ public class MasterGame {
             this.startGame();
         } catch (SlickException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
-    private void startGame() throws SlickException {
+    private void startGame() throws SlickException, JSONException {
         List<Observer> observers = new ArrayList<Observer>();
         observers.add(this.genericRequestObserver);
         this.masterResponseController.addObserver(this.interfaceController);

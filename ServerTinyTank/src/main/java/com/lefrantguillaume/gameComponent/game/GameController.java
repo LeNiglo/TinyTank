@@ -41,7 +41,6 @@ public class GameController extends Observable {
         this.mapController = new MapController();
         this.targets = new Targets();
         this.gameModeController = new GameModeController();
-        this.addObserver(this.gameModeController);
     }
 
     // FUNCTIONS
@@ -91,9 +90,6 @@ public class GameController extends Observable {
                 MessagePlayerDelete message = (MessagePlayerDelete) received;
                 System.out.println(message.getPseudo() + " a envoyé un message DELETE");
                 this.playerDelete(message);
-
-                this.setChanged();
-                this.notifyObservers(new Pair<>(EnumController.MASTER_SERVER, received));
             } else if (received instanceof MessageDisconnect) {
                 WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
                 this.playerDisconnect(connection);
@@ -103,30 +99,28 @@ public class GameController extends Observable {
                 this.processCollision(message);
             } else if (received instanceof MessagePutObstacle) {
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, received));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
             } else if (received instanceof MessagePlayerUpdatePosition) {
                 MessagePlayerUpdatePosition message = (MessagePlayerUpdatePosition) received;
                 System.out.println("Update: " + message.getX() + " / " + message.getY());
-
-                Request task = new Request(connection, received);
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, task));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, received)));
             } else if (received instanceof MessageMove) {
                 MessageMove message = (MessageMove) received;
                 System.out.println("direction recue: " + message.getDirection() + " // move : " + (message.getMove() ? "true" : "false"));
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, received));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
                 //server.sendToAllTCP(message);
             } else if (received instanceof MessageChangeTeam) {
                 MessageChangeTeam message = (MessageChangeTeam) received;
                 System.out.println(message.getPseudo() + " change de team.");
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, received));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
             } else if (received instanceof MessageSpell) {
                 MessageSpell message = (MessageSpell) received;
                 System.out.println("sort de " + message.getPseudo() + ": " + message.getX() + ", " + message.getY());
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, received));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
             } else if (received instanceof MessageNeedMap) {
                 MessageNeedMap message = (MessageNeedMap) received;
                 System.out.println("Il a besoin de la map");
@@ -170,8 +164,8 @@ public class GameController extends Observable {
             tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
             tmpMessage.setId(entry.getValue().getId());
             tmpMessage.setPseudo(entry.getValue().getPseudo());
-            tmpMessage.setPosX(-50f);
-            tmpMessage.setPosY(-50f);
+            tmpMessage.setPosX(50);
+            tmpMessage.setPosY(50);
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumController.NETWORK, new Request(connection, tmpMessage)));
         }
