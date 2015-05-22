@@ -1,5 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 /**
@@ -48,6 +50,6 @@ public class GameMode{
         return this.maxPlayer;
     }
 
-    public void update(Observable o, Object arg) {
+    public void doTask(Pair<EnumAction, Object> task) {
     }
 }

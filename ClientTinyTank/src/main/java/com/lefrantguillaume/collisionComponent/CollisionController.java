@@ -46,8 +46,10 @@ public class CollisionController {
 
     public void deleteCollisionObject(UUID id) {
         for (int i = 0; i < this.items.size(); ++i) {
-            if (this.items.get(i).getId().equals(id))
+            if (this.items.get(i).getId().equals(id)) {
                 this.items.remove(i);
+                --i;
+            }
         }
     }
 

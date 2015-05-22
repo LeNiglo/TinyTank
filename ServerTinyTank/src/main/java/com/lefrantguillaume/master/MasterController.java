@@ -168,6 +168,7 @@ public class MasterController extends Observable implements Observer {
         Pair<EnumController, Object> task = (Pair<EnumController, Object>) arg;
 
         if (task.getKey().equals(EnumController.GAME)) {
+            WindowController.addConsoleMsg("bip");
             this.gameController.doTask(o, task.getValue());
         } else if (task.getKey().equals(EnumController.NETWORK)) {
             this.server.doTask(o, task.getValue());

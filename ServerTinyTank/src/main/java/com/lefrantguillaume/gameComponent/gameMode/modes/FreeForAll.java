@@ -5,7 +5,6 @@ import com.lefrantguillaume.gameComponent.gameMode.GameMode;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
 import javafx.util.Pair;
 
-import java.util.Observable;
 import java.util.UUID;
 
 /**
@@ -30,8 +29,7 @@ public class FreeForAll extends GameMode {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        Pair<EnumAction, Object> task = (Pair<EnumAction, Object>) arg;
+    public void doTask(Pair<EnumAction, Object> task) {
 
         if (task.getKey().equals(EnumAction.KILL)) {
             UUID teamId = (UUID) task.getValue();

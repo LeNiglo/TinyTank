@@ -2,8 +2,10 @@ package com.lefrantguillaume.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.networkComponent.networkData.DataServer;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.*;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
@@ -26,9 +28,9 @@ public class WindowLogin extends BasicGameState {
     private Font font = null;
 
 
-    public WindowLogin(int id) {
+    public WindowLogin(int id) throws JSONException {
         this.id = id;
-        this.input = new InputCheck();
+        this.input = new InputCheck(StringTools.readFile("configInput.json"));
 
     }
 
