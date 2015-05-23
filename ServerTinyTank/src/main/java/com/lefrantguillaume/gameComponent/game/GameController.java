@@ -104,7 +104,7 @@ public class GameController extends Observable {
                 MessagePlayerUpdatePosition message = (MessagePlayerUpdatePosition) received;
                 System.out.println("Update: " + message.getX() + " / " + message.getY());
                 setChanged();
-                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, received)));
+                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
             } else if (received instanceof MessageMove) {
                 MessageMove message = (MessageMove) received;
                 System.out.println("direction recue: " + message.getDirection() + " // move : " + (message.getMove() ? "true" : "false"));
@@ -154,21 +154,23 @@ public class GameController extends Observable {
     }
 
     public void playerConnect(MessagePlayerNew message, Connection connection) {
-        message.setPosX(50f);
-        message.setPosY(50f);
-        WindowController.addConsoleMsg("new Player: " + message.getId());
-        this.targets.addPlayer(message.getId(), new Player(message.getId(), message.getPseudo(), this.tankConfigData.getTank(message.getEnumTanks()), connection));
         WindowController.addConsoleMsg("nombre de joueurs: " + this.targets.getPlayers().size());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-            MessagePlayerNew tmpMessage = new MessagePlayerNew(message);
+            MessagePlayerNew tmpMessage = new MessagePlayerNew();
             tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getTankType());
             tmpMessage.setId(entry.getValue().getId());
             tmpMessage.setPseudo(entry.getValue().getPseudo());
             tmpMessage.setPosX(50);
             tmpMessage.setPosY(50);
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.NETWORK, new Request(connection, tmpMessage)));
+            this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
         }
+        WindowController.addConsoleMsg("new Player: " + message.getId());
+        message.setPosX(50f);
+        message.setPosY(50f);
+        this.targets.addPlayer(message.getId(), new Player(message.getId(), message.getPseudo(), this.tankConfigData.getTank(message.getEnumTanks()), connection));
+        this.setChanged();
+        this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(message)));
     }
 
     public void playerDisconnect(Connection connection) {
