@@ -30,4 +30,5 @@ sudo chown tinytank -R *
 sudo service tinytankdata start
 cd $current
 sudo service nginx restart
+rm -f /opt/tinytank/DataTinyTank.tar.gz /opt/tinytank/web/WebTinyTank.tar.gz
 echo "There you go :)"
