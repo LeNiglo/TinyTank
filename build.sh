@@ -12,7 +12,7 @@ sudo tar -zxf WebTinyTank.tar.gz
 cd bundle/programs/server/
 sudo npm install
 cd /opt/tinytank
-sudo chown tinytank -R *
+sudo chown tinytank -R /opt/tinytank
 sudo service tinytankweb start
 cd $current
 echo "Building Data"
@@ -26,7 +26,7 @@ sudo mv DataTinyTank data
 cd data
 sudo npm install
 cd /opt/tinytank
-sudo chown tinytank -R *
+sudo chown tinytank -R /opt/tinytank
 sudo service tinytankdata start
 cd $current
 sudo service nginx restart
