@@ -1,24 +1,27 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
-import com.lefrantguillaume.networkComponent.networkData.DataServer;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.lwjglslick.input.LwjglInputSystem;
+import de.lessvoid.nifty.nulldevice.NullInputSystem;
+import de.lessvoid.nifty.nulldevice.NullSoundDevice;
+import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
+import de.lessvoid.nifty.spi.input.InputSystem;
+import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.newdawn.slick.*;
-import org.newdawn.slick.gui.TextField;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-
-import java.util.UUID;
 
 
 /**
  * Created by andres_k on 10/03/2015.
  */
+/*
 public class WindowLogin extends BasicGameState {
     private GameContainer container;
     private StateBasedGame stateGame;
@@ -123,4 +126,51 @@ public class WindowLogin extends BasicGameState {
         }
     }
 
+}
+*/
+
+
+class WindowLogin extends BasicGameState {
+    private InputCheck input;
+    private int id;
+
+    private Nifty nifty;
+
+    public WindowLogin(int id) throws JSONException {
+        this.id = id;
+        this.input = new InputCheck(StringTools.readFile("configInput.json"));
+
+    }
+
+    public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        try {
+            InputSystem input = new LwjglInputSystem();
+            ((LwjglInputSystem)input).startup();
+            nifty = new Nifty(new LwjglRenderDevice(), new NullSoundDevice(), new NullInputSystem(), new AccurateTimeProvider());
+
+            nifty.loadStyleFile("nifty-default-styles.xml");
+            nifty.loadControlFile("nifty-default-controls.xml");
+            nifty.fromXml("assets/interface/test.xml", "start");
+            nifty.validateXml("assets/interface/test.xml");
+
+            nifty.gotoScreen("start");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        nifty.update();
+    }
+
+    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        SlickCallable.enterSafeBlock();
+        nifty.render(false);
+        SlickCallable.leaveSafeBlock();
+    }
+
+    @Override
+    public int getID() {
+        return this.id;
+    }
 }
