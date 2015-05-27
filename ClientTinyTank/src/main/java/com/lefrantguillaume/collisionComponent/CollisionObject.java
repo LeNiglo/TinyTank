@@ -7,7 +7,6 @@ import com.lefrantguillaume.Utils.tools.Rectangle;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.UUID;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -15,7 +14,7 @@ import java.util.UUID;
 public class CollisionObject extends Observable implements Observer {
     private final boolean solid;
     private final String idUser;
-    private final UUID id;
+    private final String id;
     private final EnumType type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
@@ -25,7 +24,7 @@ public class CollisionObject extends Observable implements Observer {
     private boolean destroyed = false;
     private boolean alive = true;
 
-    public CollisionObject(boolean solid, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, UUID id, EnumType type, float angle) {
+    public CollisionObject(boolean solid, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, String id, EnumType type, float angle) {
         this.solid = solid;
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
         this.positions = new Pair<Float, Float>(positions);
@@ -123,7 +122,7 @@ public class CollisionObject extends Observable implements Observer {
         return this.sizes.getV2();
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 

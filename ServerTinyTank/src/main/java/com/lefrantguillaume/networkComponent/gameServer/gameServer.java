@@ -68,6 +68,8 @@ public class GameServer extends Observable {
 
     public void stop() {
         server.stop();
+        this.setChanged();
+        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
         WindowController.addConsoleMsg("Server stopped.");
     }
 

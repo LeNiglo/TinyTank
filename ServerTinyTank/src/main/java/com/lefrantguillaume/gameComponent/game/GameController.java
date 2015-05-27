@@ -131,12 +131,12 @@ public class GameController extends Observable {
         }
     }
 
-    public void onGameStart() {
+    public void startGame() {
         WindowController.addConsoleMsg("Game started");
         playable = true;
     }
 
-    public void onGameStop() {
+    public void stopGame() {
         WindowController.addConsoleMsg("Game stopped");
     }
 
@@ -177,7 +177,7 @@ public class GameController extends Observable {
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             if (entry.getValue().getConnection().getID() == connection.getID()) {
 
-                //TODO : pourquoi est ce qu'il y a un MessageDelete ? idem qu'un MessageDisconnect ?
+                // pourquoi est ce qu'il y a un MessageDelete ? idem qu'un MessageDisconnect ?
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(new MessagePlayerDelete(entry.getKey(), entry.getValue().getPseudo()))));
                 break;

@@ -70,8 +70,8 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
         public void addToConsoleLog(String msg) {}
         public void addToConsoleErr(String msg) {}
         public int getSelectedMapIndex() { return 0; }
-        public void gameStarted() {}
-        public void gameStopped() {}
+        public void startGame() {}
+        public void stopGame() {}
         public void refreshPlayers() {}
         public void refreshMaps() {}
     }
@@ -151,7 +151,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
         talker.reloadMaps();
     }
 
-    public void gameStarted() {
+    public void startGame() {
         button_start.setEnabled(true);
         button_stop.setEnabled(true);
         if (button_start.getText().equals("Start")) {
@@ -176,7 +176,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
         }.start();
     }
 
-    public void gameStopped() {
+    public void stopGame() {
         if (t != null)
             t.cancel(true);
         button_stop.setEnabled(false);

@@ -43,6 +43,8 @@ public class WindowInterface extends BasicGameState {
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
     {
         Debug.debug("init Home");
+        this.stateGame = sbg;
+        this.container = gc;
         this.container.setForceExit(false);
         this.animatorData.init();
         this.interfaceController.initAnimator(this.animatorData.getBackgroundAnimators(), this.animatorData.getButtonAnimators(),

@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public class Obstacle {
     private String userId;
-    private UUID id;
+    private String id;
     private Animator animator;
     private EnumObstacles type;
     private Pair<Float, Float> positions;
@@ -38,7 +38,7 @@ public class Obstacle {
     public void createObstacle(String userId, String id, float angle, float posX, float posY){
         this.userId = userId;
         this.angle = angle;
-        this.id = UUID.fromString(id);
+        this.id = id;
         this.positions = new Pair<Float, Float>(posX, posY);
         this.created = true;
     }
@@ -56,7 +56,7 @@ public class Obstacle {
         return this.positions.getV2();
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

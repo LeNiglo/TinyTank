@@ -32,10 +32,10 @@ public class CollisionController {
         Pair<Float, Float> origin3 = new Pair<Float, Float>(-10f, -map.getSizeY() / 2);
         Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
 
-        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
 
     }
 
@@ -44,7 +44,7 @@ public class CollisionController {
         this.items.add(object);
     }
 
-    public void deleteCollisionObject(UUID id) {
+    public void deleteCollisionObject(String id) {
         for (int i = 0; i < this.items.size(); ++i) {
             if (this.items.get(i).getId().equals(id)) {
                 this.items.remove(i);
@@ -57,7 +57,7 @@ public class CollisionController {
         this.items.clear();
     }
 
-    public Pair<Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, UUID id) {
+    public Pair<Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
         List<CollisionObject> objects = this.getCollisionObject(id);
         try {
             if (!objects.isEmpty()) {
@@ -101,7 +101,7 @@ public class CollisionController {
 
     // GETTERS
 
-    public List<CollisionObject> getCollisionObject(UUID id) {
+    public List<CollisionObject> getCollisionObject(String id) {
         List<CollisionObject> result = new ArrayList<CollisionObject>();
         for (int i = 0; i < this.items.size(); ++i) {
             if (this.items.get(i) != null) {

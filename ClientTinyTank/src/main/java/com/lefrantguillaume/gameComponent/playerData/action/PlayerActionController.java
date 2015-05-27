@@ -30,13 +30,13 @@ public class PlayerActionController extends Observable {
                 this.tank.getTankState().setMove(true);
                 this.tank.getTankState().setDirection(EnumDirection.getDirectionByValue((Integer) playerAction.getValue(0)));
                 List<CollisionObject> objects = collisionController.getCollisionObject(player.getUser().getId());
-                for (int i = 0; i < objects.size(); ++i) {
-                    objects.get(i).setAngle(this.tank.getTankState().getDirection().getAngle());
+                for (CollisionObject object : objects) {
+                    object.setAngle(this.tank.getTankState().getDirection().getAngle());
                 }
             } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == this.tank.getTankState().getDirection().getValue()) {
                 this.tank.getTankState().setMove(false);
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
-                Shot shot = tank.generateShot(player.getUser().getIdUser(), UUID.fromString((String)playerAction.getValue(0)), (Float) playerAction.getValue(1));
+                Shot shot = tank.generateShot(player.getUser().getIdUser(), (String)playerAction.getValue(0), (Float) playerAction.getValue(1));
 
                 for (int i = 0; i < shot.getCollisionObject().size(); ++i){
                     Rectangle current = shot.getCollisionObject().get(i);
