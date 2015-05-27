@@ -536,7 +536,7 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
             }
 
             //---- label_server2 ----
-            label_server2.setText("gameComponent preferences");
+            label_server2.setText("Game preferences");
             label_server2.setFont(new Font("Calibri", Font.BOLD, 22));
 
             //======== panel3 ========
