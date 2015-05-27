@@ -2,14 +2,13 @@ package com.lefrantguillaume.gameComponent.gameObject.tanks.equipment;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by andres_k on 18/03/2015.
@@ -24,7 +23,7 @@ public class TankWeapon {
     private Pair<Float, Float> shiftHitOrigin;
     private Pair<Float, Float> shiftHitHead;
     private Pair<Float, Float> shiftWeaponOrigin;
-    private List<Rectangle> collisionObject;
+    private List<Block> collisionObject;
     private int current;
 
     public TankWeapon(float speedShot, float damageShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitExplode, Pair<Float, Float> shiftHitOrigin,
@@ -40,7 +39,7 @@ public class TankWeapon {
         this.speedShot = speedShot;
         this.current = 0;
         this.canons = new ArrayList<Canon>();
-        this.collisionObject = new ArrayList<Rectangle>();
+        this.collisionObject = new ArrayList<Block>();
     }
 
     public TankWeapon(TankWeapon tankWeapon) {
@@ -55,7 +54,7 @@ public class TankWeapon {
         this.speedShot = tankWeapon.speedShot;
         this.current = 0;
         this.canons = new ArrayList<Canon>();
-        this.collisionObject = new ArrayList<Rectangle>();
+        this.collisionObject = new ArrayList<Block>();
         for (int i = 0; i < tankWeapon.canons.size(); ++i) {
             this.canons.add(tankWeapon.canons.get(i));
         }
@@ -85,8 +84,8 @@ public class TankWeapon {
         return shot;
     }
 
-    public void addCollisionObject(Rectangle rectangle) {
-        this.collisionObject.add(rectangle);
+    public void addCollisionObject(Block block) {
+        this.collisionObject.add(block);
     }
 
     public void nextCanon() {

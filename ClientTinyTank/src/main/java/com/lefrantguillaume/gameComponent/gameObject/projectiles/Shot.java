@@ -2,7 +2,7 @@ package com.lefrantguillaume.gameComponent.gameObject.projectiles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.gameComponent.animations.Animator;
@@ -24,7 +24,7 @@ public class Shot extends Observable implements Observer {
     private float speed;
     private float angle;
     private boolean explode;
-    private List<Rectangle> collisionObject;
+    private List<Block> collisionObject;
 
     public Shot(String userId, String id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
@@ -38,7 +38,7 @@ public class Shot extends Observable implements Observer {
         this.damage = damage;
         this.speed = speed;
         this.animator = animator;
-        this.collisionObject = new ArrayList<Rectangle>();
+        this.collisionObject = new ArrayList<Block>();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Shot extends Observable implements Observer {
             this.shiftOrigin.setV2(this.shiftToExplode.getV2());
             this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
             this.explode = true;
-            Rectangle tmp = null;
+            Block tmp = null;
             this.setChanged();
             this.notifyObservers(tmp);
         }
@@ -78,8 +78,8 @@ public class Shot extends Observable implements Observer {
         return coords;
     }
 
-    public void addCollisionObject(Rectangle rectangle) {
-        this.collisionObject.add(rectangle);
+    public void addCollisionObject(Block block) {
+        this.collisionObject.add(block);
     }
 
     // GETTERS
@@ -140,7 +140,7 @@ public class Shot extends Observable implements Observer {
         return this.shiftToExplode;
     }
 
-    public List<Rectangle> getCollisionObject() {
+    public List<Block> getCollisionObject() {
         return this.collisionObject;
     }
 }

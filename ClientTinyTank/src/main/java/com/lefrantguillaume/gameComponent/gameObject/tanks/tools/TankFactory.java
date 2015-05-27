@@ -4,7 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.gameComponent.gameObject.spells.EnumSpells;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.TankWeapon;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.EnumShots;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.equipment.Canon;
@@ -50,7 +50,7 @@ public class TankFactory {
             JSONObject current = collisions.getJSONObject(i);
             Pair<Float, Float> shiftOrigin2 = new Pair<Float, Float>(Float.valueOf(current.getString("shiftOriginX")), Float.valueOf(current.getString("shiftOriginY")));
             Pair<Float, Float> sizes= new Pair<Float, Float>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
-            tankWeapon.addCollisionObject(new Rectangle(shiftOrigin2, sizes));
+            tankWeapon.addCollisionObject(new Block(shiftOrigin2, sizes));
         }
 
 
@@ -71,7 +71,7 @@ public class TankFactory {
             JSONObject current = collisions.getJSONObject(i);
             Pair<Float, Float> shiftOrigin2 = new Pair<Float, Float>(Float.valueOf(current.getString("shiftOriginX")), Float.valueOf(current.getString("shiftOriginY")));
             Pair<Float, Float> sizes= new Pair<Float, Float>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
-            tankState.addCollisionObject(new Rectangle(shiftOrigin2, sizes));
+            tankState.addCollisionObject(new Block(shiftOrigin2, sizes));
         }
         return tankState;
     }

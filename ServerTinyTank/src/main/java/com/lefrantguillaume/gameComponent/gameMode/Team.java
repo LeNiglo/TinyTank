@@ -8,8 +8,10 @@ import java.util.UUID;
 public class Team {
     private UUID id;
     private int currentScore;
+    private int currentPlayers;
 
-    public Team(UUID id){
+    public Team(UUID id) {
+        this.currentPlayers = 0;
         this.id = id;
         this.init();
     }
@@ -20,13 +22,19 @@ public class Team {
         this.currentScore += score;
     }
 
-    public void init(){
+    public void init() {
+        this.currentPlayers = 0;
         this.currentScore = 0;
     }
 
     // GETTERS
-    public UUID getId(){
+
+    public UUID getId() {
         return this.id;
+    }
+
+    public int getCurrentPlayers() {
+        return this.currentPlayers;
     }
 
     public int getCurrentScore() {

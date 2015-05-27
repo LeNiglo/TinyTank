@@ -1,9 +1,12 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
 import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
+import com.lefrantguillaume.gameComponent.gameMode.modes.GameMode;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by andres_k on 13/05/2015.
@@ -23,20 +26,26 @@ public class GameModeController{
         this.getCurrentMode().doTask(task);
     }
 
+    private void initGameModes(){
+        gameModes.add(new FreeForAll(new Rectangle(0, 0, 1280, 768), 8));
+    }
+
+
+    // GETTERS
+    public GameMode getCurrentMode(){
+        return this.gameModes.get(this.currentGameMode.getIndex());
+    }
+
+    public EnumGameMode getCurrentGameMode(){
+        return this.currentGameMode;
+    }
+
     public UUID isWinnerTeam(){
         return this.getCurrentMode().isWinnerTeam();
     }
 
-    private void initGameModes(){
-        gameModes.add(new FreeForAll(8));
-    }
-
-    public void restartGameMode(){
-        this.getCurrentMode().restart();
-    }
-    // GETTERS
-    public GameMode getCurrentMode(){
-        return this.gameModes.get(this.currentGameMode.getIndex());
+    public boolean isPlayable(){
+        return this.getCurrentMode().isPlayable();
     }
 
     // SETTERS

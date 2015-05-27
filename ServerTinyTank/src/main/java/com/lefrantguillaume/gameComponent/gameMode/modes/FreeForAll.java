@@ -1,10 +1,10 @@
 package com.lefrantguillaume.gameComponent.gameMode.modes;
 
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
-import com.lefrantguillaume.gameComponent.gameMode.GameMode;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.util.UUID;
 
 /**
@@ -13,9 +13,9 @@ import java.util.UUID;
 public class FreeForAll extends GameMode {
     private final int objectiveScore;
 
-    public FreeForAll(int maxPlayer) {
-        this.objectiveScore = 300;
-        this.init(maxPlayer);
+    public FreeForAll(Rectangle world, int maxPlayer) {
+        this.objectiveScore = 30;
+        this.init(maxPlayer, maxPlayer);
     }
 
     // FUNCTIONS
@@ -44,7 +44,7 @@ public class FreeForAll extends GameMode {
         for (int i = 0; i < this.teams.size(); ++i){
             Team current = this.teams.get(i);
             if (current.getCurrentScore() == this.objectiveScore){
-                return current.getId();
+                teamId = current.getId();
             }
         }
         return teamId;

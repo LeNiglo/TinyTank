@@ -3,7 +3,7 @@ package com.lefrantguillaume.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -40,8 +40,8 @@ public class CollisionObject extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        if (arg instanceof Rectangle) { // modifier la position/size de la collision
-            Rectangle coord = (Rectangle) arg;
+        if (arg instanceof Block) { // modifier la position/size de la collision
+            Block coord = (Block) arg;
 
             if (coord != null) {
                 this.savePositions.setV1(coord.getShiftOrigin().getV1());

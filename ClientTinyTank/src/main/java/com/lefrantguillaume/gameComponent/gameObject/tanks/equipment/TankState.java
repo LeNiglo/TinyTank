@@ -1,7 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameObject.tanks.equipment;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.gameComponent.animations.Animator;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
 import com.lefrantguillaume.gameComponent.playerData.action.EnumDirection;
@@ -17,7 +17,7 @@ public class TankState {
     private Pair<Float, Float> positions;
     private Pair<Float, Float> shiftOriginSave;
     private Pair<Float, Float> shiftToExplode;
-    private List<Rectangle> collisionObject;
+    private List<Block> collisionObject;
     private Animator bodyAnimator;
     private Animator topAnimator;
     private EnumTanks tankType;
@@ -54,7 +54,7 @@ public class TankState {
         this.slowEffect = 0;
         this.boostEffect = 0;
         this.positions = new Pair<Float, Float>(0f, 0f);
-        this.collisionObject = new ArrayList<Rectangle>();
+        this.collisionObject = new ArrayList<Block>();
     }
 
     public TankState(TankState tankState) {
@@ -77,7 +77,7 @@ public class TankState {
         this.slowEffect = 0;
         this.boostEffect = 0;
         this.positions = new Pair<Float, Float>(0f, 0f);
-        this.collisionObject = new ArrayList<Rectangle>();
+        this.collisionObject = new ArrayList<Block>();
         for (int i = 0; i < tankState.collisionObject.size(); ++i) {
             this.collisionObject.add(tankState.collisionObject.get(i));
         }
@@ -85,8 +85,8 @@ public class TankState {
 
     // FUNCTIONS
 
-    public void addCollisionObject(Rectangle rectangle) {
-        this.collisionObject.add(rectangle);
+    public void addCollisionObject(Block block) {
+        this.collisionObject.add(block);
     }
 
     public void explode() {
@@ -119,7 +119,7 @@ public class TankState {
         return this.speed - (this.slowEffect * this.speed / 100) + (this.boostEffect * this.speed / 100);
     }
 
-    public List<Rectangle> getCollisionObject() {
+    public List<Block> getCollisionObject() {
         return this.collisionObject;
     }
 

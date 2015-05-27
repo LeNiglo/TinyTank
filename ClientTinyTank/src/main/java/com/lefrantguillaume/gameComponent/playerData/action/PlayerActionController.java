@@ -3,14 +3,13 @@ package com.lefrantguillaume.gameComponent.playerData.action;
 import com.lefrantguillaume.collisionComponent.CollisionObject;
 import com.lefrantguillaume.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.gameComponent.gameObject.tanks.types.Tank;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 
 import java.util.List;
 import java.util.Observable;
-import java.util.UUID;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -39,7 +38,7 @@ public class PlayerActionController extends Observable {
                 Shot shot = tank.generateShot(player.getUser().getIdUser(), (String)playerAction.getValue(0), (Float) playerAction.getValue(1));
 
                 for (int i = 0; i < shot.getCollisionObject().size(); ++i){
-                    Rectangle current = shot.getCollisionObject().get(i);
+                    Block current = shot.getCollisionObject().get(i);
 
                     CollisionObject obj = new CollisionObject(true, shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
                             shot.getUserId(), shot.getId(), EnumType.TANK, shot.getAngle());

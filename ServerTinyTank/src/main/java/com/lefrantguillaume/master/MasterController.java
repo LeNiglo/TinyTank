@@ -5,8 +5,8 @@ import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.controler.GameController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.networkComponent.dataServer.DataServer;
-import com.lefrantguillaume.networkComponent.gameServer.GameServer;
+import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
+import com.lefrantguillaume.networkComponent.gameServerComponent.GameServer;
 import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.userInterface.GraphicalUserInterface;
 import com.lefrantguillaume.userInterface.UserInterface;
@@ -88,16 +88,7 @@ public class MasterController extends Observable implements Observer {
     public void parseJsonMap(File file, String name) {
         try {
             JSONObject object = new JSONObject(StringTools.readFile(file.getAbsolutePath()));
-            Map map = new Map();
-            map.setFileNameNoExt(name);
-            map.setName(object.get("name") != null ? object.getString("name") : name);
-            map.setFilePath(file.getAbsolutePath());
-            map.setFileName(file.getName());
-            map.setFileLength(file.length());
-            file = new File("maps/" + name + ".jpg");
-            map.setImgName(file.getName());
-            map.setImgPath(file.getPath());
-            map.setImgLength(file.length());
+            Map map = new Map(file, new File("maps/" + name + ".jpg"), object);
             this.gameController.addMap(map);
         } catch (Exception e) {
             System.out.println("Error in parseJson: " + e.getMessage());

@@ -27,12 +27,12 @@ public class Player {
     private int ammoCooldown = 100;
     private boolean canShoot = true;
 
-    public Player(String id, String pseudo, Tank tank, Connection connection) {
+    public Player(String id, String pseudo, UUID teamId, Tank tank, Connection connection) {
         this.id = id;
         this.pseudo = pseudo;
         this.tank = tank;
         this.connection = connection;
-        this.teamId = null;
+        this.teamId = teamId;
     }
 
     public void hit(int damage) {

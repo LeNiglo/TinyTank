@@ -3,7 +3,7 @@ package com.lefrantguillaume.gameComponent.target;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
-import com.lefrantguillaume.networkComponent.gameServer.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class Targets {
 
-    private HashMap<String, Player> players = null;
-    private HashMap<String, Shot> shots = null;
+    private HashMap<String, Player> players;
+    private HashMap<String, Shot> shots;
 
     public Targets() {
-        this.players = new HashMap<String, Player>();
-        this.shots = new HashMap<String, Shot>();
+        this.players = new HashMap<>();
+        this.shots = new HashMap<>();
     }
 
     public MessageModel doCollision(String shotId, String targetId) {
@@ -29,7 +29,6 @@ public class Targets {
         if (this.getShot(shotId) != null) {
             WindowController.addConsoleMsg("players:" + this.players.size() + "PLAYER_ID: " + targetId);
             if (this.getPlayer(targetId) != null) {
-                WindowController.addConsoleMsg("player find");
                 msg = this.getPlayer(targetId).getTank().getTankState().getHit(this.getPlayer(targetId).getPseudo(), targetId, this.getShot(shotId));
             }
             /* pour box ext
@@ -41,12 +40,12 @@ public class Targets {
         return msg;
     }
 
-    public void addPlayer(String k, Player p) {
-        this.players.put(k, p);
+    public void addPlayer(String id, Player p) {
+        this.players.put(id, p);
     }
 
-    public void addShot(String k, Shot s) {
-        this.shots.put(k, s);
+    public void addShot(String id, Shot s) {
+        this.shots.put(id, s);
     }
 
     public void deletePlayer(String playerId) {

@@ -15,7 +15,7 @@ import com.lefrantguillaume.gameComponent.gameObject.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.gameComponent.playerData.data.User;
-import com.lefrantguillaume.Utils.tools.Rectangle;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.collisionComponent.CollisionController;
 import com.lefrantguillaume.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
@@ -136,7 +136,7 @@ public class GameController extends Observable implements Observer {
         Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
 
         for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i) {
-            Rectangle current = player.getTank().getTankState().getCollisionObject().get(i);
+            Block current = player.getTank().getTankState().getCollisionObject().get(i);
             CollisionObject obj = new CollisionObject(true, player.getTank().getTankState().getPositions(), current.getSizes(),
                     current.getShiftOrigin(), player.getUser().getIdUser(),
                     player.getUser().getId(), EnumType.TANK,

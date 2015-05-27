@@ -1,40 +1,41 @@
 {
   "name": "Sioupeur",
-  "obstacles": [
-    {
-      "type": "box",
-      "matter": "plastic",
-      "position": {
-        "x": 50,
-        "y": 150
-      },
-      "size": {
-        "x": 20,
-        "y": 20
-      },
-      "health": 100
+  "sizeX": 1280,
+  "sizeY": 768,
+  "gameMode": {
+    "FreeForAll": {
+      "obstacles": [
+      ],
+      "spawnPoint": [
+        {
+          "team": 1,
+          "x": 20,
+          "y": 20,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 2,
+          "x": 1000,
+          "y": 20,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 3,
+          "x": 20,
+          "y": 500,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 4,
+          "x": 1000,
+          "y": 500,
+          "sizeX": 200,
+          "sizeY": 200
+        }
+      ]
     }
-  ],
-  "spawnpoints": [
-    {
-      "team": 1,
-      "x": 15,
-      "y": 20
-    },
-    {
-      "team": 1,
-      "x": 45,
-      "y": 80
-    },
-    {
-      "team": 2,
-      "x": 300,
-      "y": 20
-    },
-    {
-      "team": 2,
-      "x": 330,
-      "y": 80
-    }
-  ]
+  }
 }
