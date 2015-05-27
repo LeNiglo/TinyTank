@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.game;
+package com.lefrantguillaume.gameComponent.controler;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
@@ -29,6 +29,7 @@ public class GameController extends Observable {
     private boolean playable;
     private MapController mapController;
     private GameModeController gameModeController;
+    private GameTaskExecute gameTaskExecute;
     private Targets targets = null;
     private TankConfigData tankConfigData = null;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<>();
