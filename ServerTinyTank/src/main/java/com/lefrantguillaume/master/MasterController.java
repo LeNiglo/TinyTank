@@ -122,17 +122,17 @@ public class MasterController extends Observable implements Observer {
                             //config = theInterface.getGameConfig();
                             //config.setMap(currentMap);
                             if (MasterController.this.server.start()) {
-                                MasterController.this.gameController.onGameStart();
+                                MasterController.this.gameController.startGame();
                                 if (!gameStarted) {
                                     gameStarted = true;
                                     //WindowController.addConsoleMsg("Starting server...");
                                 } else {
                                     //WindowController.addConsoleMsg("Restarting server...");
                                 }
-                                userInterface.gameStarted();
+                                userInterface.startGame();
                             } else {
                                 gameStarted = false;
-                                userInterface.gameStopped();
+                                userInterface.stopGame();
                                 //WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                             }
 
@@ -148,9 +148,9 @@ public class MasterController extends Observable implements Observer {
 
     public void stopGame() {
         gameStarted = false;
-        userInterface.gameStopped();
+        userInterface.stopGame();
         dataServer.stopServer();
-        gameController.onGameStop();
+        gameController.stopGame();
     }
 
     public List<Map> getMaps() {

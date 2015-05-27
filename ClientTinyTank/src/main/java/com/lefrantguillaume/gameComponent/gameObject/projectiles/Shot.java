@@ -13,7 +13,7 @@ import java.util.*;
  * Created by andres_k on 13/03/2015.
  */
 public class Shot extends Observable implements Observer {
-    private final UUID id;
+    private final String id;
     private final String userId;
     private final Animator animator;
     private final Pair<Float, Float> shiftHead;
@@ -26,7 +26,7 @@ public class Shot extends Observable implements Observer {
     private boolean explode;
     private List<Rectangle> collisionObject;
 
-    public Shot(String userId, UUID id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
+    public Shot(String userId, String id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
         this.shiftToExplode = new Pair<Float, Float>(shiftToExplode);
         this.shiftHead = new Pair<Float, Float>(shiftHead);
@@ -103,7 +103,7 @@ public class Shot extends Observable implements Observer {
         return this.userId;
     }
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 

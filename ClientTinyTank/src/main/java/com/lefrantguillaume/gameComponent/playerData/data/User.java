@@ -22,8 +22,8 @@ public class User {
         return this.pseudo;
     }
 
-    public UUID getId() {
-        return UUID.fromString(idUser);
+    public String getId() {
+        return this.idUser;
     }
 
     // SETTERS

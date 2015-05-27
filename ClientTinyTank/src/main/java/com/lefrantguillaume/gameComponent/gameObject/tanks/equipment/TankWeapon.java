@@ -66,7 +66,7 @@ public class TankWeapon {
 
     // FUNCTIONS
 
-    public Shot generateShot(String userId, UUID id, float angle, Pair<Float, Float> coord) {
+    public Shot generateShot(String userId, String id, float angle, Pair<Float, Float> coord) {
         float x1 = this.canons.get(this.current).getShiftCanonHead().getV1();
         float y1 = this.canons.get(this.current).getShiftCanonHead().getV2();
         double radAngle = angle * Math.PI / 180;

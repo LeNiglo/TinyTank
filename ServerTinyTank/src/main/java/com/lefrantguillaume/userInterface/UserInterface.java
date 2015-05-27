@@ -10,8 +10,8 @@ public interface UserInterface {
     public abstract void addToConsoleErr(String msg);
     public abstract void tellNoMap();
     public abstract int getSelectedMapIndex();
-    public abstract void gameStarted();
-    public abstract void gameStopped();
+    public abstract void startGame();
+    public abstract void stopGame();
     public abstract void refreshPlayers();
     public abstract void refreshMaps();
 }

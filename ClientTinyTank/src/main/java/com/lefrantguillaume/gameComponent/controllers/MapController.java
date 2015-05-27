@@ -46,9 +46,9 @@ public class MapController {
         this.collisionController.addCollisionObject(collisionObject);
     }
 
-    public void deleteObstacle(UUID id) {
+    public void deleteObstacle(String id) {
         for (int i = 0; i < this.obstacles.size(); ++i) {
-            if (this.obstacles.get(i).getId() == id) {
+            if (this.obstacles.get(i).getId().equals(id)) {
                 this.obstacles.remove(i);
                 break;
             }

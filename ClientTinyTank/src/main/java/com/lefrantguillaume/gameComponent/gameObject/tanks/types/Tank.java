@@ -35,7 +35,7 @@ public class Tank {
     }
 
     // FUNCTIONS
-    public Shot generateShot(String userId, UUID id, float angle) {
+    public Shot generateShot(String userId, String id, float angle) {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
     }
 

@@ -248,10 +248,10 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
         return null;
     }
 
-    public void gameStarted() {
+    public void startGame() {
     }
 
-    public void gameStopped() {
+    public void stopGame() {
     }
 
     public void refreshPlayers() {
