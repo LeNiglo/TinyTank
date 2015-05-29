@@ -8,11 +8,11 @@ import java.util.UUID;
 /**
  * Created by andres_k on 13/05/2015.
  */
-public class FreeForAll extends GameMode {
+public class DeathMatch extends GameMode {
 
-    public FreeForAll(int maxTeam) {
-        this.objectiveScore = 30;
-        this.maxPlayerTeam = 1;
+    public DeathMatch(int maxTeam) {
+        this.objectiveScore = 50;
+        this.maxPlayerTeam = 4;
         this.init(maxTeam, maxPlayerTeam);
     }
 
@@ -26,4 +26,5 @@ public class FreeForAll extends GameMode {
             this.incrementScore(teamId, 10);
         }
     }
+
 }

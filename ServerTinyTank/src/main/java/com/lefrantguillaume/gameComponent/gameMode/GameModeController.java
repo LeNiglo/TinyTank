@@ -27,7 +27,7 @@ public class GameModeController{
     }
 
     private void initGameModes(){
-        gameModes.add(new FreeForAll(new Rectangle(0, 0, 1280, 768), 8));
+        gameModes.add(new FreeForAll(8));
     }
 
 
