@@ -89,9 +89,9 @@ public class WindowAccount extends BasicGameState {
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         g.drawImage(this.background, 0, 0);
+        g.setColor(Color.green);
         for (int i = 0; i < this.servers.size(); i++) {
-            Debug.debug("Drawing : "+this.servers.get(i).toString());
-            g.drawString(this.servers.get(i).toString(), 20 * (i + 1), 20);
+            g.drawString(this.servers.get(i).toString(), 20, 20 * (i + 1));
         }
     }
 
