@@ -1,15 +1,24 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
+import com.lefrantguillaume.networkComponent.ServerEntry;
+import com.lefrantguillaume.networkComponent.networkData.DataServer;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observer;
 
@@ -22,6 +31,7 @@ public class WindowInterface extends BasicGameState {
     private GameContainer container;
     private StateBasedGame stateGame;
     private InputCheck input;
+    private List<ServerEntry> servers = new ArrayList<>();
     private int id;
 
     public WindowInterface(int id, List<Observer> observers, Object interfaceController) throws JSONException {
@@ -58,6 +68,33 @@ public class WindowInterface extends BasicGameState {
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
 
+        try {
+            Pair<Boolean, String> p = DataServer.getServerList();
+
+            if (p.getV1()) {
+
+                JSONArray array = new JSONArray(p.getV2());
+
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject row = array.getJSONObject(i);
+
+                    try {
+                        servers.add(new ServerEntry(row.getString("name"), row.getString("ip"), row.getJSONObject("ports"), row.getJSONArray("users"), row.getString("map"), row.getString("started_at"), row.getString("last_active")));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            } else {
+
+                // TODO Display message on client.
+                Debug.debug("Error Login : " + p.getV2());
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 

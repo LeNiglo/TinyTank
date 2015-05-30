@@ -1,8 +1,8 @@
 package com.lefrantguillaume.networkComponent.networkData;
 
-import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.networkComponent.ServerEntry;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
@@ -11,12 +11,11 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-import javax.ws.rs.core.MultivaluedMap;
+import java.util.List;
 
 /**
- * Created by Styve on 10/03/2015.
+ * Created by Guillaume on 10/03/2015.
  */
 public class DataServer {
     private String id = null;
@@ -25,7 +24,7 @@ public class DataServer {
     }
 
     private static ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://127.0.0.1:1337/client/";
+        String masterServer = "http://tinytank.lefrantguillaume.com/api/client/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -46,7 +45,7 @@ public class DataServer {
             ClientResponse response = DataServer.getClientResponse(st, "login");
             AuthRcv output = response.getEntity(AuthRcv.class);
 
-            if (output.getRes() == null) {
+            if (output.getErr() != null) {
                 return new Pair<>(false, output.getErr());
             } else {
                return new Pair<>(true, output.getRes());
@@ -54,6 +53,27 @@ public class DataServer {
         } catch (ClientHandlerException e) {
             return new Pair<>(false, e.getCause().getMessage());
         }
+    }
+
+    public static Pair<Boolean, String> getServerList() {
+
+        try {
+
+
+            ClientResponse response = DataServer.getClientResponse(null, "get_tank_list");
+            ServerListRcv output = response.getEntity(ServerListRcv.class);
+
+            if (output.getErr() != null) {
+                return new Pair<>(false, output.getErr());
+            } else {
+                return new Pair<>(true, output.getRes());
+            }
+
+
+        } catch (ClientHandlerException e) {
+            return new Pair<>(false, e.getCause().getMessage());
+        }
+
     }
 
 }
