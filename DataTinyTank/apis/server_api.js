@@ -7,7 +7,7 @@ ServerApi = function(app, db) {
 	this.init_server = function(req, res) {
 		Servers.insert({
 			name: req.body.gameName,
-			ip: req.header['x-forwarded-for'] || req.connection.remoteAddress,
+			ip:  req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 			ports: {
 				udp: req.body.udpPort,
 				tcp: req.body.tcpPort

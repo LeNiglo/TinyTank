@@ -52,6 +52,8 @@ app.set('view engine', 'jade');
 
 app.use(morgan('combined'));
 
+app.enable('trust proxy');
+
 app.use(cors({
 	allowedOrigins: [
 		"http://localhost",
