@@ -21,7 +21,7 @@ public class NetworkCall extends Observable {
         this.connect(config);
     }
 
-    public void connect(NetworkServerConfig config){
+    public boolean connect(NetworkServerConfig config){
         try {
             client.connect(5000, config.getAddress(), config.getTcpPort(), config.getUdpPort());
             client.addListener(new Listener() {
@@ -33,9 +33,11 @@ public class NetworkCall extends Observable {
                     }
                 }
             });
+            return true;
 
         } catch (IOException e) {
-            System.out.println("ERROR: " + e.getMessage());
+            System.err.println("ERROR: " + e.getMessage());
+            return false;
         }
     }
 

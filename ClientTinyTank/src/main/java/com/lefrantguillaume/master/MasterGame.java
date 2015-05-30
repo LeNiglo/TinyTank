@@ -74,6 +74,5 @@ public class MasterGame {
         Debug.debug("[" + WindowConfig.getSizeX() + "," + WindowConfig.getSizeY() + "]");
         appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
         appGame.start();
-
     }
 }

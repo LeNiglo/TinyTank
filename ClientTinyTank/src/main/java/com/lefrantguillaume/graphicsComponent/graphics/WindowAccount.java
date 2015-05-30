@@ -109,6 +109,7 @@ public class WindowAccount extends BasicGameState {
     @Override
     public void keyReleased(int key, char c) {
         if (key == Input.KEY_RETURN) {
+
             this.stateGame.enterState(EnumWindow.INTERFACE.getValue());
         }
         else if (key == Input.KEY_ESCAPE) {
