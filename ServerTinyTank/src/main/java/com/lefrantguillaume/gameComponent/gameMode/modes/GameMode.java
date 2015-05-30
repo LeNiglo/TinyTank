@@ -13,13 +13,14 @@ import java.util.UUID;
  */
 public class GameMode {
     protected List<Team> teams;
-    protected int maxPlayer;
+    protected int maxPlayerTeam;
+    protected int objectiveScore;
     protected boolean playable;
 
     // FUNCTIONS
-    public void init(int maxPlayer, int maxTeam) {
+    public void init(int maxTeam, int maxPlayer) {
         this.playable = true;
-        this.maxPlayer = maxPlayer;
+        this.maxPlayerTeam = maxPlayer;
         this.teams = new ArrayList<>();
         for (int i = 0; i < maxTeam; ++i) {
             this.teams.add(new Team(UUID.randomUUID()));
@@ -44,12 +45,12 @@ public class GameMode {
     public void doTask(Pair<EnumAction, Object> task) {
     }
 
-    public UUID attributeATeam(){
+    public UUID attributeATeam() {
         UUID idTeam = null;
         int lastNumber = 0;
 
-        if (this.openSlot() != 0){
-            for (int i = 0; i < this.teams.size(); ++i){
+        if (this.openSlot() != 0) {
+            for (int i = 0; i < this.teams.size(); ++i) {
                 if (idTeam == null || lastNumber > this.teams.get(i).getCurrentPlayers()) {
                     idTeam = this.teams.get(i).getId();
                     lastNumber = this.teams.get(i).getCurrentPlayers();
@@ -59,45 +60,70 @@ public class GameMode {
         return idTeam;
     }
 
-    public int openSlot(){
+    protected void incrementScore(UUID teamId, int value) {
+        for (int i = 0; i < this.teams.size(); ++i) {
+            if (this.teams.get(i).getId().equals(teamId)) {
+                this.teams.get(i).addToCurrentScore(value);
+            }
+        }
+    }
+
+    public int openSlot() {
         int currentPlayer = 0;
-        for (int i = 0; i < this.teams.size(); ++i){
+        for (int i = 0; i < this.teams.size(); ++i) {
             currentPlayer += this.teams.get(i).getCurrentPlayers();
         }
-        return this.maxPlayer - currentPlayer;
+        return this.maxPlayerTeam - currentPlayer;
     }
 
     // SETTERS
-    public void setMaxPlayer(int maxPlayer) {
-        if (maxPlayer < this.maxPlayer) {
-            for (int i = this.teams.size(); i > maxPlayer; --i) {
+    public void setMaxTeam(int maxTeam) {
+        if (maxTeam < this.teams.size()) {
+            for (int i = this.teams.size(); i > maxTeam; --i) {
                 this.teams.remove(i);
             }
         } else {
-            for (int i = this.teams.size(); i < maxPlayer; ++i) {
+            for (int i = this.teams.size(); i < maxTeam; ++i) {
                 this.teams.add(new Team(UUID.randomUUID()));
             }
 
         }
-        this.maxPlayer = maxPlayer;
     }
 
     // GETTERS
-    public int getMaxPlayer() {
-        return this.maxPlayer;
+
+    public int getObjectiveScore() {
+        return this.objectiveScore;
+    }
+
+    public int getMaxTeam() {
+        return this.teams.size();
+    }
+
+    public int getMaxPlayerTeam() {
+        return this.maxPlayerTeam;
     }
 
     public UUID isWinnerTeam() {
-        return null;
+
+        UUID teamId = null;
+
+        for (int i = 0; i < this.teams.size(); ++i) {
+            Team current = this.teams.get(i);
+            if (current.getCurrentScore() == this.objectiveScore) {
+                teamId = current.getId();
+            }
+        }
+        return teamId;
     }
 
     public boolean isPlayable() {
         return this.playable;
     }
 
-    public int getIndexTeam(String idTeam){
-        for (int i = 0; i < this.teams.size(); ++i){
-            if (idTeam.equals(this.teams.get(i).getId().toString())){
+    public int getIndexTeam(String idTeam) {
+        for (int i = 0; i < this.teams.size(); ++i) {
+            if (idTeam.equals(this.teams.get(i).getId().toString())) {
                 return i + 1;
             }
         }
