@@ -60,7 +60,7 @@ public class DataServer {
         try {
 
 
-            ClientResponse response = DataServer.getClientResponse(null, "get_tank_list");
+            ClientResponse response = DataServer.getClientResponse(null, "list_servers");
             ServerListRcv output = response.getEntity(ServerListRcv.class);
 
             if (output.getErr() != null) {

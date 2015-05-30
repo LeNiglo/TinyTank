@@ -31,7 +31,6 @@ public class WindowInterface extends BasicGameState {
     private GameContainer container;
     private StateBasedGame stateGame;
     private InputCheck input;
-    private List<ServerEntry> servers = new ArrayList<>();
     private int id;
 
     public WindowInterface(int id, List<Observer> observers, Object interfaceController) throws JSONException {
@@ -67,34 +66,6 @@ public class WindowInterface extends BasicGameState {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-
-        try {
-            Pair<Boolean, String> p = DataServer.getServerList();
-
-            if (p.getV1()) {
-
-                JSONArray array = new JSONArray(p.getV2());
-
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject row = array.getJSONObject(i);
-
-                    try {
-                        servers.add(new ServerEntry(row.getString("name"), row.getString("ip"), row.getJSONObject("ports"), row.getJSONArray("users"), row.getString("map"), row.getString("started_at"), row.getString("last_active")));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-            } else {
-
-                // TODO Display message on client.
-                Debug.debug("Error Login : " + p.getV2());
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 

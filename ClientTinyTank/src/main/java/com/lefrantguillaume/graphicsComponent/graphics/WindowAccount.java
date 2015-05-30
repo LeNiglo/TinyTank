@@ -1,11 +1,20 @@
 package com.lefrantguillaume.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
+import com.lefrantguillaume.networkComponent.ServerEntry;
+import com.lefrantguillaume.networkComponent.networkData.DataServer;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,6 +25,7 @@ public class WindowAccount extends BasicGameState {
     private StateBasedGame stateGame;
     private InputCheck input;
     private Image background = null;
+    private List<ServerEntry> servers = new ArrayList<>();
     private int id;
 
     public WindowAccount(int id) throws JSONException {
@@ -41,6 +51,35 @@ public class WindowAccount extends BasicGameState {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
+
+        try {
+            Pair<Boolean, String> p = DataServer.getServerList();
+
+            if (p.getV1()) {
+
+                JSONArray array = new JSONArray(p.getV2());
+
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject row = array.getJSONObject(i);
+
+                    try {
+                        Debug.debug(p.getV2());
+                        servers.add(new ServerEntry(row.getString("name"), row.getString("ip"), row.getJSONObject("ports"), row.getJSONArray("users"), row.getString("map"), row.getString("started_at"), row.getString("last_active")));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            } else {
+
+                // TODO Display message on client.
+                Debug.debug("Error Login : " + p.getV2());
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
