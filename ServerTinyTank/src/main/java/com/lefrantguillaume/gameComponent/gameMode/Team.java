@@ -1,16 +1,14 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
-import java.util.UUID;
-
 /**
  * Created by andres_k on 13/05/2015.
  */
 public class Team {
-    private UUID id;
+    private String id;
     private int currentScore;
     private int currentPlayers;
 
-    public Team(UUID id) {
+    public Team(String id) {
         this.currentPlayers = 0;
         this.id = id;
         this.init();
@@ -27,9 +25,13 @@ public class Team {
         this.currentScore = 0;
     }
 
+    public void changeCurrentPlayers(int value){
+        this.currentPlayers += value;
+    }
+
     // GETTERS
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 

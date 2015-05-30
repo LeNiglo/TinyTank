@@ -44,18 +44,19 @@ public class Map {
 
     // FUNCTIONS
 
-    private void createWorld(int sizeX, int sizeY){
+    private void createWorld(int sizeX, int sizeY) {
+        WindowController.addConsoleMsg("map : [" + sizeX + ", " + sizeY + "]");
         this.world.add(new Rectangle2D(0, 0, sizeX, 5));
         this.world.add(new Rectangle2D(0, sizeY - 5, sizeX, 5));
         this.world.add(new Rectangle2D(0, 0, 5, sizeY));
         this.world.add(new Rectangle2D(sizeX - 5, 0, 5, sizeY));
     }
 
-    public void resetCurrentObject(){
+    public void resetCurrentObject() {
         this.currentObjects.clear();
     }
 
-    private boolean detectCollision(List<Rectangle2D> world, List<Rectangle2D> obstacles, Rectangle2D object){
+    private boolean detectCollision(List<Rectangle2D> world, List<Rectangle2D> obstacles, Rectangle2D object) {
         for (int i = 0; i < world.size(); ++i) {
             if (object.intersects(world.get(i))) {
                 WindowController.addConsoleMsg("collision avec la map");
@@ -64,7 +65,7 @@ public class Map {
         }
         for (int i = 0; i < obstacles.size(); ++i) {
             if (object.intersects(obstacles.get(i))) {
-                WindowController.addConsoleMsg("collision avec un objet");
+                WindowController.addConsoleMsg("collision avec un objet: " + i);
                 return true;
             }
         }
@@ -75,26 +76,27 @@ public class Map {
         Pair<Float, Float> positions = null;
         WindowController.addConsoleMsg("selected mode : " + gameMode);
         MapGameMode current = this.getGameMode(gameMode);
-        if (current == null){
+        if (current == null) {
             return null;
         }
-        WindowController.addConsoleMsg("a");
         List<Rectangle2D> respawnPoints = current.getRespawnPointsForATeam(team);
-        if (respawnPoints == null){
+        if (respawnPoints == null) {
             return null;
         }
-        WindowController.addConsoleMsg("b");
-        for (int i = 0; i < respawnPoints.size(); ++i){
+        for (int i = 0; i < respawnPoints.size(); ++i) {
             for (int i2 = 0; i2 < 10; ++i2) {
-                int x = (int) (RandomTools.getInt() % respawnPoints.get(i).getMaxX() + respawnPoints.get(i).getWidth());
-                int y = (int) (RandomTools.getInt() % respawnPoints.get(i).getMaxY() + respawnPoints.get(i).getHeight());
+                WindowController.addConsoleMsg("respawn : [" + respawnPoints.get(i).getMinX() + "," + respawnPoints.get(i).getMinY() + "][" + respawnPoints.get(i).getWidth() + "," + respawnPoints.get(i).getHeight() + "]");
+                int x = (int) (RandomTools.getInt((int) respawnPoints.get(i).getWidth()) + respawnPoints.get(i).getMinX());
+                int y = (int) (RandomTools.getInt((int) respawnPoints.get(i).getHeight()) + respawnPoints.get(i).getMinY());
 
-                for (int i3 = 0; i3 < collisionObject.size(); ++i3){
+                WindowController.addConsoleMsg("positions = " + x + ", " + y);
+                for (int i3 = 0; i3 < collisionObject.size(); ++i3) {
                     Rectangle2D object = new Rectangle2D(x - collisionObject.get(i).getShiftOrigin().getKey(), y - collisionObject.get(i).getShiftOrigin().getValue(),
                             collisionObject.get(i).getSizes().getKey(), collisionObject.get(i).getSizes().getValue());
                     if (!this.detectCollision(this.world, this.currentObjects, object)) {
                         positions = new Pair<>((float) x, (float) y);
                         this.currentObjects.add(object);
+                        return positions;
                     }
                 }
             }
@@ -104,10 +106,9 @@ public class Map {
 
     // GETTERS
 
-    public MapGameMode getGameMode(EnumGameMode enumMode){
-        for (int i = 0; i < this.mapGameModes.size(); ++i){
-            WindowController.addConsoleMsg(" " + enumMode + " =? " + this.mapGameModes.get(i).getEnumMode());
-            if (enumMode.equals(this.mapGameModes.get(i).getEnumMode())){
+    public MapGameMode getGameMode(EnumGameMode enumMode) {
+        for (int i = 0; i < this.mapGameModes.size(); ++i) {
+            if (enumMode.equals(this.mapGameModes.get(i).getEnumMode())) {
                 return this.mapGameModes.get(i);
             }
         }

@@ -27,4 +27,9 @@ public class Windows extends StateBasedGame {
     public void initStatesList(GameContainer gameContainer) throws SlickException {
         this.enterState(EnumWindow.LOGIN.getValue());
     }
+
+    @Override
+    public boolean closeRequested(){
+        return false;
+    }
 }

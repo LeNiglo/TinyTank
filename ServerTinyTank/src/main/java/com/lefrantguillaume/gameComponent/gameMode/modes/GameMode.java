@@ -23,7 +23,7 @@ public class GameMode {
         this.maxPlayerTeam = maxPlayer;
         this.teams = new ArrayList<>();
         for (int i = 0; i < maxTeam; ++i) {
-            this.teams.add(new Team(UUID.randomUUID()));
+            this.teams.add(new Team(UUID.randomUUID().toString()));
         }
     }
 
@@ -45,11 +45,11 @@ public class GameMode {
     public void doTask(Pair<EnumAction, Object> task) {
     }
 
-    public UUID attributeATeam() {
-        UUID idTeam = null;
+    public String attributeATeam() {
+        String idTeam = null;
         int lastNumber = 0;
 
-        if (this.openSlot() != 0) {
+        if (this.countOpenSlot() != 0) {
             for (int i = 0; i < this.teams.size(); ++i) {
                 if (idTeam == null || lastNumber > this.teams.get(i).getCurrentPlayers()) {
                     idTeam = this.teams.get(i).getId();
@@ -60,7 +60,14 @@ public class GameMode {
         return idTeam;
     }
 
-    protected void incrementScore(UUID teamId, int value) {
+    public void changePlayerInTeam(String idTeam, int value){
+        for (int i = 0; i < this.teams.size(); ++i){
+            if (idTeam.equals(this.teams.get(i).getId())) {
+                this.teams.get(i).changeCurrentPlayers(value);
+            }
+        }
+    }
+    protected void incrementScore(String teamId, int value) {
         for (int i = 0; i < this.teams.size(); ++i) {
             if (this.teams.get(i).getId().equals(teamId)) {
                 this.teams.get(i).addToCurrentScore(value);
@@ -68,7 +75,7 @@ public class GameMode {
         }
     }
 
-    public int openSlot() {
+    public int countOpenSlot() {
         int currentPlayer = 0;
         for (int i = 0; i < this.teams.size(); ++i) {
             currentPlayer += this.teams.get(i).getCurrentPlayers();
@@ -84,7 +91,7 @@ public class GameMode {
             }
         } else {
             for (int i = this.teams.size(); i < maxTeam; ++i) {
-                this.teams.add(new Team(UUID.randomUUID()));
+                this.teams.add(new Team(UUID.randomUUID().toString()));
             }
 
         }
@@ -104,9 +111,8 @@ public class GameMode {
         return this.maxPlayerTeam;
     }
 
-    public UUID isWinnerTeam() {
-
-        UUID teamId = null;
+    public String isWinnerTeam() {
+        String teamId = null;
 
         for (int i = 0; i < this.teams.size(); ++i) {
             Team current = this.teams.get(i);
@@ -123,7 +129,7 @@ public class GameMode {
 
     public int getIndexTeam(String idTeam) {
         for (int i = 0; i < this.teams.size(); ++i) {
-            if (idTeam.equals(this.teams.get(i).getId().toString())) {
+            if (idTeam.equals(this.teams.get(i).getId())) {
                 return i + 1;
             }
         }

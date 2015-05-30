@@ -1,10 +1,10 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
+import com.lefrantguillaume.gameComponent.gameMode.modes.TeamDeathMatch;
 import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
 import com.lefrantguillaume.gameComponent.gameMode.modes.GameMode;
 import javafx.util.Pair;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class GameModeController{
 
     public GameModeController(){
         this.gameModes = new ArrayList<>();
-        this.currentGameMode = EnumGameMode.FreeForAll;
+        this.currentGameMode = EnumGameMode.TeamDeathMatch;
         this.initGameModes();
     }
 
@@ -28,6 +28,7 @@ public class GameModeController{
 
     private void initGameModes(){
         gameModes.add(new FreeForAll(8));
+        gameModes.add(new TeamDeathMatch(2));
     }
 
 
@@ -40,7 +41,7 @@ public class GameModeController{
         return this.currentGameMode;
     }
 
-    public UUID isWinnerTeam(){
+    public String isWinnerTeam(){
         return this.getCurrentMode().isWinnerTeam();
     }
 

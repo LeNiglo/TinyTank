@@ -3,8 +3,6 @@ package com.lefrantguillaume.gameComponent.gameobjects.player;
 import com.esotericsoftware.kryonet.Connection;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.Tank;
 
-import java.util.UUID;
-
 /**
  * Created by Styve on 19/03/2015.
  */
@@ -12,7 +10,7 @@ import java.util.UUID;
 public class Player {
     private String id;
     private String pseudo;
-    private UUID teamId;
+    private String teamId;
     private Connection connection;
     private Tank tank;
 
@@ -27,7 +25,7 @@ public class Player {
     private int ammoCooldown = 100;
     private boolean canShoot = true;
 
-    public Player(String id, String pseudo, UUID teamId, Tank tank, Connection connection) {
+    public Player(String id, String pseudo, String teamId, Tank tank, Connection connection) {
         this.id = id;
         this.pseudo = pseudo;
         this.tank = tank;
@@ -80,7 +78,7 @@ public class Player {
         this.ammo = ammo;
     }
 
-    public void setTeamId(UUID teamId) {
+    public void setTeamId(String teamId) {
         this.teamId = teamId;
     }
 
@@ -141,7 +139,7 @@ public class Player {
         return ammoCooldown;
     }
 
-    public UUID getTeamId() {
+    public String getTeamId() {
         return this.teamId;
     }
 }

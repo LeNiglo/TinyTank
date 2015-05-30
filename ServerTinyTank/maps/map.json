@@ -11,29 +11,49 @@
           "team": 1,
           "x": 20,
           "y": 20,
-          "sizeX": 200,
-          "sizeY": 200
+          "sizeX": 100,
+          "sizeY": 100
         },
         {
           "team": 2,
           "x": 1000,
           "y": 20,
-          "sizeX": 200,
-          "sizeY": 200
+          "sizeX": 100,
+          "sizeY": 100
         },
         {
           "team": 3,
           "x": 20,
           "y": 500,
-          "sizeX": 200,
-          "sizeY": 200
+          "sizeX": 100,
+          "sizeY": 100
         },
         {
           "team": 4,
           "x": 1000,
           "y": 500,
-          "sizeX": 200,
-          "sizeY": 200
+          "sizeX": 100,
+          "sizeY": 100
+        }
+      ]
+    },
+    "TeamDeathMatch": {
+      "obstacles": [
+      ],
+      "spawnPoint": [
+        {
+          "team": 1,
+          "x": 20,
+          "y": 20,
+          "sizeX": 100,
+          "sizeY": 100
+        },
+        {
+          "team": 2,
+          "x": 1000,
+          "y": 20,
+          "sizeX": 100,
+          "sizeY": 100
         }
       ]
     }

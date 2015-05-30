@@ -10,6 +10,14 @@ public class MessagePlayerUpdatePosition extends MessageModel {
 
     public MessagePlayerUpdatePosition() {}
 
+    public MessagePlayerUpdatePosition(MessagePlayerUpdatePosition message) {
+        this.x = message.x;
+        this.y = message.y;
+        this.id = message.id;
+        this.pseudo = message.pseudo;
+        this.playerAction = false;
+    }
+
     public float getX() {return x;}
     public float getY() {return y;}
     public void setX(float x) {this.x = x;}

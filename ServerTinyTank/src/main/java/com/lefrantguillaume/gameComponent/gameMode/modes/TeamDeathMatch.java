@@ -3,14 +3,12 @@ package com.lefrantguillaume.gameComponent.gameMode.modes;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import javafx.util.Pair;
 
-import java.util.UUID;
-
 /**
  * Created by andres_k on 13/05/2015.
  */
-public class DeathMatch extends GameMode {
+public class TeamDeathMatch extends GameMode {
 
-    public DeathMatch(int maxTeam) {
+    public TeamDeathMatch(int maxTeam) {
         this.objectiveScore = 50;
         this.maxPlayerTeam = 4;
         this.init(maxTeam, maxPlayerTeam);
@@ -22,7 +20,7 @@ public class DeathMatch extends GameMode {
     public void doTask(Pair<EnumAction, Object> task) {
 
         if (task.getKey().equals(EnumAction.KILL)) {
-            UUID teamId = (UUID) task.getValue();
+            String teamId = (String) task.getValue();
             this.incrementScore(teamId, 10);
         }
     }
