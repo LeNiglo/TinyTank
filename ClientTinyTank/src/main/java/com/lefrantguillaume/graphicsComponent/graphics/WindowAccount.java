@@ -89,6 +89,10 @@ public class WindowAccount extends BasicGameState {
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
         g.drawImage(this.background, 0, 0);
+        for (int i = 0; i < this.servers.size(); i++) {
+            Debug.debug("Drawing : "+this.servers.get(i).toString());
+            g.drawString(this.servers.get(i).toString(), 20 * (i + 1), 20);
+        }
     }
 
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {

@@ -6,6 +6,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ServerEntry {
     private String ip;
     private Integer udpPort;
     private Integer tcpPort;
-    private List<String> users;
+    private List<String> users = new ArrayList<>();
     private String map;
     private Date started_at;
     private Date last_active;
@@ -33,8 +34,8 @@ public class ServerEntry {
             this.users.add(users.get(i).toString());
         }
         this.map = map;
-        this.started_at = new SimpleDateFormat("yy-MM-dd HH:mm:ss").parse(started_at);
-        this.last_active = new SimpleDateFormat("yy-MM-dd HH:mm:ss").parse(last_active);
+        this.started_at = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(started_at);
+        this.last_active = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(last_active);
     }
 
     public String getName() {
@@ -67,5 +68,10 @@ public class ServerEntry {
 
     public Date getLast_active() {
         return this.last_active;
+    }
+
+    @Override
+    public String toString() {
+        return "Server '"+this.name+"' ["+this.ip+"], "+this.users.size()+" user(s).";
     }
 }
