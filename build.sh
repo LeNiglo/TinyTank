@@ -35,17 +35,16 @@ function data {
 
 }
 
+git pull
+current=`pwd`
+
 if [ $# -eq 0 ]; then
   web
+cd $current
   data
 else
   $1
 fi
-
-git pull
-current=`pwd`
-
-cd $current
 
 cd $current
 sudo service nginx restart
