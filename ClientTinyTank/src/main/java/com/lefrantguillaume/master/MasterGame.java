@@ -51,10 +51,8 @@ public class MasterGame implements Observer {
 
         Debug.debug("masterTask " + task);
         if (task.getV2().isIn(EnumTargetTask.WINDOWS)){
-            Debug.debug("windows");
             this.windows.doTask(o, task);
         } else if (task.getV2().isIn(EnumTargetTask.NETWORK)) {
-            Debug.debug("network");
             this.networkController.doTask(o, task);
         }
     }
