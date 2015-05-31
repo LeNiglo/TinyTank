@@ -33,7 +33,6 @@ public class NetworkRegister {
         kryo.register(MessagePlayerRevive.class);
         kryo.register(MessageCollision.class);
         kryo.register(MessagePutObstacle.class);
-        kryo.register(MessageGestRound.class);
         kryo.register(EnumTanks.class);
         kryo.register(EnumObjects.class);
         kryo.register(MessageNeedMap.class);

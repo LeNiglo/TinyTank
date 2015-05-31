@@ -7,14 +7,14 @@ var Background = function(app, db) {
 
   bgTask.addTask(task, function(resp){
     setInterval(function() {
-      var now = moment().add(-2, 'minutes');
+      var now = moment().add(-15, 'minutes');
 
       Servers.remove({last_active: {$lt: now.toDate()}}, function(err, res) {
         if (res > 0)
           console.log('removed '+res+' servers.', err);
       });
 
-    }, 30000);
+    }, 60000);
   });
 }
 

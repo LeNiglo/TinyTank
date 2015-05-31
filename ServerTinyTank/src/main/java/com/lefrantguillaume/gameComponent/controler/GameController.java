@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.controller;
+package com.lefrantguillaume.gameComponent.controler;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
@@ -22,7 +22,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import java.util.*;
-import java.util.Timer;
 
 /**
  * Created by Styve on 10/03/2015.
@@ -284,11 +283,6 @@ public class GameController extends Observable {
     public void newRound() {
         this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
-
-        MessageGestRound mgr = new MessageGestRound("admin", "admin", 0); // PREPARE GAME, ADD TIMER
-        this.setChanged();
-        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(mgr)));
-
         this.addNewRoundTimer();
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
@@ -341,26 +335,7 @@ public class GameController extends Observable {
                             target.addDeath();
                             killer.addKill();
                             this.gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()));
-                            String winner = null;
-                            if ((winner = this.gameModeController.isWinnerTeam()) != null) {
-
-                                WindowController.addConsoleErr("And the winner is : " + winner);
-
-                                for (java.util.Map.Entry<String, Player> p : this.getPlayers().entrySet()) {
-
-                                    MessageGestRound mgr;
-                                    if (p.getValue().getTeamId().equals(winner)) {
-                                        WindowController.addConsoleErr("WINNER : " + p.getValue().getPseudo());
-                                        mgr = new MessageGestRound("admin", "admin", 2);
-                                    } else {
-                                        WindowController.addConsoleErr("LOOSER : " + p.getValue().getPseudo());
-                                        mgr = new MessageGestRound("admin", "admin", 3);
-                                    }
-                                    this.setChanged();
-                                    this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(p.getValue().getConnection(), mgr)));
-
-                                }
-
+                            if (this.gameModeController.isWinnerTeam() != null) {
                                 MessageModel reviveTask = new MessagePlayerRevive(message.getPseudo(), message.getId(), 0, 0);
                                 targets.getPlayer(message.getId()).revive();
                                 setChanged();
@@ -415,14 +390,9 @@ public class GameController extends Observable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-
-                MessageGestRound mgr = new MessageGestRound("admin", "admin", 1); // START GAME
-                GameController.this.setChanged();
-                GameController.this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(mgr)));
-
                 gameModeController.getCurrentMode().start();
             }
-        }, 5000);
+        }, 7000);
     }
 
     // GETTERS

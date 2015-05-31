@@ -4,26 +4,25 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.MasterConfig;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
-import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
-import com.lefrantguillaume.components.gameComponent.RoundData.Team;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
-import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankConfigData;
-import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
+import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
+import com.lefrantguillaume.components.gameComponent.RoundData.Team;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankConfigData;
+import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
+import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.components.collisionComponent.CollisionController;
+import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
-import com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageGestRound;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.Color;
@@ -129,29 +128,8 @@ public class GameController extends Observable implements Observer {
                         Debug.debug("PUT OBJECT");
                         this.putObject((MessagePutObstacle) message);
                     }
-                    if (message instanceof MessageGestRound) {
-                        Debug.debug("GEST ROUND");
-                        this.gestRound((MessageGestRound) message);
-                    }
                 }
             }
-        }
-    }
-
-    private void gestRound(MessageGestRound received) {
-        if (received.getAction() == 0) {
-            Debug.debug("PREPARE GAME");
-        } else if (received.getAction() == 1) {
-            Debug.debug("START GAME");
-        } else if (received.getAction() == 2) {
-            Debug.debug("WIN ROUND");
-        } else if (received.getAction() == 3) {
-            Debug.debug("LOOSE ROUND");
-        } else if (received.getAction() == 4) {
-            Debug.debug("TIE ROUND");
-        } else {
-            Debug.debug("THIS MESSAGE IS WRONG !");
-            throw new RuntimeException("Invalid Message ...");
         }
     }
 

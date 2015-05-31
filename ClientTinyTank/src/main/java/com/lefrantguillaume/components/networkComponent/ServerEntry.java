@@ -72,6 +72,6 @@ public class ServerEntry {
 
     @Override
     public String toString() {
-        return "Server '"+this.name+"' ["+this.ip+"], "+this.users.size()+" user(s) || "+this.last_active+".";
+        return "Server '"+this.name+"' ["+this.ip+"], "+this.users.size()+" user(s).";
     }
 }
