@@ -153,16 +153,16 @@ public class MasterController extends Observable implements Observer {
     }
 
     public void update(Observable o, Object arg) {
-        Pair<EnumController, Object> task = (Pair<EnumController, Object>) arg;
+        Pair<EnumTargetTask, Object> task = (Pair<EnumTargetTask, Object>) arg;
 
-        if (task.getKey().equals(EnumController.GAME)) {
+        if (task.getKey().equals(EnumTargetTask.GAME)) {
             this.gameController.doTask(o, task.getValue());
-        } else if (task.getKey().equals(EnumController.NETWORK)) {
+        } else if (task.getKey().equals(EnumTargetTask.NETWORK)) {
             this.server.doTask(o, task.getValue());
-        } else if (task.getKey().equals(EnumController.MASTER_SERVER)) {
+        } else if (task.getKey().equals(EnumTargetTask.MASTER_SERVER)) {
             this.dataServer.doTask(o, task.getValue());
             this.userInterface.refreshPlayers();
-        } else if (task.getKey().equals(EnumController.MASTER_CONTROLLER)) {
+        } else if (task.getKey().equals(EnumTargetTask.MASTER_CONTROLLER)) {
             this.doTask(o, task.getValue());
         }
     }
