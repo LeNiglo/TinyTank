@@ -76,7 +76,7 @@ public class DataServer {
                     public void run() {
                         updateServer();
                     }
-                }, 300, 300, TimeUnit.SECONDS);
+                }, 30, 30, TimeUnit.SECONDS);
             }
         } catch (ClientHandlerException e) {
             WindowController.addConsoleMsg("Online server not reachable: " + e.getCause().getMessage());
