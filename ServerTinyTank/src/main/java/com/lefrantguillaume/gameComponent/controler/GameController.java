@@ -10,7 +10,7 @@ import com.lefrantguillaume.gameComponent.gameobjects.tanks.tools.TankConfigData
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.maps.MapController;
 import com.lefrantguillaume.gameComponent.target.Targets;
-import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.networkComponent.gameServerComponent.Request;
 import com.lefrantguillaume.networkComponent.gameServerComponent.RequestFactory;
 import com.lefrantguillaume.networkComponent.gameServerComponent.SendFile;
@@ -87,7 +87,7 @@ public class GameController extends Observable {
             MessageConnect response = new MessageConnect(this.mapController.getCurrentMap().getName(), this.mapController.getCurrentMap().getFileNameNoExt(), encodedMap, encodedJson, new ArrayList<String>());
 
             setChanged();
-            notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, response)));
+            notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, response)));
         } catch (Exception e) {
             Log.error("MD5: " + e.getMessage());
         }
@@ -96,7 +96,7 @@ public class GameController extends Observable {
     public void doMessageDownload(Connection connection) {
         MessageDownload response = new MessageDownload(this.mapController.getCurrentMap().getFileName(), this.mapController.getCurrentMap().getFileLength());
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, response)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, response)));
         new Thread("upload") {
             public void run() {
                 try {
@@ -104,7 +104,7 @@ public class GameController extends Observable {
                     MessageDownload response = new MessageDownload(mapController.getCurrentMap().getImgName(), mapController.getCurrentMap().getImgLength());
 
                     setChanged();
-                    notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, response)));
+                    notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, response)));
                     new SendFile(mapController.getCurrentMap().getImgPath());
                 } catch (Exception e) {
                     System.out.println("Cannot send file: " + e.getMessage());
@@ -123,7 +123,7 @@ public class GameController extends Observable {
             tmpMessage.setPosX(0);
             tmpMessage.setPosY(0);
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
         }
 
         this.targets.addPlayer(received.getId(), new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(), this.tankConfigData.getTank(received.getEnumTanks()), connection));
@@ -136,9 +136,9 @@ public class GameController extends Observable {
             received.setPosX(newPositions.getKey());
             received.setPosY(newPositions.getValue());
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.MASTER_SERVER, received));
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
         }
     }
 
@@ -150,7 +150,7 @@ public class GameController extends Observable {
             this.targets.deletePlayer(received.getId());
         }
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessageDisconnect(Connection connection) {
@@ -158,7 +158,7 @@ public class GameController extends Observable {
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             if (entry.getValue().getConnection().getID() == connection.getID()) {
                 this.setChanged();
-                this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(new MessagePlayerDelete(entry.getKey(), entry.getValue().getPseudo()))));
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessagePlayerDelete(entry.getKey(), entry.getValue().getPseudo()))));
                 break;
             }
         }
@@ -216,7 +216,7 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable())
             return;
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessagePlayerUpdatePosition(MessagePlayerUpdatePosition received) {
@@ -224,26 +224,26 @@ public class GameController extends Observable {
             return;
         System.out.println("Update: " + received.getX() + " / " + received.getY());
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessageMove(MessageMove received) {
         if (!this.gameModeController.isPlayable())
             return;
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessageChangeTeam(MessageChangeTeam received) {
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessageSpell(MessageSpell received) {
         if (!this.gameModeController.isPlayable())
             return;
         setChanged();
-        notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(received)));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     public void doMessageShoot(MessageShoot message) {
@@ -258,7 +258,7 @@ public class GameController extends Observable {
             this.targets.addShot(message.getShotId(), player.getTank().getTankWeapon().generateShot(message.getShotId(), player.getId()));
 
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(message)));
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
 
             TimerTask tt = new TimerTask() {
                 @Override
@@ -298,7 +298,7 @@ public class GameController extends Observable {
                 message = new MessagePlayerDelete(entry.getValue().getPseudo(), entry.getValue().getId());
             }
             setChanged();
-            notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(message)));
+            notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
         }
         this.mapController.getCurrentMap().resetCurrentObject();
     }
@@ -329,7 +329,7 @@ public class GameController extends Observable {
                 MessageModel message = targets.doCollision(shotId, targetId);
                 if (message != null) {
                     this.setChanged();
-                    this.notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(message)));
+                    this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
                     if (message instanceof MessagePlayerUpdateState) {
                         if (((MessagePlayerUpdateState) message).getCurrentLife() <= 0) {
                             target.addDeath();
@@ -339,7 +339,7 @@ public class GameController extends Observable {
                                 MessageModel reviveTask = new MessagePlayerRevive(message.getPseudo(), message.getId(), 0, 0);
                                 targets.getPlayer(message.getId()).revive();
                                 setChanged();
-                                notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(reviveTask)));
+                                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(reviveTask)));
                                 this.newRound();
                             } else {
                                 this.addReviveTimer(message);
@@ -379,7 +379,7 @@ public class GameController extends Observable {
                     MessageModel message = new MessagePlayerRevive(player.getPseudo(), player.getId(), newPositions.getKey(), newPositions.getValue());
                     player.revive();
                     setChanged();
-                    notifyObservers(new Pair<>(EnumController.NETWORK, RequestFactory.createRequest(message)));
+                    notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
                 }
             }
         }, 3000);
