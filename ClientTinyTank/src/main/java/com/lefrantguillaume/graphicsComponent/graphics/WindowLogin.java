@@ -46,6 +46,46 @@ public class WindowLogin extends BasicGameState {
 
     private Nifty nifty;
 
+    public class LoginController implements ScreenController {
+        @Override
+        public void bind(Nifty nifty, Screen screen) {
+            // on est bind dans le xml. le screen id="start" est relié à ce controlleur
+            System.out.println("LoginController binded");
+            loginField = screen.findNiftyControl("login", TextField.class);
+            passField = screen.findNiftyControl("pass", TextField.class);
+        }
+
+        @Override
+        public void onStartScreen() {
+            System.out.println("LoginController started");
+        }
+
+        @Override
+        public void onEndScreen() {
+            System.out.println("LoginController ended");
+        }
+
+        public void connect() {
+            System.out.println("Cliqué sur Connect !");
+            try {
+                System.out.println("user: " + loginField.getDisplayedText() + " // pass: " + passField.getRealText());
+                Pair<Boolean, String> p = DataServer.authentification(loginField.getDisplayedText(), passField.getRealText());
+                if (p.getV1()) {
+                    JSONObject object = new JSONObject(p.getV2());
+                    Debug.debug("my id = " + object.get("_id"));
+                    CurrentUser.setId(object.get("_id").toString());
+                    CurrentUser.setPseudo(object.get("username").toString());
+                    stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+                } else {
+                    // TODO Display message on client.
+                    Debug.debug("Error Login : " + p.getV2());
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public WindowLogin(int id) throws JSONException {
         this.id = id;
         //this.input = new InputCheck(StringTools.readFile("configInput.json"));
@@ -65,7 +105,9 @@ public class WindowLogin extends BasicGameState {
 
             nifty.loadStyleFile("nifty-default-styles.xml");
             nifty.loadControlFile("nifty-default-controls.xml");
-            nifty.fromXml("assets/interface/test.xml", "start");
+            nifty.fromXml("assets/interface/test.xml", "start", new LoginController() {
+
+            });
             nifty.validateXml("assets/interface/test.xml");
 
             nifty.gotoScreen("start");
