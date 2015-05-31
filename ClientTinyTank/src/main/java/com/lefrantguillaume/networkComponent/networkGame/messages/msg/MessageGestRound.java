@@ -1,6 +1,7 @@
 package com.lefrantguillaume.networkComponent.networkGame.messages.msg;
 
-import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
+
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 
 /**
  * Created by leniglo on 30/05/15.

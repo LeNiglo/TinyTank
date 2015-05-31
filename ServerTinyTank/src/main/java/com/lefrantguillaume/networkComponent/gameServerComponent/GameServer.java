@@ -4,7 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageDisconnect;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import com.lefrantguillaume.utils.ServerConfig;
@@ -48,13 +48,13 @@ public class GameServer extends Observable {
                     if (object instanceof MessageModel) {
                         Request task = new Request(connection, (MessageModel) object);
                         GameServer.this.setChanged();
-                        GameServer.this.notifyObservers(new Pair<>(EnumController.GAME, task));
+                        GameServer.this.notifyObservers(new Pair<>(EnumTargetTask.GAME, task));
                     }
                 }
 
                 public void disconnected(Connection connection) {
                     GameServer.this.setChanged();
-                    GameServer.this.notifyObservers(new Pair<>(EnumController.MASTER_SERVER, new Request(connection, new MessageDisconnect())));
+                    GameServer.this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, new Request(connection, new MessageDisconnect())));
                 }
             });
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
@@ -70,7 +70,7 @@ public class GameServer extends Observable {
     public void stop() {
         server.stop();
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
+        this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "stop game"));
         WindowController.addConsoleMsg("Server stopped.");
     }
 

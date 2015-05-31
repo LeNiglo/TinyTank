@@ -1,7 +1,7 @@
 package com.lefrantguillaume.userInterface;
 
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.master.MasterController;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
@@ -153,12 +153,12 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
         ServerConfig.friendlyFire = (Argument.fromName(args, "friendlyfire").equals("ff"));
         ServerConfig.allyNoBlock = (Argument.fromName(args, "ally_noblock").equals("noblock"));
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "start game"));
+        this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "start game"));
     }
 
     private void askStopGame(ArrayList<Argument> args) {
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
+        this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "stop game"));
     }
 
     private void onListPlayers(ArrayList<Argument> args) {
@@ -231,7 +231,7 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
 
     private void onReloadMaps(ArrayList<Argument> args) {
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "reload maps"));
+        this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "reload maps"));
     }
 
     public void tellNoMap() {

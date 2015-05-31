@@ -2,8 +2,8 @@ package com.lefrantguillaume.networkComponent.networkGame;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.gameComponent.gameObject.tanks.types.EnumTanks;
-import com.lefrantguillaume.networkComponent.networkGame.messages.MessageModel;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 
 /**
  * Created by andres_k on 11/03/2015.

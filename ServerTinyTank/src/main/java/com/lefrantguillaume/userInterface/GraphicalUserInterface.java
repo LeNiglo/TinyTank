@@ -3,7 +3,7 @@ package com.lefrantguillaume.userInterface;
 import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
-import com.lefrantguillaume.master.EnumController;
+import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.master.MasterController;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.ServerConfig;
@@ -53,17 +53,17 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
 
         public void askStartGame() {
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "start game"));
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "start game"));
         }
 
         public void askStopGame() {
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "stop game"));
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "stop game"));
         }
 
         public void reloadMaps() {
             this.setChanged();
-            this.notifyObservers(new Pair<>(EnumController.MASTER_CONTROLLER, "reload maps"));
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_CONTROLLER, "reload maps"));
         }
 
         public void tellNoMap() {}
