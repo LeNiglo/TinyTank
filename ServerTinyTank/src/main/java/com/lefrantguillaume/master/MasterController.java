@@ -2,7 +2,7 @@ package com.lefrantguillaume.master;
 
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.WindowObserver;
-import com.lefrantguillaume.gameComponent.controler.GameController;
+import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;

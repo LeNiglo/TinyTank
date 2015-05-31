@@ -1,4 +1,4 @@
-package com.lefrantguillaume.gameComponent.controler;
+package com.lefrantguillaume.gameComponent.controllers;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
