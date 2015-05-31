@@ -49,6 +49,7 @@ Router.map(function() {
 
 	this.route('servers-list');
 	this.route('ladder');
+	this.route('about');
 
 	/* Handle 404 */
 	this.route('notFound', {
