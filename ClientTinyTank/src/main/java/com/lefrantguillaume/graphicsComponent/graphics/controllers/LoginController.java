@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.graphicsComponent.graphics.WindowLogin;
 import com.lefrantguillaume.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;

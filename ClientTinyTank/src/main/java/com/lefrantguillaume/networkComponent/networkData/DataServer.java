@@ -25,7 +25,7 @@ public class DataServer {
     }
 
     private static ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://127.0.0.1:1337/client/";
+        String masterServer = "http://tinytank.lefrantguillaume.com/api/client/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
