@@ -1,30 +1,30 @@
 package com.lefrantguillaume.graphicsComponent.graphics.controllers;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.TextField;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
-import de.lessvoid.nifty.input.NiftyInputEvent;
-import de.lessvoid.nifty.screen.KeyInputHandler;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 /**
- * Created by Styve on 27/05/2015.
+ * Created by Styve on 31/05/2015.
  */
-public class LoginController implements ScreenController, KeyInputHandler {
-    private Nifty nifty;
-    private Screen screen;
-    private Element loginInput;
+public class LoginController implements ScreenController {
+    TextField loginField = null;
+    TextField passField = null;
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
         // on est bind dans le xml. le screen id="start" est relié à ce controlleur
         System.out.println("LoginController binded");
-        this.nifty = nifty;
-        this.screen = screen;
-        this.loginInput = screen.findElementByName("login");
+        loginField = screen.findNiftyControl("login", TextField.class);
+        passField = screen.findNiftyControl("pass", TextField.class);
     }
 
     @Override
@@ -37,16 +37,24 @@ public class LoginController implements ScreenController, KeyInputHandler {
         System.out.println("LoginController ended");
     }
 
-    @Override
-    public boolean keyEvent(NiftyInputEvent e) {
-        return false;
-    }
-
-    @NiftyEventSubscriber(id="ConnectButton")
-    public void onClick(String id, NiftyMousePrimaryClickedEvent event) {
-        System.out.println("element with id [" + id + "] clicked at [" + event.getMouseX() + ", " + event.getMouseY() + "]"); }
-
     public void connect() {
         System.out.println("Cliqué sur Connect !");
+        try {
+            System.out.println("user: " + loginField.getDisplayedText() + " // pass: " + passField.getRealText());
+            Pair<Boolean, String> p = DataServer.authentification(loginField.getDisplayedText(), passField.getRealText());
+            if (p.getV1()) {
+                JSONObject object = new JSONObject(p.getV2());
+                Debug.debug("my id = " + object.get("_id"));
+                CurrentUser.setId(object.get("_id").toString());
+                CurrentUser.setPseudo(object.get("username").toString());
+                //stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+            } else {
+                // TODO Display message on client.
+                Debug.debug("Error Login : " + p.getV2());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
+
 }

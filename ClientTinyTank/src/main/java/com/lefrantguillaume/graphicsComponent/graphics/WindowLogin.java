@@ -5,11 +5,19 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
+import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.nulldevice.NullSoundDevice;
 import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
 import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick2d.input.PlainSlickInputSystem;
 import de.lessvoid.nifty.slick2d.input.SlickInputSystem;
+import de.lessvoid.nifty.slick2d.render.SlickRenderDevice;
 import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -28,10 +36,12 @@ import java.util.UUID;
  * Created by andres_k on 10/03/2015.
  */
 
-class WindowLogin extends BasicGameState {
+public class WindowLogin extends BasicGameState {
     private GameContainer container;
     private StateBasedGame stateGame;
-    private LwjglInputSystem inputSys;
+    private SlickInputSystem inputSys;
+    private TextField loginField = null;
+    private TextField passField = null;
     private int id;
 
     private Nifty nifty;
@@ -46,7 +56,7 @@ class WindowLogin extends BasicGameState {
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
         try {
-            SlickInputSystem inputSys = new PlainSlickInputSystem();
+            inputSys = new PlainSlickInputSystem();
             nifty = new Nifty(new LwjglRenderDevice(), new NullSoundDevice(), inputSys, new AccurateTimeProvider());
 
             gameContainer.getInput().removeListener(this);
@@ -88,49 +98,22 @@ class WindowLogin extends BasicGameState {
     }
 
     @Override
-    public void keyPressed(int key, char c) {
-        System.out.println("key pressed:" + c);
-    }
-
-    @Override
     public void keyReleased(int key, char c) {
+        if (loginField == null) {
+            return;
+        }
         if (key == Input.KEY_RETURN) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
-
                 // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                CurrentUser.setPseudo("login"); //TODO remplacer login par la vraie value du loginText
+                CurrentUser.setPseudo(loginField.getDisplayedText());
+                System.out.println(loginField.getDisplayedText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
-
             } else {
-                try {
-                    Pair<Boolean, String> p = DataServer.authentification("user", "pass"); // TODO voir le TODO d'au dessus
-
-                    if (p.getV1()) {
-
-                        JSONObject object = new JSONObject(p.getV2());
-
-                        Debug.debug("my id = " + object.get("_id"));
-
-                        CurrentUser.setId(object.get("_id").toString());
-                        CurrentUser.setPseudo(object.get("username").toString());
-                        this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
-                    } else {
-
-                        // TODO Display message on client.
-                        Debug.debug("Error Login : " + p.getV2());
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                System.out.println("Press ctrl + enter pls");
             }
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
         }
-    }
-
-    public void connect() {
-        System.out.println("Cliqué sur Connect !");
     }
 }
