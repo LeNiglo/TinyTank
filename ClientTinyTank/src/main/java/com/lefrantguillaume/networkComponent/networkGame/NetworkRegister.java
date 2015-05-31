@@ -26,6 +26,7 @@ public class NetworkRegister {
         kryo.register(com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePlayerRevive.class);
         kryo.register(com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageCollision.class);
         kryo.register(com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessagePutObstacle.class);
+        kryo.register(com.lefrantguillaume.networkComponent.networkGame.messages.msg.MessageGestRound.class);
         kryo.register(EnumTanks.class);
     }
 }

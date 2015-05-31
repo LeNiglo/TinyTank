@@ -104,30 +104,46 @@ public class GameController extends Observable implements Observer {
                 }
                 if (received instanceof MessagePlayerDelete) {
                     Debug.debug("DELETE PLAYER");
-                    MessagePlayerDelete task = (MessagePlayerDelete) received;
-                    this.deletePlayer(task.getId());
+                    this.deletePlayer(received.getId());
                 }
                 if (received instanceof MessagePlayerUpdateState) {
                     Debug.debug("UPDATE STATE PLAYER");
-                    MessagePlayerUpdateState task = (MessagePlayerUpdateState) received;
-                    this.changeStatePlayer(task);
+                    this.changeStatePlayer((MessagePlayerUpdateState) received);
                 }
                 if (received instanceof MessagePlayerUpdatePosition) {
                     Debug.debug("UPDATE POS PLAYER");
-                    MessagePlayerUpdatePosition task = (MessagePlayerUpdatePosition) received;
-                    this.changePositionPlayer(task);
+                    this.changePositionPlayer((MessagePlayerUpdatePosition) received);
                 }
                 if (received instanceof MessagePlayerRevive) {
                     Debug.debug("REVIVE PLAYER");
-                    MessagePlayerRevive task = (MessagePlayerRevive) received;
-                    this.revivePlayer(task);
+                    this.revivePlayer((MessagePlayerRevive) received);
                 }
                 if (received instanceof MessagePutObstacle) {
                     Debug.debug("PUT OBJECT");
-                    MessagePutObstacle task = (MessagePutObstacle) received;
-                    this.putObject(task);
+                    this.putObject((MessagePutObstacle) received);
+                }
+                if (received instanceof MessageGestRound) {
+                    Debug.debug("GEST ROUND");
+                    this.gestRound((MessageGestRound) received);
                 }
             }
+        }
+    }
+
+    private void gestRound(MessageGestRound received) {
+        if (received.getAction() == 0) {
+            Debug.debug("PREPARE GAME");
+        } else if (received.getAction() == 1) {
+            Debug.debug("START GAME");
+        } else if (received.getAction() == 2) {
+            Debug.debug("WIN ROUND");
+        } else if (received.getAction() == 3) {
+            Debug.debug("LOOSE ROUND");
+        } else if (received.getAction() == 4) {
+            Debug.debug("TIE ROUND");
+        } else {
+            Debug.debug("THIS MESSAGE IS WRONG !");
+            throw new RuntimeException("Invalid Message ...");
         }
     }
 

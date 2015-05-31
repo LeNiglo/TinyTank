@@ -73,6 +73,14 @@ WebApi = function (app, db) {
     }
 
     this.register = function (req, res) {
+
+        var forbidden = ["admin", "test", "leniglo", "draym", "switi"];
+
+        if (forbidden.indexOf(req.body.username.toLowerCase()) > -1) {
+            res.status(200).json({name: "register", res: false, err: "Username not allowed."});
+            return false;
+        }
+
         Users.findOne({
             $or: [{email: req.body.email.toLowerCase()}, {username: new RegExp('^' + req.body.username + '$', 'i')}]
         }, function (error, alreadyExist) {
@@ -181,7 +189,8 @@ WebApi = function (app, db) {
 
         }
         Users.findOne({
-            $or: [{_id: objId}, {username: regUn}]
+            $or: [{_id: objId}, {username: regUn}],
+            active: true
         }, function (error, exists) {
 
             //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
