@@ -10,22 +10,30 @@ FEFEFE;               // WHITE
 */
 
 table#ladder a {
-  color: #F15841;
-  text-decoration: none;
+    color: #F15841;
+    text-decoration: none;
 }
 
 table#ladder tbody tr:hover td,
 table#ladder tbody tr:hover th {
-  font-size: 120%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+    font-size: 120%;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 div#home section {
-  margin: 20px 0;
-  font-size: 18px;
+    margin: 20px 0;
+    font-size: 18px;
 }
 
 table.list-users {
-  width: 100%;
+    width: 100%;
+}
+
+.circular {
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
 }
