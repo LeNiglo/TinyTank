@@ -6,12 +6,12 @@ Template.about.helpers({
                 picture: "http://puu.sh/i7GKO.jpg"
             },
             {
-                name: "Kévin Andres",
+                name: "KÃ©vin Andres",
                 picture: "http://puu.sh/i7GBq.jpg"
             },
             {
                 name: "Styve Simonneau",
-                picture: "http://puu.sh/gsacK/ffaf9995bf.jpg"
+                picture: "http://puu.sh/i7Iyx.png"
             },
             {
                 name: "Alexandre Quintin",

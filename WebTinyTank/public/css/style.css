@@ -28,12 +28,25 @@ div#home section {
 
 table.list-users {
     width: 100%;
+    text-align: center;
 }
 
 .circular {
-    background-repeat: no-repeat;
-    background-position: 50%;
-    border-radius: 50%;
     width: 100px;
     height: 100px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.circular img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
 }

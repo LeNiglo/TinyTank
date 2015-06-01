@@ -15,8 +15,10 @@
 <template name="aboutUser">
     <td>
         <div>
-            {{ name }}
-            <div class="circular" style="background-image: url({{ picture }});"></div>
+            <h4>{{ name }}</h4>
+            <div class="circular">
+                <img src="{{ picture }}" alt="{{ name }}" tile="{{ name }}" />
+            </div>
         </div>
     </td>
 </template>
