@@ -23,6 +23,13 @@ Router.map(function() {
 		}
 	});
 
+	this.route('tank', {
+		path: '/tank/:_id?',
+		data: function() {
+			return this.params;
+		}
+	});
+
 	this.route('download', {
 		layoutTemplate: 'fullLayout'
 	});

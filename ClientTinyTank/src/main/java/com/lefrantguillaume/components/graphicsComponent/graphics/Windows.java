@@ -51,7 +51,6 @@ public class Windows extends StateBasedGame implements Observer {
         return false;
     }
 
-    @Override
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> task = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
