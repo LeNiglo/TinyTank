@@ -5,7 +5,7 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Shot extends Observable implements Observer {
     private final Animator animator;
     private final Pair<Float, Float> shiftHead;
     private final Pair<Float, Float> shiftToExplode;
-    private final EnumShots shotType;
+    private final EnumGameObject type;
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private float damage;
@@ -32,17 +32,18 @@ public class Shot extends Observable implements Observer {
     private List<Block> collisionObject;
     private List<Pair<Float, Float>> savePosShot;
 
-    public Shot(String userId, String id, EnumShots shotType, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
+    public Shot(String userId, String id, EnumGameObject type, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning,
+                Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
+        this.positions = new Pair<>(positioning.getV1(), positioning.getV2());
+        this.angle = positioning.getV3();
         this.shiftOrigin = new Pair<>(shiftOrigin);
         this.shiftToExplode = new Pair<>(shiftToExplode);
         this.shiftHead = new Pair<>(shiftHead);
         this.savePosShot = new ArrayList<>();
-        this.shotType = shotType;
+        this.type = type;
         this.explode = false;
         this.userId = userId;
         this.id = id;
-        this.positions = new Pair<>(positioning.getV1(), positioning.getV2());
-        this.angle = positioning.getV3();
         this.damage = damage;
         this.speed = speed;
         this.animator = animator;
@@ -51,19 +52,24 @@ public class Shot extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
+        Tuple<Float, Float, EnumGameObject> task = (Tuple<Float, Float, EnumGameObject>) arg;
 
-        if (order.getV3() == EnumType.UNBREAKABLE || order.getV3() == EnumType.OBSTACLE || order.getV3() == EnumType.SHOT || order.getV3() == EnumType.TANK) {
-            this.positions.setV1(order.getV1());
-            this.positions.setV2(order.getV2());
-            this.shiftOrigin.setV1(this.shiftToExplode.getV1());
-            this.shiftOrigin.setV2(this.shiftToExplode.getV2());
-            this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
-            this.explode = true;
-            Block nullBlock = null;
-            this.setChanged();
-            this.notifyObservers(nullBlock);
-        }
+        Pair<Float, Float> newPoint = new Pair<>(task.getV1() + this.shiftHead.getV1(), task.getV2() + this.shiftHead.getV2());
+        MathTools.rotate(new Pair<>(task.getV1(), task.getV2()), newPoint, angle);
+        this.positions.setV1(newPoint.getV1());
+        this.positions.setV2(newPoint.getV2());
+
+        Pair<Float, Float> newShift = new Pair<>(this.positions.getV1() + this.shiftOrigin.getV1(), this.positions.getV2() + this.shiftOrigin.getV2());
+        MathTools.rotate(this.positions, newShift, angle);
+        this.shiftOrigin.setV1(this.shiftToExplode.getV1());
+        this.shiftOrigin.setV2(this.shiftToExplode.getV2());
+
+        this.addNewPosition();
+        this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
+        this.explode = true;
+        Block nullBlock = null;
+        this.setChanged();
+        this.notifyObservers(nullBlock);
     }
 
     // FUNCTIONS
@@ -79,13 +85,17 @@ public class Shot extends Observable implements Observer {
     public void move(float delta) {
         if (this.explode == false) {
             Pair<Float, Float> coords = this.movePredict(delta);
-            if (this.shotType != EnumShots.LASER) {
-                this.savePosShot.clear();
-            }
-            this.savePosShot.add(new Pair<>(this.getGraphicalX(), this.getGraphicalY()));
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
+            this.addNewPosition();
         }
+    }
+
+    private void addNewPosition() {
+        if (this.type != EnumGameObject.LASER) {
+            this.savePosShot.clear();
+        }
+        this.savePosShot.add(new Pair<>(this.getGraphicalX(), this.getGraphicalY()));
     }
 
     public Pair<Float, Float> movePredict(float delta) {
@@ -137,8 +147,11 @@ public class Shot extends Observable implements Observer {
     }
 
     public float getAngle() {
-
         return this.angle;
+    }
+
+    public EnumGameObject getType() {
+        return this.type;
     }
 
     public boolean getExplode() {
@@ -163,5 +176,13 @@ public class Shot extends Observable implements Observer {
 
     public List<Block> getCollisionObject() {
         return this.collisionObject;
+    }
+
+    public List<EnumGameObject> getIgnoredObjectList() {
+        List<EnumGameObject> types = new ArrayList<>();
+
+        if (this.type.equals(EnumGameObject.LASER))
+            types.add(EnumGameObject.PLASMA_WALL);
+        return types;
     }
 }

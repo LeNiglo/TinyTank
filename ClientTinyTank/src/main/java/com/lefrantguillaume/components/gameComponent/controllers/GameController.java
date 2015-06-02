@@ -7,7 +7,6 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
@@ -95,7 +94,7 @@ public class GameController extends Observable implements Observer {
                         MessagePlayerNew task = (MessagePlayerNew) message;
                         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
                             Debug.debug("NEW PLAYER");
-                            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumTanks()), this.getShots(), task.getPosX(), task.getPosY()));
+                            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), null, this.tankConfigData.getTank(task.getEnumGameObject()), this.getShots(), task.getPosX(), task.getPosY()));
                             if (task.getId().equals(CurrentUser.getId())) {
                                 CurrentUser.setInGame(true);
                                 this.initGame();
@@ -139,9 +138,9 @@ public class GameController extends Observable implements Observer {
 
         for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i) {
             Block current = player.getTank().getTankState().getCollisionObject().get(i);
-            CollisionObject obj = new CollisionObject(true, player.getTank().getTankState().getPositions(), current.getSizes(),
+            CollisionObject obj = new CollisionObject(player.getIgnoredObjectList(), player.getTank().getTankState().getPositions(), current.getSizes(),
                     current.getShiftOrigin(), player.getUser().getIdUser(),
-                    player.getUser().getId(), EnumType.TANK,
+                    player.getUser().getId(), player.getTank().getTankState().getType(),
                     player.getTank().getTankState().getDirection().getAngle());
             obj.addObserver(player);
             player.addObserver(obj);
@@ -194,7 +193,6 @@ public class GameController extends Observable implements Observer {
     }
 
     public void putObject(MessagePutObstacle task) {
-
         Obstacle obstacle = this.obstaclesConfigData.getNewObstacle(task.getType().getIndex());
         obstacle.createObstacle(task.getId(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
         this.mapController.addObstacle(obstacle);

@@ -1,9 +1,8 @@
 package com.lefrantguillaume.components.gameComponent.playerData.action;
 
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.Tank;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
@@ -40,8 +39,8 @@ public class PlayerActionController extends Observable {
                 for (int i = 0; i < shot.getCollisionObject().size(); ++i){
                     Block current = shot.getCollisionObject().get(i);
 
-                    CollisionObject obj = new CollisionObject(true, shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
-                            shot.getUserId(), shot.getId(), EnumType.TANK, shot.getAngle());
+                    CollisionObject obj = new CollisionObject(shot.getIgnoredObjectList(), shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
+                            shot.getUserId(), shot.getId(), shot.getType(), shot.getAngle());
                     obj.addObserver(shot);
                     shot.addObserver(obj);
                     collisionController.addCollisionObject(obj);

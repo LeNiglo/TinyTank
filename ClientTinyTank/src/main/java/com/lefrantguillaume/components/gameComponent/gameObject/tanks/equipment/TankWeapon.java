@@ -4,7 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.EnumShots;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class TankWeapon {
     private Animator shotAnimator;
-    private EnumShots shotType;
+    private EnumGameObject shotType;
     private final float damageShot;
     private final float speedShot;
     private List<Canon> canons;
@@ -27,34 +27,34 @@ public class TankWeapon {
     private int current;
 
     public TankWeapon(float speedShot, float damageShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitExplode, Pair<Float, Float> shiftHitOrigin,
-                      Pair<Float, Float> shiftHitHead, Animator shotAnimator, EnumShots shotType) {
-        this.shiftWeaponOrigin = new Pair<Float, Float>(shiftWeaponOrigin);
-        this.shiftHitOrigin = new Pair<Float, Float>(shiftHitOrigin);
-        this.shiftHitExplode = new Pair<Float, Float>(shiftHitExplode);
-        this.shiftHitHead = new Pair<Float, Float>(shiftHitHead);
-        this.shiftHitExplode = new Pair<Float, Float>(shiftHitExplode);
+                      Pair<Float, Float> shiftHitHead, Animator shotAnimator, EnumGameObject shotType) {
+        this.shiftWeaponOrigin = new Pair<>(shiftWeaponOrigin);
+        this.shiftHitOrigin = new Pair<>(shiftHitOrigin);
+        this.shiftHitExplode = new Pair<>(shiftHitExplode);
+        this.shiftHitHead = new Pair<>(shiftHitHead);
+        this.shiftHitExplode = new Pair<>(shiftHitExplode);
         this.shotAnimator = new Animator(shotAnimator);
         this.shotType = shotType;
         this.damageShot = damageShot;
         this.speedShot = speedShot;
         this.current = 0;
-        this.canons = new ArrayList<Canon>();
-        this.collisionObject = new ArrayList<Block>();
+        this.canons = new ArrayList<>();
+        this.collisionObject = new ArrayList<>();
     }
 
     public TankWeapon(TankWeapon tankWeapon) {
-        this.shiftWeaponOrigin = new Pair<Float, Float>(tankWeapon.shiftWeaponOrigin);
-        this.shiftHitOrigin = new Pair<Float, Float>(tankWeapon.shiftHitOrigin);
-        this.shiftHitExplode = new Pair<Float, Float>(tankWeapon.shiftHitExplode);
-        this.shiftHitHead = new Pair<Float, Float>(tankWeapon.shiftHitHead);
-        this.shiftHitExplode = new Pair<Float, Float>(tankWeapon.shiftHitExplode);
+        this.shiftWeaponOrigin = new Pair<>(tankWeapon.shiftWeaponOrigin);
+        this.shiftHitOrigin = new Pair<>(tankWeapon.shiftHitOrigin);
+        this.shiftHitExplode = new Pair<>(tankWeapon.shiftHitExplode);
+        this.shiftHitHead = new Pair<>(tankWeapon.shiftHitHead);
+        this.shiftHitExplode = new Pair<>(tankWeapon.shiftHitExplode);
         this.shotAnimator = new Animator(tankWeapon.shotAnimator);
         this.shotType = tankWeapon.shotType;
         this.damageShot = tankWeapon.damageShot;
         this.speedShot = tankWeapon.speedShot;
         this.current = 0;
-        this.canons = new ArrayList<Canon>();
-        this.collisionObject = new ArrayList<Block>();
+        this.canons = new ArrayList<>();
+        this.collisionObject = new ArrayList<>();
         for (int i = 0; i < tankWeapon.canons.size(); ++i) {
             this.canons.add(tankWeapon.canons.get(i));
         }
@@ -74,8 +74,8 @@ public class TankWeapon {
         float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
 
         Tuple<Float, Float, Float> newCoord = new Tuple<Float, Float, Float>(x, y, angle);
-        Shot shot = new Shot(userId, id, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<Float, Float>(this.shiftHitOrigin),
-                new Pair<Float, Float>(this.getShiftHitExplode()), new Pair<Float, Float>(this.shiftHitHead));
+        Shot shot = new Shot(userId, id, this.shotType, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<>(this.shiftHitOrigin),
+                new Pair<>(this.getShiftHitExplode()), new Pair<>(this.shiftHitHead));
 
         for (int i = 0; i < this.collisionObject.size(); ++i) {
             shot.addCollisionObject(this.collisionObject.get(i));
@@ -117,7 +117,7 @@ public class TankWeapon {
         return this.shotAnimator;
     }
 
-    public EnumShots getShotType() {
+    public EnumGameObject getShotType() {
         return shotType;
     }
 

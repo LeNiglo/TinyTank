@@ -4,7 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class TankState {
     private List<Block> collisionObject;
     private Animator bodyAnimator;
     private Animator topAnimator;
-    private EnumTanks tankType;
+    private EnumGameObject type;
     private final float speed;
     private final float maxLife;
     private final float maxArmor;
@@ -34,33 +34,33 @@ public class TankState {
     private float gunAngle;
     private EnumDirection direction;
 
-    public TankState(float speed, float maxLife, float maxArmor, float accuracy, Animator bodyAnimator, Animator topAnimator, EnumTanks tankType, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
+    public TankState(float speed, float maxLife, float maxArmor, float accuracy, Animator bodyAnimator, Animator topAnimator, EnumGameObject type, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
         this.bodyAnimator = bodyAnimator;
         this.topAnimator = topAnimator;
-        this.tankType = tankType;
+        this.type = type;
         this.speed = speed;
         this.maxLife = maxLife;
         this.maxArmor = maxArmor;
         this.accuracy = accuracy;
         this.currentLife = maxLife;
         this.currentArmor = maxArmor;
-        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
-        this.shiftOriginSave = new Pair<Float, Float>(shiftOrigin);
-        this.shiftToExplode = new Pair<Float, Float>(shiftToExplode);
+        this.shiftOrigin = new Pair<>(shiftOrigin);
+        this.shiftOriginSave = new Pair<>(shiftOrigin);
+        this.shiftToExplode = new Pair<>(shiftToExplode);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.positions = new Pair<Float, Float>(0f, 0f);
-        this.collisionObject = new ArrayList<Block>();
+        this.positions = new Pair<>(0f, 0f);
+        this.collisionObject = new ArrayList<>();
     }
 
     public TankState(TankState tankState) {
         this.bodyAnimator = new Animator(tankState.bodyAnimator);
         this.topAnimator = new Animator(tankState.topAnimator);
-        this.tankType = tankState.tankType;
+        this.type = tankState.type;
         this.speed = tankState.speed;
         this.maxLife = tankState.maxLife;
         this.maxArmor = tankState.maxArmor;
@@ -220,8 +220,8 @@ public class TankState {
         this.boostEffect = boostEffect;
     }
 
-    public EnumTanks getTankType() {
-        return tankType;
+    public EnumGameObject getType() {
+        return type;
     }
 
     public void setPositions(Pair<Float, Float> positions) {

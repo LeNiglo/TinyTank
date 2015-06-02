@@ -3,7 +3,6 @@ package com.lefrantguillaume.components.gameComponent.controllers;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import org.newdawn.slick.SlickException;
@@ -22,7 +21,7 @@ public class MapController {
     private String configMapFile;
 
     public MapController(CollisionController collisionController, String configMapFile) throws SlickException {
-        this.obstacles = new ArrayList<Obstacle>();
+        this.obstacles = new ArrayList<>();
         this.collisionController = collisionController;
         this.configMapFile = configMapFile;
         this.initMap();
@@ -40,7 +39,8 @@ public class MapController {
     }
 
     public void addObstacle(Obstacle obstacle) {
-        CollisionObject collisionObject = new CollisionObject(true, obstacle.getPositions(), obstacle.getSizes(), obstacle.getShiftOrigin(), obstacle.getUserId(), obstacle.getId(), EnumType.OBSTACLE, 0);
+        CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), obstacle.getSizes(),
+                obstacle.getShiftOrigin(), obstacle.getUserId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
         this.obstacles.add(obstacle);
         this.collisionController.addCollisionObject(collisionObject);
     }

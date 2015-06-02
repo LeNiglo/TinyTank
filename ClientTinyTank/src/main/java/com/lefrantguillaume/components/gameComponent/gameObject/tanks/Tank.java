@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.gameComponent.gameObject.tanks.types;
+package com.lefrantguillaume.components.gameComponent.gameObject.tanks;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
@@ -19,11 +19,14 @@ public class Tank {
     private TankWeapon tankWeapon;
     private TankState tankState;
     private TankSpell tankSpell;
+    private TankSpell tankBox;
 
     public Tank(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"), animatorGameData);
         this.tankState = TankFactory.createTankState(config.getJSONObject("tankState"), animatorGameData);
         this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankSpell"), animatorGameData);
+//TODO mettre les box dans le fichier de conf
+//        this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankBox"), animatorGameData);
     }
 
     public Tank(Tank tank){

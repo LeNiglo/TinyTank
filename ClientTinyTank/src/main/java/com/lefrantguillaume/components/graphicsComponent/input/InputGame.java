@@ -4,7 +4,7 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.EnumObstacles;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
@@ -72,7 +72,7 @@ public class InputGame extends Observable{
             message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
             Tuple<Float, Float, Float> boxValues = player.predictCreateBox(collisionController);
-            message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumObstacles.WALL_WOOD, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
+            message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumGameObject.IRON_WALL, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
         }
         return message;
     }

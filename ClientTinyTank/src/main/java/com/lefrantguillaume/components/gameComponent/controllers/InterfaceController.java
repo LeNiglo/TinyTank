@@ -5,7 +5,7 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumInterfaceComponent;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.interfaceComponent.AvailableTank;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePlayerNew;
@@ -46,8 +46,8 @@ public class InterfaceController extends Observable implements Observer {
     }
 
     public boolean loadGame() {
-        EnumTanks tankChoice = this.availableTank.getCurrentTank();
-        if (tankChoice != EnumTanks.NULL) {
+        EnumGameObject tankChoice = this.availableTank.getCurrentTank();
+        if (tankChoice != EnumGameObject.NULL) {
             Debug.debug("tank:" + tankChoice);
             MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), tankChoice);
 

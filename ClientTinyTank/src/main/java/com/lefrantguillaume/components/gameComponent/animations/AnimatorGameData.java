@@ -1,9 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.EnumObstacles;
-import com.lefrantguillaume.components.gameComponent.gameObject.spells.EnumSpells;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
-import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.EnumShots;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -23,11 +20,11 @@ public class AnimatorGameData {
 
     public AnimatorGameData() {
         this.animatorFactory = new AnimatorGameFactory();
-        this.tankBodyAnimator = new ArrayList<Animator>();
-        this.tankTopAnimator = new ArrayList<Animator>();
-        this.spellAnimator = new ArrayList<Animator>();
-        this.shotAnimator = new ArrayList<Animator>();
-        this.obstacleAnimator = new ArrayList<Animator>();
+        this.tankBodyAnimator = new ArrayList<>();
+        this.tankTopAnimator = new ArrayList<>();
+        this.spellAnimator = new ArrayList<>();
+        this.shotAnimator = new ArrayList<>();
+        this.obstacleAnimator = new ArrayList<>();
     }
 
     public void initGame() throws SlickException {
@@ -92,19 +89,19 @@ public class AnimatorGameData {
         this.obstacleAnimator.add(obstacleAnimator);
     }
 
-    public Animator getTankBodyAnimator(EnumTanks index) {
+    public Animator getTankBodyAnimator(EnumGameObject index) {
         return new Animator(this.tankBodyAnimator.get(index.getIndex()));
     }
 
-    public Animator getTankTopAnimator(EnumTanks index) {
+    public Animator getTankTopAnimator(EnumGameObject index) {
         return new Animator(this.tankTopAnimator.get(index.getIndex()));
     }
 
-    public Animator getSpellAnimator(EnumSpells index) {
+    public Animator getSpellAnimator(EnumGameObject index) {
         return new Animator(this.spellAnimator.get(index.getIndex()));
     }
 
-    public Animator getShotAnimator(EnumShots index) {
+    public Animator getShotAnimator(EnumGameObject index) {
         return new Animator(this.shotAnimator.get(index.getIndex()));
     }
 
@@ -112,7 +109,7 @@ public class AnimatorGameData {
         return this.mapAnimator;
     }
 
-    public Animator getObstacleAnimator(EnumObstacles index) {
+    public Animator getObstacleAnimator(EnumGameObject index) {
         return new Animator(this.obstacleAnimator.get(index.getIndex()));
     }
 }

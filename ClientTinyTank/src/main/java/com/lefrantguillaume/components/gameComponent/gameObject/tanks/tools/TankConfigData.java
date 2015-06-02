@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools;
 
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.Tank;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -42,7 +42,7 @@ public class TankConfigData {
         return this.tanks;
     }
 
-    public Tank getTank(EnumTanks index) {
+    public Tank getTank(EnumGameObject index) {
         if (this.valid == true && index.getIndex() < this.tanks.size()) {
             return new Tank(this.tanks.get(index.getIndex()));
         }

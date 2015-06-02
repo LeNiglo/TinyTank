@@ -2,18 +2,15 @@ package com.lefrantguillaume.components.gameComponent.playerData.data;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.Tank;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerActionController;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -41,10 +38,8 @@ public class Player extends Observable implements Observer{
 
     @Override
     public void update(Observable o, Object arg) {
-        Tuple<Float, Float, EnumType> order = (Tuple<Float, Float, EnumType>) arg;
+        Tuple<Float, Float, EnumGameObject> order = (Tuple<Float, Float, EnumGameObject>) arg;
 
-        if (order.getV3() == EnumType.AREA) {
-        }
     }
 
     public void doAction(PlayerAction playerAction, CollisionController collisionController) {
@@ -124,4 +119,11 @@ public class Player extends Observable implements Observer{
     public User getUser() {
         return user;
     }
+
+    public List<EnumGameObject> getIgnoredObjectList(){
+        List<EnumGameObject> types = new ArrayList<>();
+
+        return types;
+    }
 }
+

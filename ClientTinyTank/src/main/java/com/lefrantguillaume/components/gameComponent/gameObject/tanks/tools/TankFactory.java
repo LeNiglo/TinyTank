@@ -3,14 +3,12 @@ package com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.Canon;
-import com.lefrantguillaume.components.gameComponent.gameObject.spells.EnumSpells;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.EnumShots;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.Tank;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -28,7 +26,7 @@ public class TankFactory {
         JSONObject hit = config.getJSONObject("hit");
         JSONObject weapon = config.getJSONObject("weapon");
 
-        EnumShots shot = EnumShots.getEnumByValue(hit.getString("shotType"));
+        EnumGameObject shotType = EnumGameObject.getEnumByValue(hit.getString("shotType"));
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
         Pair<Float, Float> shiftHitExplode = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("shiftXExplode")), Float.valueOf(hit.getJSONObject("build").getString("shiftYExplode")));
@@ -36,7 +34,7 @@ public class TankFactory {
         Pair<Float, Float> shiftHitHead = new Pair<Float, Float>(Float.valueOf(hit.getJSONObject("build").getString("headX")), Float.valueOf(hit.getJSONObject("build").getString("headY")));
 
         Pair<Float, Float> shiftWeaponOrigin = new Pair<Float, Float>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shot), shot);
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shotType), shotType);
         JSONArray canons = weapon.getJSONArray("canons");
         for (int i = 0; i < canons.length(); ++i){
             JSONObject current = canons.getJSONObject(i);
@@ -58,14 +56,14 @@ public class TankFactory {
     }
 
     public static TankState createTankState(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
-        EnumTanks tank = EnumTanks.getEnumByValue(config.getString("tankType"));
+        EnumGameObject tankType = EnumGameObject.getEnumByValue(config.getString("tankType"));
 
         JSONObject build = config.getJSONObject("build");
         Pair<Float, Float> shiftOrigin = new Pair<Float, Float>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
         Pair<Float, Float> shiftHitExplode = new Pair<Float, Float>(Float.valueOf(build.getString("shiftXExplode")), Float.valueOf(build.getString("shiftYExplode")));
 
         TankState tankState = new TankState(Float.valueOf(config.getString("speed")), Float.valueOf(config.getString("life")), Float.valueOf(config.getString("armor")), Float.valueOf(config.getString("accuracy")),
-                animatorGameData.getTankBodyAnimator(tank), animatorGameData.getTankTopAnimator(tank), tank, shiftOrigin, shiftHitExplode);
+                animatorGameData.getTankBodyAnimator(tankType), animatorGameData.getTankTopAnimator(tankType), tankType, shiftOrigin, shiftHitExplode);
         JSONArray collisions = build.getJSONArray("collisions");
         for (int i = 0; i < collisions.length(); ++i){
             JSONObject current = collisions.getJSONObject(i);
@@ -77,7 +75,7 @@ public class TankFactory {
     }
 
     public static TankSpell createTankSpell(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
-        EnumSpells spell = EnumSpells.getEnumByValue(config.getString("spellType"));
+        EnumGameObject spellType = EnumGameObject.getEnumByValue(config.getString("spellType"));
         TankSpell tankSpell = new TankSpell();
         return tankSpell;
     }

@@ -3,7 +3,7 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.MapController;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +32,10 @@ public class CollisionController {
         Pair<Float, Float> origin3 = new Pair<Float, Float>(-10f, -map.getSizeY() / 2);
         Pair<Float, Float> origin4 = new Pair<Float, Float>(0f, -map.getSizeY() / 2);
 
-        this.addCollisionObject(new CollisionObject(true, pos1, size1, origin1, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos2, size1, origin2, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos3, size2, origin3, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
-        this.addCollisionObject(new CollisionObject(true, pos4, size2, origin4, "admin", UUID.randomUUID().toString(), EnumType.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(null, pos1, size1, origin1, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(null, pos2, size1, origin2, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(null, pos3, size2, origin3, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
+        this.addCollisionObject(new CollisionObject(null, pos4, size2, origin4, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
 
     }
 
@@ -68,21 +68,21 @@ public class CollisionController {
                         if (current.isAlive()) {
                             if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
                                 if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
-                                    objects.get(i).notifyCollision(current.getType());
-                                    current.notifyCollision(current.getType());
-                                    if (current.isSolid()) {
+                                    if (!objects.get(i).isIgnored(current.getType())) {
                                         objects.get(i).backToSave();
+                                        objects.get(i).notifyCollision(current.getType());
+                                        current.notifyCollision(current.getType());
                                     }
-                                    if (current.getType() == EnumType.UNBREAKABLE) {
-                                        return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
+                                    if (current.getType() == EnumGameObject.UNBREAKABLE) {
+                                        return new Pair<>(false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
-                                    return new Pair<Boolean, Pair<String, String>>(true, new Pair<String, String>(objects.get(i).getId().toString(), current.getId().toString()));
+                                    return new Pair<>(true, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                 }
                             }
                         }
                     }
                 }
-                return new Pair<Boolean, Pair<String, String>>(false, new Pair<String, String>("null", "null"));
+                return new Pair<>(false, new Pair<>("null", "null"));
             }
         } catch (Exception e) {
             e.printStackTrace();

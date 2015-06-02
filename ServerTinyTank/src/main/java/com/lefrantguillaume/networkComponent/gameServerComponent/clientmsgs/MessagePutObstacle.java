@@ -1,6 +1,7 @@
 package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
 
-import com.lefrantguillaume.gameComponent.gameobjects.obstacle.EnumObstacles;
+
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 
 /**
  * Created by Styve on 26/03/2015.
@@ -9,7 +10,7 @@ public class MessagePutObstacle extends MessageModel {
     private float posX;
     private float posY;
     private float angle;
-    private EnumObstacles type;
+    private EnumGameObject type;
     private String obstacleId = "";
 
     public MessagePutObstacle() {}
@@ -27,7 +28,7 @@ public class MessagePutObstacle extends MessageModel {
         return this.angle;
     }
 
-    public EnumObstacles getType() {
+    public EnumGameObject getType() {
         return this.type;
     }
 
@@ -48,7 +49,7 @@ public class MessagePutObstacle extends MessageModel {
         this.angle = angle;
     }
 
-    public void setType(EnumObstacles type) {
+    public void setType(EnumGameObject type) {
         this.type = type;
     }
 

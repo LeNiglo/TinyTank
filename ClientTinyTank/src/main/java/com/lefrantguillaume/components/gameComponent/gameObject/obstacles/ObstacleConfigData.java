@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -16,7 +17,7 @@ public class ObstacleConfigData {
     private boolean valid;
 
     public ObstacleConfigData(){
-        this.obstacles = new ArrayList<Obstacle>();
+        this.obstacles = new ArrayList<>();
         this.valid = false;
     }
 
@@ -29,7 +30,8 @@ public class ObstacleConfigData {
         for (int i = 0; i < obstacleArray.length(); ++i) {
                     }
         */
-        obstacles.add(new Obstacle(animatorGameData.getObstacleAnimator(EnumObstacles.WALL_WOOD), EnumObstacles.WALL_WOOD, new Pair<Float, Float>(50f, 45f), new Pair<Float, Float>(25f, 22.5f)));
+        obstacles.add(new Obstacle(animatorGameData.getObstacleAnimator(EnumGameObject.IRON_WALL), EnumGameObject.IRON_WALL, new Pair<>(50f, 45f), new Pair<>(25f, 22.5f), 20, 0));
+        obstacles.add(new Obstacle(animatorGameData.getObstacleAnimator(EnumGameObject.IRON_WALL), EnumGameObject.MINE, new Pair<>(50f, 45f), new Pair<>(25f, 22.5f), 10, 10));
         this.valid = true;
     }
     public Obstacle getNewObstacle(int index){

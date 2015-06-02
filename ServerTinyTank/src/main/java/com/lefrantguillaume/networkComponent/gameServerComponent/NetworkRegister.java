@@ -2,15 +2,13 @@ package com.lefrantguillaume.networkComponent.gameServerComponent;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.gameComponent.gameobjects.EnumObjects;
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.*;
 
 import java.util.ArrayList;
 
 /**
  * Created by Styve on 10/03/2015.
- * lol
  */
 
 // This class is a convenient place to keep things common to both the client and server.
@@ -33,8 +31,7 @@ public class NetworkRegister {
         kryo.register(MessagePlayerRevive.class);
         kryo.register(MessageCollision.class);
         kryo.register(MessagePutObstacle.class);
-        kryo.register(EnumTanks.class);
-        kryo.register(EnumObjects.class);
+        kryo.register(EnumGameObject.class);
         kryo.register(MessageNeedMap.class);
         kryo.register(MessageDownload.class);
         kryo.register(ArrayList.class);

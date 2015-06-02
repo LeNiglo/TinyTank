@@ -1,10 +1,11 @@
 package com.lefrantguillaume.components.collisionComponent;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -12,10 +13,10 @@ import java.util.Observer;
  * Created by andres_k on 13/03/2015.
  */
 public class CollisionObject extends Observable implements Observer {
-    private final boolean solid;
+    private List<EnumGameObject> ignoredObject;
     private final String idUser;
     private final String id;
-    private final EnumType type;
+    private final EnumGameObject type;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> sizes;
     private Pair<Float, Float> shiftOrigin;
@@ -24,12 +25,13 @@ public class CollisionObject extends Observable implements Observer {
     private boolean destroyed = false;
     private boolean alive = true;
 
-    public CollisionObject(boolean solid, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin, String idUser, String id, EnumType type, float angle) {
-        this.solid = solid;
-        this.shiftOrigin = new Pair<Float, Float>(shiftOrigin);
-        this.positions = new Pair<Float, Float>(positions);
-        this.savePositions = new Pair<Float, Float>(positions);
-        this.sizes = new Pair<Float, Float>(sizes);
+    public CollisionObject(List<EnumGameObject> ignoredObject, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin,
+                           String idUser, String id, EnumGameObject type, float angle) {
+        this.ignoredObject = ignoredObject;
+        this.shiftOrigin = new Pair<>(shiftOrigin);
+        this.positions = new Pair<>(positions);
+        this.savePositions = new Pair<>(positions);
+        this.sizes = new Pair<>(sizes);
         this.type = type;
         this.angle = angle;
         this.idUser = idUser;
@@ -71,7 +73,18 @@ public class CollisionObject extends Observable implements Observer {
         }
     }
 
-    public void notifyCollision(EnumType type) {
+    public boolean isIgnored(EnumGameObject type){
+        if (this.ignoredObject == null)
+            return false;
+        for (int i = 0; i < this.ignoredObject.size(); ++i){
+            if (this.ignoredObject.get(i).equals(type)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void notifyCollision(EnumGameObject type) {
         this.setChanged();
         this.notifyObservers(new Tuple<>(this.positions.getV1(), this.positions.getV2(), type));
     }
@@ -98,7 +111,7 @@ public class CollisionObject extends Observable implements Observer {
         return this.positions.getV2();
     }
 
-    public EnumType getType() {
+    public EnumGameObject getType() {
         return this.type;
     }
 
@@ -126,16 +139,16 @@ public class CollisionObject extends Observable implements Observer {
         return this.id;
     }
 
-    public boolean isSolid() {
-        return solid;
-    }
-
     public float getAngle() {
         return this.angle;
     }
 
     public float getRadian() {
         return (float) (this.angle * Math.PI / 180);
+    }
+
+    public List<EnumGameObject> getIgnoredList(){
+        return this.ignoredObject;
     }
 
     // SETTERS

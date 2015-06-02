@@ -1,19 +1,21 @@
 package com.lefrantguillaume.gameComponent.gameobjects.shots;
 
 
+import com.lefrantguillaume.gameComponent.EnumGameObject;
+
 /**
- * Created by Styve on 25/03/2015.
+ * Created by andres_k on 13/03/2015.
  */
 public class Shot {
     private String playerId;
     private String shotId;
-    private EnumShots shotType;
+    private EnumGameObject shotType;
     private float damageShot;
     private float speedShot;
     private float lifeShot;
     private long timestamp;
 
-    public Shot(String shotId, String playerId, EnumShots shotType, float damageShot, float speedShot, float lifeShot) {
+    public Shot(String shotId, String playerId, EnumGameObject shotType, float damageShot, float speedShot, float lifeShot) {
         this.playerId = playerId;
         this.shotId = shotId;
         this.shotType = shotType;
@@ -23,11 +25,31 @@ public class Shot {
         this.timestamp = System.currentTimeMillis();
     }
 
-    public String getPlayerId() {return playerId;}
-    public String getShotId() {return shotId;}
-    public EnumShots getShotType() {return shotType;}
-    public float getDamageShot() {return damageShot;}
-    public float getSpeedShot() {return speedShot;}
-    public float getLifeShot() {return lifeShot;}
-    public long getTimestamp() {return timestamp;}
+    public String getPlayerId() {
+        return this.playerId;
+    }
+
+    public String getShotId() {
+        return this.shotId;
+    }
+
+    public EnumGameObject getShotType() {
+        return this.shotType;
+    }
+
+    public float getDamageShot() {
+        return this.damageShot;
+    }
+
+    public float getSpeedShot() {
+        return this.speedShot;
+    }
+
+    public float getLifeShot() {
+        return this.lifeShot;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
 }

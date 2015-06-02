@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.interfaceComponent;
 
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumInterfaceComponent;
 import org.newdawn.slick.Graphics;
@@ -76,10 +76,10 @@ public class AvailableTank {
         this.currentTankStat = values[index];
     }
 
-    public EnumTanks getCurrentTank() {
+    public EnumGameObject getCurrentTank() {
         if (this.currentTankStat.getIndex() < this.available.size() && this.available.get(this.currentTankStat.getIndex()).equals(true)) {
-            return EnumTanks.getEnumByIndex(this.currentTankStat.getIndex());
+            return EnumGameObject.getEnumByIndex(this.currentTankStat.getIndex());
         }
-        return EnumTanks.NULL;
+        return EnumGameObject.NULL;
     }
 }

@@ -2,7 +2,7 @@ package com.lefrantguillaume.components.networkComponent.networkGame;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.types.EnumTanks;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 
@@ -27,6 +27,6 @@ public class NetworkRegister {
         kryo.register(MessagePlayerRevive.class);
         kryo.register(MessageCollision.class);
         kryo.register(MessagePutObstacle.class);
-        kryo.register(EnumTanks.class);
+        kryo.register(EnumGameObject.class);
     }
 }

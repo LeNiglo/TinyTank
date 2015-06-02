@@ -1,7 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment;
 
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerUpdateState;
 import com.lefrantguillaume.utils.Block;
 
@@ -20,10 +20,10 @@ public class TankState {
     private float shieldEffect;
     private float slowEffect;
     private float boostEffect;
-    private EnumTanks tankType;
+    private EnumGameObject tankType;
     private List<Block> collisionObject;
 
-    public TankState(float speed, float maxLife, float armor, EnumTanks tankType) {
+    public TankState(float speed, float maxLife, float armor, EnumGameObject tankType) {
         this.speed = speed;
         this.maxLife = maxLife;
         this.armor = armor;
@@ -128,7 +128,7 @@ public class TankState {
         this.armor = armor;
     }
 
-    public EnumTanks getTankType() {
+    public EnumGameObject getTankType() {
         return tankType;
     }
 

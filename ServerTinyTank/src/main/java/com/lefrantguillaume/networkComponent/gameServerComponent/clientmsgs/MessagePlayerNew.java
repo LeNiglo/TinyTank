@@ -1,14 +1,14 @@
 package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
 
 
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.EnumTanks;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 
 /**
  * Created by Styve on 25/03/2015.
  */
 
 public class MessagePlayerNew extends MessageModel {
-    private EnumTanks enumTanks;
+    private EnumGameObject enumTanks;
     private float posX;
     private float posY;
 
@@ -26,7 +26,7 @@ public class MessagePlayerNew extends MessageModel {
 
     // GETTERS
 
-    public EnumTanks getEnumTanks() {
+    public EnumGameObject getEnumTanks() {
         return enumTanks;
     }
 
@@ -40,7 +40,7 @@ public class MessagePlayerNew extends MessageModel {
 
     // SETTERS
 
-    public void setEnumTanks(EnumTanks enumTanks) {
+    public void setEnumTanks(EnumGameObject enumTanks) {
         this.enumTanks = enumTanks;
     }
 

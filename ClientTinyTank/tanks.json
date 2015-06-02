@@ -33,7 +33,7 @@
             "shiftXExplode": "-26.0", // décallage x/y pour afficher l'animation d'explosion
             "shiftYExplode": "-26.0",
             "headX": "10.0", // point représentant la tête du hit / futur centre de l'explosion
-            "headY": "10.0",
+            "headY": "0.0",
             "collisions": [
               {
                 "shiftOriginX": "-14.0", //décallage depuis (x, y) pour créer la collision (si sprite = collision, alors même décallage que sizeX/Y)
@@ -166,8 +166,8 @@
             "centerY": "-5.0",
             "shiftXExplode": "-12.0",
             "shiftYExplode": "-14.0",
-            "headX": "10.0",
-            "headY": "10.0",
+            "headX": "8.0",
+            "headY": "0.0",
             "collisions": [
               {
                 "shiftOriginX": "-6.0",

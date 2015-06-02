@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.networkComponent.networkGame.messages.msg;
 
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.EnumObstacles;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 
 /**
@@ -10,14 +10,14 @@ public class MessagePutObstacle extends MessageModel {
     private float posX;
     private float posY;
     private float angle;
-    private EnumObstacles type;
+    private EnumGameObject type;
     private String obstacleId = "";
 
     public MessagePutObstacle(){
 
     }
 
-    public MessagePutObstacle(String pseudo, String id,  EnumObstacles type, float posX, float posY, float angle){
+    public MessagePutObstacle(String pseudo, String id,  EnumGameObject type, float posX, float posY, float angle){
         this.pseudo = pseudo;
         this.id = id;
         this.posX = posX;
@@ -39,7 +39,7 @@ public class MessagePutObstacle extends MessageModel {
         return this.angle;
     }
 
-    public EnumObstacles getType() {
+    public EnumGameObject getType() {
         return this.type;
     }
 

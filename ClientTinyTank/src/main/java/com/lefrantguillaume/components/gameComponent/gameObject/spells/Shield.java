@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.spells;
 
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 /**
  * Created by andres_k on 18/03/2015.
@@ -8,7 +9,7 @@ import com.lefrantguillaume.components.gameComponent.animations.Animator;
 public class Shield extends Spell {
 
     public Shield(Animator animator) {
-        this.type = EnumSpells.SHIELD;
+        this.type = EnumGameObject.SHIELD;
         this.animator = animator;
     }
 
