@@ -10,6 +10,17 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: lessvoid:nifty:1.4.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: org.bushe:eventbus:1.4" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:2.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jglfont:jglfont-core:1.4" level="project" />
+    <orderEntry type="library" name="Maven: lessvoid:nifty-default-controls:1.4.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: lessvoid:nifty-lwjgl-renderer:1.4.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl_util:2.9.3" level="project" />
+    <orderEntry type="library" name="Maven: lessvoid:nifty-slick2d-renderer:1.4.2-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: slick:slick:20121001-264" level="project" />
+    <orderEntry type="library" name="Maven: lessvoid:nifty-style-black:1.4.2-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.slick2d:slick2d-core:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl:2.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl-platform:natives-windows:2.9.1" level="project" />
