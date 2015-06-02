@@ -1,13 +1,17 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.projectiles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumType;
-import com.lefrantguillaume.Utils.stockage.Tuple;
+import org.newdawn.slick.Graphics;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -18,6 +22,7 @@ public class Shot extends Observable implements Observer {
     private final Animator animator;
     private final Pair<Float, Float> shiftHead;
     private final Pair<Float, Float> shiftToExplode;
+    private final EnumShots shotType;
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private float damage;
@@ -25,11 +30,14 @@ public class Shot extends Observable implements Observer {
     private float angle;
     private boolean explode;
     private List<Block> collisionObject;
+    private List<Pair<Float, Float>> savePosShot;
 
-    public Shot(String userId, String id, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
+    public Shot(String userId, String id, EnumShots shotType, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.shiftOrigin = new Pair<>(shiftOrigin);
         this.shiftToExplode = new Pair<>(shiftToExplode);
         this.shiftHead = new Pair<>(shiftHead);
+        this.savePosShot = new ArrayList<>();
+        this.shotType = shotType;
         this.explode = false;
         this.userId = userId;
         this.id = id;
@@ -59,9 +67,22 @@ public class Shot extends Observable implements Observer {
     }
 
     // FUNCTIONS
+
+    public void draw(Graphics g) {
+        this.animator.currentAnimation().getCurrentFrame().setCenterOfRotation(this.getShiftOrigin().getV1() * -1, this.getShiftOrigin().getV2() * -1);
+        this.animator.currentAnimation().getCurrentFrame().setRotation(this.getAngle());
+        for (int i = 0; i < this.savePosShot.size(); ++i) {
+            g.drawAnimation(this.animator.currentAnimation(), this.savePosShot.get(i).getV1(), this.savePosShot.get(i).getV2());
+        }
+    }
+
     public void move(float delta) {
         if (this.explode == false) {
             Pair<Float, Float> coords = this.movePredict(delta);
+            if (this.shotType != EnumShots.LASER) {
+                this.savePosShot.clear();
+            }
+            this.savePosShot.add(new Pair<>(this.getGraphicalX(), this.getGraphicalY()));
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
         }

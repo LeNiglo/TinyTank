@@ -307,9 +307,7 @@ public class GameController extends Observable implements Observer {
                 this.collisionController.deleteCollisionObject(this.shots.get(i).getId());
                 this.shots.remove(i);
             } else {
-                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
-                current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
-                g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
+                current.draw(g);
 
                 // debug
                 g.setColor(Color.black);
