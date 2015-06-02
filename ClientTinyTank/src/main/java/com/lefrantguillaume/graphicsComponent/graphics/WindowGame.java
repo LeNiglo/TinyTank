@@ -8,6 +8,7 @@ import com.lefrantguillaume.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
 import com.lefrantguillaume.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
+import de.lessvoid.nifty.Nifty;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
@@ -38,7 +39,7 @@ public class WindowGame extends BasicGameState {
     private float saveAngle = 0f;
     private long runningTime = 0l;
 
-    public WindowGame(int id, List<Observer> observers, Object gameController) throws JSONException {
+    public WindowGame(int id, Nifty nifty, List<Observer> observers, Object gameController) throws JSONException {
         this.id = id;
         this.gameController = (GameController) gameController;
         this.animatorGameData = new AnimatorGameData();

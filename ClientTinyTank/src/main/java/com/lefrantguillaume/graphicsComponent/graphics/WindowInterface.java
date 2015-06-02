@@ -5,6 +5,7 @@ import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.graphicsComponent.input.InputCheck;
 import com.lefrantguillaume.gameComponent.controllers.InterfaceController;
+import de.lessvoid.nifty.Nifty;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
@@ -24,7 +25,7 @@ public class WindowInterface extends BasicGameState {
     private InputCheck input;
     private int id;
 
-    public WindowInterface(int id, List<Observer> observers, Object interfaceController) throws JSONException {
+    public WindowInterface(int id, Nifty nifty, List<Observer> observers, Object interfaceController) throws JSONException {
         this.id = id;
         this.animatorData = new AnimatorInterfaceData();
         this.interfaceController = (InterfaceController) interfaceController;
