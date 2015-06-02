@@ -1,8 +1,8 @@
 {
   "MOVE_UP" : "Z",
   "MOVE_DOWN" : "S",
-  "MOVE_RIGHT" : "D",
   "MOVE_LEFT" : "Q",
+  "MOVE_RIGHT" : "D",
   "PUT_OBJECT": "B",
   "SHOOT" : "MOUSE_LEFT_BUTTON",
   "SPELL" : "MOUSE_RIGHT_BUTTON",

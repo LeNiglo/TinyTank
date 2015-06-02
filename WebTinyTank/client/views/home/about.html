@@ -1,0 +1,24 @@
+<template name="about">
+    <h1 class="text-center page-header">About TinyTank</h1>
+
+    <div class="container text-center">
+
+        <table class="list-users">
+            {{#each users}}
+                {{> aboutUser }}
+            {{/each}}
+        </table>
+
+    </div>
+</template>
+
+<template name="aboutUser">
+    <td>
+        <div>
+            <h4>{{ name }}</h4>
+            <div class="circular">
+                <img src="{{ picture }}" alt="{{ name }}" tile="{{ name }}" />
+            </div>
+        </div>
+    </td>
+</template>

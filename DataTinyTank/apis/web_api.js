@@ -190,8 +190,8 @@ WebApi = function (app, db) {
         });
     }
 
-    this.get_tank_list = function(req, res) {
-        Tanks.find().toArray(function(err, result) {
+    this.get_tank_list = function (req, res) {
+        Tanks.find().toArray(function (err, result) {
             res.status(200).json({name: 'get_tank_list', res: result, err: err});
         });
     }
