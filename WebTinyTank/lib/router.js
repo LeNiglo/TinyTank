@@ -23,6 +23,13 @@ Router.map(function() {
 		}
 	});
 
+	this.route('tank', {
+		path: '/tank/:_id?',
+		data: function() {
+			return this.params;
+		}
+	});
+
 	this.route('download', {
 		layoutTemplate: 'fullLayout'
 	});
@@ -49,6 +56,7 @@ Router.map(function() {
 
 	this.route('servers-list');
 	this.route('ladder');
+	this.route('about');
 
 	/* Handle 404 */
 	this.route('notFound', {

@@ -14,10 +14,6 @@ public class MapController {
         this.maps = new ArrayList<Map>();
     }
 
-    public Map getCurrentMapIndex(){
-        return this.maps.get(currentMapIndex);
-    }
-
     public void clearMaps(){
         this.maps.clear();
     }
@@ -26,6 +22,7 @@ public class MapController {
         this.maps.add(map);
     }
 
+    // GETTERS
     public List<Map> getMaps(){
         return this.maps;
     }
@@ -34,8 +31,13 @@ public class MapController {
         return this.maps.get(index);
     }
 
+    public Map getCurrentMap(){
+        return this.maps.get(currentMapIndex);
+    }
+    //SETTERS
     public void setCurrentMapIndex(int index){
         if (index >= 0 && index < this.maps.size()){
+            this.maps.get(this.currentMapIndex).resetCurrentObject();
             this.currentMapIndex = index;
         }
     }

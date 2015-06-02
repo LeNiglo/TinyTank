@@ -1,9 +1,12 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
+import com.lefrantguillaume.gameComponent.gameMode.modes.TeamDeathMatch;
 import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
+import com.lefrantguillaume.gameComponent.gameMode.modes.GameMode;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by andres_k on 13/05/2015.
@@ -14,7 +17,7 @@ public class GameModeController{
 
     public GameModeController(){
         this.gameModes = new ArrayList<>();
-        this.currentGameMode = EnumGameMode.FreeForAll;
+        this.currentGameMode = EnumGameMode.TeamDeathMatch;
         this.initGameModes();
     }
 
@@ -23,20 +26,27 @@ public class GameModeController{
         this.getCurrentMode().doTask(task);
     }
 
-    public UUID isWinnerTeam(){
-        return this.getCurrentMode().isWinnerTeam();
-    }
-
     private void initGameModes(){
         gameModes.add(new FreeForAll(8));
+        gameModes.add(new TeamDeathMatch(2));
     }
 
-    public void restartGameMode(){
-        this.getCurrentMode().restart();
-    }
+
     // GETTERS
     public GameMode getCurrentMode(){
         return this.gameModes.get(this.currentGameMode.getIndex());
+    }
+
+    public EnumGameMode getCurrentGameMode(){
+        return this.currentGameMode;
+    }
+
+    public String isWinnerTeam(){
+        return this.getCurrentMode().isWinnerTeam();
+    }
+
+    public boolean isPlayable(){
+        return this.getCurrentMode().isPlayable();
     }
 
     // SETTERS

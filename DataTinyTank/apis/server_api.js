@@ -7,7 +7,7 @@ ServerApi = function(app, db) {
 	this.init_server = function(req, res) {
 		Servers.insert({
 			name: req.body.gameName,
-			ip: req.ip,
+			ip:  req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 			ports: {
 				udp: req.body.udpPort,
 				tcp: req.body.tcpPort
@@ -54,6 +54,12 @@ ServerApi = function(app, db) {
 	this.add_game_stats = function(req, res) {
 		console.log(req.body, req.query, req.params);
 		res.status(200).json({name: 'add_game_stats', res: true, err: null});
+	}
+
+	this.get_tank_list = function (req, res) {
+		Tanks.find().toArray(function (err, result) {
+			res.status(200).json({name: 'get_tank_list', res: result, err: err});
+		});
 	}
 
 };

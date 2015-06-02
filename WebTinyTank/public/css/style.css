@@ -10,18 +10,43 @@ FEFEFE;               // WHITE
 */
 
 table#ladder a {
-  color: #F15841;
-  text-decoration: none;
+    color: #F15841;
+    text-decoration: none;
 }
 
 table#ladder tbody tr:hover td,
 table#ladder tbody tr:hover th {
-  font-size: 120%;
-  padding-top: 20px;
-  padding-bottom: 20px;
+    font-size: 120%;
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 div#home section {
-  margin: 20px 0;
-  font-size: 18px;
+    margin: 20px 0;
+    font-size: 18px;
+}
+
+table.list-users {
+    width: 100%;
+    text-align: center;
+}
+
+.circular {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.circular img {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
 }

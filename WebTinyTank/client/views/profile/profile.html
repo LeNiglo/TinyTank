@@ -6,10 +6,7 @@
     <h2 class="page-header text-center">Loading ...</h2>
 
     {{else}}
-
-    <h2 class="page-header text-center">{{ username }}</h2>
-
-    <p>Registered {{ getFromRegister createdAt }} from {{ from }}</p>
+      {{> profileDetail }}
     {{/if}}
 
     {{else}}
@@ -20,4 +17,11 @@
 
     {{/with}}
   </div>
+</template>
+
+<template name="profileDetail">
+    <h2 class="page-header text-center">{{ username }}</h2>
+
+    <p>Registered {{ getFromRegister createdAt }} from {{ from }}</p>
+    <p>Last seen {{ getFromRegister updatedAt }}</p>
 </template>

@@ -22,6 +22,7 @@ var Router = function(app, db) {
   app.post('/server/add_user', serverApi.add_user);
   app.post('/server/remove_user', serverApi.remove_user);
   app.post('/server/add_game_stats', serverApi.add_game_stats);
+  app.get('/server/get_tank_list', serverApi.get_tank_list);
 
   /*
   **	Client communication
@@ -29,6 +30,7 @@ var Router = function(app, db) {
 
   app.post('/client/login', clientApi.login);
   app.post('/client/list_servers', clientApi.list_servers);
+  app.get('/client/get_tank_list', serverApi.get_tank_list);
 
   /*
   **	Web communication
@@ -41,6 +43,7 @@ var Router = function(app, db) {
   app.get('/web/ladder', webApi.ladder);
   app.get('/web/user_profile', webApi.user_profile);
   app.get('/web/get_infos', webApi.get_infos);
+  app.get('/web/get_tank_list', serverApi.get_tank_list);
 
   /*
   **	Error handling
