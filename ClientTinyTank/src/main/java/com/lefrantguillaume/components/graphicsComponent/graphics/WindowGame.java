@@ -43,8 +43,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.id = id;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
-        this.input = new InputGame(StringTools.readFile("configInput.json"));
 
+        String configs = StringTools.readFile("configInput.json");
+        this.input = new InputGame(configs);
         this.input.addObserver(inputTask);
 
         gameTask.addObserver(this.gameController);
@@ -95,7 +96,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
             if (this.gameController.getCollisionController() != null) {
                 for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
                     CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
-                    if (current != null && current.isAlive()) {
+                    if (current.isAlive()) {
                         Rectangle r = new Rectangle(current.getOriginX(), current.getOriginY(), current.getSizeX(), current.getSizeY());
                         Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getX(), current.getY()));
                         g.draw(nr);

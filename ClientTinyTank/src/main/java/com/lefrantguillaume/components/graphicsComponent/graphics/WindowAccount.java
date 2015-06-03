@@ -18,20 +18,17 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
 
-
 /**
  * Created by andres_k on 10/03/2015.
  */
 public class WindowAccount extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
+    private AccountController accountController;
     private Nifty nifty;
     private int current = 0;
-    private AccountController accountController;
-
     private int id;
     private ListBox listBox = null;
-
 
     public WindowAccount(int id, Nifty nifty, GenericSendTask accountTask) throws JSONException {
         this.id = id;
