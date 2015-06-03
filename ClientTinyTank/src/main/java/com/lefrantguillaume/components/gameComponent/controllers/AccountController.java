@@ -24,13 +24,10 @@ import java.util.Observer;
  */
 public class AccountController extends Observable implements Observer {
     private StateBasedGame stateGame;
-    private List<ServerEntry> servers;
-    private int current;
+    public List<ServerEntry> servers = new ArrayList<>();
 
-    public AccountController(){
-        this.servers = new ArrayList<>();
+    public AccountController() {
         this.stateGame = null;
-        this.current = 0;
     }
 
     // FUNCTIONS
@@ -46,7 +43,7 @@ public class AccountController extends Observable implements Observer {
         }
     }
 
-    public void createServerList() {
+    public List<ServerEntry> createServerList() {
         try {
             Pair<Boolean, String> p = DataServer.getServerList();
 
@@ -62,6 +59,7 @@ public class AccountController extends Observable implements Observer {
                         e.printStackTrace();
                     }
                 }
+                return this.servers;
             } else {
                 // TODO Display message on client.
                 Debug.debug("Error Login : " + p.getV2());
@@ -69,14 +67,10 @@ public class AccountController extends Observable implements Observer {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public void connect() {
-        ServerEntry server = null;
-
-        if (this.current < this.servers.size()) {
-            server = this.servers.get(this.current);
-        }
+    public void connect(ServerEntry server) {
         if (server != null) {
             NetworkServerConfig request = new NetworkServerConfig(server.getUdpPort(), server.getTcpPort(), server.getIp());
             this.setChanged();
@@ -84,15 +78,9 @@ public class AccountController extends Observable implements Observer {
         }
     }
 
-    // GETTERS
-
-    public List<ServerEntry> getServerList(){
-        return this.servers;
-    }
-
     // SETTERS
 
-    public void setStateGame(StateBasedGame stateGame){
+    public void setStateGame(StateBasedGame stateGame) {
         this.stateGame = stateGame;
     }
 }

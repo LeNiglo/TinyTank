@@ -1,4 +1,9 @@
 .idea
+
 ClientTinyTank/target/
 ServeurTinyTank/target/
 ClientTinyTank/configInput.json
+
+*.iml
+*/*.iml
+

@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Browser;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
@@ -18,6 +19,8 @@ import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.UUID;
 
 
@@ -85,8 +88,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                CurrentUser.setPseudo(this.loginField.getDisplayedText());
-                System.out.println(this.loginField.getDisplayedText());
+                CurrentUser.setPseudo("CHEAT - "+this.loginField.getDisplayedText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
             } else {
                 this.connect();
@@ -98,24 +100,17 @@ public class WindowLogin extends BasicGameState implements ScreenController {
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
-        // on est bind dans le xml. le screen id="start" est relié à ce controlleur
-        System.out.println("LoginController binded");
         this.loginField = screen.findNiftyControl("login", TextField.class);
         this.passField = screen.findNiftyControl("pass", TextField.class);
     }
 
     @Override
-    public void onStartScreen() {
-        System.out.println("LoginController started");
-    }
+    public void onStartScreen() {}
 
     @Override
-    public void onEndScreen() {
-        System.out.println("LoginController ended");
-    }
+    public void onEndScreen() {}
 
     public void connect() {
-        System.out.println("Cliqué sur Connect !");
         try {
             Pair<Boolean, String> authentication = DataServer.authentification(this.loginField.getDisplayedText(), this.passField.getRealText());
             if (authentication.getV1()) {
@@ -129,6 +124,14 @@ public class WindowLogin extends BasicGameState implements ScreenController {
                 Debug.debug("Error Login : " + authentication.getV2());
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void register() {
+        try {
+            Browser.openWebpage(new URI("http://tinytank.lefrantguillaume.com/register"));
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
