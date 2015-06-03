@@ -24,6 +24,7 @@ import java.util.Observer;
  */
 public class AccountController extends Observable implements Observer {
     private StateBasedGame stateGame;
+    public List<ServerEntry> servers = new ArrayList<>();
 
     public AccountController() {
         this.stateGame = null;
@@ -44,22 +45,21 @@ public class AccountController extends Observable implements Observer {
 
     public List<ServerEntry> createServerList() {
         try {
-            List<ServerEntry> servers = new ArrayList<>();
             Pair<Boolean, String> p = DataServer.getServerList();
 
             if (p.getV1()) {
                 JSONArray array = new JSONArray(p.getV2());
-                servers.clear();
+                this.servers.clear();
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject row = array.getJSONObject(i);
                     try {
                         Debug.debug(p.getV2());
-                        servers.add(new ServerEntry(row.getString("name"), row.getString("ip"), row.getJSONObject("ports"), row.getJSONArray("users"), row.getString("map"), row.getString("started_at"), row.getString("last_active")));
+                        this.servers.add(new ServerEntry(row.getString("name"), row.getString("ip"), row.getJSONObject("ports"), row.getJSONArray("users"), row.getString("map"), row.getString("started_at"), row.getString("last_active")));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                return servers;
+                return this.servers;
             } else {
                 // TODO Display message on client.
                 Debug.debug("Error Login : " + p.getV2());

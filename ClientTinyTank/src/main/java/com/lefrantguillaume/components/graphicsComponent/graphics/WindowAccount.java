@@ -23,7 +23,6 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
     private Nifty nifty;
-    private List<ServerEntry> servers = new ArrayList<>();
     private int current = 0;
     private AccountController accountController;
 
@@ -63,7 +62,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-        this.servers = this.accountController.createServerList();
+        this.accountController.createServerList();
     }
 
     @Override
@@ -79,8 +78,8 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
         g.setColor(Color.green);
 
-        for (int i = 0; i < this.servers.size(); i++) {
-            g.drawString(servers.get(i).toString(), 20, 20 * (i + 1));
+        for (int i = 0; i < this.accountController.servers.size(); i++) {
+            g.drawString(this.accountController.servers.get(i).toString(), 20, 20 * (i + 1));
         }
     }
 
@@ -111,15 +110,15 @@ public class WindowAccount extends BasicGameState implements ScreenController {
             } else {
 
                 ServerEntry srv = null;
-                if (this.current < this.servers.size()) {
-                    srv = this.servers.get(this.current);
+                if (this.current < this.accountController.servers.size()) {
+                    srv = this.accountController.servers.get(this.current);
                 }
                 this.accountController.connect(srv);
             }
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
         } else if (key == Input.KEY_SPACE) {
-            this.servers = this.accountController.createServerList();
+            this.accountController.createServerList();
         }
     }
 
