@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class CollisionObject extends Observable implements Observer {
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> savePositions;
     private float angle;
-    private boolean destroyed = false;
-    private boolean alive = true;
+    private boolean destroyed;
+    private boolean alive;
 
     public CollisionObject(List<EnumGameObject> ignoredObject, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin,
                            String idUser, String id, EnumGameObject type, float angle) {
@@ -36,6 +37,8 @@ public class CollisionObject extends Observable implements Observer {
         this.angle = angle;
         this.idUser = idUser;
         this.id = id;
+        this.alive = true;
+        this.destroyed = false;
     }
 
     // FUNCTIONS
@@ -76,7 +79,9 @@ public class CollisionObject extends Observable implements Observer {
     public boolean isIgnored(EnumGameObject type){
         if (this.ignoredObject == null)
             return false;
+        Debug.debug("IgnoredList : " + this.ignoredObject.size());
         for (int i = 0; i < this.ignoredObject.size(); ++i){
+            Debug.debug("" + type + " =? " + this.ignoredObject.get(i));
             if (this.ignoredObject.get(i).equals(type)){
                 return true;
             }

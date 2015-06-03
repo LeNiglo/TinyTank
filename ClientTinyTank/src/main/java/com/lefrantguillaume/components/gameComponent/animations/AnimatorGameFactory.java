@@ -32,20 +32,24 @@ public class AnimatorGameFactory extends AnimatorFactory {
     }
 
     private void wallAnimator(Animator animator, EnumSprites index) throws SlickException {
-        if (index == EnumSprites.WALL_WOOD) {
-            Animation animation = new Animation();
+        if (index == EnumSprites.IRON_WALL) {
+            Animation animation1 = new Animation();
             Image img1 = new Image("assets/img/game/box/box1.png");
-            animation.addFrame(img1, 150);
+            animation1.addFrame(img1, 150);
+            Animation animation2 = new Animation();
             Image img2 = new Image("assets/img/game/box/box2.png");
-            animation.addFrame(img2, 150);
+            animation2.addFrame(img2, 150);
+            Animation animation3 = new Animation();
             Image img3 = new Image("assets/img/game/box/box3.png");
-            animation.addFrame(img3, 150);
-            animator.addAnimation(animation);
+            animation3.addFrame(img3, 150);
+            animator.addAnimation(animation1);
+            animator.addAnimation(animation2);
+            animator.addAnimation(animation3);
 
             SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/box/boomBox.png", 88, 63);
-            Animation animation2 = this.loadAnimation(spriteSheet2, 0, 3, 0, 1, 200);
-            animation2.setLooping(false);
-            animator.addAnimation(animation2);
+            Animation animation4 = this.loadAnimation(spriteSheet2, 0, 3, 0, 1, 200);
+            animation4.setLooping(false);
+            animator.addAnimation(animation4);
         }
     }
 

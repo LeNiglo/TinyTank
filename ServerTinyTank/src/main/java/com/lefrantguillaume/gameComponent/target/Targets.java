@@ -1,6 +1,7 @@
 package com.lefrantguillaume.gameComponent.target;
 
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
@@ -16,10 +17,12 @@ public class Targets {
 
     private HashMap<String, Player> players;
     private HashMap<String, Shot> shots;
+    private HashMap<String, Obstacle> obstacles;
 
     public Targets() {
         this.players = new HashMap<>();
         this.shots = new HashMap<>();
+        this.obstacles = new HashMap<>();
     }
 
     public MessageModel doCollision(String shotId, String targetId) {
@@ -31,7 +34,7 @@ public class Targets {
             if (this.getPlayer(targetId) != null) {
                 msg = this.getPlayer(targetId).getTank().getTankState().getHit(this.getPlayer(targetId).getPseudo(), targetId, this.getShot(shotId));
             }
-            /* pour box ext
+/*
             else if (this.getBox(targetId) != null){
                 this.getBox(targetId).getHit(this.getShot(shotId));
             }
@@ -40,12 +43,16 @@ public class Targets {
         return msg;
     }
 
-    public void addPlayer(String id, Player p) {
-        this.players.put(id, p);
+    public void addPlayer(String id, Player player) {
+        this.players.put(id, player);
     }
 
-    public void addShot(String id, Shot s) {
-        this.shots.put(id, s);
+    public void addShot(String id, Shot shot) {
+        this.shots.put(id, shot);
+    }
+
+    public void addObstacle(String id, Obstacle obstacle){
+        this.obstacles.put(id, obstacle);
     }
 
     public void deletePlayer(String playerId) {

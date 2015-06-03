@@ -16,6 +16,10 @@ public class MathTools {
         return (float) angle;
     }
 
+    public static float toRadian(float angle){
+        return (float)(angle * Math.PI / 180);
+    }
+
     public static Pair<Float, Float> movePredict(float angle, float speed, float delta) {
         double addX = Math.cos(angle * Math.PI / 180);
         double addY = Math.sin(angle * Math.PI / 180);

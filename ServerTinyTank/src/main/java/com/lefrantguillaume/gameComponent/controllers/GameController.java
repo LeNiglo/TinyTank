@@ -5,6 +5,8 @@ import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gameComponent.maps.Map;
@@ -30,6 +32,7 @@ import java.util.*;
 public class GameController extends Observable {
     private MapController mapController;
     private GameModeController gameModeController;
+    private ObstacleConfigData obstaclesConfigData;
     private Targets targets = null;
     private TankConfigData tankConfigData = null;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<>();
@@ -39,6 +42,9 @@ public class GameController extends Observable {
         this.tankConfigData = new TankConfigData();
         this.tankConfigData.initTanks(configFile);
         this.mapController = new MapController();
+        this.obstaclesConfigData = new ObstacleConfigData();
+        // TODO faire un fichier de config pour les boites
+        this.obstaclesConfigData.initObstacles(null);
         this.targets = new Targets();
         this.gameModeController = new GameModeController();
     }
@@ -215,6 +221,10 @@ public class GameController extends Observable {
     public void doMessagePutObstacle(MessagePutObstacle received) {
         if (!this.gameModeController.isPlayable())
             return;
+        received.setObstacleId(UUID.randomUUID().toString());
+        Obstacle obstacle = this.obstaclesConfigData.getNewObstacle(received.getType().getIndex());
+        obstacle.createObstacle(received.getId(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
+        this.targets.addObstacle(received.getObstacleId(), obstacle);
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }

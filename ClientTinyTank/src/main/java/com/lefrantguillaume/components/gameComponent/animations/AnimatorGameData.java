@@ -65,8 +65,9 @@ public class AnimatorGameData {
     }
 
     private void initObstacles() throws SlickException {
-        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.WALL_WOOD));
-
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL));
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL));
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL));
     }
 
     public void addTankAnimator(Animator tankAnimator) {

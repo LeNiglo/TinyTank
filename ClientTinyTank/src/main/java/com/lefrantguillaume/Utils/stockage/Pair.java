@@ -13,8 +13,10 @@ public class Pair<T1, T2> {
     }
 
     public Pair(Pair<T1, T2> pair){
-        this.v1 = pair.v1;
-        this.v2 = pair.v2;
+        if (pair != null) {
+            this.v1 = pair.v1;
+            this.v2 = pair.v2;
+        }
     }
     public T1 getV1() {
         return this.v1;

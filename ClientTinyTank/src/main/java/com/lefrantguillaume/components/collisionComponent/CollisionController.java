@@ -2,8 +2,10 @@ package com.lefrantguillaume.components.collisionComponent;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.controllers.MapController;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class CollisionController {
     private List<CollisionObject> items;
 
     public CollisionController() {
-        this.items = new ArrayList<CollisionObject>();
+        this.items = new ArrayList<>();
     }
 
     // FUNCTIONS
@@ -90,6 +92,16 @@ public class CollisionController {
         return null;
     }
 
+    public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle){
+        Rectangle rectangle = new Rectangle(point.getV1(), point.getV2(), sizes.getV1(), sizes.getV2());
+        Float radianAngle = MathTools.toRadian(angle);
+        for (int i = 0; i < this.items.size(); ++i){
+            if (CollisionDetection.checkCollision(this.items.get(i), rectangle, radianAngle)){
+                return true;
+            }
+        }
+        return false;
+    }
     public void cleanCollision() {
         for (int i = 0; i < this.items.size(); ++i) {
             CollisionObject current = this.items.get(i);

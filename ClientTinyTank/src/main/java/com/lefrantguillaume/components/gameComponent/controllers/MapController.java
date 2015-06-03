@@ -1,10 +1,11 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
-import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import org.newdawn.slick.SlickException;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class MapController {
 
     // FUNCTIONS
     public void initMap() {
-        sizes = new Pair<Float, Float>(1280f, 768f);
+        sizes = new Pair<>(1280f, 768f);
 
     }
 
@@ -39,10 +40,13 @@ public class MapController {
     }
 
     public void addObstacle(Obstacle obstacle) {
-        CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), obstacle.getSizes(),
-                obstacle.getShiftOrigin(), obstacle.getUserId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
+        List<Block> block = obstacle.getCollisionObject();
+        for (int i = 0; i < block.size(); ++i) {
+            CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), block.get(i).getSizes(),
+                    block.get(i).getShiftOrigin(), obstacle.getUserId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
+            this.collisionController.addCollisionObject(collisionObject);
+        }
         this.obstacles.add(obstacle);
-        this.collisionController.addCollisionObject(collisionObject);
     }
 
     public void deleteObstacle(String id) {

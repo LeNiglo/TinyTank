@@ -21,8 +21,8 @@ public enum EnumGameObject {
     MACHINE_GUN(2, "machine_gun"),
     /* Obstacles */
     IRON_WALL(0, "iron_wall"),
-    MINE(1, "mine"),
-    PLASMA_WALL(3, "plasma_wall");
+    PLASMA_WALL(1, "plasma_wall"),
+    MINE(2, "mine");
     /* Areas */
 
 

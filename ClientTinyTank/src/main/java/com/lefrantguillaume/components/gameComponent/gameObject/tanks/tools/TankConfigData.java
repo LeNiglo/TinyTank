@@ -18,7 +18,7 @@ public class TankConfigData {
     private boolean valid;
 
     public TankConfigData() {
-        this.tanks = new ArrayList<Tank>();
+        this.tanks = new ArrayList<>();
         this.valid = false;
     }
 

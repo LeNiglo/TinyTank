@@ -95,7 +95,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
             if (this.gameController.getCollisionController() != null) {
                 for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
                     CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
-                    if (current.isAlive()) {
+                    if (current != null && current.isAlive()) {
                         Rectangle r = new Rectangle(current.getOriginX(), current.getOriginY(), current.getSizeX(), current.getSizeY());
                         Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getX(), current.getY()));
                         g.draw(nr);

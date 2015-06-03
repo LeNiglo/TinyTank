@@ -1,9 +1,8 @@
-package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
+package com.lefrantguillaume.gameComponent.gameobjects.obstacles;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+
+import com.lefrantguillaume.gameComponent.EnumGameObject;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +11,12 @@ import java.util.List;
  * Created by andres_k on 16/03/2015.
  */
 public class Obstacle {
-    private final Animator animator;
     private final EnumGameObject type;
-    private final List<Block> collisionObject;
+    private final Pair<Float, Float> sizes;
     private final Pair<Float, Float> shiftOrigin;
-    private final float maxLife;
-    private final float damage;
-    private float currentLife;
+    private final int maxLife;
+    private final int damage;
+    private int currentLife;
 
     private String userId;
     private String id;
@@ -26,26 +24,24 @@ public class Obstacle {
     private float angle;
     private boolean created;
 
-    public Obstacle(Animator animator, EnumGameObject type, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
-        this.animator = animator;
+    public Obstacle(EnumGameObject type, Pair<Float, Float> size, Pair<Float, Float> shiftOrigin, int maxLife, int damage) {
         this.type = type;
-        this.collisionObject = collisionObject;
-        this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
         this.damage = damage;
+        this.shiftOrigin = new Pair<>(shiftOrigin.getKey(), shiftOrigin.getValue());
+        this.sizes = new Pair<>(size.getKey(), size.getValue());
         this.created = false;
         this.currentLife = this.maxLife;
     }
 
     public Obstacle(Obstacle obstacle) {
-        this.animator = new Animator(obstacle.animator);
         this.type = obstacle.type;
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
+        this.shiftOrigin = new Pair<>(obstacle.shiftOrigin.getKey(), obstacle.shiftOrigin.getValue());
+        this.sizes = new Pair<>(obstacle.sizes.getKey(), obstacle.sizes.getValue());
         this.created = obstacle.created;
         this.currentLife = obstacle.currentLife;
-        this.collisionObject = obstacle.collisionObject;
-        this.shiftOrigin = obstacle.shiftOrigin;
     }
 
     public void createObstacle(String userId, String id, float angle, float posX, float posY) {
@@ -61,28 +57,16 @@ public class Obstacle {
         return this.userId;
     }
 
-    public float getGraphicalX() {
-        return this.positions.getV1() + this.shiftOrigin.getV1();
-    }
-
-    public float getGraphicalY() {
-        return this.positions.getV2() + this.shiftOrigin.getV2();
-    }
-
     public float getX() {
-        return this.positions.getV1();
+        return this.positions.getKey();
     }
 
     public float getY() {
-        return this.positions.getV2();
+        return this.positions.getValue();
     }
 
     public String getId() {
         return id;
-    }
-
-    public Animator getAnimator() {
-        return animator;
     }
 
     public EnumGameObject getType() {
@@ -93,6 +77,10 @@ public class Obstacle {
         return this.positions;
     }
 
+    public Pair<Float, Float> getSizes() {
+        return this.sizes;
+    }
+
     public Pair<Float, Float> getShiftOrigin() {
         return shiftOrigin;
     }
@@ -101,15 +89,15 @@ public class Obstacle {
         return this.angle;
     }
 
-    public float getMaxLife() {
+    public int getMaxLife() {
         return this.maxLife;
     }
 
-    public float getCurrentLife() {
+    public int getCurrentLife() {
         return this.currentLife;
     }
 
-    public float getDamage() {
+    public int getDamage() {
         return this.damage;
     }
 
@@ -126,18 +114,7 @@ public class Obstacle {
         return types;
     }
 
-    public List<Block> getCollisionObject(){
-        return this.collisionObject;
-    }
-
     // SETTERS
-    public void setX(float x) {
-        this.positions.setV1(x);
-    }
-
-    public void setY(float y) {
-        this.positions.setV2(y);
-    }
 
     public void setAngle(float angle) {
         this.angle = angle;
