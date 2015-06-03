@@ -21,4 +21,16 @@ public class CollisionDetection {
             return false;
         }
     }
+
+    public static boolean checkCollision(CollisionObject obj1, Rectangle obj2, Float radianAngle) {
+        Rectangle rectangle1 = new Rectangle(obj1.getOriginX(), obj1.getOriginY(), obj1.getSizeX(), obj1.getSizeY());
+
+        Shape s1 = rectangle1.transform(Transform.createRotateTransform(obj1.getRadian(), obj1.getX(), obj1.getY()));
+        Shape s2 = obj2.transform(Transform.createRotateTransform(radianAngle, obj2.getX(), obj2.getY()));
+        if (s1.intersects(s2)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

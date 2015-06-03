@@ -1,8 +1,7 @@
-package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
+package com.lefrantguillaume.gameComponent.gameobjects.obstacles;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
+import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -22,7 +21,7 @@ public class ObstacleConfigData {
     }
 
     // FUNCTIONS
-    public void initObstacles(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public void initObstacles(JSONObject config) throws JSONException {
 
         /*
         JSONArray obstacleArray = config.getJSONArray("obstacles");
@@ -30,8 +29,8 @@ public class ObstacleConfigData {
         for (int i = 0; i < obstacleArray.length(); ++i) {
                     }
         */
-        obstacles.add(new Obstacle(animatorGameData.getObstacleAnimator(EnumGameObject.IRON_WALL), EnumGameObject.IRON_WALL, new Pair<>(50f, 45f), new Pair<>(25f, 22.5f), 20, 0));
-        obstacles.add(new Obstacle(animatorGameData.getObstacleAnimator(EnumGameObject.IRON_WALL), EnumGameObject.MINE, new Pair<>(50f, 45f), new Pair<>(25f, 22.5f), 10, 10));
+        obstacles.add(new Obstacle(EnumGameObject.IRON_WALL, new Pair<>(50f, 45f), new Pair<>(-25f, -22.5f), 20, 0));
+        obstacles.add(new Obstacle(EnumGameObject.MINE, new Pair<>(50f, 45f), new Pair<>(-25f, -22.5f), 10, 10));
         this.valid = true;
     }
     public Obstacle getNewObstacle(int index){

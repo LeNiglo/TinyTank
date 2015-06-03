@@ -12,7 +12,6 @@ import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
 import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
 import com.lefrantguillaume.components.gameComponent.RoundData.Team;
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankConfigData;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.Utils.tools.Block;
@@ -47,7 +46,6 @@ public class GameController extends Observable implements Observer {
     private RoundController roundController;
     private AnimatorGameData animatorGameData;
     private TankConfigData tankConfigData;
-    private ObstacleConfigData obstaclesConfigData;
     public final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public GameController() throws SlickException {
@@ -56,10 +54,9 @@ public class GameController extends Observable implements Observer {
         this.teams = new ArrayList<>();
         this.animatorGameData = null;
         this.roundController = new RoundController(this.players, this.teams);
-        this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.collisionController = new CollisionController();
+        this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.tankConfigData = new TankConfigData();
-        this.obstaclesConfigData = new ObstacleConfigData();
     }
 
     public void clearData() {
@@ -186,34 +183,29 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
                 Debug.debug("Revive ok");
-                this.players.get(i).revive(new Pair<Float, Float>(task.getPosX(), task.getPosY()));
+                this.players.get(i).revive(new Pair<>(task.getPosX(), task.getPosY()));
                 break;
             }
         }
     }
 
     public void putObject(MessagePutObstacle task) {
-        Obstacle obstacle = this.obstaclesConfigData.getNewObstacle(task.getType().getIndex());
-        obstacle.createObstacle(task.getId(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
-        this.mapController.addObstacle(obstacle);
+        Player player = this.getPlayer(task.getId());
+        if (player != null) {
+            Obstacle obstacle = player.getTank().generateObstacle(task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
+            this.mapController.addObstacle(obstacle);
+        }
     }
 
     // FUNCTIONS
     public void initConfigData(JSONObject config) throws JSONException {
         this.initTankConfigData(config);
-        this.initObstacleConfigData(config);
     }
 
     public void initTankConfigData(JSONObject config) throws JSONException {
         if (this.animatorGameData == null)
             throw new JSONException("tankConfigData failed");
         this.tankConfigData.initTanks(config, this.animatorGameData);
-    }
-
-    public void initObstacleConfigData(JSONObject config) throws JSONException {
-        if (this.animatorGameData == null)
-            throw new JSONException("obstacleConfigData failed");
-        this.obstaclesConfigData.initObstacles(config, this.animatorGameData);
     }
 
     public void deletePlayer(String id) {
@@ -322,7 +314,9 @@ public class GameController extends Observable implements Observer {
             g.drawAnimation(this.mapController.getMapAnimator().currentAnimation(), 0, 0);
             for (int i = 0; i < this.mapController.getObstacles().size(); ++i) {
                 Obstacle current = this.mapController.getObstacles().get(i);
-                g.drawAnimation(current.getAnimator().currentAnimation(), current.getX(), current.getY());
+                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
+                current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
+                g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
             }
         }
     }

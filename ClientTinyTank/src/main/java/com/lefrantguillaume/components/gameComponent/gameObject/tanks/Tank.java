@@ -1,14 +1,16 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.RandomTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankBox;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankFactory;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
-import com.lefrantguillaume.Utils.tools.RandomTools;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankFactory;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -19,25 +21,32 @@ public class Tank {
     private TankWeapon tankWeapon;
     private TankState tankState;
     private TankSpell tankSpell;
-    private TankSpell tankBox;
+    private TankBox tankBox;
 
     public Tank(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"), animatorGameData);
         this.tankState = TankFactory.createTankState(config.getJSONObject("tankState"), animatorGameData);
         this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankSpell"), animatorGameData);
-//TODO mettre les box dans le fichier de conf
-//        this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankBox"), animatorGameData);
+        this.tankBox = TankFactory.createTankBox(config.getJSONObject("tankBox"), animatorGameData);
     }
 
     public Tank(Tank tank){
         this.tankWeapon = new TankWeapon(tank.tankWeapon);
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
+        this.tankBox = new TankBox(tank.tankBox);
     }
 
     // FUNCTIONS
     public Shot generateShot(String userId, String id, float angle) {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
+    }
+
+    public Obstacle generateObstacle(String obstacleId, float angle, float posX, float posY){
+        Obstacle obstacle = this.tankBox.generateBox();
+
+        obstacle.createObstacle(obstacleId, obstacleId, angle, posX, posY);
+        return obstacle;
     }
 
     public float predictAngleHit(){
@@ -79,4 +88,7 @@ public class Tank {
         return this.tankState;
     }
 
+    public TankBox getTankBox() {
+        return this.tankBox;
+    }
 }

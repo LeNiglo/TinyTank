@@ -14,6 +14,15 @@ public class Tuple<T1, T2, T3> {
         this.v3 = v3;
     }
 
+    public Tuple(Tuple<T1, T2, T3> tuple) {
+        if (tuple != null) {
+            this.v1 = tuple.v1;
+            this.v2 = tuple.v2;
+            this.v3 = tuple.v3;
+        }
+    }
+
+
     public T1 getV1() {
         return this.v1;
     }
@@ -26,21 +35,21 @@ public class Tuple<T1, T2, T3> {
         return this.v3;
     }
 
-    public void setV1(T1 value){
+    public void setV1(T1 value) {
         this.v1 = value;
     }
 
-    public void setV2(T2 value){
+    public void setV2(T2 value) {
         this.v2 = value;
     }
 
-    public void setV3(T3 value){
+    public void setV3(T3 value) {
         this.v3 = value;
     }
 
     @Override
-    public String toString(){
-        return new String("v1:" + this.getV1() + " v2:"+this.getV2() + " v3:"+this.getV3());
+    public String toString() {
+        return new String("v1:" + this.getV1() + " v2:" + this.getV2() + " v3:" + this.getV3());
     }
 
 }

@@ -72,7 +72,9 @@ public class InputGame extends Observable{
             message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
             Tuple<Float, Float, Float> boxValues = player.predictCreateBox(collisionController);
-            message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumGameObject.IRON_WALL, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
+            if (boxValues != null) {
+                message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumGameObject.IRON_WALL, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
+            }
         }
         return message;
     }

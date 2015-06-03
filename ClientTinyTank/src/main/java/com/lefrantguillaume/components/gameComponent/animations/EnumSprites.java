@@ -16,7 +16,7 @@ public enum EnumSprites {
     PREVIEW_TIGER(-1), PREVIEW_SNIPER(-1), PREVIEW_RUSHER(-1),
     //gameComponent
     MAP(-1),
-    WALL_WOOD(WALL.getIndex()),
+    IRON_WALL(WALL.getIndex()),
     TIGER_BODY(TIGER.getIndex()), TIGER_TOP(TIGER.getIndex()), TIGER_SPELL(TIGER.getIndex()), TIGER_HIT(TIGER.getIndex()),
     SNIPER_BODY(SNIPER.getIndex()), SNIPER_TOP(SNIPER.getIndex()), SNIPER_SPELL(SNIPER.getIndex()), SNIPER_HIT(SNIPER.getIndex()),
     RUSHER_BODY(RUSHER.getIndex()), RUSHER_TOP(RUSHER.getIndex()), RUSHER_SPELL(RUSHER.getIndex()), RUSHER_HIT(RUSHER.getIndex());

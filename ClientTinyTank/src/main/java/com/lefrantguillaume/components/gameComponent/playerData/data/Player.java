@@ -1,21 +1,22 @@
 package com.lefrantguillaume.components.gameComponent.playerData.data;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
-import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerActionController;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
+import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerActionController;
 
 import java.util.*;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Player extends Observable implements Observer{
+public class Player extends Observable implements Observer {
     private List<Shot> shots;
     private UUID idTeam;
     private Tank tank;
@@ -65,42 +66,49 @@ public class Player extends Observable implements Observer{
         return coords;
     }
 
-    public boolean kill(){
+    public boolean kill() {
         if (this.tank.getTankState().getCurrentLife() <= 0) {
             this.tank.explode();
             this.setChanged();
-            this.notifyObservers(new Tuple<Boolean, Float, Float>(false, 0f, 0f));
+            this.notifyObservers(new Tuple<>(false, 0f, 0f));
             return true;
         }
         return false;
     }
 
-    public void die(){
+    public void die() {
         this.alive = false;
     }
 
-    public void revive(Pair<Float, Float> positions){
+    public void revive(Pair<Float, Float> positions) {
         this.alive = true;
         this.getTank().revive(positions);
         this.setChanged();
-        this.notifyObservers(new Tuple<Boolean, Float, Float>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
+        this.notifyObservers(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
 
-    public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController){
-        Tuple<Float, Float, Float> boxValues = new Tuple<Float, Float, Float>(0f, 0f, 0f);
+    public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController) {
+        Tuple<Float, Float, Float> boxValues = new Tuple<>(0f, 0f, 0f);
         float canonAngle = this.tank.getTankState().getGunAngle();
-        double boxAngle = canonAngle + 90;
-        //TODO check collision
-        //TODO trouver un new point
-        boxValues.setV1(15f);
-        boxValues.setV2(15f);
-        boxValues.setV3((float)boxAngle);
+        float boxAngle = canonAngle + 90;
+
+        Pair<Float, Float> newPoint = new Pair<>(this.getTank().getTankState().getX() + 80, this.getTank().getTankState().getY());
+        MathTools.rotate(new Pair<>(this.getTank().getTankState().getX(), this.getTank().getTankState().getY()), newPoint, canonAngle);
+        boxValues.setV1(newPoint.getV1());
+        boxValues.setV2(newPoint.getV2());
+        boxValues.setV3(boxAngle);
+        List<Block> block = this.tank.getTankBox().getCollisionObject();
+        for (int i = 0; i < block.size(); ++i) {
+            if (collisionController.checkCollision(newPoint, block.get(i).getSizes(), boxAngle)) {
+                return null;
+            }
+        }
         return boxValues;
     }
 
     // GETTERS
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return this.alive;
     }
 
@@ -120,7 +128,7 @@ public class Player extends Observable implements Observer{
         return user;
     }
 
-    public List<EnumGameObject> getIgnoredObjectList(){
+    public List<EnumGameObject> getIgnoredObjectList() {
         List<EnumGameObject> types = new ArrayList<>();
 
         return types;
