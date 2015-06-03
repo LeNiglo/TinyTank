@@ -73,7 +73,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
         try {
-            this.nifty.fromXml("assets/interface/gui-login.xml", "start", this);
+            this.nifty.fromXml("assets/interface/gui-login.xml", "screen-login", this);
         } catch (Exception e) {
             e.printStackTrace();
         }

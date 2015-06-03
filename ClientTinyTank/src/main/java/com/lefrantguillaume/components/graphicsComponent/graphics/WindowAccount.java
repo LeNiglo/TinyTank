@@ -1,9 +1,13 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.AccountController;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.ListBox;
+import de.lessvoid.nifty.controls.ListBoxSelectionChangedEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
@@ -12,7 +16,6 @@ import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,6 +30,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private AccountController accountController;
 
     private int id;
+    private ListBox listBox = null;
 
 
     public WindowAccount(int id, Nifty nifty, GenericSendTask accountTask) throws JSONException {
@@ -53,7 +57,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         try {
-            nifty.fromXml("assets/interface/gui-account.xml", "main", this);
+            nifty.fromXml("assets/interface/gui-account.xml", "screen-account", this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,10 +106,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 // TODO REMOVE THIS ON RELEASE
 
-                ServerEntry srv = new ServerEntry("Server de Hacker", "127.0.0.1", null);
-                srv.setTcpPort(13333);
-                srv.setUdpPort(13444);
-                this.accountController.connect(srv);
+                this.accountController.connect(new ServerEntry("Server de Hacker", "127.0.0.1", 13333, 13444));
 
             } else {
 
@@ -119,11 +120,16 @@ public class WindowAccount extends BasicGameState implements ScreenController {
             this.container.exit();
         } else if (key == Input.KEY_SPACE) {
             this.accountController.createServerList();
+            this.fillServerList();
         }
     }
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
+        Debug.debug("BIND ACCOUNT ?");
+        this.listBox = screen.findNiftyControl("list-servers", ListBox.class);
+        Debug.debug("BIND LIST BOX ?");
+        this.fillServerList();
     }
 
     @Override
@@ -133,4 +139,35 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     @Override
     public void onEndScreen() {
     }
+
+    public void fillServerList() {
+        if (this.listBox != null) {
+            this.listBox.clear();
+            for (int i = 0; i < this.accountController.servers.size(); i++) {
+                this.listBox.addItem(this.accountController.servers.get(i));
+            }
+        }
+    }
+
+
+    public void onServerEntrySelected(final String id, final ListBoxSelectionChangedEvent<String> event) {
+        Debug.debug("Clicked ... ON WHAT ?!");
+        List<String> selection = event.getSelection();
+        for (String selectedItem : selection) {
+            System.out.println("listServers selection [" + selectedItem.toString() + "]");
+        }
+    }
+
+    /**
+     * When the selection of the ListBox changes this method is called.
+     */
+    @NiftyEventSubscriber(id = "list-servers")
+    public void onListServerSelectionChanged(final String id, final ListBoxSelectionChangedEvent<String> event) {
+        List<String> selection = event.getSelection();
+        for (String selectedItem : selection) {
+            System.out.println("listServers selection [" + selectedItem + "]");
+        }
+    }
+
+
 }
