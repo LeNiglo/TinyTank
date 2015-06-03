@@ -1,7 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment;
 
 import com.lefrantguillaume.gameComponent.EnumGameObject;
-import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerUpdateState;
 import com.lefrantguillaume.utils.Block;
 
@@ -20,15 +20,15 @@ public class TankState {
     private float shieldEffect;
     private float slowEffect;
     private float boostEffect;
-    private EnumGameObject tankType;
+    private EnumGameObject type;
     private List<Block> collisionObject;
 
-    public TankState(float speed, float maxLife, float armor, EnumGameObject tankType) {
+    public TankState(float speed, float maxLife, float armor, EnumGameObject type) {
         this.speed = speed;
         this.maxLife = maxLife;
         this.armor = armor;
         this.currentLife = maxLife;
-        this.tankType = tankType;
+        this.type = type;
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
@@ -40,7 +40,7 @@ public class TankState {
         this.maxLife = tankState.maxLife;
         this.armor = tankState.armor;
         this.currentLife = tankState.maxLife;
-        this.tankType = tankState.tankType;
+        this.type = tankState.type;
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
@@ -56,14 +56,14 @@ public class TankState {
         this.collisionObject.add(block);
     }
 
-    public MessagePlayerUpdateState getHit(String pseudo, String id, Shot shot) {
+    public MessagePlayerUpdateState getHit(Player player, float damage) {
         MessagePlayerUpdateState msg;
 
-        this.currentLife -= shot.getDamageShot();
+        this.currentLife -= damage;
         if (this.currentLife < 0) {
             this.currentLife = 0;
         }
-        msg = new MessagePlayerUpdateState(pseudo, id, this.currentLife, this.armor, this.shieldEffect, this.slowEffect, this.boostEffect);
+        msg = new MessagePlayerUpdateState(player.getPseudo(), player.getId(), this.currentLife, this.armor, this.shieldEffect, this.slowEffect, this.boostEffect);
         return msg;
     }
 
@@ -128,8 +128,8 @@ public class TankState {
         this.armor = armor;
     }
 
-    public EnumGameObject getTankType() {
-        return tankType;
+    public EnumGameObject getType() {
+        return type;
     }
 
 }

@@ -2,6 +2,8 @@ package com.lefrantguillaume.gameComponent.gameobjects.obstacles;
 
 
 import com.lefrantguillaume.gameComponent.EnumGameObject;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
+import com.lefrantguillaume.utils.Block;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -12,24 +14,25 @@ import java.util.List;
  */
 public class Obstacle {
     private final EnumGameObject type;
-    private final Pair<Float, Float> sizes;
+    private final  List<Block> collisionObject;
     private final Pair<Float, Float> shiftOrigin;
-    private final int maxLife;
-    private final int damage;
-    private int currentLife;
+    private final float maxLife;
+    private final float damage;
+    private float currentLife;
 
-    private String userId;
+    private String playerId;
+    private String playerPseudo;
     private String id;
     private Pair<Float, Float> positions;
     private float angle;
     private boolean created;
 
-    public Obstacle(EnumGameObject type, Pair<Float, Float> size, Pair<Float, Float> shiftOrigin, int maxLife, int damage) {
+    public Obstacle(EnumGameObject type,  List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.type = type;
         this.maxLife = maxLife;
         this.damage = damage;
         this.shiftOrigin = new Pair<>(shiftOrigin.getKey(), shiftOrigin.getValue());
-        this.sizes = new Pair<>(size.getKey(), size.getValue());
+        this.collisionObject = collisionObject;
         this.created = false;
         this.currentLife = this.maxLife;
     }
@@ -39,22 +42,39 @@ public class Obstacle {
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
         this.shiftOrigin = new Pair<>(obstacle.shiftOrigin.getKey(), obstacle.shiftOrigin.getValue());
-        this.sizes = new Pair<>(obstacle.sizes.getKey(), obstacle.sizes.getValue());
         this.created = obstacle.created;
         this.currentLife = obstacle.currentLife;
+        this.collisionObject = obstacle.collisionObject;
     }
 
-    public void createObstacle(String userId, String id, float angle, float posX, float posY) {
-        this.userId = userId;
+    // FUNCTIONS
+    public void createObstacle(String playerId, String playerPseudo, String id, float angle, float posX, float posY) {
+        this.playerId = playerId;
+        this.playerPseudo = playerPseudo;
         this.angle = angle;
         this.id = id;
         this.positions = new Pair<>(posX, posY);
         this.created = true;
     }
 
+    public MessageObstacleUpdateState getHit(float damage) {
+        MessageObstacleUpdateState msg;
+
+        this.currentLife -= damage;
+        if (this.currentLife < 0) {
+            this.currentLife = 0;
+        }
+        msg = new MessageObstacleUpdateState(this.playerPseudo, this.playerId, this.id, this.currentLife);
+        return msg;
+    }
+
     // GETTERS
-    public String getUserId() {
-        return this.userId;
+    public String getPlayerId() {
+        return this.playerId;
+    }
+
+    public String getPlayerPseudo(){
+        return this.playerPseudo;
     }
 
     public float getX() {
@@ -66,38 +86,34 @@ public class Obstacle {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public EnumGameObject getType() {
-        return type;
+        return this.type;
     }
 
     public Pair<Float, Float> getPositions() {
         return this.positions;
     }
 
-    public Pair<Float, Float> getSizes() {
-        return this.sizes;
-    }
-
     public Pair<Float, Float> getShiftOrigin() {
-        return shiftOrigin;
+        return this.shiftOrigin;
     }
 
     public float getAngle() {
         return this.angle;
     }
 
-    public int getMaxLife() {
+    public float getMaxLife() {
         return this.maxLife;
     }
 
-    public int getCurrentLife() {
+    public float getCurrentLife() {
         return this.currentLife;
     }
 
-    public int getDamage() {
+    public float getDamage() {
         return this.damage;
     }
 

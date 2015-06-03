@@ -6,13 +6,13 @@ package com.lefrantguillaume.components.gameComponent.gameObject.projectiles;
 public enum EnumAnimationShot {
     HIT(0),
     EXPLODE(1);
-    private final int id;
+    private final int index;
 
-    EnumAnimationShot(int id) {
-        this.id = id;
+    EnumAnimationShot(int index) {
+        this.index = index;
     }
 
-    public int getValue() {
-        return id;
+    public int getIndex() {
+        return index;
     }
 }

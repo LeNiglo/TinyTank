@@ -124,6 +124,14 @@ public class GameController extends Observable implements Observer {
                         Debug.debug("PUT OBJECT");
                         this.putObject((MessagePutObstacle) message);
                     }
+                    if (message instanceof MessageObstacleUpdateState) {
+                        Debug.debug("UPDATE STATE OBSTACLE");
+                        this.changeStateObstacle((MessageObstacleUpdateState) message);
+                    }
+                    if (message instanceof MessageShotUpdateState) {
+                        Debug.debug("UPDATE STATE SHOT");
+                        this.changeStateShot((MessageShotUpdateState) message);
+                    }
                 }
             }
         }
@@ -148,56 +156,64 @@ public class GameController extends Observable implements Observer {
 
 
     public void changeStatePlayer(MessagePlayerUpdateState task) {
-        for (Player player : this.players) {
-            if (player.getUser().getIdUser().equals(task.getId())) {
-                player.getTank().getTankState().setCurrentLife(task.getCurrentLife());
-                player.getTank().getTankState().setBoostEffect(task.getBoostEffect());
-                player.getTank().getTankState().setShieldEffect(task.getShieldEffect());
-                player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
-                player.getTank().getTankState().setCurrentArmor(task.getArmor());
-                player.kill();
-                break;
-            }
+        Player player = this.getPlayer(task.getId());
+        if (player != null) {
+            player.getTank().getTankState().setCurrentLife(task.getCurrentLife());
+            player.getTank().getTankState().setBoostEffect(task.getBoostEffect());
+            player.getTank().getTankState().setShieldEffect(task.getShieldEffect());
+            player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
+            player.getTank().getTankState().setCurrentArmor(task.getArmor());
+            player.kill();
         }
     }
 
     public void changePositionPlayer(MessagePlayerUpdatePosition task) {
         Debug.debug("new pos [" + task.getX() + "," + task.getY() + "] : id=" + task.getId());
-        for (Player player : this.players) {
-            if (player.getUser().getIdUser().equals(task.getId())) {
-                player.getTank().getTankState().setX(task.getX());
-                player.getTank().getTankState().setY(task.getY());
-                List<CollisionObject> objects = this.collisionController.getCollisionObject(player.getUser().getId());
-                for (CollisionObject object : objects) {
-                    object.setX(task.getX());
-                    object.setY(task.getY());
-                    object.setSaveX(task.getX());
-                    object.setSaveY(task.getY());
-                }
-                break;
+        Player player = this.getPlayer(task.getId());
+        if (player != null) {
+            player.getTank().getTankState().setX(task.getX());
+            player.getTank().getTankState().setY(task.getY());
+            List<CollisionObject> objects = this.collisionController.getCollisionObject(player.getUser().getId());
+            for (CollisionObject object : objects) {
+                object.setX(task.getX());
+                object.setY(task.getY());
+                object.setSaveX(task.getX());
+                object.setSaveY(task.getY());
             }
         }
     }
 
     public void revivePlayer(MessagePlayerRevive task) {
-        for (int i = 0; i < this.players.size(); ++i) {
-            if (this.players.get(i).getUser().getIdUser().equals(task.getId())) {
-                Debug.debug("Revive ok");
-                this.players.get(i).revive(new Pair<>(task.getPosX(), task.getPosY()));
-                break;
-            }
+        Player player = this.getPlayer(task.getId());
+        if (player != null) {
+            player.revive(new Pair<>(task.getPosX(), task.getPosY()));
         }
     }
 
     public void putObject(MessagePutObstacle task) {
         Player player = this.getPlayer(task.getId());
         if (player != null) {
-            Obstacle obstacle = player.getTank().generateObstacle(task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
+            Obstacle obstacle = player.getTank().generateObstacle(task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
             this.mapController.addObstacle(obstacle);
         }
     }
 
+    public void changeStateObstacle(MessageObstacleUpdateState task) {
+        Obstacle obstacle = this.getObstacle(task.getObstacleId());
+        if (obstacle != null) {
+            obstacle.setCurrentLife(task.getCurrentLife());
+        }
+    }
+
+    public void changeStateShot(MessageShotUpdateState task) {
+        Shot shot = this.getShot(task.getShotId());
+        if (shot != null) {
+            shot.setCurrentLife(task.getCurrentDamageShot());
+        }
+    }
+
     // FUNCTIONS
+
     public void initConfigData(JSONObject config) throws JSONException {
         this.initTankConfigData(config);
     }
@@ -220,7 +236,7 @@ public class GameController extends Observable implements Observer {
 
     // UPDATE GAME FUNCTIONS
     public void updateGame(float delta) {
-        Pair<Boolean, Pair<String, String>> impactIds;
+        Tuple<Boolean, Boolean, Pair<String, String>> impactIds;
 
         if (this.collisionController != null) {
             this.collisionController.cleanCollision();
@@ -228,8 +244,14 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getTank().getTankState().isMove() && this.players.get(i).isAlive()) {
                 if ((impactIds = this.collisionController.checkCollision(this.players.get(i).coordPredict(delta), this.players.get(i).getUser().getId())) != null) {
-                    if (impactIds.getV2().getV1().equals("null")) {
+                    if (impactIds.getV2() == true) {
                         this.players.get(i).move(delta);
+                    }
+                    if (impactIds.getV1() == true) {
+                        Debug.debug("Collision to Server");
+                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1(), impactIds.getV3().getV2());
+                        this.setChanged();
+                        this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
                     }
                 }
             }
@@ -237,11 +259,12 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.shots.size(); ++i) {
             if (!this.shots.get(i).getExplode()) {
                 if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).coordPredict(delta), this.shots.get(i).getId())) != null) {
-                    if (impactIds.getV2().getV1().equals("null")) {
+                    if (impactIds.getV2() == true) {
                         this.shots.get(i).move(delta);
-                    } else if (impactIds.getV1() == true && !impactIds.getV2().getV1().equals("null")) {
+                    }
+                    if (impactIds.getV1() == true) {
                         Debug.debug("Collision to Server");
-                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV2().getV1(), impactIds.getV2().getV2());
+                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1(), impactIds.getV3().getV2());
                         this.setChanged();
                         this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
                     }
@@ -314,9 +337,14 @@ public class GameController extends Observable implements Observer {
             g.drawAnimation(this.mapController.getMapAnimator().currentAnimation(), 0, 0);
             for (int i = 0; i < this.mapController.getObstacles().size(); ++i) {
                 Obstacle current = this.mapController.getObstacles().get(i);
-                current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
-                current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
-                g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
+
+                if (current.getAnimator().currentAnimation().isStopped()) {
+                    this.mapController.deleteObstacle(current.getId());
+                } else {
+                    current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
+                    current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
+                    g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
+                }
             }
         }
     }
@@ -343,9 +371,22 @@ public class GameController extends Observable implements Observer {
     }
 
     public Player getPlayer(String id) {
-        for (int i = 0; i < this.players.size(); ++i) {
-            if (id.equals(this.players.get(i).getUser().getIdUser())) {
-                return this.players.get(i);
+        for (Player player : this.players) {
+            if (id.equals(player.getUser().getIdUser())) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Obstacle getObstacle(String id) {
+        return this.mapController.getObstacle(id);
+    }
+
+    public Shot getShot(String id) {
+        for (Shot shot : this.shots) {
+            if (id.equals(shot.getId())) {
+                return shot;
             }
         }
         return null;

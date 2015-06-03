@@ -1,10 +1,14 @@
 package com.lefrantguillaume.gameComponent.target;
 
 import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageShotUpdateState;
+import com.lefrantguillaume.utils.ServerConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,22 +29,87 @@ public class Targets {
         this.obstacles = new HashMap<>();
     }
 
-    public MessageModel doCollision(String shotId, String targetId) {
-        MessageModel msg = null;
+    // FUNCTIONS
+    public boolean isIgnored(List<EnumGameObject> items, EnumGameObject type) {
+        return items.contains(type);
+    }
 
-        WindowController.addConsoleMsg("shots:" + this.shots.size() + "SHOT_ID:" + shotId);
-        if (this.getShot(shotId) != null) {
-            WindowController.addConsoleMsg("players:" + this.players.size() + "PLAYER_ID: " + targetId);
+    public List<MessageModel> doCollision(String hitterId, String targetId, String saveTeamId) {
+        List<MessageModel> messages = new ArrayList<>();
+
+        if (this.getShot(hitterId) != null) {
+            Shot hitterShot = this.getShot(hitterId);
+            float damage = hitterShot.getCurrentDamageShot();
+
             if (this.getPlayer(targetId) != null) {
-                msg = this.getPlayer(targetId).getTank().getTankState().getHit(this.getPlayer(targetId).getPseudo(), targetId, this.getShot(shotId));
+                Player player = this.getPlayer(targetId);
+                Player killer = this.getPlayer(hitterShot.getPlayerId());
+                if (this.isIgnored(player.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                    hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
+                    if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
+                        messages.add(player.getTank().getTankState().getHit(player, damage));
+                        if (player.getTank().getTankState().getCurrentLife() == 0){
+                            killer.addKill();
+                            saveTeamId = killer.getTeamId();
+                            player.addDeath();
+                        }
+                    }
+                    if (hitterShot.getCurrentDamageShot() == 0) {
+                        messages.add(this.deleteShot(hitterShot.getId()));
+                    }
+
+                }
             }
-/*
-            else if (this.getBox(targetId) != null){
-                this.getBox(targetId).getHit(this.getShot(shotId));
+            if (this.getObstacle(targetId) != null) {
+                WindowController.addConsoleMsg("obstacle find");
+                Obstacle obstacle = this.getObstacle(targetId);
+
+                if (this.isIgnored(obstacle.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                    hitterShot.getDamageByCollision(obstacle.getCurrentLife());
+                    messages.add(obstacle.getHit(damage));
+                    if (obstacle.getCurrentLife() == 0) {
+                        this.obstacles.remove(obstacle.getId());
+                    }
+                    if (hitterShot.getCurrentDamageShot() == 0) {
+                        messages.add(this.deleteShot(hitterShot.getId()));
+                    }
+                }
             }
-            */
+            if (this.getShot(targetId) != null) {
+                Shot shot = this.getShot(targetId);
+                Player player = this.getPlayer(shot.getPlayerId());
+
+                if (this.isIgnored(shot.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                    hitterShot.getDamageByCollision(shot.getCurrentDamageShot());
+                    messages.add(shot.getHit(player, damage));
+                    if (shot.getCurrentDamageShot() == 0) {
+                        this.shots.remove(shot.getId());
+                    }
+                    if (hitterShot.getCurrentDamageShot() == 0) {
+                        messages.add(this.deleteShot(hitterShot.getId()));
+                    }
+                }
+            }
+        } else if (this.getPlayer(hitterId) != null) {
+            if (this.getObstacle(targetId) != null){
+                Obstacle obstacle = this.getObstacle(targetId);
+
+                if (obstacle.getType().equals(EnumGameObject.MINE)){
+                    Player player = this.getPlayer(hitterId);
+                    Player killer = this.getPlayer(obstacle.getPlayerId());
+                    if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
+                        messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
+                        if (player.getTank().getTankState().getCurrentLife() == 0){
+                            killer.addKill();
+                            saveTeamId = killer.getTeamId();
+                            player.addDeath();
+                        }
+                        messages.add(this.deleteObstacle(targetId));
+                    }
+                }
+            }
         }
-        return msg;
+        return messages;
     }
 
     public void addPlayer(String id, Player player) {
@@ -51,7 +120,7 @@ public class Targets {
         this.shots.put(id, shot);
     }
 
-    public void addObstacle(String id, Obstacle obstacle){
+    public void addObstacle(String id, Obstacle obstacle) {
         this.obstacles.put(id, obstacle);
     }
 
@@ -59,8 +128,18 @@ public class Targets {
         this.players.remove(playerId);
     }
 
-    public void deleteShot(String shotId) {
+    public MessageShotUpdateState deleteShot(String shotId) {
+        Player player = this.getPlayer(this.getShot(shotId).getPlayerId());
+        MessageShotUpdateState message = new MessageShotUpdateState(player.getPseudo(), player.getId(), shotId, 0);
         this.shots.remove(shotId);
+        return message;
+    }
+
+    public MessageObstacleUpdateState deleteObstacle(String obstacleId) {
+        Obstacle obstacle = this.getObstacle(obstacleId);
+        MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
+        this.shots.remove(obstacleId);
+        return message;
     }
 
     public void clear() {
@@ -69,12 +148,16 @@ public class Targets {
     }
 
     // GETTERS
-    public Player getPlayer(String playerId) {
-        return this.players.get(playerId);
+    public Player getPlayer(String id) {
+        return this.players.get(id);
     }
 
-    public Shot getShot(String shotId) {
-        return this.shots.get(shotId);
+    public Shot getShot(String id) {
+        return this.shots.get(id);
+    }
+
+    public Obstacle getObstacle(String id) {
+        return this.obstacles.get(id);
     }
 
     public HashMap<String, Player> getPlayers() {
@@ -83,6 +166,10 @@ public class Targets {
 
     public HashMap<String, Shot> getShots() {
         return this.shots;
+    }
+
+    public HashMap<String, Obstacle> getObstacles() {
+        return this.obstacles;
     }
 
     public List<String> getPlayersName() {

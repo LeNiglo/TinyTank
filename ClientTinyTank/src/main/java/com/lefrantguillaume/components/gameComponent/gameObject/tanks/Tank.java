@@ -42,10 +42,10 @@ public class Tank {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
     }
 
-    public Obstacle generateObstacle(String obstacleId, float angle, float posX, float posY){
+    public Obstacle generateObstacle(String playerPseudo, String obstacleId, float angle, float posX, float posY){
         Obstacle obstacle = this.tankBox.generateBox();
 
-        obstacle.createObstacle(obstacleId, obstacleId, angle, posX, posY);
+        obstacle.createObstacle(obstacleId, playerPseudo, obstacleId, angle, posX, posY);
         return obstacle;
     }
 
