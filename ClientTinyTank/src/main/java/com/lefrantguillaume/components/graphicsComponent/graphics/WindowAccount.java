@@ -147,10 +147,10 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     }
 
 
-    public void onServerEntrySelected(final String id, final ListBoxSelectionChangedEvent<String> event) {
-        Debug.debug("Clicked ... ON WHAT ?!");
-        List<String> selection = event.getSelection();
-        for (String selectedItem : selection) {
+    public void onServerEntrySelected(final String id, final ListBoxSelectionChangedEvent<ServerEntry> event) {
+        Debug.debug("Clicked ... ON WHAT ?!" + id);
+        List<ServerEntry> selection = event.getSelection();
+        for (ServerEntry selectedItem : selection) {
             System.out.println("listServers selection [" + selectedItem.toString() + "]");
         }
     }
