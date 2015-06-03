@@ -17,6 +17,9 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -26,6 +29,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
     private AccountController accountController;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Nifty nifty;
     private ListBox listBox;
     private int id;
@@ -62,7 +66,10 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-        this.accountController.createServerList();
+        this.scheduler.scheduleAtFixedRate(() -> {
+            WindowAccount.this.accountController.createServerList();
+            WindowAccount.this.fillServerList();
+        }, 0, 15, TimeUnit.SECONDS);
     }
 
     @Override
@@ -75,15 +82,6 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         SlickCallable.enterSafeBlock();
         this.nifty.render(false);
         SlickCallable.leaveSafeBlock();
-
-        /*
-
-        g.setColor(Color.green);
-        for (int i = 0; i < this.accountController.getServers().size(); i++) {
-            g.drawString(this.accountController.getServers().get(i).toString(), 20, 20 * (i + 1));
-        }
-
-        */
     }
 
     @Override

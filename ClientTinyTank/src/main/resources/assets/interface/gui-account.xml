@@ -19,6 +19,7 @@
                 <control id="list-servers" name="listBox" vertical="optional" horizontal="off" displayItems="10"/>
             </panel>
             <panel id="panel_bottom" height="20%" width="50%" align="40%" childLayout="horizontal">
+                <text id="alertZone" text="" valign="center" align="center" style='nifty-label'/>
             </panel>
         </layer>
     </screen>
