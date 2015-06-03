@@ -16,7 +16,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -26,16 +25,15 @@ import java.util.Observer;
  */
 public class Windows extends NiftyStateBasedGame implements Observer {
 
-    GenericSendTask gameTask;
-    GenericSendTask inputTask;
-    GenericSendTask interfaceTask;
-    GenericSendTask accountTask;
-    GenericSendTask masterTask;
+    private GenericSendTask gameTask;
+    private GenericSendTask inputTask;
+    private GenericSendTask interfaceTask;
+    private GenericSendTask accountTask;
+    private GenericSendTask masterTask;
     private Nifty nifty = null;
 
     public Windows(String name, GenericSendTask masterTask) throws JSONException, SlickException {
         super(name);
-
         this.masterTask = masterTask;
         this.gameTask = new GenericSendTask();
         this.gameTask.addObserver(this);
@@ -49,23 +47,12 @@ public class Windows extends NiftyStateBasedGame implements Observer {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        SlickInputSystem inputSystem = new PlainSlickInputSystem();
-        Input input = this.getContainer().getInput();
-
-        inputSystem.setInput(input);
-        input.addListener(inputSystem);
-
-        nifty = new Nifty(new BatchRenderDevice(LwjglBatchRenderBackendFactory.create()), new NullSoundDevice(), inputSystem, new AccurateTimeProvider());
-
-
-        nifty.loadStyleFile("nifty-default-styles.xml");
-        nifty.loadControlFile("nifty-default-controls.xml");
-
+        this.initNifty();
         try {
-        this.addState(new WindowLogin(EnumWindow.LOGIN.getValue(), nifty));
-        this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue(), nifty, this.accountTask));
-        this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), nifty, this.gameTask));
-        this.addState(new WindowGame(EnumWindow.GAME.getValue(), nifty, this.inputTask, this.gameTask));
+        this.addState(new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty));
+        this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask));
+        this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask));
+        this.addState(new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -76,6 +63,17 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     @Override
     public boolean closeRequested() {
         return false;
+    }
+
+    public void initNifty(){
+        SlickInputSystem inputSystem = new PlainSlickInputSystem();
+        Input input = this.getContainer().getInput();
+
+        inputSystem.setInput(input);
+        input.addListener(inputSystem);
+        this.nifty = new Nifty(new BatchRenderDevice(LwjglBatchRenderBackendFactory.create()), new NullSoundDevice(), inputSystem, new AccurateTimeProvider());
+        this.nifty.loadStyleFile("nifty-default-styles.xml");
+        this.nifty.loadControlFile("nifty-default-controls.xml");
     }
 
     public void update(Observable o, Object arg) {

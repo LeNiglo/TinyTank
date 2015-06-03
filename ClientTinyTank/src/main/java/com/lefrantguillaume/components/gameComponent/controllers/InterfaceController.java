@@ -6,7 +6,7 @@ import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumInterfaceComponent;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
-import com.lefrantguillaume.components.interfaceComponent.AvailableTank;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.AvailableTank;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePlayerNew;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;

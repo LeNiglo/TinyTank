@@ -3,8 +3,6 @@ package com.lefrantguillaume.components.graphicsComponent.graphics;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.tools.StringTools;
-import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
@@ -32,7 +30,6 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     private StateBasedGame stateGame;
     private TextField loginField = null;
     private TextField passField = null;
-    private InputGame input;
     private int id;
 
     private Nifty nifty;
@@ -40,25 +37,24 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     public WindowLogin(int id, Nifty nifty) throws JSONException {
         this.id = id;
         this.nifty = nifty;
-        this.input = new InputGame(StringTools.readFile("configInput.json"));
-
     }
 
+    @Override
     public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
-
-
     }
 
+    @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        nifty.update();
+        this.nifty.update();
     }
 
+    @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         SlickCallable.enterSafeBlock();
-        nifty.render(false);
+        this.nifty.render(false);
         SlickCallable.leaveSafeBlock();
     }
 
@@ -73,11 +69,8 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-
         try {
-
-
-            nifty.fromXml("assets/interface/gui-login.xml", "start", this);
+            this.nifty.fromXml("assets/interface/gui-login.xml", "start", this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,15 +78,15 @@ public class WindowLogin extends BasicGameState implements ScreenController {
 
     @Override
     public void keyReleased(int key, char c) {
-        if (loginField == null) {
+        if (this.loginField == null) {
             return;
         }
         if (key == Input.KEY_RETURN) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                CurrentUser.setPseudo(loginField.getDisplayedText());
-                System.out.println(loginField.getDisplayedText());
+                CurrentUser.setPseudo(this.loginField.getDisplayedText());
+                System.out.println(this.loginField.getDisplayedText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
             } else {
                 this.connect();
@@ -107,8 +100,8 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     public void bind(Nifty nifty, Screen screen) {
         // on est bind dans le xml. le screen id="start" est relié à ce controlleur
         System.out.println("LoginController binded");
-        loginField = screen.findNiftyControl("login", TextField.class);
-        passField = screen.findNiftyControl("pass", TextField.class);
+        this.loginField = screen.findNiftyControl("login", TextField.class);
+        this.passField = screen.findNiftyControl("pass", TextField.class);
     }
 
     @Override
@@ -124,13 +117,13 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     public void connect() {
         System.out.println("Cliqué sur Connect !");
         try {
-            Pair<Boolean, String> p = DataServer.authentification(loginField.getDisplayedText(), passField.getRealText());
+            Pair<Boolean, String> p = DataServer.authentification(this.loginField.getDisplayedText(), this.passField.getRealText());
             if (p.getV1()) {
                 JSONObject object = new JSONObject(p.getV2());
                 Debug.debug("my id = " + object.get("_id"));
                 CurrentUser.setId(object.get("_id").toString());
                 CurrentUser.setPseudo(object.get("username").toString());
-                stateGame.enterState(EnumWindow.ACCOUNT.getValue());
+                this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
             } else {
                 // TODO Display message on client.
                 Debug.debug("Error Login : " + p.getV2());

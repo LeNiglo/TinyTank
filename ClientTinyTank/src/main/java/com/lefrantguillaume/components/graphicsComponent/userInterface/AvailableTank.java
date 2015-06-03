@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.interfaceComponent;
+package com.lefrantguillaume.components.graphicsComponent.userInterface;
 
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
@@ -27,12 +27,12 @@ public class AvailableTank {
         this.yStat = 450;
         this.xPreview = 500;
         this.yPreview = 300;
-        this.available = new ArrayList<Boolean>();
+        this.available = new ArrayList<>();
         this.available.add(true);
         this.available.add(false);
         this.available.add(true);
-        this.tankStatAnimator = new ArrayList<Animator>();
-        this.tankPreviewAnimator = new ArrayList<Animator>();
+        this.tankStatAnimator = new ArrayList<>();
+        this.tankPreviewAnimator = new ArrayList<>();
         this.currentTankStat = EnumInterfaceComponent.SNIPER;
     }
 
