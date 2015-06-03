@@ -21,17 +21,26 @@ import java.util.Observable;
 /**
  * Created by andres_k on 11/03/2015.
  */
-public class InputGame extends Observable{
+public class InputGame extends Observable {
     private InputData inputData;
+    private boolean valid;
 
     public InputGame(String configsFile) throws JSONException {
-        this.inputData = new InputData(configsFile);
+
+        if (configsFile != null) {
+            this.inputData = new InputData(configsFile);
+            this.valid = true;
+        } else {
+            this.valid = false;
+        }
     }
 
     public int checkInput(GameController gameController, int key, EnumInput mode, int posX, int posY) {
         MessageModel request = null;
         String keyName;
 
+        if (this.valid == false)
+            return -1;
         if (key == -2) {
             keyName = "MOUSE_LEFT_BUTTON";
         } else if (key == -3) {

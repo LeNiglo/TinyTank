@@ -49,11 +49,10 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     public void initStatesList(GameContainer gameContainer) throws SlickException {
         this.initNifty();
         try {
-        this.addState(new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty));
-        this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask));
-        this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask));
-        this.addState(new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask));
-
+            this.addState(new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty));
+            this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask));
+            this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask));
+            this.addState(new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class Windows extends NiftyStateBasedGame implements Observer {
         return false;
     }
 
-    public void initNifty(){
+    public void initNifty() {
         SlickInputSystem inputSystem = new PlainSlickInputSystem();
         Input input = this.getContainer().getInput();
 
