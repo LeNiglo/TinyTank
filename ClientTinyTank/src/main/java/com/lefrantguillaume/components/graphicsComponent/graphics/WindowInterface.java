@@ -37,7 +37,6 @@ public class WindowInterface extends BasicGameState implements ScreenController 
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
     {
-        Debug.debug("init Home");
         this.stateWindow = sbg;
         this.interfaceController.setStateWindow(this.stateWindow);
         this.container = gc;
@@ -100,12 +99,8 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     }
 
     @Override
-    public void onStartScreen() {
-
-    }
+    public void onStartScreen() {}
 
     @Override
-    public void onEndScreen() {
-
-    }
+    public void onEndScreen() {}
 }
