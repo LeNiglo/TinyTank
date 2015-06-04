@@ -24,7 +24,7 @@ import java.util.Observer;
  */
 public class AccountController extends Observable implements Observer {
     private StateBasedGame stateGame;
-    public List<ServerEntry> servers = new ArrayList<>();
+    private List<ServerEntry> servers = new ArrayList<>();
 
     public AccountController() {
         this.stateGame = null;
@@ -83,4 +83,8 @@ public class AccountController extends Observable implements Observer {
     public void setStateGame(StateBasedGame stateGame) {
         this.stateGame = stateGame;
     }
+
+    // GETTERS
+
+    public List<ServerEntry> getServers() { return this.servers; }
 }
