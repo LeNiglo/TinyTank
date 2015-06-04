@@ -1,7 +1,11 @@
 package com.lefrantguillaume.gameComponent.gameobjects.player;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.Tank;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
+import com.lefrantguillaume.gameComponent.gameobjects.tanks.Tank;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Styve on 19/03/2015.
@@ -141,5 +145,11 @@ public class Player {
 
     public String getTeamId() {
         return this.teamId;
+    }
+
+    public List<EnumGameObject> getIgnoredObjectList() {
+        List<EnumGameObject> types = new ArrayList<>();
+
+        return types;
     }
 }

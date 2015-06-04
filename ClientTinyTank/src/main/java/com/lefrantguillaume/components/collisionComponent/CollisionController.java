@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.collisionComponent;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.controllers.MapController;
@@ -59,7 +60,7 @@ public class CollisionController {
         this.items.clear();
     }
 
-    public Pair<Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
+    public Tuple<Boolean, Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
         List<CollisionObject> objects = this.getCollisionObject(id);
         try {
             if (!objects.isEmpty()) {
@@ -70,26 +71,28 @@ public class CollisionController {
                         if (current.isAlive()) {
                             if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
                                 if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
-                                    if (!objects.get(i).isIgnored(current.getType())) {
+                                    if (current.isIgnored(objects.get(i).getType()) == false) {
+                                        Debug.debug("Collision");
                                         objects.get(i).backToSave();
                                         objects.get(i).notifyCollision(current.getType());
                                         current.notifyCollision(current.getType());
+                                        return new Tuple<>(true, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
                                     if (current.getType() == EnumGameObject.UNBREAKABLE) {
-                                        return new Pair<>(false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
+                                        return new Tuple<>(false, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
-                                    return new Pair<>(true, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
+                                    return new Tuple<>(true, true, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                 }
                             }
                         }
                     }
                 }
-                return new Pair<>(false, new Pair<>("null", "null"));
+                return new Tuple<>(false, true, new Pair<>("null", "null"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return new Tuple<>(false, false, new Pair<>("null", "null"));
     }
 
     public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle){

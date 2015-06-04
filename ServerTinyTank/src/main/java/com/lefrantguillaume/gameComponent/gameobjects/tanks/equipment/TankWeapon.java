@@ -11,18 +11,15 @@ public class TankWeapon {
     private EnumGameObject shotType;
     private final float damageShot;
     private final float speedShot;
-    private final float lifeShot;
 
 
-    public TankWeapon(float speedShot, float damageShot, float lifeShot, EnumGameObject shotType) {
+    public TankWeapon(float speedShot, float damageShot, EnumGameObject shotType) {
         this.shotType = shotType;
         this.damageShot = damageShot;
         this.speedShot = speedShot;
-        this.lifeShot = lifeShot;
     }
 
     public TankWeapon(TankWeapon tankWeapon) {
-        this.lifeShot = tankWeapon.lifeShot;
         this.shotType = tankWeapon.shotType;
         this.damageShot = tankWeapon.damageShot;
         this.speedShot = tankWeapon.speedShot;
@@ -37,12 +34,9 @@ public class TankWeapon {
         return this.speedShot;
     }
 
-    public float getLifeShot() {
-        return this.lifeShot;
-    }
 
     public Shot generateShot(String shotId, String playerId) {
-        return new Shot(shotId, playerId, this.shotType, this.damageShot, this.speedShot, this.lifeShot);
+        return new Shot(shotId, playerId, this.shotType, this.damageShot, this.speedShot);
     }
 
 }

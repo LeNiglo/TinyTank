@@ -25,14 +25,15 @@ public class Shot extends Observable implements Observer {
     private final EnumGameObject type;
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
-    private float damage;
+    private float currentDamageShot;
     private float speed;
     private float angle;
     private boolean explode;
     private List<Block> collisionObject;
     private List<Pair<Float, Float>> savePosShot;
+    private float saveDelta;
 
-    public Shot(String userId, String id, EnumGameObject type, float damage, float speed, Animator animator, Tuple<Float, Float, Float> positioning,
+    public Shot(String userId, String id, EnumGameObject type, float currentDamageShot, float speed, Animator animator, Tuple<Float, Float, Float> positioning,
                 Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.positions = new Pair<>(positioning.getV1(), positioning.getV2());
         this.angle = positioning.getV3();
@@ -44,18 +45,28 @@ public class Shot extends Observable implements Observer {
         this.explode = false;
         this.userId = userId;
         this.id = id;
-        this.damage = damage;
+        this.currentDamageShot = currentDamageShot;
         this.speed = speed;
         this.animator = animator;
         this.collisionObject = new ArrayList<>();
+        this.saveDelta = 0;
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        Tuple<Float, Float, EnumGameObject> task = (Tuple<Float, Float, EnumGameObject>) arg;
+        if (arg instanceof Tuple) {
+            Tuple<Float, Float, EnumGameObject> task = (Tuple<Float, Float, EnumGameObject>) arg;
+            if (task.getV3().equals(EnumGameObject.UNBREAKABLE)) {
+                this.explode(new Pair<>(task.getV1(), task.getV2()));
+            }
+        }
+    }
 
-        Pair<Float, Float> newPoint = new Pair<>(task.getV1() + this.shiftHead.getV1(), task.getV2() + this.shiftHead.getV2());
-        MathTools.rotate(new Pair<>(task.getV1(), task.getV2()), newPoint, angle);
+    // FUNCTIONS
+
+    public void explode(Pair<Float, Float> newPos){
+        Pair<Float, Float> newPoint = new Pair<>(newPos.getV1() + this.shiftHead.getV1(), newPos.getV2() + this.shiftHead.getV2());
+        MathTools.rotate(newPos, newPoint, angle);
         this.positions.setV1(newPoint.getV1());
         this.positions.setV2(newPoint.getV2());
 
@@ -65,14 +76,12 @@ public class Shot extends Observable implements Observer {
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
 
         this.addNewPosition();
-        this.animator.setIndex(EnumAnimationShot.EXPLODE.getValue());
+        this.animator.setIndex(EnumAnimationShot.EXPLODE.getIndex());
         this.explode = true;
         Block nullBlock = null;
         this.setChanged();
         this.notifyObservers(nullBlock);
     }
-
-    // FUNCTIONS
 
     public void draw(Graphics g) {
         this.animator.currentAnimation().getCurrentFrame().setCenterOfRotation(this.getShiftOrigin().getV1() * -1, this.getShiftOrigin().getV2() * -1);
@@ -82,13 +91,16 @@ public class Shot extends Observable implements Observer {
         }
     }
 
-    public void move(float delta) {
+    public Pair<Float, Float> move(float delta) {
         if (this.explode == false) {
             Pair<Float, Float> coords = this.movePredict(delta);
+            this.saveDelta = delta;
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
             this.addNewPosition();
+            return coords;
         }
+        return null;
     }
 
     private void addNewPosition() {
@@ -138,8 +150,8 @@ public class Shot extends Observable implements Observer {
         return this.id;
     }
 
-    public float getDamage() {
-        return this.damage;
+    public float getCurrentDamageShot() {
+        return this.currentDamageShot;
     }
 
     public float getSpeed() {
@@ -184,5 +196,15 @@ public class Shot extends Observable implements Observer {
         if (this.type.equals(EnumGameObject.LASER))
             types.add(EnumGameObject.PLASMA_WALL);
         return types;
+    }
+
+
+    // SETTERS
+    public void setCurrentLife(float currentLife){
+        this.currentDamageShot = currentLife;
+        if (this.currentDamageShot == 0){
+            this.move(this.saveDelta);
+            this.explode(new Pair<>(this.positions));
+        }
     }
 }

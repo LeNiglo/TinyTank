@@ -2,7 +2,7 @@ package com.lefrantguillaume.gameComponent.gameobjects.tanks.tools;
 
 
 import com.lefrantguillaume.gameComponent.EnumGameObject;
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.types.Tank;
+import com.lefrantguillaume.gameComponent.gameobjects.tanks.Tank;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

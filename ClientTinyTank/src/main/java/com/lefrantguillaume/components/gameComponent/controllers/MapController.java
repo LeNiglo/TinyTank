@@ -43,7 +43,7 @@ public class MapController {
         List<Block> block = obstacle.getCollisionObject();
         for (int i = 0; i < block.size(); ++i) {
             CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), block.get(i).getSizes(),
-                    block.get(i).getShiftOrigin(), obstacle.getUserId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
+                    block.get(i).getShiftOrigin(), obstacle.getPlayerId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
             this.collisionController.addCollisionObject(collisionObject);
         }
         this.obstacles.add(obstacle);
@@ -84,6 +84,14 @@ public class MapController {
         return configMapFile;
     }
 
+    public Obstacle getObstacle(String id){
+        for (Obstacle obstacle : this.obstacles) {
+            if (id.equals(obstacle.getId())) {
+                return obstacle;
+            }
+        }
+        return null;
+    }
     // SETTERS
     public void setMapAnimator(Animator mapAnimator) {
         this.mapAnimator = mapAnimator;

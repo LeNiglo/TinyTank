@@ -1,6 +1,5 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.AccountController;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -11,12 +10,19 @@ import de.lessvoid.nifty.controls.ListBoxSelectionChangedEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by andres_k on 10/03/2015.
@@ -25,8 +31,8 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
     private AccountController accountController;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Nifty nifty;
-    private int current = 0;
     private int id;
     private ListBox listBox = null;
 
@@ -58,12 +64,14 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.current = 0;
         this.container.setTargetFrameRate(10);
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-        this.accountController.createServerList();
+        this.scheduler.scheduleAtFixedRate(() -> {
+            WindowAccount.this.accountController.createServerList();
+            WindowAccount.this.fillServerList();
+        }, 0, 15, TimeUnit.SECONDS);
     }
 
     @Override
@@ -76,12 +84,6 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         SlickCallable.enterSafeBlock();
         this.nifty.render(false);
         SlickCallable.leaveSafeBlock();
-
-        g.setColor(Color.green);
-
-        for (int i = 0; i < this.accountController.servers.size(); i++) {
-            g.drawString(this.accountController.servers.get(i).toString(), 20, 20 * (i + 1));
-        }
     }
 
     @Override
@@ -99,18 +101,10 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
     @Override
     public void keyReleased(int key, char c) {
+        // TODO REMOVE THIS ON RELEASE
         if (key == Input.KEY_RETURN) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
-                // TODO REMOVE THIS ON RELEASE
-
-                this.accountController.connect(new ServerEntry("Server de Hacker", "127.0.0.1", 13333, 13444));
-
-            } else {
-
-                ServerEntry srv = null;
-                if (this.current < this.accountController.servers.size()) {
-                    srv = this.accountController.servers.get(this.current);
-                }
+                ServerEntry srv = new ServerEntry("Server de Hacker", "127.0.0.1", "Cheated Map", 13333, 13444);
                 this.accountController.connect(srv);
             }
         } else if (key == Input.KEY_ESCAPE) {
@@ -123,10 +117,17 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
     @Override
     public void bind(Nifty nifty, Screen screen) {
-        Debug.debug("BIND ACCOUNT ?");
         this.listBox = screen.findNiftyControl("list-servers", ListBox.class);
-        Debug.debug("BIND LIST BOX ?");
         this.fillServerList();
+    }
+
+    private void fillServerList() {
+        if (this.listBox != null) {
+            this.listBox.clear();
+            for (int i = 0; i < this.accountController.getServers().size(); i++) {
+                this.listBox.addItem(this.accountController.getServers().get(i));
+            }
+        }
     }
 
     @Override
@@ -137,34 +138,13 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     public void onEndScreen() {
     }
 
-    public void fillServerList() {
-        if (this.listBox != null) {
-            this.listBox.clear();
-            for (int i = 0; i < this.accountController.servers.size(); i++) {
-                this.listBox.addItem(this.accountController.servers.get(i));
+    @NiftyEventSubscriber(id = "list-servers")
+    public void onListServersSelectionChanged(final String id, final ListBoxSelectionChangedEvent<ServerEntry> event) {
+        List<Integer> indices = event.getSelectionIndices();
+        for (Integer i : indices) {
+            if (i < this.accountController.getServers().size()) {
+                this.accountController.connect(this.accountController.getServers().get(i));
             }
         }
     }
-
-
-    public void onServerEntrySelected(final String id, final ListBoxSelectionChangedEvent<String> event) {
-        Debug.debug("Clicked ... ON WHAT ?!");
-        List<String> selection = event.getSelection();
-        for (String selectedItem : selection) {
-            System.out.println("listServers selection [" + selectedItem.toString() + "]");
-        }
-    }
-
-    /**
-     * When the selection of the ListBox changes this method is called.
-     */
-    @NiftyEventSubscriber(id = "list-servers")
-    public void onListServerSelectionChanged(final String id, final ListBoxSelectionChangedEvent<String> event) {
-        List<String> selection = event.getSelection();
-        for (String selectedItem : selection) {
-            System.out.println("listServers selection [" + selectedItem + "]");
-        }
-    }
-
-
 }

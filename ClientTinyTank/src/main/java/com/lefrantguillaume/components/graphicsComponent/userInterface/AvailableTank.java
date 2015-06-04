@@ -29,7 +29,7 @@ public class AvailableTank {
         this.yPreview = 300;
         this.available = new ArrayList<>();
         this.available.add(true);
-        this.available.add(false);
+        this.available.add(true);
         this.available.add(true);
         this.tankStatAnimator = new ArrayList<>();
         this.tankPreviewAnimator = new ArrayList<>();

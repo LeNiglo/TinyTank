@@ -38,13 +38,12 @@ public class ServerEntry {
         this.last_active = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(last_active);
     }
 
-
-    public ServerEntry(String name, String ip, int udpPort, int tcpPort) {
+    public ServerEntry(String name, String ip, String map, int udp, int tcp) {
         this.name = name;
         this.ip = ip;
-        this.map = "hackedMap";
-        this.udpPort = udpPort;
-        this.tcpPort = tcpPort;
+        this.map = map;
+        this.udpPort = udp;
+        this.tcpPort = tcp;
         this.started_at = new Date();
         this.last_active = new Date();
     }

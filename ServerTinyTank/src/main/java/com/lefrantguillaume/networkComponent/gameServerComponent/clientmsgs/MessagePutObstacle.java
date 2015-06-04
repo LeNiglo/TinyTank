@@ -11,7 +11,7 @@ public class MessagePutObstacle extends MessageModel {
     private float posY;
     private float angle;
     private EnumGameObject type;
-    private String obstacleId = "";
+    private String obstacleId;
 
     public MessagePutObstacle() {}
 

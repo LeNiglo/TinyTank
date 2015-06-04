@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
@@ -20,7 +21,8 @@ public class Obstacle {
     private final float damage;
     private float currentLife;
 
-    private String userId;
+    private String playerId;
+    private String playerPseudo;
     private String id;
     private Pair<Float, Float> positions;
     private float angle;
@@ -48,17 +50,31 @@ public class Obstacle {
         this.shiftOrigin = obstacle.shiftOrigin;
     }
 
-    public void createObstacle(String userId, String id, float angle, float posX, float posY) {
-        this.userId = userId;
+    public void createObstacle(String userId, String playerPseudo, String id, float angle, float posX, float posY) {
+        this.playerId = userId;
+        this.playerPseudo = playerPseudo;
         this.angle = angle;
         this.id = id;
         this.positions = new Pair<>(posX, posY);
         this.created = true;
     }
 
+    public void getHit(){
+        if (this.currentLife == 0){
+            this.animator.setIndex(EnumAnimationObstacle.EXPLODE.getIndex());
+            this.shiftOrigin.setV1(-44f);
+            this.shiftOrigin.setV1(-31.5f);
+        } else if (this.currentLife > 0 && this.currentLife <= 10) {
+            this.animator.setIndex(EnumAnimationObstacle.LOW.getIndex());
+        }
+    }
     // GETTERS
-    public String getUserId() {
-        return this.userId;
+    public String getPlayerId() {
+        return this.playerId;
+    }
+
+    public String getPlayerPseudo(){
+        return this.playerPseudo;
     }
 
     public float getGraphicalX() {
@@ -78,7 +94,7 @@ public class Obstacle {
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
     public Animator getAnimator() {
@@ -116,10 +132,15 @@ public class Obstacle {
     public List<EnumGameObject> getIgnoredObjectList() {
         List<EnumGameObject> types = new ArrayList<>();
 
+        Debug.debug("type: " + this.type);
         if (this.type.equals(EnumGameObject.MINE)) {
+            Debug.debug("a");
             types.add(EnumGameObject.ROCKET);
             types.add(EnumGameObject.MACHINE_GUN);
             types.add(EnumGameObject.LASER);
+            types.add(EnumGameObject.TIGER);
+            types.add(EnumGameObject.RUSHER);
+            types.add(EnumGameObject.SNIPER);
         } else if (this.type.equals(EnumGameObject.PLASMA_WALL)) {
             types.add(EnumGameObject.LASER);
         }
@@ -143,7 +164,8 @@ public class Obstacle {
         this.angle = angle;
     }
 
-    public void setCurrentLife(int currentLife) {
+    public void setCurrentLife(float currentLife) {
         this.currentLife = currentLife;
+        this.getHit();
     }
 }
