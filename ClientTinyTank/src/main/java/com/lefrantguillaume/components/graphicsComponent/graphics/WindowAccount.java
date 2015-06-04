@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.AccountController;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -59,15 +60,13 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        try {
-            nifty.fromXml("assets/interface/gui-account.xml", "screen-account", this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        this.container.setTargetFrameRate(10);
+        this.container.setTargetFrameRate(60);
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
+
+        this.nifty.gotoScreen("screen-account");
+
         this.scheduler.scheduleAtFixedRate(() -> {
             WindowAccount.this.accountController.createServerList();
             WindowAccount.this.fillServerList();
@@ -102,16 +101,19 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     @Override
     public void keyReleased(int key, char c) {
         // TODO REMOVE THIS ON RELEASE
-        if (key == Input.KEY_RETURN) {
+        if (key == Input.KEY_C) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 ServerEntry srv = new ServerEntry("Server de Hacker", "127.0.0.1", "Cheated Map", 13333, 13444);
+                Debug.debug("Trying to cheat ! Connect to " + srv);
                 this.accountController.connect(srv);
             }
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
-        } else if (key == Input.KEY_SPACE) {
-            this.accountController.createServerList();
-            this.fillServerList();
+        } else if (key == Input.KEY_R) {
+            if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
+                this.accountController.createServerList();
+                this.fillServerList();
+            }
         }
     }
 

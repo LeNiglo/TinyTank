@@ -34,7 +34,7 @@ http://nifty-gui.sourceforge.net/nifty-1.3.xsd ">
                     </control>
                 </panel>
                 <panel id="panel_bottom_right" height="50%" width="50%" valign="center" childLayout="center">
-                    <control name="button" label="Register" id="RegisterButton" height="50" width="200" align="60%"
+                    <control name="button" label="Register" id="RegisterButton" height="50" width="200" align="center"
                              valign="bottom" visibleToMouse="true">
                         <interact onClick="register()"/>
                     </control>

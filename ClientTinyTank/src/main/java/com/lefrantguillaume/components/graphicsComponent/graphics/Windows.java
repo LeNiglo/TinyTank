@@ -30,6 +30,12 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     private GenericSendTask interfaceTask;
     private GenericSendTask accountTask;
     private GenericSendTask masterTask;
+
+    private WindowLogin wl;
+    private WindowAccount wa;
+    private WindowInterface wi;
+    private WindowGame wg;
+
     private Nifty nifty = null;
 
     public Windows(String name, GenericSendTask masterTask) throws JSONException, SlickException {
@@ -47,16 +53,36 @@ public class Windows extends NiftyStateBasedGame implements Observer {
 
     @Override
     public void initStatesList(GameContainer gameContainer) throws SlickException {
-        this.initNifty();
+        if (!this.initNifty(true) || !this.initScreenControllers()) {
+            throw new SlickException("Wrong Custom Init begin.");
+        }
+
+        this.addState(this.wl);
+        this.addState(this.wa);
+        this.addState(this.wi);
+        this.addState(this.wg);
+
+        if (!this.initNifty(false)) {
+            throw new SlickException("Wrong Custom Init end.");
+        }
+
+        this.enterState(EnumWindow.LOGIN.getValue());
+    }
+
+    private boolean initScreenControllers() {
         try {
-            this.addState(new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty));
-            this.addState(new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask));
-            this.addState(new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask));
-            this.addState(new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask));
+            this.wl = new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty);
+            this.wa = new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask);
+            this.wi = new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask);
+            this.wg = new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask);
+            return true;
+        } catch (SlickException e) {
+            e.printStackTrace();
+            return false;
         } catch (JSONException e) {
             e.printStackTrace();
+            return false;
         }
-        this.enterState(EnumWindow.LOGIN.getValue());
     }
 
     @Override
@@ -64,15 +90,26 @@ public class Windows extends NiftyStateBasedGame implements Observer {
         return false;
     }
 
-    public void initNifty() {
-        SlickInputSystem inputSystem = new PlainSlickInputSystem();
-        Input input = this.getContainer().getInput();
+    public boolean initNifty(boolean start) {
+        if (start) {
+            SlickInputSystem inputSystem = new PlainSlickInputSystem();
+            Input input = this.getContainer().getInput();
 
-        inputSystem.setInput(input);
-        input.addListener(inputSystem);
-        this.nifty = new Nifty(new BatchRenderDevice(LwjglBatchRenderBackendFactory.create()), new NullSoundDevice(), inputSystem, new AccurateTimeProvider());
-        this.nifty.loadStyleFile("nifty-default-styles.xml");
-        this.nifty.loadControlFile("nifty-default-controls.xml");
+            inputSystem.setInput(input);
+            input.addListener(inputSystem);
+            this.nifty = new Nifty(new BatchRenderDevice(LwjglBatchRenderBackendFactory.create()), new NullSoundDevice(), inputSystem, new AccurateTimeProvider());
+            this.nifty.loadStyleFile("nifty-default-styles.xml");
+            this.nifty.loadControlFile("nifty-default-controls.xml");
+            return true;
+        } else {
+            this.nifty.registerScreenController(this.wl);
+            this.nifty.registerScreenController(this.wa);
+            this.nifty.registerScreenController(this.wi);
+            this.nifty.registerScreenController(this.wg);
+            this.nifty.addXml("assets/interface/gui-login.xml");
+            this.nifty.addXml("assets/interface/gui-account.xml");
+            return true;
+        }
     }
 
     public void update(Observable o, Object arg) {

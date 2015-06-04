@@ -38,7 +38,7 @@ public class ServerEntry {
         this.last_active = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(last_active);
     }
 
-    public ServerEntry(String name, String ip, String map, int udp, int tcp) {
+    public ServerEntry(String name, String ip, String map, int tcp, int udp) {
         this.name = name;
         this.ip = ip;
         this.map = map;

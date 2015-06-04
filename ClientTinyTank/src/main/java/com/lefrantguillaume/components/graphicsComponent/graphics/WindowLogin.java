@@ -72,11 +72,13 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
-        try {
-            this.nifty.fromXml("assets/interface/gui-login.xml", "screen-login", this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        this.nifty.gotoScreen("screen-login");
+    }
+
+    @Override
+    public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+
     }
 
     @Override
@@ -84,15 +86,16 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         if (this.loginField == null) {
             return;
         }
-        if (key == Input.KEY_RETURN) {
+        if (key == Input.KEY_C) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                CurrentUser.setPseudo("CHEAT - "+this.loginField.getDisplayedText());
+                CurrentUser.setPseudo("CHEAT - " + this.loginField.getDisplayedText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
-            } else {
-                this.connect();
             }
+        }
+        if (key == Input.KEY_RETURN) {
+            this.connect();
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
         }
@@ -105,10 +108,12 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     }
 
     @Override
-    public void onStartScreen() {}
+    public void onStartScreen() {
+    }
 
     @Override
-    public void onEndScreen() {}
+    public void onEndScreen() {
+    }
 
     public void connect() {
         try {
