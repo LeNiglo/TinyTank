@@ -61,6 +61,8 @@ public class CollisionController {
     }
 
     public Tuple<Boolean, Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
+        Pair<String , String> saveCollision = null;
+
         List<CollisionObject> objects = this.getCollisionObject(id);
         try {
             if (!objects.isEmpty()) {
@@ -72,7 +74,6 @@ public class CollisionController {
                             if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
                                 if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
                                     if (current.isIgnored(objects.get(i).getType()) == false) {
-                                        Debug.debug("Collision");
                                         objects.get(i).backToSave();
                                         objects.get(i).notifyCollision(current.getType());
                                         current.notifyCollision(current.getType());
@@ -81,13 +82,17 @@ public class CollisionController {
                                     if (current.getType() == EnumGameObject.UNBREAKABLE) {
                                         return new Tuple<>(false, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
-                                    return new Tuple<>(true, true, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
+                                    saveCollision = new Pair<>(objects.get(i).getId().toString(), current.getId().toString());
                                 }
                             }
                         }
                     }
                 }
-                return new Tuple<>(false, true, new Pair<>("null", "null"));
+                if (saveCollision != null) {
+                    return new Tuple<>(true, true, saveCollision);
+                } else {
+                    return new Tuple<>(false, true, new Pair<>("null", "null"));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
