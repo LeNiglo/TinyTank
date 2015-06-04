@@ -1,11 +1,14 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
+import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -178,31 +181,75 @@ public class WindowGame extends BasicGameState implements ScreenController {
     }
 
 
-    public void myMouseMoved(double newX, double newY) {
+    public void myMouseMoved(double newX, double newY) throws SlickException {
         if (CurrentUser.isInGame() && this.gameController != null) {
-            double x = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX();
-            double y = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY();
+            TankState ts = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState();
+
+            double x = ts.getX();
+            double y = ts.getY();
 
             float angle = MathTools.getAngle(x, y, newX, newY);
-            float newAngle = angle;
-            if (angle < 0)
-                newAngle = 180 + (180 - (angle * -1));
-            float minAngle = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getDirection().getAngle() - 90;
-            float maxAngle = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getDirection().getAngle() + 90;
-            //TODO Change 90 with a tank variable.
+            float tmpAngle;
 
-            minAngle = (minAngle < 0 ? 360 + minAngle : minAngle);
-            maxAngle = (maxAngle > 360 ? maxAngle - 360 : maxAngle);
+            tmpAngle = ts.getDirection().getAngle() - 75;
+            float minAngle = ((tmpAngle < -180 ? tmpAngle + 360 : tmpAngle) > 180 ? tmpAngle - 360 : tmpAngle);
 
-            if (maxAngle < minAngle && ((newAngle >= 0 && newAngle <= maxAngle) || (newAngle >= minAngle && newAngle <= 360))) {
-                this.saveAngle = newAngle;
-                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(angle);
-            } else if (newAngle >= minAngle && newAngle <= maxAngle) {
-                this.saveAngle = newAngle;
-                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(angle);
+            tmpAngle = ts.getDirection().getAngle() + 75;
+            float maxAngle = ((tmpAngle < -180 ? tmpAngle + 360 : tmpAngle) > 180 ? tmpAngle - 360 : tmpAngle);
+            //TODO Change 75 with a tank variable (getTankState().rotationAngle).
+
+            if (ts.getDirection() == EnumDirection.DOWN) {
+
+                if ((angle >= minAngle && angle <= maxAngle) || (angle >= minAngle && angle <= maxAngle)) {
+                    ts.setGunAngle(angle);
+                } else if (angle >= -90 && angle <= minAngle) {
+                    ts.setGunAngle(minAngle);
+                } else if (angle >= maxAngle || angle <= -90) {
+                    ts.setGunAngle(maxAngle);
+                } else {
+                    throw new SlickException("WHAT IS THIS CASE FOR DOWN ? angle = "+angle);
+                }
+
+            } else if (ts.getDirection() == EnumDirection.RIGHT) {
+
+                if (angle >= minAngle && angle <= maxAngle) {
+                    ts.setGunAngle(angle);
+                } else if (angle <= minAngle) {
+                    ts.setGunAngle(minAngle);
+                } else if (angle <= 180 && angle >= maxAngle) {
+                    ts.setGunAngle(maxAngle);
+                } else {
+                    throw new SlickException("WHAT IS THIS CASE FOR RIGHT ? angle = "+angle);
+                }
+
+            } else if (ts.getDirection() == EnumDirection.UP) {
+
+                if (angle >= minAngle && angle <= maxAngle) {
+                    ts.setGunAngle(angle);
+                } else if (angle >= maxAngle && angle <= 90) {
+                    ts.setGunAngle(maxAngle);
+                } else if ((angle >= 90 && angle <= 180) || (angle <= minAngle)) {
+                     ts.setGunAngle(minAngle);
+                } else {
+                    throw new SlickException("WHAT IS THIS CASE FOR UP ? angle = "+angle);
+                }
+
+            } else if (ts.getDirection() == EnumDirection.LEFT) {
+
+                if (angle >= minAngle || angle <= maxAngle) {
+                    ts.setGunAngle(angle);
+                } else if (angle >= maxAngle && angle <= 0) {
+                    ts.setGunAngle(maxAngle);
+                } else if (angle >= 0 && angle <= minAngle) {
+                    ts.setGunAngle(minAngle);
+                } else {
+                    throw new SlickException("WHAT IS THIS CASE FOR LEFT ? angle = "+angle);
+                }
+                
             } else {
-                this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().setGunAngle(this.saveAngle);
+                throw new SlickException("Your direction isn't real");
             }
+
         }
     }
 
