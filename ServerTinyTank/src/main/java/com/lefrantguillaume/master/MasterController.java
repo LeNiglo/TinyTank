@@ -34,13 +34,9 @@ public class MasterController extends Observable implements Observer {
     private boolean gameStarted = false;
 
     public MasterController(String type) throws JSONException {
-        /*
-        TODO Get this from the data.
-        */
+        /* TODO Get this from the data server. */
         String content = StringTools.readFile("tanks.json");
-        /*
-        Until here
-         */
+
         this.initInterface(type);
         this.gameController = new GameController(new JSONObject(content));
         this.dataServer = new DataServer();
