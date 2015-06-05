@@ -72,11 +72,7 @@ public class DataServer {
                 Log.info("Server id: " + this.id);
 
                 updateThread = Executors.newScheduledThreadPool(5);
-                updateThread.scheduleAtFixedRate(new Runnable() {
-                    public void run() {
-                        updateServer();
-                    }
-                }, 30, 30, TimeUnit.SECONDS);
+                updateThread.scheduleAtFixedRate(() -> updateServer(), 30, 120, TimeUnit.SECONDS);
             }
         } catch (ClientHandlerException e) {
             WindowController.addConsoleMsg("Online server not reachable: " + e.getCause().getMessage());
