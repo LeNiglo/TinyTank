@@ -11,7 +11,7 @@ public class MapController {
     private int currentMapIndex = 0;
 
     public MapController(){
-        this.maps = new ArrayList<Map>();
+        this.maps = new ArrayList<>();
     }
 
     public void clearMaps(){

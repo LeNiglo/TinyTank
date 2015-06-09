@@ -107,8 +107,11 @@ public class WindowAccount extends BasicGameState implements ScreenController {
                 Debug.debug("Trying to cheat ! Connect to " + srv);
                 this.accountController.connect(srv);
             }
+        } else if (key == Input.KEY_ENTER) {
+
         } else if (key == Input.KEY_ESCAPE) {
             this.container.exit();
+            this.scheduler.shutdown();
         } else if (key == Input.KEY_R) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 this.accountController.createServerList();

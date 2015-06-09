@@ -75,6 +75,7 @@ public class Shot extends Observable implements Observer {
         this.shiftOrigin.setV1(this.shiftToExplode.getV1());
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
 
+        this.savePosShot.clear();
         this.addNewPosition();
         this.animator.setIndex(EnumAnimationShot.EXPLODE.getIndex());
         this.explode = true;

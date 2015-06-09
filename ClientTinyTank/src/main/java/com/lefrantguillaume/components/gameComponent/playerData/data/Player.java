@@ -23,14 +23,16 @@ public class Player extends Observable implements Observer {
     private PlayerActionController playerActionController;
     private User user;
     private boolean alive;
+    private boolean canDoAction;
 
     public Player(User user, UUID idTeam, Tank tank, List<Shot> shots, float x, float y) {
         this.user = user;
         this.alive = true;
+        this.canDoAction = true;
         this.shots = shots;
         this.idTeam = idTeam;
         this.tank = tank;
-        this.tank.getTankState().setPositions(new Pair<Float, Float>(x, y));
+        this.tank.getTankState().setPositions(new Pair<>(x, y));
         this.playerActionController = new PlayerActionController(this.shots, this.tank);
     }
 
@@ -44,11 +46,12 @@ public class Player extends Observable implements Observer {
     }
 
     public void doAction(PlayerAction playerAction, CollisionController collisionController) {
-        this.playerActionController.doAction(playerAction, collisionController, this);
+        if (this.canDoAction == true)
+            this.playerActionController.doAction(playerAction, collisionController, this);
     }
 
     public void move(float delta) {
-        if (this.alive == true) {
+        if (this.alive == true && this.canDoAction == true) {
             Pair<Float, Float> coords = this.movePredict(delta);
             this.tank.getTankState().addX(coords.getV1());
             this.tank.getTankState().addY(coords.getV2());
@@ -78,10 +81,12 @@ public class Player extends Observable implements Observer {
 
     public void die() {
         this.alive = false;
+        this.canDoAction = false;
     }
 
     public void revive(Pair<Float, Float> positions) {
         this.alive = true;
+        this.canDoAction = true;
         this.getTank().revive(positions);
         this.setChanged();
         this.notifyObservers(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
@@ -112,6 +117,10 @@ public class Player extends Observable implements Observer {
         return this.alive;
     }
 
+    public boolean isCanDoAction(){
+        return this.canDoAction;
+    }
+
     public Tank getTank() {
         return this.tank;
     }
@@ -132,6 +141,12 @@ public class Player extends Observable implements Observer {
         List<EnumGameObject> types = new ArrayList<>();
 
         return types;
+    }
+
+    // SETTERS
+
+    public void setCanDoAction(boolean value){
+        this.canDoAction = value;
     }
 }
 

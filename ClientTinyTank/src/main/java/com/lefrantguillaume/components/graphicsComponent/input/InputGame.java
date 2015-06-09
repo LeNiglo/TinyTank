@@ -56,7 +56,7 @@ public class InputGame extends Observable {
             return -1;
         } else {
             Player player = gameController.getPlayer(CurrentUser.getId());
-            if (player != null && player.isAlive()) {
+            if (player != null && player.isAlive() && player.isCanDoAction()) {
                 request = createMessageByInput(gameController.getCollisionController(), player, keyName, mode, posX, posY);
             }
             if (request != null) {

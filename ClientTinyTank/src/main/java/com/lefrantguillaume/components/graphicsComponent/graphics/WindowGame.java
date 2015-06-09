@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
@@ -140,15 +139,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyPressed(int key, char c) {
-        if (key == Input.KEY_ADD) {
-            this.frameRate += 5;
-            this.container.setTargetFrameRate(this.frameRate);
-        } else if (key == Input.KEY_SUBTRACT) {
-            if (this.frameRate > 5) {
-                this.frameRate -= 5;
-                this.container.setTargetFrameRate(this.frameRate);
-            }
-        } else {
+        if (input != null && this.gameController != null) {
             input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
         }
     }
@@ -164,10 +155,12 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        if (input != null && button == 0) {
-            input.checkInput(this.gameController, -2, EnumInput.PRESSED, x, y);
-        } else if (input != null && button == 1) {
-            input.checkInput(this.gameController, -3, EnumInput.PRESSED, x, y);
+        if (input != null && this.gameController != null) {
+            if (button == 0) {
+                input.checkInput(this.gameController, -2, EnumInput.PRESSED, x, y);
+            } else if (button == 1) {
+                input.checkInput(this.gameController, -3, EnumInput.PRESSED, x, y);
+            }
         }
     }
 

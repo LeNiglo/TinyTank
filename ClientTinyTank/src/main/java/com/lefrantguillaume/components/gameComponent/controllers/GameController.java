@@ -7,6 +7,7 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
@@ -210,6 +211,15 @@ public class GameController extends Observable implements Observer {
         Shot shot = this.getShot(task.getShotId());
         if (shot != null) {
             shot.setCurrentLife(task.getCurrentDamageShot());
+            Debug.debug("a");
+            if (shot.getType() == EnumGameObject.LASER && shot.getExplode() == true){
+                Debug.debug("b");
+                Player player = this.getPlayer(shot.getUserId());
+                if (player != null){
+                    Debug.debug("c");
+                    player.setCanDoAction(true);
+                }
+            }
         }
     }
 
