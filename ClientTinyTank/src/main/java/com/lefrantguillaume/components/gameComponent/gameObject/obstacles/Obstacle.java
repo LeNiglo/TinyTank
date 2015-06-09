@@ -39,19 +39,26 @@ public class Obstacle {
         this.currentLife = this.maxLife;
     }
 
-    public Obstacle(Obstacle obstacle) {
+    public Obstacle(Obstacle obstacle, boolean isCreated) {
         this.animator = new Animator(obstacle.animator);
         this.type = obstacle.type;
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
+        this.collisionObject = obstacle.collisionObject;
         this.created = obstacle.created;
         this.currentLife = obstacle.currentLife;
-        this.collisionObject = obstacle.collisionObject;
         this.shiftOrigin = obstacle.shiftOrigin;
+        if (isCreated == true) {
+            this.playerId = obstacle.playerId;
+            this.playerPseudo = obstacle.playerPseudo;
+            this.angle = obstacle.angle;
+            this.id = obstacle.id;
+            this.positions = new Pair<>(obstacle.positions);
+        }
     }
 
-    public void createObstacle(String userId, String playerPseudo, String id, float angle, float posX, float posY) {
-        this.playerId = userId;
+    public void createObstacle(String playerId, String playerPseudo, String id, float angle, float posX, float posY) {
+        this.playerId = playerId;
         this.playerPseudo = playerPseudo;
         this.angle = angle;
         this.id = id;
@@ -60,12 +67,14 @@ public class Obstacle {
     }
 
     public void getHit(){
-        if (this.currentLife == 0){
-            this.animator.setIndex(EnumAnimationObstacle.EXPLODE.getIndex());
-            this.shiftOrigin.setV1(-44f);
-            this.shiftOrigin.setV1(-31.5f);
-        } else if (this.currentLife > 0 && this.currentLife <= 10) {
-            this.animator.setIndex(EnumAnimationObstacle.LOW.getIndex());
+        if (this.animator != null) {
+            if (this.currentLife == 0) {
+                this.animator.setIndex(EnumAnimationObstacle.EXPLODE.getIndex());
+                this.shiftOrigin.setV1(-44f);
+                this.shiftOrigin.setV1(-31.5f);
+            } else if (this.currentLife > 0 && this.currentLife <= 10) {
+                this.animator.setIndex(EnumAnimationObstacle.LOW.getIndex());
+            }
         }
     }
     // GETTERS
@@ -134,7 +143,6 @@ public class Obstacle {
 
         Debug.debug("type: " + this.type);
         if (this.type.equals(EnumGameObject.MINE)) {
-            Debug.debug("a");
             types.add(EnumGameObject.ROCKET);
             types.add(EnumGameObject.MACHINE_GUN);
             types.add(EnumGameObject.LASER);
@@ -168,4 +176,9 @@ public class Obstacle {
         this.currentLife = currentLife;
         this.getHit();
     }
+
+    public void setId(String id){
+        this.id = id;
+    }
 }
+

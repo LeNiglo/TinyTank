@@ -1,10 +1,10 @@
 package com.lefrantguillaume.gameComponent.target;
 
-import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
+import com.lefrantguillaume.gameComponent.maps.MapController;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageShotUpdateState;
@@ -30,6 +30,24 @@ public class Targets {
     }
 
     // FUNCTIONS
+
+    public void initGame(MapController mapController){
+        this.shots.clear();
+        this.obstacles.clear();
+        List<Obstacle> mapObstacles = mapController.getCurrentMap().getMapObstacles();
+        if (mapObstacles != null) {
+            for (Obstacle obstacle : mapObstacles){
+                this.obstacles.put(obstacle.getId(), new Obstacle(obstacle, true));
+            }
+        }
+    }
+
+    public void clearAll(){
+        this.obstacles.clear();
+        this.players.clear();
+        this.shots.clear();
+    }
+
     public boolean isIgnored(List<EnumGameObject> items, EnumGameObject type) {
         return items.contains(type);
     }
@@ -61,12 +79,15 @@ public class Targets {
                 }
             }
             if (this.getObstacle(targetId) != null) {
-                WindowController.addConsoleMsg("obstacle find");
                 Obstacle obstacle = this.getObstacle(targetId);
 
                 if (this.isIgnored(obstacle.getIgnoredObjectList(), hitterShot.getType()) == false) {
-                    hitterShot.getDamageByCollision(obstacle.getCurrentLife());
-                    messages.add(obstacle.getHit(damage));
+                    if (obstacle.getType() == EnumGameObject.UNBREAKABLE) {
+                        hitterShot.getDamageByCollision(hitterShot.getCurrentDamageShot());
+                    } else {
+                        hitterShot.getDamageByCollision(obstacle.getCurrentLife());
+                        messages.add(obstacle.getHit(damage));
+                    }
                     if (obstacle.getCurrentLife() == 0) {
                         this.obstacles.remove(obstacle.getId());
                     }
@@ -140,11 +161,6 @@ public class Targets {
         MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
         this.shots.remove(obstacleId);
         return message;
-    }
-
-    public void clear() {
-        this.players.clear();
-        this.shots.clear();
     }
 
     // GETTERS

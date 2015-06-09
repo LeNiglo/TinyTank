@@ -2,17 +2,16 @@ package com.lefrantguillaume.components.graphicsComponent.input;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
-import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePlayerDelete;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePutObstacle;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageShoot;
+import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
+import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Input;
 
@@ -57,7 +56,7 @@ public class InputGame extends Observable {
         } else {
             Player player = gameController.getPlayer(CurrentUser.getId());
             if (player != null && player.isAlive() && player.isCanDoAction()) {
-                request = createMessageByInput(gameController.getCollisionController(), player, keyName, mode, posX, posY);
+                request = createMessageByInput(gameController, player, keyName, mode, posX, posY);
             }
             if (request != null) {
                 this.setChanged();
@@ -67,7 +66,7 @@ public class InputGame extends Observable {
         }
     }
 
-    public MessageModel createMessageByInput(CollisionController collisionController, Player player, String keyName, EnumInput mode, int posX, int posY) {
+    public MessageModel createMessageByInput(GameController gameController, Player player, String keyName, EnumInput mode, int posX, int posY) {
         MessageModel message = null;
 
         if (keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_UP)) || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_DOWN))
@@ -80,7 +79,7 @@ public class InputGame extends Observable {
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SHOOT)) && mode == EnumInput.RELEASED) {
             message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
-            Tuple<Float, Float, Float> boxValues = player.predictCreateBox(collisionController);
+            Tuple<Float, Float, Float> boxValues = player.predictCreateBox(gameController.getCollisionController(), gameController.getObstacleConfigData());
             if (boxValues != null) {
                 message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumGameObject.IRON_WALL, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
             }

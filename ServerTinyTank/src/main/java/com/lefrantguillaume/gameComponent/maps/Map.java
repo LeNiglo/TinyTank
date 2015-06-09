@@ -2,7 +2,9 @@ package com.lefrantguillaume.gameComponent.maps;
 
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
-import com.lefrantguillaume.utils.Block;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Block;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.utils.RandomTools;
 import javafx.geometry.Rectangle2D;
 import javafx.util.Pair;
@@ -19,19 +21,19 @@ import java.util.List;
  */
 public class Map {
     private final List<MapGameMode> mapGameModes;
-    private final List<Rectangle2D> world;
+    private final List<Obstacle> mapObstacles;
     private List<Rectangle2D> currentObjects;
     private String mapName;
     private File fileConfig;
     private File image;
 
-    public Map(File fileConfig, File image, JSONObject map) throws JSONException {
+    public Map(ObstacleConfigData obstacleConfigData, File fileConfig, File image, JSONObject map) throws JSONException {
         this.fileConfig = fileConfig;
         this.mapGameModes = new ArrayList<>();
         this.currentObjects = new ArrayList<>();
+        this.mapObstacles = new ArrayList<>();
         this.image = image;
-        this.world = new ArrayList<>();
-        this.createWorld(map.getInt("sizeX"), map.getInt("sizeY"));
+        this.createWorld(obstacleConfigData);
         this.mapName = map.get("name") != null ? map.getString("name") : "unknown";
         JSONObject modes = map.getJSONObject("gameMode");
         Iterator iterator = modes.keys();
@@ -44,21 +46,21 @@ public class Map {
 
     // FUNCTIONS
 
-    private void createWorld(int sizeX, int sizeY) {
-        WindowController.addConsoleMsg("map : [" + sizeX + ", " + sizeY + "]");
-        this.world.add(new Rectangle2D(0, 0, sizeX, 5));
-        this.world.add(new Rectangle2D(0, sizeY - 5, sizeX, 5));
-        this.world.add(new Rectangle2D(0, 0, 5, sizeY));
-        this.world.add(new Rectangle2D(sizeX - 5, 0, 5, sizeY));
+    private void createWorld(ObstacleConfigData obstacleConfigData) {
+        this.mapObstacles.add(new Obstacle(obstacleConfigData.getWorldWall("admin-UNBREAKABLE-Wall-1"), true));
+        this.mapObstacles.add(new Obstacle(obstacleConfigData.getWorldWall("admin-UNBREAKABLE-Wall-2"), true));
+        this.mapObstacles.add(new Obstacle(obstacleConfigData.getWorldWall("admin-UNBREAKABLE-Wall-3"), true));
+        this.mapObstacles.add(new Obstacle(obstacleConfigData.getWorldWall("admin-UNBREAKABLE-Wall-4"), true));
     }
 
     public void resetCurrentObject() {
         this.currentObjects.clear();
     }
 
-    private boolean detectCollision(List<Rectangle2D> world, List<Rectangle2D> obstacles, Rectangle2D object) {
+    private boolean detectCollision(List<Obstacle> world, List<Rectangle2D> obstacles, Rectangle2D object) {
         for (int i = 0; i < world.size(); ++i) {
-            if (object.intersects(world.get(i))) {
+            Rectangle2D current = new Rectangle2D(world.get(i).getXByIndex(0), world.get(i).getYByIndex(0), world.get(i).getSizeXByIndex(0), world.get(i).getSizeYByIndex(0));
+            if (object.intersects(current)) {
                 WindowController.addConsoleMsg("collision avec la map");
                 return true;
             }
@@ -74,7 +76,6 @@ public class Map {
 
     public Pair<Float, Float> calcRespawnPoint(EnumGameMode gameMode, int team, List<Block> collisionObject) {
         Pair<Float, Float> positions = null;
-        WindowController.addConsoleMsg("selected mode : " + gameMode);
         MapGameMode current = this.getGameMode(gameMode);
         if (current == null) {
             return null;
@@ -89,11 +90,10 @@ public class Map {
                 int x = (int) (RandomTools.getInt((int) respawnPoints.get(i).getWidth()) + respawnPoints.get(i).getMinX());
                 int y = (int) (RandomTools.getInt((int) respawnPoints.get(i).getHeight()) + respawnPoints.get(i).getMinY());
 
-                WindowController.addConsoleMsg("positions = " + x + ", " + y);
                 for (int i3 = 0; i3 < collisionObject.size(); ++i3) {
                     Rectangle2D object = new Rectangle2D(x - collisionObject.get(i).getShiftOrigin().getKey(), y - collisionObject.get(i).getShiftOrigin().getValue(),
                             collisionObject.get(i).getSizes().getKey(), collisionObject.get(i).getSizes().getValue());
-                    if (!this.detectCollision(this.world, this.currentObjects, object)) {
+                    if (!this.detectCollision(this.mapObstacles, this.currentObjects, object)) {
                         positions = new Pair<>((float) x, (float) y);
                         this.currentObjects.add(object);
                         return positions;
@@ -113,6 +113,10 @@ public class Map {
             }
         }
         return null;
+    }
+
+    public List<Obstacle> getMapObstacles(){
+        return this.mapObstacles;
     }
 
     public String getName() {

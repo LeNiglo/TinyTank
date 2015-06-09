@@ -1,7 +1,6 @@
 package com.lefrantguillaume.gameComponent.gameobjects.tanks;
 
-import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
-import com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment.TankBox;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment.TankSpell;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment.TankState;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment.TankWeapon;
@@ -16,7 +15,7 @@ public class Tank {
     private TankWeapon tankWeapon;
     private TankState tankState;
     private TankSpell tankSpell;
-    private TankBox tankBox;
+    private EnumGameObject tankBox;
 
     public Tank(JSONObject config) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"));
@@ -29,20 +28,13 @@ public class Tank {
         this.tankWeapon = new TankWeapon(tank.tankWeapon);
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
-        this.tankBox = new TankBox(tank.tankBox);
+        this.tankBox = tank.tankBox;
     }
 
     // FUNCTIONS
 
     public void revive(){
         this.tankState.init();
-    }
-
-    public Obstacle generateObstacle(String playerId, String playerPseudo, String obstacleId, float angle, float posX, float posY){
-        Obstacle obstacle = this.tankBox.generateBox();
-
-        obstacle.createObstacle(playerId, playerPseudo, obstacleId, angle, posX, posY);
-        return obstacle;
     }
 
     // GETTERS
@@ -53,6 +45,10 @@ public class Tank {
 
     public TankState getTankState(){
         return this.tankState;
+    }
+
+    public EnumGameObject getTankBox(){
+        return this.tankBox;
     }
 
 }

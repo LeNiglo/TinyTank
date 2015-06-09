@@ -77,21 +77,9 @@ public class TankFactory {
         return tankSpell;
     }
 
-    public static TankBox createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public static EnumGameObject createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         EnumGameObject boxType = EnumGameObject.getEnumByValue(config.getString("boxType"));
 
-        JSONObject build = config.getJSONObject("build");
-        Pair<Float, Float> shiftOrigin = new Pair<>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
-
-        TankBox tankBox = new TankBox(boxType, Float.valueOf(config.getString("life")), Float.valueOf(config.getString("damage")),
-                animatorGameData.getObstacleAnimator(boxType), shiftOrigin);
-        JSONArray collisions = build.getJSONArray("collisions");
-        for (int i = 0; i < collisions.length(); ++i){
-            JSONObject current = collisions.getJSONObject(i);
-            Pair<Float, Float> shiftOrigin2 = new Pair<>(Float.valueOf(current.getString("shiftOriginX")), Float.valueOf(current.getString("shiftOriginY")));
-            Pair<Float, Float> sizes= new Pair<>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
-            tankBox.addCollisionObject(new Block(shiftOrigin2, sizes));
-        }
-        return tankBox;
+        return boxType;
     }
 }

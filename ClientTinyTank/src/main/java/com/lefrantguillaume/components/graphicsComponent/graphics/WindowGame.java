@@ -68,8 +68,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.gameController.getMapController().setMapAnimator(this.animatorGameData.getMapAnimator());
         this.gameController.setAnimatorGameData(this.animatorGameData);
         try {
-            JSONObject jsonConfig = new JSONObject(StringTools.readFile("tanks.json"));
-            this.gameController.initConfigData(jsonConfig);
+            JSONObject tanksConfig = new JSONObject(StringTools.readFile("tanks.json"));
+            JSONObject obstaclesConfig = new JSONObject(StringTools.readFile("obstacles.json"));
+            this.gameController.initConfigData(tanksConfig, obstaclesConfig);
         } catch (JSONException e) {
             throw new SlickException(e.getMessage());
         }

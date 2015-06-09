@@ -3,7 +3,6 @@ package com.lefrantguillaume.gameComponent.gameobjects.obstacles;
 
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
-import com.lefrantguillaume.utils.Block;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.List;
  */
 public class Obstacle {
     private final EnumGameObject type;
-    private final  List<Block> collisionObject;
+    private final List<Block> collisionObject;
     private final Pair<Float, Float> shiftOrigin;
     private final float maxLife;
     private final float damage;
@@ -27,24 +26,31 @@ public class Obstacle {
     private float angle;
     private boolean created;
 
-    public Obstacle(EnumGameObject type,  List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
+    public Obstacle(EnumGameObject type, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.type = type;
+        this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
         this.damage = damage;
-        this.shiftOrigin = new Pair<>(shiftOrigin.getKey(), shiftOrigin.getValue());
         this.collisionObject = collisionObject;
         this.created = false;
         this.currentLife = this.maxLife;
     }
 
-    public Obstacle(Obstacle obstacle) {
+    public Obstacle(Obstacle obstacle, boolean isCreated) {
         this.type = obstacle.type;
+        this.shiftOrigin = new Pair<>(obstacle.shiftOrigin.getKey(), obstacle.shiftOrigin.getValue());
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
-        this.shiftOrigin = new Pair<>(obstacle.shiftOrigin.getKey(), obstacle.shiftOrigin.getValue());
+        this.collisionObject = obstacle.collisionObject;
         this.created = obstacle.created;
         this.currentLife = obstacle.currentLife;
-        this.collisionObject = obstacle.collisionObject;
+        if (isCreated == true) {
+            this.playerId = obstacle.playerId;
+            this.playerPseudo = obstacle.playerPseudo;
+            this.angle = obstacle.angle;
+            this.id = obstacle.id;
+            this.positions = new Pair<>(obstacle.positions.getKey(), obstacle.positions.getValue());
+        }
     }
 
     // FUNCTIONS
@@ -73,8 +79,38 @@ public class Obstacle {
         return this.playerId;
     }
 
-    public String getPlayerPseudo(){
+    public String getPlayerPseudo() {
         return this.playerPseudo;
+    }
+
+    public float getXByIndex(int index) {
+        if (index < this.collisionObject.size()) {
+            return this.positions.getKey() + this.collisionObject.get(index).getShiftOrigin().getKey();
+        } else {
+            return this.positions.getKey();
+        }
+    }
+
+    public float getYByIndex(int index) {
+        if (index < this.collisionObject.size()) {
+            return this.positions.getValue() + this.collisionObject.get(index).getShiftOrigin().getValue();
+        } else {
+            return this.positions.getValue();
+        }
+    }
+
+    public float getSizeXByIndex(int index){
+        if (index < this.collisionObject.size()) {
+            return this.collisionObject.get(index).getSizes().getKey();
+        }
+        return 0;
+    }
+
+    public float getSizeYByIndex(int index){
+        if (index < this.collisionObject.size()) {
+            return this.collisionObject.get(index).getSizes().getValue();
+        }
+        return 0;
     }
 
     public float getX() {
@@ -95,10 +131,6 @@ public class Obstacle {
 
     public Pair<Float, Float> getPositions() {
         return this.positions;
-    }
-
-    public Pair<Float, Float> getShiftOrigin() {
-        return this.shiftOrigin;
     }
 
     public float getAngle() {

@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.controllers;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
@@ -44,6 +45,8 @@ public class MapController {
         for (int i = 0; i < block.size(); ++i) {
             CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), block.get(i).getSizes(),
                     block.get(i).getShiftOrigin(), obstacle.getPlayerId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
+            Debug.debug("addCollision obstacle: pos["  + collisionObject.getX() + "," + collisionObject.getY() + "] + origin["
+                    + collisionObject.getOriginX() + ","  + collisionObject.getOriginY() + "] size[" + collisionObject.getSizeX() + "," + collisionObject.getSizeY()+"]");
             this.collisionController.addCollisionObject(collisionObject);
         }
         this.obstacles.add(obstacle);

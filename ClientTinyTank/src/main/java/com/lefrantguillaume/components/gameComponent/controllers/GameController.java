@@ -9,6 +9,7 @@ import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
 import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
@@ -47,6 +48,7 @@ public class GameController extends Observable implements Observer {
     private RoundController roundController;
     private AnimatorGameData animatorGameData;
     private TankConfigData tankConfigData;
+    private ObstacleConfigData obstacleConfigData;
     public final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     public GameController() throws SlickException {
@@ -58,6 +60,7 @@ public class GameController extends Observable implements Observer {
         this.collisionController = new CollisionController();
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
         this.tankConfigData = new TankConfigData();
+        this.obstacleConfigData = new ObstacleConfigData();
     }
 
     public void clearData() {
@@ -192,11 +195,19 @@ public class GameController extends Observable implements Observer {
     }
 
     public void putObject(MessagePutObstacle task) {
-        Player player = this.getPlayer(task.getId());
-        Debug.debug("player for obstacle = " + player);
-        if (player != null) {
-            Obstacle obstacle = player.getTank().generateObstacle(task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
+        Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
+        Obstacle obstacle;
+
+        if (task.getType() == EnumGameObject.UNBREAKABLE) {
+            obstacle = this.obstacleConfigData.getWorldWall(task.getObstacleId());
+        } else {
+            obstacle = this.obstacleConfigData.getObstacle(task.getType());
+        }
+        if (obstacle != null) {
+            obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
             this.mapController.addObstacle(obstacle);
+        } else {
+            Debug.debug("obstacle = NULL");
         }
     }
 
@@ -211,12 +222,9 @@ public class GameController extends Observable implements Observer {
         Shot shot = this.getShot(task.getShotId());
         if (shot != null) {
             shot.setCurrentLife(task.getCurrentDamageShot());
-            Debug.debug("a");
-            if (shot.getType() == EnumGameObject.LASER && shot.getExplode() == true){
-                Debug.debug("b");
+            if (shot.getType() == EnumGameObject.LASER && shot.getExplode() == true) {
                 Player player = this.getPlayer(shot.getUserId());
-                if (player != null){
-                    Debug.debug("c");
+                if (player != null) {
                     player.setCanDoAction(true);
                 }
             }
@@ -225,14 +233,21 @@ public class GameController extends Observable implements Observer {
 
     // FUNCTIONS
 
-    public void initConfigData(JSONObject config) throws JSONException {
-        this.initTankConfigData(config);
+    public void initConfigData(JSONObject tankConfig, JSONObject obstacleConfig) throws JSONException {
+        this.initTankConfigData(tankConfig);
+        this.initObstacleConfigData(obstacleConfig);
     }
 
     public void initTankConfigData(JSONObject config) throws JSONException {
         if (this.animatorGameData == null)
             throw new JSONException("tankConfigData failed");
         this.tankConfigData.initTanks(config, this.animatorGameData);
+    }
+
+    public void initObstacleConfigData(JSONObject config) throws JSONException {
+        if (this.animatorGameData == null)
+            throw new JSONException("obstacleConfigData failed");
+        this.obstacleConfigData.initObstacle(config, this.animatorGameData);
     }
 
     public void deletePlayer(String id) {
@@ -349,12 +364,14 @@ public class GameController extends Observable implements Observer {
             for (int i = 0; i < this.mapController.getObstacles().size(); ++i) {
                 Obstacle current = this.mapController.getObstacles().get(i);
 
-                if (current.getAnimator().currentAnimation().isStopped()) {
-                    this.mapController.deleteObstacle(current.getId());
-                } else {
-                    current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
-                    current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
-                    g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
+                if (current.getAnimator() != null) {
+                    if (current.getAnimator().currentAnimation().isStopped()) {
+                        this.mapController.deleteObstacle(current.getId());
+                    } else {
+                        current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);
+                        current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
+                        g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
+                    }
                 }
             }
         }
@@ -371,6 +388,10 @@ public class GameController extends Observable implements Observer {
 
     public MapController getMapController() {
         return this.mapController;
+    }
+
+    public ObstacleConfigData getObstacleConfigData() {
+        return this.obstacleConfigData;
     }
 
     public RoundController getRoundController() {

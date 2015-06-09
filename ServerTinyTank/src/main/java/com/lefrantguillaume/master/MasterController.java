@@ -84,7 +84,7 @@ public class MasterController extends Observable implements Observer {
     public void parseJsonMap(File file, String name) {
         try {
             JSONObject object = new JSONObject(StringTools.readFile(file.getAbsolutePath()));
-            Map map = new Map(file, new File("maps/" + name + ".jpg"), object);
+            Map map = new Map(this.gameController.getObstacleConfigData(), file, new File("maps/" + name + ".jpg"), object);
             this.gameController.addMap(map);
         } catch (Exception e) {
             System.out.println("Error in parseJson: " + e.getMessage());

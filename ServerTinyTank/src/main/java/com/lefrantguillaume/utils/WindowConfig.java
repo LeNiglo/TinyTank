@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.configs;
+package com.lefrantguillaume.utils;
 
 import java.awt.*;
 
@@ -12,7 +12,7 @@ public class WindowConfig {
     public WindowConfig() {
 
         //TODO: Résolution à régler
-        Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         float height = (float)dimension.getHeight();
         float width  = (float)dimension.getWidth();
 
@@ -27,13 +27,5 @@ public class WindowConfig {
 
     public static float getSizeY() {
         return sizeY;
-    }
-
-    public static int getIntSizeX() {
-        return (int)sizeX;
-    }
-
-    public static int getIntSizeY() {
-        return (int)sizeY;
     }
 }

@@ -41,7 +41,7 @@ public class MasterGame implements Observer {
 
     private void startGame() throws SlickException, JSONException {
         AppGameContainer appGame = new AppGameContainer(this.windows);
-        appGame.setDisplayMode(WindowConfig.getSizeX(), WindowConfig.getSizeY(), false);
+        appGame.setDisplayMode(WindowConfig.getIntSizeX(), WindowConfig.getIntSizeY(), false);
         appGame.start();
     }
 

@@ -33,7 +33,7 @@ public class TankConfigData {
         this.valid = true;
     }
 
-    public void clear(){
+    public void clear() {
         this.tanks.clear();
     }
 
@@ -45,8 +45,7 @@ public class TankConfigData {
     public Tank getTank(EnumGameObject index) {
         if (this.valid == true && index.getIndex() < this.tanks.size()) {
             return new Tank(this.tanks.get(index.getIndex()));
-        }
-        else {
+        } else {
             return null;
         }
     }

@@ -2,6 +2,7 @@ package com.lefrantguillaume;
 
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.master.MasterController;
+import com.lefrantguillaume.utils.WindowConfig;
 import org.codehaus.jettison.json.JSONException;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -12,6 +13,8 @@ import org.kohsuke.args4j.Option;
  */
 
 public class Main  {
+    private static WindowConfig windowConfig;
+
     @Option(name = "-c", usage = "console mode", aliases = "--console")
     private boolean console = false;
     @Option(name = "-h", usage = "shows this help", aliases = "--help", help = true)
@@ -22,6 +25,7 @@ public class Main  {
     }
 
     public Main(String args[]) {
+        windowConfig = new WindowConfig();
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);

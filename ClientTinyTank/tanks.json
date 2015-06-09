@@ -61,21 +61,7 @@
         "spellType": "shield"
       },
       "tankBox": {
-        "boxType": "iron_wall",
-        "life" : "20",
-        "damage": "0",
-        "build":{
-          "centerX": "-25.0",
-          "centerY": "-22.5",
-          "collisions": [
-            {
-              "shiftOriginX": "-25.0",
-              "shiftOriginY": "-22.5",
-              "sizeX": "50.0",
-              "sizeY": "45.0"
-            }
-          ]
-        }
+        "boxType": "iron_wall"
       }
     },
     {
@@ -139,21 +125,7 @@
         "spellType": "invisibility"
       },
       "tankBox": {
-        "boxType": "plasma_wall",
-        "life": "20",
-        "damage": "0",
-        "build": {
-          "centerX": "-25.0",
-          "centerY": "-22.5",
-          "collisions": [
-            {
-              "shiftOriginX": "-25.0",
-              "shiftOriginY": "-22.5",
-              "sizeX": "50.0",
-              "sizeY": "45.0"
-            }
-          ]
-        }
+        "boxType": "plasma_wall"
       }
     },
     {
@@ -236,21 +208,7 @@
         "spellType": "teleport"
       },
       "tankBox": {
-        "boxType": "mine",
-        "life": "20",
-        "damage": "50",
-        "build": {
-          "centerX": "-25.0",
-          "centerY": "-22.5",
-          "collisions": [
-            {
-              "shiftOriginX": "-25.0",
-              "shiftOriginY": "-22.5",
-              "sizeX": "50.0",
-              "sizeY": "45.0"
-            }
-          ]
-        }
+        "boxType": "mine"
       }
     }
   ]

@@ -6,6 +6,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gameComponent.maps.Map;
@@ -17,6 +18,7 @@ import com.lefrantguillaume.networkComponent.gameServerComponent.RequestFactory;
 import com.lefrantguillaume.networkComponent.gameServerComponent.SendFile;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.*;
 import com.lefrantguillaume.utils.MD5;
+import com.lefrantguillaume.utils.StringTools;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -29,10 +31,11 @@ import java.util.*;
 
 public class GameController extends Observable {
     private MapController mapController;
+    private ObstacleConfigData obstacleConfigData;
     private GameModeController gameModeController;
-    private Targets targets = null;
-    private TankConfigData tankConfigData = null;
-    private HashMap<String, HashMap<String, List<List<String>>>> collisions = new HashMap<>();
+    private Targets targets;
+    private TankConfigData tankConfigData;
+    private HashMap<String, HashMap<String, List<List<String>>>> collisions;
     /////////////// idShot /////// idTarget //////// idPlayer
 
     public GameController(JSONObject configFile) throws JSONException {
@@ -41,6 +44,8 @@ public class GameController extends Observable {
         this.mapController = new MapController();
         this.targets = new Targets();
         this.gameModeController = new GameModeController();
+        this.obstacleConfigData = new ObstacleConfigData(new JSONObject(StringTools.readFile("obstacles.json")));
+        this.collisions = new HashMap<>();
     }
 
     // FUNCTIONS
@@ -115,17 +120,8 @@ public class GameController extends Observable {
 
     public void doMessagePlayerNew(MessagePlayerNew received, Connection connection) {
         WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
-        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-            MessagePlayerNew tmpMessage = new MessagePlayerNew();
-            tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
-            tmpMessage.setId(entry.getValue().getId());
-            tmpMessage.setPseudo(entry.getValue().getPseudo());
-            tmpMessage.setPosX(0);
-            tmpMessage.setPosY(0);
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
-        }
 
+        this.sendAllTargetsToSomeone(connection);
         this.targets.addPlayer(received.getId(), new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(), this.tankConfigData.getTank(received.getEnumTanks()), connection));
         Player player = this.targets.getPlayer(received.getId());
         this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
@@ -139,19 +135,6 @@ public class GameController extends Observable {
             this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
-        }
-
-        for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()){
-            MessagePutObstacle tmpMessage = new MessagePutObstacle();
-
-            tmpMessage.setId(entry.getValue().getPlayerId());
-            tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
-            tmpMessage.setObstacleId(entry.getValue().getId());
-            tmpMessage.setAngle(entry.getValue().getAngle());
-            tmpMessage.setPosX(entry.getValue().getX());
-            tmpMessage.setPosY(entry.getValue().getY());
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
         }
     }
 
@@ -282,33 +265,35 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable())
             return;
         received.setObstacleId(UUID.randomUUID().toString());
-        Player player = this.targets.getPlayer(received.getId());
         WindowController.addConsoleMsg("create Box with playerId:" + received.getId());
-        if (player != null) {
-            Obstacle obstacle = player.getTank().generateObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
-            WindowController.addConsoleMsg("new Box : " + received.getObstacleId());
-            this.targets.addObstacle(received.getObstacleId(), obstacle);
-            setChanged();
-            notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
-        }
+        Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
+        obstacle.createObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
+        WindowController.addConsoleMsg("new Box : " + received.getObstacleId());
+        this.targets.addObstacle(received.getObstacleId(), obstacle);
+        setChanged();
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
 
     // FUNCTIONS
     public void startGame() {
         WindowController.addConsoleMsg("Game started");
+        this.targets.initGame(this.mapController);
+        WindowController.addConsoleMsg("nombre d'objet: \n\tobstacle: " + this.targets.getObstacles().size() + "\n\tplayer:" + this.targets.getPlayers().size() + "\n\tshots: " + this.targets.getShots().size());
     }
 
     public void stopGame() {
         WindowController.addConsoleMsg("Game stopped");
+        this.targets.clearAll();
     }
 
     public void newRound() {
         this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
-        this.addNewRoundTimer();
+        this.targets.initGame(this.mapController);
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
-            Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(), this.gameModeController.getCurrentMode().getIndexTeam(entry.getValue().getTeamId().toString()), entry.getValue().getTank().getTankState().getCollisionObject());
+            Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
+                    this.gameModeController.getCurrentMode().getIndexTeam(entry.getValue().getTeamId().toString()), entry.getValue().getTank().getTankState().getCollisionObject());
             if (newPositions != null) {
                 MessagePlayerUpdatePosition tmp = new MessagePlayerUpdatePosition();
                 tmp.setPseudo(entry.getValue().getPseudo());
@@ -323,6 +308,34 @@ public class GameController extends Observable {
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
         }
         this.mapController.getCurrentMap().resetCurrentObject();
+        this.addNewRoundTimer();
+    }
+
+    public void sendAllTargetsToSomeone(Connection connection) {
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+            MessagePlayerNew tmpMessage = new MessagePlayerNew();
+            tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
+            tmpMessage.setId(entry.getValue().getId());
+            tmpMessage.setPseudo(entry.getValue().getPseudo());
+            tmpMessage.setPosX(0);
+            tmpMessage.setPosY(0);
+            this.setChanged();
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+        }
+
+        for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
+            MessagePutObstacle tmpMessage = new MessagePutObstacle();
+
+            tmpMessage.setId(entry.getValue().getPlayerId());
+            tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
+            tmpMessage.setObstacleId(entry.getValue().getId());
+            tmpMessage.setType(entry.getValue().getType());
+            tmpMessage.setAngle(entry.getValue().getAngle());
+            tmpMessage.setPosX(entry.getValue().getX());
+            tmpMessage.setPosY(entry.getValue().getY());
+            this.setChanged();
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+        }
     }
 
     // TODO : à refaire
@@ -428,5 +441,9 @@ public class GameController extends Observable {
 
     public Targets getTargets() {
         return this.targets;
+    }
+
+    public ObstacleConfigData getObstacleConfigData(){
+        return this.obstacleConfigData;
     }
 }
