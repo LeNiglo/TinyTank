@@ -206,8 +206,6 @@ public class GameController extends Observable implements Observer {
         if (obstacle != null) {
             obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
             this.mapController.addObstacle(obstacle);
-        } else {
-            Debug.debug("obstacle = NULL");
         }
     }
 

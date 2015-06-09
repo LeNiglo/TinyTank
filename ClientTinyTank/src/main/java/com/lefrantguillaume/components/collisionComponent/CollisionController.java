@@ -78,11 +78,6 @@ public class CollisionController {
                                         current.notifyCollision(current.getType());
                                         return new Tuple<>(true, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
-/*
-                                    if (current.getType() == EnumGameObject.UNBREAKABLE) {
-                                        return new Tuple<>(false, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
-                                    }
-                                    */
                                     saveCollision = new Pair<>(objects.get(i).getId().toString(), current.getId().toString());
                                 }
                             }
