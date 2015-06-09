@@ -21,6 +21,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +37,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private Nifty nifty;
     private int id;
     private ListBox listBox = null;
+    private Future<?> future = null;
 
     public WindowAccount(int id, Nifty nifty, GenericSendTask accountTask) throws JSONException {
         this.id = id;
@@ -67,7 +69,9 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
         this.nifty.gotoScreen("screen-account");
 
-        this.scheduler.scheduleAtFixedRate(() -> {
+
+
+        this.future = this.scheduler.scheduleWithFixedDelay(() -> {
             WindowAccount.this.accountController.createServerList();
             WindowAccount.this.fillServerList();
         }, 0, 15, TimeUnit.SECONDS);
@@ -75,7 +79,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-
+        this.future.cancel(true);
     }
 
     @Override
@@ -110,6 +114,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         } else if (key == Input.KEY_ENTER) {
 
         } else if (key == Input.KEY_ESCAPE) {
+            this.scheduler.shutdown();
             this.container.exit();
             this.scheduler.shutdown();
         } else if (key == Input.KEY_R) {

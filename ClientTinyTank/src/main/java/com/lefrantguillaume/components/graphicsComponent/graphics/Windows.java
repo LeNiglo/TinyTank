@@ -31,10 +31,10 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     private GenericSendTask accountTask;
     private GenericSendTask masterTask;
 
-    private WindowLogin wl;
-    private WindowAccount wa;
-    private WindowInterface wi;
-    private WindowGame wg;
+    private WindowLogin windowLogin;
+    private WindowAccount windowAccount;
+    private WindowInterface windowInterface;
+    private WindowGame windowGame;
 
     private Nifty nifty = null;
 
@@ -57,10 +57,10 @@ public class Windows extends NiftyStateBasedGame implements Observer {
             throw new SlickException("Wrong Custom Init begin.");
         }
 
-        this.addState(this.wl);
-        this.addState(this.wa);
-        this.addState(this.wi);
-        this.addState(this.wg);
+        this.addState(this.windowLogin);
+        this.addState(this.windowAccount);
+        this.addState(this.windowInterface);
+        this.addState(this.windowGame);
 
         if (!this.initNifty(false)) {
             throw new SlickException("Wrong Custom Init end.");
@@ -71,10 +71,10 @@ public class Windows extends NiftyStateBasedGame implements Observer {
 
     private boolean initScreenControllers() {
         try {
-            this.wl = new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty);
-            this.wa = new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask);
-            this.wi = new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask);
-            this.wg = new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask);
+            this.windowLogin = new WindowLogin(EnumWindow.LOGIN.getValue(), this.nifty);
+            this.windowAccount = new WindowAccount(EnumWindow.ACCOUNT.getValue(), this.nifty, this.accountTask);
+            this.windowInterface = new WindowInterface(EnumWindow.INTERFACE.getValue(), this.nifty, this.gameTask);
+            this.windowGame = new WindowGame(EnumWindow.GAME.getValue(), this.nifty, this.inputTask, this.gameTask);
             return true;
         } catch (SlickException e) {
             e.printStackTrace();
@@ -102,10 +102,10 @@ public class Windows extends NiftyStateBasedGame implements Observer {
             this.nifty.loadControlFile("nifty-default-controls.xml");
             return true;
         } else {
-            this.nifty.registerScreenController(this.wl);
-            this.nifty.registerScreenController(this.wa);
-            this.nifty.registerScreenController(this.wi);
-            this.nifty.registerScreenController(this.wg);
+            this.nifty.registerScreenController(this.windowLogin);
+            this.nifty.registerScreenController(this.windowAccount);
+            this.nifty.registerScreenController(this.windowInterface);
+            this.nifty.registerScreenController(this.windowGame);
             this.nifty.addXml("assets/interface/gui-login.xml");
             this.nifty.addXml("assets/interface/gui-account.xml");
             return true;
