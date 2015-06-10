@@ -83,6 +83,7 @@ public class AccountController extends Observable implements Observer {
     public void setStateGame(StateBasedGame stateGame) {
         this.stateGame = stateGame;
     }
+    public void clearServers() { this.servers.clear(); }
 
     // GETTERS
 

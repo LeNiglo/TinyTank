@@ -33,7 +33,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
     private AccountController accountController;
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler;
     private Nifty nifty;
     private int id;
     private ListBox listBox = null;
@@ -45,6 +45,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         this.accountController = new AccountController();
         this.accountController.addObserver(accountTask);
         accountTask.addObserver(this.accountController);
+        this.scheduler = Executors.newScheduledThreadPool(1);
     }
 
     @Override
@@ -80,6 +81,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.future.cancel(true);
+        this.accountController.clearServers();
     }
 
     @Override
@@ -116,7 +118,6 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         } else if (key == Input.KEY_ESCAPE) {
             this.scheduler.shutdown();
             this.container.exit();
-            this.scheduler.shutdown();
         } else if (key == Input.KEY_R) {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 this.accountController.createServerList();
