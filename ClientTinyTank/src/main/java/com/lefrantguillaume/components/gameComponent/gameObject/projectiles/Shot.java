@@ -56,9 +56,6 @@ public class Shot extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         if (arg instanceof Tuple) {
             Tuple<Float, Float, EnumGameObject> task = (Tuple<Float, Float, EnumGameObject>) arg;
-            if (task.getV3().equals(EnumGameObject.UNBREAKABLE)) {
-                this.explode(new Pair<>(task.getV1(), task.getV2()));
-            }
         }
     }
 

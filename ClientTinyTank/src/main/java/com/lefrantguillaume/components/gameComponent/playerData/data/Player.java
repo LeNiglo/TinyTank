@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
@@ -92,7 +93,7 @@ public class Player extends Observable implements Observer {
         this.notifyObservers(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
 
-    public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController) {
+    public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController, ObstacleConfigData obstacleConfigData) {
         Tuple<Float, Float, Float> boxValues = new Tuple<>(0f, 0f, 0f);
         float canonAngle = this.tank.getTankState().getGunAngle();
         float boxAngle = canonAngle + 90;
@@ -102,7 +103,7 @@ public class Player extends Observable implements Observer {
         boxValues.setV1(newPoint.getV1());
         boxValues.setV2(newPoint.getV2());
         boxValues.setV3(boxAngle);
-        List<Block> block = this.tank.getTankBox().getCollisionObject();
+        List<Block> block = obstacleConfigData.getObstacle(this.getTank().getTankBox()).getCollisionObject();
         for (int i = 0; i < block.size(); ++i) {
             if (collisionController.checkCollision(newPoint, block.get(i).getSizes(), boxAngle)) {
                 return null;

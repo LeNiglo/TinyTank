@@ -5,12 +5,10 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.controllers.MapController;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by andres_k on 10/03/2015.
@@ -24,6 +22,7 @@ public class CollisionController {
 
     // FUNCTIONS
     public void createWorld(MapController map) {
+        /*
         Pair<Float, Float> pos1 = new Pair<Float, Float>(map.getSizeX() / 2, 0f);
         Pair<Float, Float> pos2 = new Pair<Float, Float>(map.getSizeX() / 2, map.getSizeY());
         Pair<Float, Float> pos3 = new Pair<Float, Float>(0f, map.getSizeY() / 2);
@@ -39,7 +38,7 @@ public class CollisionController {
         this.addCollisionObject(new CollisionObject(null, pos2, size1, origin2, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
         this.addCollisionObject(new CollisionObject(null, pos3, size2, origin3, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
         this.addCollisionObject(new CollisionObject(null, pos4, size2, origin4, "admin", UUID.randomUUID().toString(), EnumGameObject.UNBREAKABLE, 0));
-
+*/
     }
 
     public void addCollisionObject(CollisionObject object) {
@@ -79,11 +78,6 @@ public class CollisionController {
                                         current.notifyCollision(current.getType());
                                         return new Tuple<>(true, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
                                     }
-/*
-                                    if (current.getType() == EnumGameObject.UNBREAKABLE) {
-                                        return new Tuple<>(false, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
-                                    }
-                                    */
                                     saveCollision = new Pair<>(objects.get(i).getId().toString(), current.getId().toString());
                                 }
                             }

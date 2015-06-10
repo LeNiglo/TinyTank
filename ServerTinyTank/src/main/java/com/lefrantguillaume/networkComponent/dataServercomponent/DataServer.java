@@ -18,6 +18,7 @@ import com.sun.jersey.api.json.JSONConfiguration;
 
 import java.util.List;
 import java.util.Observable;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * Created by Styve on 10/03/2015.
  */
 public class DataServer {
-    private String id = null;
+    private static String id = null;
     private ScheduledExecutorService updateThread;
 
     public DataServer() {
@@ -162,5 +163,12 @@ public class DataServer {
         } catch (Exception e) {
             Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
+    }
+
+    public static String getId(){
+        if (id == null){
+            id = UUID.randomUUID().toString();
+        }
+        return id;
     }
 }

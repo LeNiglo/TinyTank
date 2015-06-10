@@ -4,9 +4,8 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.RandomTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankBox;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
@@ -21,7 +20,7 @@ public class Tank {
     private TankWeapon tankWeapon;
     private TankState tankState;
     private TankSpell tankSpell;
-    private TankBox tankBox;
+    private EnumGameObject tankBox;
 
     public Tank(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"), animatorGameData);
@@ -34,19 +33,12 @@ public class Tank {
         this.tankWeapon = new TankWeapon(tank.tankWeapon);
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
-        this.tankBox = new TankBox(tank.tankBox);
+        this.tankBox = tank.tankBox;
     }
 
     // FUNCTIONS
     public Shot generateShot(String userId, String id, float angle) {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
-    }
-
-    public Obstacle generateObstacle(String playerPseudo, String obstacleId, float angle, float posX, float posY){
-        Obstacle obstacle = this.tankBox.generateBox();
-
-        obstacle.createObstacle(obstacleId, playerPseudo, obstacleId, angle, posX, posY);
-        return obstacle;
     }
 
     public float predictAngleHit(){
@@ -88,7 +80,7 @@ public class Tank {
         return this.tankState;
     }
 
-    public TankBox getTankBox() {
+    public EnumGameObject getTankBox() {
         return this.tankBox;
     }
 }

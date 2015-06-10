@@ -18,7 +18,7 @@ public class TankConfigData {
     private boolean valid;
 
     public TankConfigData() {
-        this.tanks = new ArrayList<Tank>();
+        this.tanks = new ArrayList<>();
         this.valid = false;
     }
 
@@ -26,7 +26,6 @@ public class TankConfigData {
     public void initTanks(JSONObject config) throws JSONException {
 
         JSONArray tankArray = config.getJSONArray("tanks");
-
         for (int i = 0; i < tankArray.length(); ++i) {
             tanks.add(TankFactory.createTank(tankArray.getJSONObject(i)));
         }

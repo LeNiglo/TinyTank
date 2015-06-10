@@ -3,7 +3,7 @@ package com.lefrantguillaume.gameComponent.gameobjects.tanks.equipment;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerUpdateState;
-import com.lefrantguillaume.utils.Block;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Block;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.utils;
+package com.lefrantguillaume.gameComponent.gameobjects.obstacles;
 
 
 import javafx.util.Pair;
@@ -7,8 +7,8 @@ import javafx.util.Pair;
  * Created by andres_k on 25/03/2015.
  */
 public class Block {
-    private Pair<Float, Float> shiftOrigin;
-    private Pair<Float, Float> sizes;
+    private final Pair<Float, Float> shiftOrigin;
+    private final Pair<Float, Float> sizes;
 
     public Block(Pair<Float, Float> shiftOrigin, Pair<Float, Float> sizes) {
         this.shiftOrigin = shiftOrigin;
