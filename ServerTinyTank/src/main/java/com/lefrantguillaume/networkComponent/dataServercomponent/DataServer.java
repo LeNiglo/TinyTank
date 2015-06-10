@@ -72,7 +72,7 @@ public class DataServer {
                 this.id = output.getId();
                 Log.info("Server id: " + this.id);
 
-                updateThread = Executors.newScheduledThreadPool(5);
+                updateThread = Executors.newScheduledThreadPool(1);
                 updateThread.scheduleAtFixedRate(() -> updateServer(), 30, 120, TimeUnit.SECONDS);
             }
         } catch (ClientHandlerException e) {

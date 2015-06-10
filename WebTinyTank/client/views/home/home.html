@@ -1,46 +1,55 @@
 <template name="home">
-  <h1>Tiny Tank Official</h1>
+    <h1>Tiny Tank Official</h1>
 
-  <h2 class="text-primary text-center"><span id="tinyHomeMessage"></span>, on Tiny Tank.</h2>
+    <h2 class="text-primary text-center"><span id="tinyHomeMessage"></span>, on Tiny Tank.</h2>
 
-  <div id="home">
+    <div id="home">
 
-    <section>
-      {{!-- Full width picture / background image --}}
-      <img src="/img/section-banner-test.png" class="img-responsive" />
-      <div class="container text-center">
-        <h2 class="page-header">Fun Comes First</h2>
+        <section>
+            {{!-- Full width picture / background image --}}
+            <img src="/img/section-banner-test.png" class="img-responsive"/>
 
-        <p>Our cute tiny tanks will make you enjoy every moment of gaming. Play in a lot of mods :</p>
-        <ul class="list-unstyled">
-          <li>Free For All <strong>[FFA]</strong></li>
-          <li>Team DeathMatch <strong>[TDM]</strong></li>
-          <li>King of the Hill <strong>[KTH]</strong></li>
-          <li>Drop The Bomb <strong>[DTB]</strong></li>
-        </ul>
-      </div>
-    </section>
+            <div class="container text-center">
+                <h2 class="page-header">Fun Comes First</h2>
 
-    <section>
-      {{!-- Full width picture / background image --}}
-      {{!-- <img src="/img/section-banner-test.png" class="img-responsive" /> --}}
-      <div class="container text-center">
-        <h2 class="page-header">Rankable gaming</h2>
+                <p>Our cute tiny tanks will make you enjoy every moment of gaming. Play in a lot of mods :</p>
+                <ul class="list-unstyled">
+                    <li>Free For All <strong>[FFA]</strong></li>
+                    <li>Team DeathMatch <strong>[TDM]</strong></li>
+                    <li>King of the Hill <strong>[KTH]</strong></li>
+                    <li>Drop The Bomb <strong>[DTB]</strong></li>
+                </ul>
+            </div>
+        </section>
 
-        <p>A system of ladder is included so playing with your friends can become a competitive match.</p>
-        <p>You can also gain medals by playing some mod and reaching some score for example. Those medals will be visible by anyone who is looking at your profile.</p>
-      </div>
-    </section>
+        <section>
+            {{!-- Full width picture / background image --}}
+            {{!-- <img src="/img/section-banner-test.png" class="img-responsive" /> --}}
+            <div class="container text-center">
+                <h2 class="page-header">Rankable gaming</h2>
 
-    <section>
-      {{!-- Full width picture / background image --}}
-      {{!-- <img src="/img/section-banner-test.png" class="img-responsive" /> --}}
-      <div class="container text-center">
-        <h2 class="page-header">Growing Community</h2>
+                <p>A system of ladder is included so playing with your friends can become a competitive match.</p>
 
-        <p>Join our growing army !</p>
-        {{> infos }}
-      </div>
-    </section>
-  </div>
+                <p>You can also gain medals by playing some mod and reaching some score for example. Those medals will
+                    be visible by anyone who is looking at your profile.</p>
+            </div>
+        </section>
+
+        <section>
+            {{!-- Full width picture / background image --}}
+            {{!-- <img src="/img/section-banner-test.png" class="img-responsive" /> --}}
+            <div class="container text-center">
+                <h2 class="page-header">Growing Community</h2>
+
+                <div class="col-md-6">
+                    <p>Join our growing army !</p>
+                    {{> infos }}
+                </div>
+                <div class="col-md-6">
+                    <p>Help Us :)</p>
+                    {{> paypal }}
+                </div>
+            </div>
+        </section>
+    </div>
 </template>

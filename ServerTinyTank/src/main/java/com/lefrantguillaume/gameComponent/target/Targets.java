@@ -151,9 +151,12 @@ public class Targets {
 
     public MessageShotUpdateState deleteShot(String shotId) {
         Player player = this.getPlayer(this.getShot(shotId).getPlayerId());
-        MessageShotUpdateState message = new MessageShotUpdateState(player.getPseudo(), player.getId(), shotId, 0);
-        this.shots.remove(shotId);
-        return message;
+        if (player != null) {
+            MessageShotUpdateState message = new MessageShotUpdateState(player.getPseudo(), player.getId(), shotId, 0);
+            this.shots.remove(shotId);
+            return message;
+        }
+        return null;
     }
 
     public MessageObstacleUpdateState deleteObstacle(String obstacleId) {

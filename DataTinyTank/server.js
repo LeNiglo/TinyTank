@@ -1,12 +1,7 @@
 #!/usr/bin/nodejs
 
 var express = require('express');
-var cors = require('express-cors');
-var basicAuth = require('basic-auth-connect');
-var bodyParser = require('body-parser');
-var jwt = require('jwt-simple');
 var mailer = require('express-mailer');
-var morgan = require('morgan');
 var app = express();
 
 
@@ -33,45 +28,10 @@ Matches = db.collection('matches');
 WEB_URL = process.env.WEB_URL || 'http://tinytank.dev';
 
 /*
-**	Init Mailer
+**	Init Configs
 */
 
-mailer.extend(app, {
-	from: 'TinyTank <no-reply@tinytank.lefrantguillaume.com>',
-	host: 'smtp.gmail.com',
-	secureConnection: true,
-	port: 465,
-	transportMethod: 'SMTP',
-	auth: {
-		user: 'webpatalot@gmail.com',
-		pass: 'motdepassesecure'
-	}
-});
-app.set('views', __dirname + '/emails');
-app.set('view engine', 'jade');
-
-app.use(morgan('combined'));
-
-app.enable('trust proxy');
-
-app.use(cors({
-	allowedOrigins: [
-		"http://localhost",
-		"http://tinytank.dev",
-		"http://tinytank.com",
-		"http://lefrantguillaume.com",
-		"http://tinytank.lefrantguillaume.com"
-	]
-}));
-
-/*
-**	Authentification for the API
-**	Replace with a real badass user and password
-*/
-app.use(basicAuth("T0N1jjOQIDmA4cJnmiT6zHvExjoSLRnbqEJ6h2zWKXLtJ9N8ygVHvkP7Sy4kqrv", "lMhIq0tVVwIvPKSBg8p8YbPg0zcvihBPJW6hsEGUiS6byKjoZcymXQs5urequUo"));
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+require('./config.js')(app, mailer);
 
 
 /*

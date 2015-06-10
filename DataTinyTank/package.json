@@ -5,7 +5,7 @@
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/LeNiglo/TinyTank.git"
+    "url": "git@github.com/LeNiglo/TinyTank.git"
   },
   "dependencies": {
     "MD5": "*",
