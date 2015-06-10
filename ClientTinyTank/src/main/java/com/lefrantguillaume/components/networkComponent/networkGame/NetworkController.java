@@ -44,6 +44,7 @@ public class NetworkController {
             return true;
         } catch (IOException e) {
             System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }

@@ -77,6 +77,7 @@ public class DataServer {
             }
         } catch (ClientHandlerException e) {
             WindowController.addConsoleMsg("Online server not reachable: " + e.getCause().getMessage());
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -93,7 +94,8 @@ public class DataServer {
                 Log.info("Sent alive signal to data server.");
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());e.printStackTrace();
+            Log.error("Master: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -107,7 +109,8 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());e.printStackTrace();
+            Log.error("Master: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -121,7 +124,8 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());e.printStackTrace();
+            Log.error("Master: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -135,7 +139,8 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());e.printStackTrace();
+            Log.error("Master: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -161,7 +166,8 @@ public class DataServer {
                 WindowController.addConsoleMsg("Sent player stats for " + users + ".");
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());e.printStackTrace();
+            Log.error("Master: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -113,12 +113,15 @@ public class ConsoleUserInterface extends Observable implements UserInterface {
                 this.parse(input);
                 try {
                     Thread.sleep(10);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } catch (IllegalStateException e) {
                 addToConsoleLog(e.getMessage() + " Try 'help' to show more informations.");
+                e.printStackTrace();
             } catch (NoSuchElementException e) {
                 WindowController.addConsoleMsg("\nInterrupted. use 'exit' next time !\n");
+                e.printStackTrace();
                 System.exit(1);
             }
         }

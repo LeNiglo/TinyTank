@@ -36,9 +36,11 @@ public class ServerConfig {
             reader.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Config file does not exist");
+            ex.printStackTrace();
             return (false);
         } catch (IOException ex) {
             System.out.println("I/O error: " + ex.getMessage());
+            ex.printStackTrace();
             return (false);
         }
         return (true);
@@ -62,9 +64,11 @@ public class ServerConfig {
             writer.close();
         } catch (FileNotFoundException ex) {
             System.out.println("Config file does not exist");
+            ex.printStackTrace();
             return (false);
         } catch (IOException ex) {
             System.out.println("I/O error: " + ex.getMessage());
+            ex.printStackTrace();
             return (false);
         }
         return (true);

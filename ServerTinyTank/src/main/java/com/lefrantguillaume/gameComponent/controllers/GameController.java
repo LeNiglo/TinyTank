@@ -94,7 +94,8 @@ public class GameController extends Observable {
             setChanged();
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, response)));
         } catch (Exception e) {
-            Log.error("MD5: " + e.getMessage());e.printStackTrace();
+            Log.error("MD5: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -112,7 +113,8 @@ public class GameController extends Observable {
                     notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, response)));
                     new SendFile(mapController.getCurrentMap().getImgPath());
                 } catch (Exception e) {
-                    System.out.println("Cannot send file: " + e.getMessage());e.printStackTrace();
+                    System.out.println("Cannot send file: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         }.start();

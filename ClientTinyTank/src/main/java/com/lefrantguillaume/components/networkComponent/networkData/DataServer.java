@@ -47,6 +47,7 @@ public class DataServer {
                return new Pair<>(true, output.getRes());
             }
         } catch (ClientHandlerException e) {
+            e.printStackTrace();
             return new Pair<>(false, e.getCause().getMessage());
         }
     }
@@ -67,6 +68,7 @@ public class DataServer {
 
 
         } catch (ClientHandlerException e) {
+            e.printStackTrace();
             return new Pair<>(false, e.getCause().getMessage());
         }
 
