@@ -92,7 +92,7 @@ public class DataServer {
                 Log.info("Sent alive signal to data server.");
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());
+            Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
     }
 
@@ -106,7 +106,7 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());
+            Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
     }
 
@@ -120,7 +120,7 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());
+            Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
     }
 
@@ -134,7 +134,7 @@ public class DataServer {
                 Log.error("Master server error: " + output.getErr());
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());
+            Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
     }
 
@@ -160,7 +160,7 @@ public class DataServer {
                 WindowController.addConsoleMsg("Sent player stats for " + users + ".");
             }
         } catch (Exception e) {
-            Log.error("Master: " + e.getMessage());
+            Log.error("Master: " + e.getMessage());e.printStackTrace();
         }
     }
 }

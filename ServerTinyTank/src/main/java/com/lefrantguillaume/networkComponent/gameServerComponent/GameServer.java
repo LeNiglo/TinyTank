@@ -60,7 +60,7 @@ public class GameServer extends Observable {
             server.bind(ServerConfig.tcpPort, ServerConfig.udpPort);
             WindowController.addConsoleMsg("Server listening on port " + ServerConfig.tcpPort + " (tcp) and " + ServerConfig.udpPort + " (udp).");
         } catch (Exception e) {
-            WindowController.addConsoleErr(e.getMessage());
+            WindowController.addConsoleErr(e.getMessage());e.printStackTrace();
             server.close();
             return (false);
         }

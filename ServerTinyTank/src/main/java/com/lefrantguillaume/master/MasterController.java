@@ -87,7 +87,7 @@ public class MasterController extends Observable implements Observer {
             Map map = new Map(file, new File("maps/" + name + ".jpg"), object);
             this.gameController.addMap(map);
         } catch (Exception e) {
-            System.out.println("Error in parseJson: " + e.getMessage());
+            System.out.println("Error in parseJson: " + e.getMessage());e.printStackTrace();
         }
     }
 

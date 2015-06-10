@@ -37,7 +37,7 @@ public class Main  {
                 new MasterController("Console");
             }
         } catch (CmdLineException e) {
-            System.err.println(e.getMessage());
+            System.err.println(e.getMessage());e.printStackTrace();
             System.err.println("java -jar "+ new java.io.File(Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName() +" [options]");
             parser.printUsage(System.err);
             System.err.println();
