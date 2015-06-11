@@ -67,6 +67,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
+        this.accountController.clearServers();
 
         this.nifty.gotoScreen("screen-account");
 

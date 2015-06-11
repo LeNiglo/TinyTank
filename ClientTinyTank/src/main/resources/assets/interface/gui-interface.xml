@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd
+http://nifty-gui.sourceforge.net/nifty-1.3.xsd ">
+    <screen id="screen-interface" controller="com.lefrantguillaume.components.graphicsComponent.graphics.WindowInterface">
+        <layer id="background" childLayout="center">
+            <panel valign="top" height="100%" align="center" childLayout="vertical">
+                <panel height="5%" width="100%" childLayout="vertical">
+                </panel>
+                <panel height="35%" valign="top" childLayout="center">
+
+                </panel>
+            </panel>
+        </layer>
+        <layer id="foreground" backgroundColor="#0000" childLayout="vertical">
+            <panel id="panel_top" height="50%" width="75%" align="center" childLayout="center">
+            </panel>
+            <panel id="panel_mid" height="30%" width="75%" align="center" childLayout="center">
+            </panel>
+            <panel id="panel_bottom" height="20%" width="50%" align="40%" childLayout="horizontal">
+            </panel>
+        </layer>
+    </screen>
+</nifty>

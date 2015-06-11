@@ -24,10 +24,13 @@ public class WindowInterface extends BasicGameState implements ScreenController 
 
     private AnimatorInterfaceData animatorData;
     private InterfaceController interfaceController;
+
+    private Nifty nifty;
     private int id;
 
     public WindowInterface(int id, Nifty nifty, GenericSendTask interfaceTask) throws JSONException {
         this.id = id;
+        this.nifty = nifty;
         this.animatorData = new AnimatorInterfaceData();
         this.interfaceController = new InterfaceController();
 
@@ -52,6 +55,8 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
+
+        this.nifty.gotoScreen("screen-interface");
 
     }
 

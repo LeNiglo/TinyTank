@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
@@ -23,6 +24,9 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by andres_k on 10/03/2015.
@@ -35,14 +39,18 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     private GameContainer container;
     private StateBasedGame stateWindow;
+    private Nifty nifty;
     private int id;
 
     private int frameRate = 60;
     private float saveAngle = 0f;
     private long runningTime = 0l;
 
+    List<Pair<Integer, Integer>> mousePos = new ArrayList<>();
+
     public WindowGame(int id, Nifty nifty, GenericSendTask inputTask, GenericSendTask gameTask) throws JSONException, SlickException {
         this.id = id;
+        this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
 
@@ -80,14 +88,20 @@ public class WindowGame extends BasicGameState implements ScreenController {
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container.setTargetFrameRate(this.frameRate);
-        this.container.setShowFPS(true);
+        this.container.setShowFPS(false);
         this.container.setAlwaysRender(true);
         this.container.setVSync(false);
+
+
+        this.nifty.gotoScreen("screen-game");
+        this.nifty.getNiftyMouse().enableMouseCursor("crosshair");
+
     }
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.gameController.clearData();
+        this.nifty.getNiftyMouse().resetMouseCursor();
     }
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
@@ -98,6 +112,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
             // debug
             if (this.gameController.getCollisionController() != null) {
+                g.setColor(Color.red);
                 for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
                     CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
                     if (current.isAlive()) {
@@ -115,17 +130,33 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() - 2, 5, 5);
                 g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), 1, 1);
             }
+
+            g.setColor(Color.darkGray);
+            for (Pair<Integer, Integer> pos : this.mousePos) {
+                g.drawRoundRect(pos.getV1() - 2, pos.getV2() - 2, 5, 5, 50);
+            }
         }
     }
 
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
         this.runningTime += delta;
-//        Debug.debug("Delta=" + delta + "   frameRate:" + this.frameRate);
-        if (runningTime > 30) {
-            Input input = gameContainer.getInput();
-            int xpos = input.getMouseX();
-            int ypos = input.getMouseY();
+        Input input = gameContainer.getInput();
+        int xpos = input.getMouseX();
+        int ypos = input.getMouseY();
 
+        if (runningTime > 10) {
+            if (this.mousePos.size() > 10) {
+                this.mousePos.remove(0);
+            }
+            this.mousePos.add(new Pair<>(xpos, ypos));
+        }
+        if (runningTime > 30) {
+
+
+            if (this.mousePos.size() > 10) {
+                this.mousePos.remove(0);
+            }
+            this.mousePos.add(new Pair<>(xpos, ypos));
 
             if (this.gameController != null) {
                 this.myMouseMoved(xpos, ypos);
@@ -202,7 +233,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 } else if (angle >= maxAngle || angle <= -90) {
                     ts.setGunAngle(maxAngle);
                 } else {
-                    throw new SlickException("WHAT IS THIS CASE FOR DOWN ? angle = "+angle);
+                    throw new SlickException("WHAT IS THIS CASE FOR DOWN ? angle = " + angle);
                 }
 
             } else if (ts.getDirection() == EnumDirection.RIGHT) {
@@ -214,7 +245,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 } else if (angle <= 180 && angle >= maxAngle) {
                     ts.setGunAngle(maxAngle);
                 } else {
-                    throw new SlickException("WHAT IS THIS CASE FOR RIGHT ? angle = "+angle);
+                    throw new SlickException("WHAT IS THIS CASE FOR RIGHT ? angle = " + angle);
                 }
 
             } else if (ts.getDirection() == EnumDirection.UP) {
@@ -224,9 +255,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 } else if (angle >= maxAngle && angle <= 90) {
                     ts.setGunAngle(maxAngle);
                 } else if ((angle >= 90 && angle <= 180) || (angle <= minAngle)) {
-                     ts.setGunAngle(minAngle);
+                    ts.setGunAngle(minAngle);
                 } else {
-                    throw new SlickException("WHAT IS THIS CASE FOR UP ? angle = "+angle);
+                    throw new SlickException("WHAT IS THIS CASE FOR UP ? angle = " + angle);
                 }
 
             } else if (ts.getDirection() == EnumDirection.LEFT) {
@@ -238,9 +269,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 } else if (angle >= 0 && angle <= minAngle) {
                     ts.setGunAngle(minAngle);
                 } else {
-                    throw new SlickException("WHAT IS THIS CASE FOR LEFT ? angle = "+angle);
+                    throw new SlickException("WHAT IS THIS CASE FOR LEFT ? angle = " + angle);
                 }
-                
+
             } else {
                 throw new SlickException("Your direction isn't real");
             }
@@ -255,7 +286,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void onStartScreen() {
-
     }
 
     @Override
