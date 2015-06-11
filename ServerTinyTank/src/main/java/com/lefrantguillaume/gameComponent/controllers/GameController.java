@@ -267,7 +267,7 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable())
             return;
         received.setObstacleId(UUID.randomUUID().toString());
-        WindowController.addConsoleMsg("create Box with playerId:" + received.getId());
+        WindowController.addConsoleMsg("create Box " +  received.getType() + "with playerId:" + received.getId());
         Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
         obstacle.createObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
         WindowController.addConsoleMsg("new Box : " + received.getObstacleId());

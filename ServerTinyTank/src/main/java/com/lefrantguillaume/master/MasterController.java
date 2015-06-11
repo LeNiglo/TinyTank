@@ -135,10 +135,10 @@ public class MasterController extends Observable implements Observer {
     }
 
     public void stopGame() {
-        gameStarted = false;
-        userInterface.stopGame();
-        dataServer.stopServer();
-        gameController.stopGame();
+        this.gameStarted = false;
+        this.userInterface.stopGame();
+        this.dataServer.stopServer();
+        this.gameController.stopGame();
     }
 
     public List<Map> getMaps() {

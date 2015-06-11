@@ -3,7 +3,6 @@ package com.lefrantguillaume.components.graphicsComponent.input;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
@@ -81,7 +80,7 @@ public class InputGame extends Observable {
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
             Tuple<Float, Float, Float> boxValues = player.predictCreateBox(gameController.getCollisionController(), gameController.getObstacleConfigData());
             if (boxValues != null) {
-                message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), EnumGameObject.IRON_WALL, boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
+                message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankBox() , boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
             }
         }
         return message;

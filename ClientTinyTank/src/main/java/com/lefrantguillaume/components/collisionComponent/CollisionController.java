@@ -8,6 +8,7 @@ import com.lefrantguillaume.components.gameComponent.controllers.MapController;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -58,54 +59,69 @@ public class CollisionController {
     public void clearCollisionObjects() {
         this.items.clear();
     }
-
+    
     public Tuple<Boolean, Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
-        Pair<String , String> saveCollision = null;
+        HashMap<Integer, Tuple<Boolean, Boolean, Pair<String, String>>> listSaveActions = new HashMap<>();
 
         List<CollisionObject> objects = this.getCollisionObject(id);
-        try {
-            if (!objects.isEmpty()) {
-                for (int i = 0; i < objects.size(); ++i) {
-                    objects.get(i).modifCoord(coords);
-                    for (int i2 = 0; i2 < this.items.size(); ++i2) {
-                        CollisionObject current = this.items.get(i2);
-                        if (current.isAlive()) {
-                            if (current.getIdUser().equals(objects.get(i).getIdUser()) == false) {
-                                if (CollisionDetection.checkCollision(objects.get(i), current) == true) {
-                                    if (current.isIgnored(objects.get(i).getType()) == false) {
-                                        objects.get(i).backToSave();
-                                        objects.get(i).notifyCollision(current.getType());
-                                        current.notifyCollision(current.getType());
-                                        return new Tuple<>(true, false, new Pair<>(objects.get(i).getId().toString(), current.getId().toString()));
-                                    }
-                                    saveCollision = new Pair<>(objects.get(i).getId().toString(), current.getId().toString());
-                                }
+        if (!objects.isEmpty()) {
+            for (int i = 0; i < this.items.size(); ++i) {
+                CollisionObject current = this.items.get(i);
+                Debug.debug("--------------------" + i + "--------------------");
+
+                for (CollisionObject object : objects) {
+                    object.modifCoord(coords);
+                    if (CollisionDetection.checkCollision(object, current) == true && object.getIdUser().equals(current.getIdUser()) != true) { // 1 collision
+                        if (current.isIgnored(object.getType()) == false) { // collision pas ignorée
+                            object.backToSave();
+                            object.notifyCollision(current.getType());
+                            current.notifyCollision(object.getType());
+                            if (object.canDoCollisionWithObject(current)) { // collision possible
+                                Debug.debug("collision ok");
+                                listSaveActions.put(3, new Tuple<>(true, false, new Pair<>(object.getId(), current.getId())));
+                            } else { // collision impossible (déjà en collision)
+                                Debug.debug("collision impossible");
+                                listSaveActions.put(4, new Tuple<>(false, false, new Pair<>(object.getId(), current.getId())));
                             }
+                        } else { // collision ignorée (area)
+                            Debug.debug("collision ignoré");
+                            listSaveActions.put(2, new Tuple<>(true, true, new Pair<>(object.getId(), current.getId())));
                         }
+                        object.setSaveCollisionObject(current);
+                    } else { //pas de collision
+                        Debug.debug("pas de collision");
+                        listSaveActions.put(1, new Tuple<>(false, true, new Pair<>("null", "null")));
                     }
                 }
-                if (saveCollision != null) {
-                    return new Tuple<>(true, true, saveCollision);
-                } else {
-                    return new Tuple<>(false, true, new Pair<>("null", "null"));
-                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return new Tuple<>(false, false, new Pair<>("null", "null"));
+        listSaveActions.put(0, new Tuple<>(false, false, new Pair<>("null", "null")));
+        int maxPriority = 4;
+        while (maxPriority >= 0) {
+            if (listSaveActions.containsKey(maxPriority) == true) {
+                if (maxPriority == 1){
+                    for (CollisionObject object : objects){
+                        object.setSaveCollisionObject(null);
+                    }
+                }
+                return listSaveActions.get(maxPriority);
+            }
+            --maxPriority;
+        }
+        return listSaveActions.get(0);
     }
 
-    public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle){
+    public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle) {
         Rectangle rectangle = new Rectangle(point.getV1(), point.getV2(), sizes.getV1(), sizes.getV2());
         Float radianAngle = MathTools.toRadian(angle);
-        for (int i = 0; i < this.items.size(); ++i){
-            if (CollisionDetection.checkCollision(this.items.get(i), rectangle, radianAngle)){
+        for (int i = 0; i < this.items.size(); ++i) {
+            if (CollisionDetection.checkCollision(this.items.get(i), rectangle, radianAngle)) {
                 return true;
             }
         }
         return false;
     }
+
     public void cleanCollision() {
         for (int i = 0; i < this.items.size(); ++i) {
             CollisionObject current = this.items.get(i);
