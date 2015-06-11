@@ -25,6 +25,7 @@ public class CollisionObject extends Observable implements Observer {
     private float angle;
     private boolean destroyed;
     private boolean alive;
+    private CollisionObject saveCollisionObject;
 
     public CollisionObject(List<EnumGameObject> ignoredObject, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin,
                            String idUser, String id, EnumGameObject type, float angle) {
@@ -39,6 +40,7 @@ public class CollisionObject extends Observable implements Observer {
         this.id = id;
         this.alive = true;
         this.destroyed = false;
+        this.saveCollisionObject = null;
     }
 
     // FUNCTIONS
@@ -76,6 +78,15 @@ public class CollisionObject extends Observable implements Observer {
         }
     }
 
+    public boolean checkLastCollision(CollisionObject collisionObject) {
+        if (this.saveCollisionObject == null)
+            return false;
+        if (collisionObject.getId().equals(this.saveCollisionObject.getId())){
+            return true;
+        }
+        return false;
+    }
+
     public boolean isIgnored(EnumGameObject type){
         if (this.ignoredObject == null)
             return false;
@@ -104,6 +115,16 @@ public class CollisionObject extends Observable implements Observer {
     public void backToSave() {
         this.positions.setV1(this.savePositions.getV1());
         this.positions.setV2(this.savePositions.getV2());
+    }
+
+    public boolean canDoCollisionWithObject(CollisionObject object){
+        if (this.alive == false || object.isAlive() == false) {
+            return false;
+        }
+        if (this.checkLastCollision(object) == true) {
+            return false;
+        }
+        return true;
     }
 
     // GETTERS
@@ -156,6 +177,18 @@ public class CollisionObject extends Observable implements Observer {
         return this.ignoredObject;
     }
 
+    public CollisionObject getSaveCollisionObject() {
+        return this.saveCollisionObject;
+    }
+
+    public boolean isAlive() {
+        return this.alive;
+    }
+
+    public boolean isDestroyed() {
+        return this.destroyed;
+    }
+
     // SETTERS
     public void setAngle(float angle) {
         this.angle = angle;
@@ -177,11 +210,7 @@ public class CollisionObject extends Observable implements Observer {
         this.savePositions.setV1(y);
     }
 
-    public boolean isAlive() {
-        return this.alive;
-    }
-
-    public boolean isDestroyed() {
-        return this.destroyed;
+    public void setSaveCollisionObject(CollisionObject saveCollisionObject) {
+        this.saveCollisionObject = saveCollisionObject;
     }
 }
