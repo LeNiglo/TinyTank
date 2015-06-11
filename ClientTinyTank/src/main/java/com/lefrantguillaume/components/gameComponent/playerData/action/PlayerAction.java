@@ -28,6 +28,8 @@ public class PlayerAction {
                 this.action = EnumActions.UNMOVED;
             }
             this.values.add(new Integer(((MessageMove) todo).getDirection()));
+            this.values.add(new Float(((MessageMove) todo).getPlayerX()));
+            this.values.add(new Float(((MessageMove) todo).getPlayerY()));
         }
         else if (todo instanceof MessageShoot){
             this.action = EnumActions.SHOOT;

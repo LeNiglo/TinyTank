@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.input;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
+import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
@@ -71,9 +72,14 @@ public class InputGame extends Observable {
         if (keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_UP)) || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_DOWN))
                 || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_RIGHT)) || keyName.equals(this.inputData.getInputValue(EnumInput.MOVE_LEFT))) {
             if (mode == EnumInput.PRESSED) {
-                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), true);
+                if (!player.getTank().getTankState().isMove() ||
+                        (player.getTank().getTankState().getDirection() != EnumDirection.getDirectionByValue(EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName))))) {
+                    message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), true,
+                            player.getTank().getTankState().getX(), player.getTank().getTankState().getY());
+                }
             } else {
-                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), false);
+                message = new MessageMove(CurrentUser.getPseudo(), CurrentUser.getId(), EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName)), false,
+                        player.getTank().getTankState().getX(), player.getTank().getTankState().getY());
             }
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SHOOT)) && mode == EnumInput.RELEASED) {
             message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());

@@ -73,7 +73,6 @@ public class GameController extends Observable implements Observer {
     }
 
     public void initGame() {
-        this.collisionController.createWorld(this.mapController);
         this.scheduleToSendCurrentPlayerPosition();
     }
 

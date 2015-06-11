@@ -34,7 +34,7 @@ public class Player extends Observable implements Observer {
         this.idTeam = idTeam;
         this.tank = tank;
         this.tank.getTankState().setPositions(new Pair<>(x, y));
-        this.playerActionController = new PlayerActionController(this.shots, this.tank);
+        this.playerActionController = new PlayerActionController(this.shots);
     }
 
 

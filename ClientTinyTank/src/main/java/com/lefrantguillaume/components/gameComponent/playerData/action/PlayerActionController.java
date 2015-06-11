@@ -5,7 +5,6 @@ import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
-import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 
 import java.util.List;
@@ -18,24 +17,35 @@ import java.util.TimerTask;
  */
 public class PlayerActionController extends Observable {
     private List<Shot> shots;
-    private Tank tank;
 
-    public PlayerActionController(List<Shot> shots, Tank tank) {
+    public PlayerActionController(List<Shot> shots) {
         this.shots = shots;
-        this.tank = tank;
     }
 
     public boolean doAction(PlayerAction playerAction, CollisionController collisionController, Player player) {
         if (playerAction.getAction() != EnumActions.NOTHING) {
             if (playerAction.getAction() == EnumActions.MOVE) {
-                this.tank.getTankState().setMove(true);
-                this.tank.getTankState().setDirection(EnumDirection.getDirectionByValue((Integer) playerAction.getValue(0)));
+                player.getTank().getTankState().setMove(true);
+                player.getTank().getTankState().setDirection(EnumDirection.getDirectionByValue((Integer) playerAction.getValue(0)));
+                player.getTank().getTankState().setX((float) (playerAction.getValue(1)));
+                player.getTank().getTankState().setY((float) (playerAction.getValue(2)));
+
                 List<CollisionObject> objects = collisionController.getCollisionObject(player.getUser().getId());
                 for (CollisionObject object : objects) {
-                    object.setAngle(this.tank.getTankState().getDirection().getAngle());
+                    object.setAngle(player.getTank().getTankState().getDirection().getAngle());
+                    object.setX(player.getTank().getTankState().getX());
+                    object.setY(player.getTank().getTankState().getY());
                 }
-            } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == this.tank.getTankState().getDirection().getValue()) {
-                this.tank.getTankState().setMove(false);
+            } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == player.getTank().getTankState().getDirection().getValue()) {
+                player.getTank().getTankState().setMove(false);
+                player.getTank().getTankState().setX((float) (playerAction.getValue(1)));
+                player.getTank().getTankState().setY((float) (playerAction.getValue(2)));
+                
+                List<CollisionObject> objects = collisionController.getCollisionObject(player.getUser().getId());
+                for (CollisionObject object : objects) {
+                    object.setX(player.getTank().getTankState().getX());
+                    object.setY(player.getTank().getTankState().getY());
+                }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
                 if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
                     player.setCanDoAction(false);
@@ -54,7 +64,7 @@ public class PlayerActionController extends Observable {
     }
 
     private void generateShot(PlayerAction playerAction, CollisionController collisionController, Player player){
-        Shot shot = tank.generateShot(player.getUser().getIdUser(), (String)playerAction.getValue(0), (Float) playerAction.getValue(1));
+        Shot shot = player.getTank().generateShot(player.getUser().getIdUser(), (String)playerAction.getValue(0), (Float) playerAction.getValue(1));
 
         for (int i = 0; i < shot.getCollisionObject().size(); ++i){
             Block current = shot.getCollisionObject().get(i);

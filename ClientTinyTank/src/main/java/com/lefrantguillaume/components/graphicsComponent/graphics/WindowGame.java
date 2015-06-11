@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
@@ -133,7 +134,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
             g.setColor(Color.darkGray);
             for (Pair<Integer, Integer> pos : this.mousePos) {
-                g.drawRoundRect(pos.getV1() - 2, pos.getV2() - 2, 5, 5, 50);
+                g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
             }
         }
     }
@@ -172,6 +173,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyPressed(int key, char c) {
+        Debug.debug("PRESSED");
         if (input != null && this.gameController != null) {
             input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
         }
