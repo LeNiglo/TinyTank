@@ -3,6 +3,7 @@ package com.lefrantguillaume.networkComponent.dataServerComponent;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageDisconnect;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerDelete;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerNew;
@@ -38,8 +39,8 @@ public class DataServer {
             if (arg instanceof MessagePlayerNew) {
                 this.addUser(((MessagePlayerNew) arg).getPseudo());
             }
-            if (arg instanceof MessagePlayerDelete) {
-                this.delUser(((MessagePlayerDelete) arg).getPseudo());
+            if (arg instanceof MessagePlayerDelete || arg instanceof MessageDisconnect) {
+                this.delUser(((MessageModel) arg).getPseudo());
             }
         }
     }

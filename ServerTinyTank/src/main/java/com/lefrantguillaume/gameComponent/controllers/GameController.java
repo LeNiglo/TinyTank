@@ -285,7 +285,22 @@ public class GameController extends Observable {
 
     public void stopGame() {
         WindowController.addConsoleMsg("Game stopped");
+        this.kickAll();
         this.targets.clearAll();
+    }
+
+    public void kickAll() {
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+            String key = entry.getKey();
+            Player value = entry.getValue();
+            System.out.println("Plyer to be kicked: " + value.getPseudo());
+            MessagePlayerDelete md = new MessagePlayerDelete();
+            md.setId(key);
+            md.setPseudo(value.getPseudo());
+            this.setChanged();
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, new Request(value.getConnection(), md)));
+            this.doTask(null, md);
+        }
     }
 
     public void newRound() {
