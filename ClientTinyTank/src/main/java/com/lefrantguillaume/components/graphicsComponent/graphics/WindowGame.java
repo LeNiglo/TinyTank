@@ -19,9 +19,6 @@ import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -116,9 +113,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
                     CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
                     if (current.isAlive()) {
-                        Rectangle r = new Rectangle(current.getOriginX(), current.getOriginY(), current.getSizeX(), current.getSizeY());
-                        Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getX(), current.getY()));
-                        g.draw(nr);
+                        g.draw(current.getShape());
                     }
                 }
             }

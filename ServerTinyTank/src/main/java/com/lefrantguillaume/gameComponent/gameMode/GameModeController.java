@@ -1,22 +1,19 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
-import com.lefrantguillaume.gameComponent.gameMode.modes.TeamDeathMatch;
-import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
-import com.lefrantguillaume.gameComponent.gameMode.modes.GameMode;
+import com.lefrantguillaume.gameComponent.gameMode.modes.*;
 import javafx.util.Pair;
 
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by andres_k on 13/05/2015.
  */
 public class GameModeController{
-    private List<GameMode> gameModes;
+    private HashMap<EnumGameMode, GameMode> gameModes;
     private EnumGameMode currentGameMode;
 
     public GameModeController(){
-        this.gameModes = new ArrayList<>();
+        this.gameModes = new HashMap();
         this.currentGameMode = EnumGameMode.TeamDeathMatch;
         this.initGameModes();
     }
@@ -27,14 +24,16 @@ public class GameModeController{
     }
 
     private void initGameModes(){
-        gameModes.add(new FreeForAll(8));
-        gameModes.add(new TeamDeathMatch(2));
+        gameModes.put(EnumGameMode.FreeForAll, new FreeForAll(8));
+        gameModes.put(EnumGameMode.TeamDeathMatch, new TeamDeathMatch(2));
+        gameModes.put(EnumGameMode.Kingdom, new Kingdom(2));
+        gameModes.put(EnumGameMode.TouchDown, new TouchDown(2));
     }
 
 
     // GETTERS
     public GameMode getCurrentMode(){
-        return this.gameModes.get(this.currentGameMode.getIndex());
+        return this.gameModes.get(this.currentGameMode);
     }
 
     public EnumGameMode getCurrentGameMode(){
@@ -51,8 +50,10 @@ public class GameModeController{
 
     // SETTERS
     public void setCurrentGameMode(EnumGameMode index){
-        this.getCurrentMode().restart();
-        this.currentGameMode = index;
+        if (this.gameModes.containsKey(index)) {
+            this.getCurrentMode().restart();
+            this.currentGameMode = index;
+        }
     }
 
 }
