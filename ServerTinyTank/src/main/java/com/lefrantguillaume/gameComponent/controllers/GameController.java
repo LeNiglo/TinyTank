@@ -320,6 +320,7 @@ public class GameController extends Observable {
                 tmp.setId(entry.getValue().getId());
                 tmp.setX(newPositions.getKey());
                 tmp.setY(newPositions.getValue());
+                tmp.setResetMove(true);
                 message = new MessagePlayerUpdatePosition(tmp);
             } else {
                 message = new MessagePlayerDelete(entry.getValue().getPseudo(), entry.getValue().getId());

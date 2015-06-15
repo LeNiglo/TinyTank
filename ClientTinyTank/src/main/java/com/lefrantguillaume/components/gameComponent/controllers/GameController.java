@@ -183,6 +183,9 @@ public class GameController extends Observable implements Observer {
                 object.setSaveX(task.getX());
                 object.setSaveY(task.getY());
             }
+            if (task.isResetMove() == true){
+                player.getTank().getTankState().setMove(false);
+            }
         }
     }
 

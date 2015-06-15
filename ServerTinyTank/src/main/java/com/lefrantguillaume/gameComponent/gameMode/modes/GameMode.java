@@ -42,8 +42,8 @@ public class GameMode {
     }
 
     public void start() {
-        this.playable = true;
         this.restart();
+        this.playable = true;
     }
 
     public void stop() {

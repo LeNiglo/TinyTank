@@ -8,6 +8,7 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.Mes
 public class MessagePlayerUpdatePosition extends MessageModel {
     private float x;
     private float y;
+    private boolean resetMove;
 
     public MessagePlayerUpdatePosition() {
     }
@@ -18,13 +19,25 @@ public class MessagePlayerUpdatePosition extends MessageModel {
         this.playerAction = false;
         this.x = x;
         this.y = y;
+        this.resetMove = false;
     }
 
+    // GETETRS
     public float getX(){
         return this.x;
     }
 
     public float getY(){
         return this.y;
+    }
+
+    public boolean isResetMove(){
+        return this.resetMove;
+    }
+
+    // SETTERS
+
+    public void setResetMove(boolean value){
+        this.resetMove = value;
     }
 }
