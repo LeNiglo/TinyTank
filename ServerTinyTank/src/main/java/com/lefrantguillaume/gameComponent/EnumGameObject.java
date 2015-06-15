@@ -24,8 +24,8 @@ public enum EnumGameObject {
     PLASMA_WALL(1, "plasma_wall"),
     MINE(2, "mine"),
     /* Areas */
-    KINGDOM_AREA(0, "kingdom_area"),
-    TOUCHDOWN_AREA(1, "touchdown_area");
+    SPAWN_AREA(0, "spawn_area"),
+    OBJECTIVE_AREA(1, "objective_area");
 
 
     private final int index;

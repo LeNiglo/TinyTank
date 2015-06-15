@@ -20,11 +20,12 @@ public class TeamDeathMatch extends GameMode {
     // FUNCTIONS
 
     @Override
-    public void doTask(Pair<EnumAction, Object> task) {
+    public boolean doTask(Pair<EnumAction, Object> task) {
 
         if (task.getKey().equals(EnumAction.KILL)) {
             String teamId = (String) task.getValue();
             this.incrementScore(teamId, 10);
         }
+        return false;
     }
 }

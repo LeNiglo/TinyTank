@@ -19,10 +19,12 @@ public class GameMode {
     protected int maxPlayerTeam;
     protected int objectiveScore;
     protected boolean playable;
+    protected boolean canDoObjective;
 
     // FUNCTIONS
     public void init(int maxTeam, int maxPlayer) {
         this.playable = true;
+        this.canDoObjective = true;
         this.maxPlayerTeam = maxPlayer;
         this.teams = new ArrayList<>();
         for (int i = 0; i < maxTeam; ++i) {
@@ -48,7 +50,8 @@ public class GameMode {
         this.playable = false;
     }
 
-    public void doTask(Pair<EnumAction, Object> task) {
+    public boolean doTask(Pair<EnumAction, Object> task) {
+        return false;
     }
 
     public String attributeATeam() {
@@ -103,7 +106,15 @@ public class GameMode {
         }
     }
 
+    public void setCanDoObjective(boolean value){
+        this.canDoObjective = value;
+    }
+
     // GETTERS
+
+    public boolean isCanDoObjective(){
+        return this.canDoObjective;
+    }
 
     public int getObjectiveScore() {
         return this.objectiveScore;
@@ -122,7 +133,7 @@ public class GameMode {
 
         for (int i = 0; i < this.teams.size(); ++i) {
             Team current = this.teams.get(i);
-            if (current.getCurrentScore() == this.objectiveScore) {
+            if (current.getCurrentScore() == this.getObjectiveScore()) {
                 teamId = current.getId();
             }
         }
@@ -131,6 +142,14 @@ public class GameMode {
 
     public List<Obstacle> getObstacles(){
         return this.obstacles;
+    }
+
+    public Obstacle getSpecificObstacle(String id){
+        for (Obstacle obstacle : this.obstacles){
+            if (obstacle.getId().equals(id))
+                return obstacle;
+        }
+        return null;
     }
 
     public boolean isPlayable() {

@@ -15,13 +15,13 @@ public class GameModeController{
 
     public GameModeController(ObstacleConfigData obstacleConfigData){
         this.gameModes = new HashMap();
-        this.currentGameMode = EnumGameMode.TouchDown;
+        this.currentGameMode = EnumGameMode.Kingdom;
         this.initGameModes(obstacleConfigData);
     }
 
     // FUNCTIONS
-    public void doTask(Pair<EnumAction, Object> task) {
-        this.getCurrentMode().doTask(task);
+    public boolean doTask(Pair<EnumAction, Object> task) {
+        return this.getCurrentMode().doTask(task);
     }
 
     private void initGameModes(ObstacleConfigData obstacleConfigData){

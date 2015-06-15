@@ -63,17 +63,17 @@
     }
   },
   "area": {
-    "kingdom_area": {
+    "spawn_area": {
       "life": "1",
       "damage": "0",
       "build": {
-        "centerX": "-25.0",
-        "centerY": "-22.5",
+        "centerX": "-45.0",
+        "centerY": "-45.0",
         "collisions": [
           {
-            "shiftOriginX": "-25.0",
-            "shiftOriginY": "-22.5",
-            "sizeX": "10.0",
+            "shiftOriginX": "-45.0",
+            "shiftOriginY": "-45.0",
+            "sizeX": "45.0",
             "sizeY": "-1.0"
           }
         ],
@@ -87,17 +87,17 @@
         ]
       }
     },
-    "touchdown_area": {
+    "objective_area": {
       "life": "1",
       "damage": "0",
       "build": {
-        "centerX": "-25.0",
-        "centerY": "-22.5",
+        "centerX": "-45.0",
+        "centerY": "-45.0",
         "collisions": [
           {
-            "shiftOriginX": "-25.0",
-            "shiftOriginY": "-22.5",
-            "sizeX": "5.0",
+            "shiftOriginX": "-45.0",
+            "shiftOriginY": "-45.0",
+            "sizeX": "45.0",
             "sizeY": "-1.0"
           }
         ],

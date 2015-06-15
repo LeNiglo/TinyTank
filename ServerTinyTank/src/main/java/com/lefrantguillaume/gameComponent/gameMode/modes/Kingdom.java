@@ -17,7 +17,7 @@ public class Kingdom extends GameMode {
 
     public Kingdom(int maxTeam, ObstacleConfigData obstacleConfigData) {
         this.obstacles = new ArrayList<>();
-        this.objectiveScore = 500;
+        this.objectiveScore = 100;
         this.maxPlayerTeam = 4;
         this.init(maxTeam, maxPlayerTeam);
         this.initObstacles(obstacleConfigData);
@@ -26,21 +26,20 @@ public class Kingdom extends GameMode {
     // FUNCTIONS
 
     @Override
-    public void doTask(Pair<EnumAction, Object> task) {
-
+    public boolean doTask(Pair<EnumAction, Object> task) {
+        Pair<String, String> values = (Pair<String, String>) task.getValue();
         if (task.getKey().equals(EnumAction.KILL)) {
-            String teamId = (String) task.getValue();
-            this.incrementScore(teamId, 5);
-        } else if (task.getKey().equals(EnumAction.IN_OBJECTIVE)) {
-            String teamId = (String) task.getValue();
-            this.incrementScore(teamId, 10);
+            this.incrementScore(values.getKey(), 5);
+        } else if (task.getKey().equals(EnumAction.IN)) {
+            this.incrementScore(values.getKey(), 10);
         }
+        return false;
     }
 
     @Override
-    public void initObstacles(ObstacleConfigData obstacleConfigData){
-        Obstacle obstacle = obstacleConfigData.getObstacle(EnumGameObject.KINGDOM_AREA);
-        obstacle.createObstacle(DataServer.getId(), "admin", EnumGameObject.KINGDOM_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
+    public void initObstacles(ObstacleConfigData obstacleConfigData) {
+        Obstacle obstacle = obstacleConfigData.getObstacle(EnumGameObject.OBJECTIVE_AREA);
+        obstacle.createObstacle(DataServer.getId(), "admin", EnumGameObject.OBJECTIVE_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
         this.obstacles.add(obstacle);
     }
 }

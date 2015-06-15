@@ -3,7 +3,7 @@ package com.lefrantguillaume.gameComponent.controllers;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
-import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
+import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
@@ -169,6 +169,7 @@ public class GameController extends Observable {
 
         String it1 = mc.getHitterId();
         String it2 = mc.getTargetId();
+        EnumCollision type = mc.getType();
 
         int it3 = -1;
 
@@ -209,7 +210,7 @@ public class GameController extends Observable {
             it3 = 0;
         }
         if (!added) {
-            this.addCollisionTimer(it1, it2, it3);
+            this.addCollisionTimer(it1, it2, it3, type);
         }
     }
 
@@ -375,11 +376,10 @@ public class GameController extends Observable {
         this.mapController.addMap(map);
     }
 
-    private void resultForCollision(String hitterId, String targetId) {
-        WindowController.addConsoleMsg("Shot : " + hitterId + ", target : " + targetId);
-        String saveTeamId = new String();
+    private void resultForCollision(String hitterId, String targetId, EnumCollision type) {
+        WindowController.addConsoleMsg("Hitter : " + hitterId + ", target : " + targetId);
 
-        List<MessageModel> allMessage = targets.doCollision(hitterId, targetId, saveTeamId);
+        List<MessageModel> allMessage = targets.doCollision(hitterId, targetId, type, this.gameModeController);
         WindowController.addConsoleMsg("MessageSize: " + allMessage.size());
         for (int i = 0; i < allMessage.size(); ++i) {
             MessageModel message = allMessage.get(i);
@@ -388,24 +388,25 @@ public class GameController extends Observable {
             this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
             if (message instanceof MessagePlayerUpdateState) {
                 if (((MessagePlayerUpdateState) message).getCurrentLife() <= 0) {
-                    this.gameModeController.doTask(new Pair<>(EnumAction.KILL, saveTeamId));
                     if (this.gameModeController.isWinnerTeam() != null) {
                         MessageModel reviveTask = new MessagePlayerRevive(message.getPseudo(), message.getId(), 0, 0);
                         targets.getPlayer(message.getId()).revive();
                         setChanged();
                         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(reviveTask)));
-                        this.newRound();
                     } else {
                         this.addReviveTimer(message);
                     }
                 }
             }
         }
+        if (this.gameModeController.isWinnerTeam() != null){
+            this.newRound();
+        }
     }
 
 
     //TIMERS
-    private void addCollisionTimer(final String it1, final String it2, final int it3) {
+    private void addCollisionTimer(final String it1, final String it2, final int it3, final EnumCollision type) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -413,7 +414,7 @@ public class GameController extends Observable {
                 List<String> targeted = collisions.get(it1).get(it2).get(it3);
                 int playerCount = targets.getPlayers().size();
                 if (targeted.size() >= playerCount / 2) {
-                    resultForCollision(it1, it2);
+                    resultForCollision(it1, it2, type);
                 }
             }
         }, 150);

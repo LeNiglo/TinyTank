@@ -196,7 +196,7 @@ public class CollisionObject extends Observable implements Observer {
     public Shape getShape(){
         Shape shape;
         if (this.getSizeY() == -1) {
-            shape = new Circle(this.getOriginX(), this.getOriginY(), this.getSizeX());
+            shape = new Circle(this.getX(), this.getY(), this.getSizeX());
         } else {
             shape = new Rectangle(this.getOriginX(), this.getOriginY(), this.getSizeX(), this.getSizeY());
         }
