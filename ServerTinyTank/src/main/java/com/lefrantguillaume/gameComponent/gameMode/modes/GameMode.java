@@ -2,6 +2,8 @@ package com.lefrantguillaume.gameComponent.gameMode.modes;
 
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.UUID;
  */
 public class GameMode {
     protected List<Team> teams;
+    protected List<Obstacle> obstacles;
     protected int maxPlayerTeam;
     protected int objectiveScore;
     protected boolean playable;
@@ -25,6 +28,9 @@ public class GameMode {
         for (int i = 0; i < maxTeam; ++i) {
             this.teams.add(new Team(UUID.randomUUID().toString()));
         }
+    }
+
+    public void initObstacles(ObstacleConfigData obstacleConfigData){
     }
 
     public void restart() {
@@ -121,6 +127,10 @@ public class GameMode {
             }
         }
         return teamId;
+    }
+
+    public List<Obstacle> getObstacles(){
+        return this.obstacles;
     }
 
     public boolean isPlayable() {

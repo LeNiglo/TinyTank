@@ -1,6 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
 import com.lefrantguillaume.gameComponent.gameMode.modes.*;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -12,10 +13,10 @@ public class GameModeController{
     private HashMap<EnumGameMode, GameMode> gameModes;
     private EnumGameMode currentGameMode;
 
-    public GameModeController(){
+    public GameModeController(ObstacleConfigData obstacleConfigData){
         this.gameModes = new HashMap();
-        this.currentGameMode = EnumGameMode.TeamDeathMatch;
-        this.initGameModes();
+        this.currentGameMode = EnumGameMode.TouchDown;
+        this.initGameModes(obstacleConfigData);
     }
 
     // FUNCTIONS
@@ -23,11 +24,11 @@ public class GameModeController{
         this.getCurrentMode().doTask(task);
     }
 
-    private void initGameModes(){
+    private void initGameModes(ObstacleConfigData obstacleConfigData){
         gameModes.put(EnumGameMode.FreeForAll, new FreeForAll(8));
         gameModes.put(EnumGameMode.TeamDeathMatch, new TeamDeathMatch(2));
-        gameModes.put(EnumGameMode.Kingdom, new Kingdom(2));
-        gameModes.put(EnumGameMode.TouchDown, new TouchDown(2));
+        gameModes.put(EnumGameMode.Kingdom, new Kingdom(2, obstacleConfigData));
+        gameModes.put(EnumGameMode.TouchDown, new TouchDown(2, obstacleConfigData));
     }
 
 

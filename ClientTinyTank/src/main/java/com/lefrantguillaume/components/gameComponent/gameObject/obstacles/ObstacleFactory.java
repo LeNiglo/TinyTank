@@ -27,7 +27,12 @@ public class ObstacleFactory {
             Pair<Float, Float> sizes= new Pair<>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
             blocks.add(new Block(shiftOrigin2, sizes));
         }
-        Obstacle obstacle = new Obstacle(animatorGameData.getObstacleAnimator(type), type, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        Obstacle obstacle;
+        if (type.getValue().contains("area")) {
+            obstacle = new Obstacle(animatorGameData.getAreaAnimator(type), type, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        } else {
+            obstacle = new Obstacle(animatorGameData.getObstacleAnimator(type), type, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        }
         return obstacle;
     }
 }

@@ -31,14 +31,15 @@ public class Targets {
 
     // FUNCTIONS
 
-    public void initGame(MapController mapController) {
+    public void initGame(MapController mapController, List<Obstacle> moreObstacles) {
         this.shots.clear();
         this.obstacles.clear();
         List<Obstacle> mapObstacles = mapController.getCurrentMap().getMapObstacles();
         if (mapObstacles != null) {
-            for (Obstacle obstacle : mapObstacles) {
-                this.obstacles.put(obstacle.getId(), new Obstacle(obstacle, true));
-            }
+            this.addObstacles(mapObstacles);
+        }
+        if (moreObstacles != null){
+            this.addObstacles(moreObstacles);
         }
     }
 
@@ -143,6 +144,12 @@ public class Targets {
 
     public void addObstacle(String id, Obstacle obstacle) {
         this.obstacles.put(id, obstacle);
+    }
+
+    public void addObstacles(List<Obstacle> obstacles){
+        for (Obstacle obstacle : obstacles) {
+            this.obstacles.put(obstacle.getId(), obstacle);
+        }
     }
 
     public void deletePlayer(String playerId) {

@@ -56,6 +56,46 @@
           "sizeY": 100
         }
       ]
+    },
+    "TouchDown": {
+      "obstacles": [
+      ],
+      "spawnPoint": [
+        {
+          "team": 1,
+          "x": 20,
+          "y": 20,
+          "sizeX": 100,
+          "sizeY": 100
+        },
+        {
+          "team": 2,
+          "x": 1000,
+          "y": 620,
+          "sizeX": 100,
+          "sizeY": 100
+        }
+      ]
+    },
+    "Kingdom": {
+      "obstacles": [
+      ],
+      "spawnPoint": [
+        {
+          "team": 1,
+          "x": 20,
+          "y": 20,
+          "sizeX": 100,
+          "sizeY": 100
+        },
+        {
+          "team": 2,
+          "x": 1000,
+          "y": 620,
+          "sizeX": 100,
+          "sizeY": 100
+        }
+      ]
     }
   }
 }

@@ -6,5 +6,6 @@ package com.lefrantguillaume.gameComponent.gameMode;
 public enum EnumAction {
     KILL,
     IN_OBJECTIVE,
+    OUT_OBJECTIVE,
     IN_BASE
 }

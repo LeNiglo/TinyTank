@@ -48,5 +48,39 @@
         ]
       }
     }
+  },
+  "area": {
+    "kingdom_area": {
+      "life": "1",
+      "damage": "0",
+      "build": {
+        "centerX": "-25.0",
+        "centerY": "-22.5",
+        "collisions": [
+          {
+            "shiftOriginX": "-25.0",
+            "shiftOriginY": "-22.5",
+            "sizeX": "10.0",
+            "sizeY": "-1.0"
+          }
+        ]
+      }
+    },
+    "touchdown_area": {
+      "life": "1",
+      "damage": "0",
+      "build": {
+        "centerX": "-25.0",
+        "centerY": "-22.5",
+        "collisions": [
+          {
+            "shiftOriginX": "-25.0",
+            "shiftOriginY": "-22.5",
+            "sizeX": "5.0",
+            "sizeY": "-1.0"
+          }
+        ]
+      }
+    }
   }
 }

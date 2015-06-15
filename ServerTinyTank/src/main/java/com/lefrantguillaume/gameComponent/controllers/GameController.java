@@ -43,9 +43,11 @@ public class GameController extends Observable {
         this.tankConfigData.initTanks(configFile);
         this.mapController = new MapController();
         this.targets = new Targets();
-        this.gameModeController = new GameModeController();
         this.obstacleConfigData = new ObstacleConfigData(new JSONObject(StringTools.readFile("obstacles.json")));
+        this.gameModeController = new GameModeController(this.obstacleConfigData);
         this.collisions = new HashMap<>();
+
+        // à mettre lorsqu'on charge une game via l'interface
     }
 
     // FUNCTIONS
@@ -128,7 +130,7 @@ public class GameController extends Observable {
         Player player = this.targets.getPlayer(received.getId());
         this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
         Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(), this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId().toString()), player.getTank().getTankState().getCollisionObject());
-        WindowController.addConsoleMsg("joueur team: " + this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()));
+        WindowController.addConsoleMsg("joueur team: " + this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()) + " at position: " + newPositions);
 
         if (newPositions != null) {
             received.setPosX(newPositions.getKey());
@@ -279,7 +281,7 @@ public class GameController extends Observable {
     // FUNCTIONS
     public void startGame() {
         WindowController.addConsoleMsg("Game started");
-        this.targets.initGame(this.mapController);
+        this.targets.initGame(this.mapController, this.gameModeController.getCurrentMode().getObstacles());
         WindowController.addConsoleMsg("nombre d'objet: \n\tobstacle: " + this.targets.getObstacles().size() + "\n\tplayer:" + this.targets.getPlayers().size() + "\n\tshots: " + this.targets.getShots().size());
     }
 
@@ -306,7 +308,7 @@ public class GameController extends Observable {
     public void newRound() {
         this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
-        this.targets.initGame(this.mapController);
+        this.targets.initGame(this.mapController, this.gameModeController.getCurrentMode().getObstacles());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
             Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
@@ -343,6 +345,7 @@ public class GameController extends Observable {
         for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
             MessagePutObstacle tmpMessage = new MessagePutObstacle();
 
+            WindowController.addConsoleMsg("send Box: " + entry.getKey());
             tmpMessage.setId(entry.getValue().getPlayerId());
             tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
             tmpMessage.setObstacleId(entry.getValue().getId());

@@ -22,8 +22,10 @@ public enum EnumGameObject {
     /* Obstacles */
     IRON_WALL(0, "iron_wall"),
     PLASMA_WALL(1, "plasma_wall"),
-    MINE(2, "mine");
+    MINE(2, "mine"),
     /* Areas */
+    KINGDOM_AREA(0, "kingdom_area"),
+    TOUCHDOWN_AREA(1, "touchdown_area");
 
 
     private final int index;
