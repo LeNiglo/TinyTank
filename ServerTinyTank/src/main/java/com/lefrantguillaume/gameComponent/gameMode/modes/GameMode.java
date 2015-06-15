@@ -133,7 +133,7 @@ public class GameMode {
 
         for (int i = 0; i < this.teams.size(); ++i) {
             Team current = this.teams.get(i);
-            if (current.getCurrentScore() == this.getObjectiveScore()) {
+            if (current.getCurrentScore() >= this.getObjectiveScore()) {
                 teamId = current.getId();
             }
         }
