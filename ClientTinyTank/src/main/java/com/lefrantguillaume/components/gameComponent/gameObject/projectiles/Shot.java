@@ -32,7 +32,6 @@ public class Shot extends Observable implements Observer {
     private boolean explode;
     private List<Block> collisionObject;
     private List<Pair<Float, Float>> savePosShot;
-    private float saveDelta;
 
     public Shot(String userId, String id, EnumGameObject type, float currentDamageShot, float speed, Animator animator, Tuple<Float, Float, Float> positioning,
                 Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
@@ -50,7 +49,6 @@ public class Shot extends Observable implements Observer {
         this.speed = speed;
         this.animator = animator;
         this.collisionObject = new ArrayList<>();
-        this.saveDelta = 0;
     }
 
     @Override
@@ -93,7 +91,6 @@ public class Shot extends Observable implements Observer {
     public Pair<Float, Float> move(float delta) {
         if (this.explode == false) {
             Pair<Float, Float> coords = this.movePredict(delta);
-            this.saveDelta = delta;
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
             this.addNewPosition();
@@ -202,7 +199,6 @@ public class Shot extends Observable implements Observer {
     public void setCurrentLife(float currentLife){
         this.currentDamageShot = currentLife;
         if (this.currentDamageShot == 0){
-            this.move(this.saveDelta);
             this.explode(new Pair<>(this.positions));
         }
     }

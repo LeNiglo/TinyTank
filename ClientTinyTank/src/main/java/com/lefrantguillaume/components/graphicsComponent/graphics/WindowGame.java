@@ -209,7 +209,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
 
     public void myMouseMoved(double newX, double newY) throws SlickException {
-        if (CurrentUser.isInGame() && this.gameController != null) {
+        if (CurrentUser.isInGame() && this.gameController != null && this.gameController.getPlayer(CurrentUser.getId()).isCanDoAction()) {
             TankState ts = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState();
 
             double x = ts.getX();

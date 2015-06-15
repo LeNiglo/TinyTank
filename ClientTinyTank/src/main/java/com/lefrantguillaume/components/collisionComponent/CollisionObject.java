@@ -5,6 +5,10 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 import java.util.List;
 import java.util.Observable;
@@ -32,8 +36,8 @@ public class CollisionObject extends Observable implements Observer {
         this.ignoredObject = ignoredObject;
         this.shiftOrigin = new Pair<>(shiftOrigin);
         this.positions = new Pair<>(positions);
-        this.savePositions = new Pair<>(positions);
         this.sizes = new Pair<>(sizes);
+        this.savePositions = new Pair<>(positions);
         this.type = type;
         this.angle = angle;
         this.idUser = idUser;
@@ -189,6 +193,17 @@ public class CollisionObject extends Observable implements Observer {
         return this.destroyed;
     }
 
+    public Shape getShape(){
+        Shape shape;
+        if (this.getSizeY() == -1) {
+            shape = new Circle(this.getOriginX(), this.getOriginY(), this.getSizeX());
+        } else {
+            shape = new Rectangle(this.getOriginX(), this.getOriginY(), this.getSizeX(), this.getSizeY());
+        }
+        shape = shape.transform(Transform.createRotateTransform(this.getRadian(), this.getX(), this.getY()));
+        return shape;
+    }
+
     // SETTERS
     public void setAngle(float angle) {
         this.angle = angle;
@@ -212,5 +227,10 @@ public class CollisionObject extends Observable implements Observer {
 
     public void setSaveCollisionObject(CollisionObject saveCollisionObject) {
         this.saveCollisionObject = saveCollisionObject;
+    }
+
+    @Override
+    public String toString(){
+        return "Id: " + this.getId() + " with type: " + this.getType();
     }
 }

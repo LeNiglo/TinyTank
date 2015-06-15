@@ -31,18 +31,18 @@ public class Targets {
 
     // FUNCTIONS
 
-    public void initGame(MapController mapController){
+    public void initGame(MapController mapController) {
         this.shots.clear();
         this.obstacles.clear();
         List<Obstacle> mapObstacles = mapController.getCurrentMap().getMapObstacles();
         if (mapObstacles != null) {
-            for (Obstacle obstacle : mapObstacles){
+            for (Obstacle obstacle : mapObstacles) {
                 this.obstacles.put(obstacle.getId(), new Obstacle(obstacle, true));
             }
         }
     }
 
-    public void clearAll(){
+    public void clearAll() {
         this.obstacles.clear();
         this.players.clear();
         this.shots.clear();
@@ -66,7 +66,7 @@ public class Targets {
                     hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
                     if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
                         messages.add(player.getTank().getTankState().getHit(player, damage));
-                        if (player.getTank().getTankState().getCurrentLife() == 0){
+                        if (player.getTank().getTankState().getCurrentLife() == 0) {
                             killer.addKill();
                             saveTeamId = killer.getTeamId();
                             player.addDeath();
@@ -112,15 +112,15 @@ public class Targets {
                 }
             }
         } else if (this.getPlayer(hitterId) != null) {
-            if (this.getObstacle(targetId) != null){
+            if (this.getObstacle(targetId) != null) {
                 Obstacle obstacle = this.getObstacle(targetId);
 
-                if (obstacle.getType().equals(EnumGameObject.MINE)){
+                if (obstacle.getType().equals(EnumGameObject.MINE)) {
                     Player player = this.getPlayer(hitterId);
                     Player killer = this.getPlayer(obstacle.getPlayerId());
                     if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
                         messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
-                        if (player.getTank().getTankState().getCurrentLife() == 0){
+                        if (player.getTank().getTankState().getCurrentLife() == 0) {
                             killer.addKill();
                             saveTeamId = killer.getTeamId();
                             player.addDeath();
@@ -162,7 +162,7 @@ public class Targets {
     public MessageObstacleUpdateState deleteObstacle(String obstacleId) {
         Obstacle obstacle = this.getObstacle(obstacleId);
         MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
-        this.shots.remove(obstacleId);
+        this.obstacles.remove(obstacleId);
         return message;
     }
 

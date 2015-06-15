@@ -71,8 +71,6 @@ public class Obstacle {
         if (this.animator != null) {
             if (this.currentLife == 0) {
                 this.animator.setCurrent(EnumAnimation.EXPLODE);
-                this.shiftOrigin.setV1(-44f);
-                this.shiftOrigin.setV1(-31.5f);
             } else {
                 this.animator.nextCurrentIndex();
             }

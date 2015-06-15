@@ -2,6 +2,7 @@ package com.lefrantguillaume.networkComponent.gameServerComponent;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.*;
 
@@ -34,6 +35,7 @@ public class NetworkRegister {
         kryo.register(MessageObstacleUpdateState.class);
         kryo.register(MessageShotUpdateState.class);
         kryo.register(EnumGameObject.class);
+        kryo.register(EnumCollision.class);
         kryo.register(MessageNeedMap.class);
         kryo.register(MessageDownload.class);
         kryo.register(ArrayList.class);

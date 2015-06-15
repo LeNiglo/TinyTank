@@ -165,13 +165,13 @@ public class GameController extends Observable {
     public void doMessageCollision(final MessageCollision mc) {
         boolean added = false;
 
-        String it1 = mc.getShotId();
+        String it1 = mc.getHitterId();
         String it2 = mc.getTargetId();
 
         int it3 = -1;
 
-        if (this.collisions.containsKey(mc.getShotId())) {
-            HashMap<String, List<List<String>>> shootVal = collisions.get(mc.getShotId());
+        if (this.collisions.containsKey(mc.getHitterId())) {
+            HashMap<String, List<List<String>>> shootVal = collisions.get(mc.getHitterId());
             if (shootVal.containsKey(mc.getTargetId())) {
                 List<List<String>> targetVal = shootVal.get(mc.getTargetId());
                 for (int i = 0; i > targetVal.size(); ++i) {
@@ -203,7 +203,7 @@ public class GameController extends Observable {
             listVal.add(mc.getId());
             targetVal.add(listVal);
             shootVal.put(mc.getTargetId(), targetVal);
-            this.collisions.put(mc.getShotId(), shootVal);
+            this.collisions.put(mc.getHitterId(), shootVal);
             it3 = 0;
         }
         if (!added) {

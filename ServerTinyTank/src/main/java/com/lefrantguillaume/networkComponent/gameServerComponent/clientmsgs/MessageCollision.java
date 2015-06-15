@@ -1,17 +1,39 @@
 package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
 
+import com.lefrantguillaume.gameComponent.EnumCollision;
+
 /**
- * Created by Styve on 25/03/2015.
+ * Created by andres_k on 15/06/2015.
  */
 public class MessageCollision extends MessageModel {
+    private String hitterId;
     private String targetId;
-    private String shotId;
+    private EnumCollision type;
 
-    public MessageCollision() {}
+    public MessageCollision() {
+    }
 
-    public String getTargetId() {return targetId;}
-    public String getShotId() {return shotId;}
+    public String getHitterId() {
+        return this.hitterId;
+    }
 
-    public void setTargetId(String targetId) {this.targetId = targetId;}
-    public void setShotId(String shotId) {this.shotId = shotId;}
+    public String getTargetId() {
+        return this.targetId;
+    }
+
+    public EnumCollision getType() {
+        return this.type;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
+    public void setHitterId(String hitterId) {
+        this.hitterId = hitterId;
+    }
+
+    public void setType(EnumCollision type){
+        this.type = type;
+    }
 }

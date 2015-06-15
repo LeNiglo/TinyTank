@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
+import com.lefrantguillaume.components.collisionComponent.EnumCollision;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
@@ -73,7 +74,6 @@ public class GameController extends Observable implements Observer {
     }
 
     public void initGame() {
-        this.scheduleToSendCurrentPlayerPosition();
     }
 
     @Override
@@ -259,7 +259,7 @@ public class GameController extends Observable implements Observer {
 
     // UPDATE GAME FUNCTIONS
     public void updateGame(float delta) {
-        Tuple<Boolean, Boolean, Pair<String, String>> impactIds;
+        Tuple<EnumCollision, Boolean, Pair<CollisionObject, CollisionObject>> impactIds;
 
         if (this.collisionController != null) {
             this.collisionController.cleanCollision();
@@ -271,8 +271,9 @@ public class GameController extends Observable implements Observer {
                     if (impactIds.getV2() == true) {
                         this.players.get(i).move(delta);
                     }
-                    if (impactIds.getV1() == true) {
-                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1(), impactIds.getV3().getV2());
+                    if (impactIds.getV1() != EnumCollision.NOTHING) {
+                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1().getId(),
+                                impactIds.getV3().getV2().getId(), impactIds.getV1());
                         this.setChanged();
                         this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
                     }
@@ -282,33 +283,20 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.shots.size(); ++i) {
             if (!this.shots.get(i).getExplode()) {
                 if ((impactIds = this.collisionController.checkCollision(this.shots.get(i).coordPredict(delta), this.shots.get(i).getId())) != null) {
+                    Debug.debug("Collision: " + impactIds);
                     if (impactIds.getV2() == true) {
                         this.shots.get(i).move(delta);
                     }
-                    if (impactIds.getV1() == true) {
+                    if (impactIds.getV1() != EnumCollision.NOTHING) {
                         Debug.debug("Collision to Server");
-                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1(), impactIds.getV3().getV2());
+                        MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1().getId(),
+                                impactIds.getV3().getV2().getId(), impactIds.getV1());
                         this.setChanged();
                         this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
                     }
                 }
             }
         }
-    }
-
-    public void scheduleToSendCurrentPlayerPosition() {
-        /*
-        this.scheduler.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-                Player currentPlayer = getPlayer(CurrentUser.getId());
-                if (currentPlayer != null && currentPlayer.isAlive()) {
-                    MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(), currentPlayer.getTank().getTankState().getX(), currentPlayer.getTank().getTankState().getY());
-                    setChanged();
-                    notifyObservers(request);
-                }
-            }
-        }, 300, 300, TimeUnit.MILLISECONDS);
-*/
     }
 
     // DRAW FUNCTIONS
