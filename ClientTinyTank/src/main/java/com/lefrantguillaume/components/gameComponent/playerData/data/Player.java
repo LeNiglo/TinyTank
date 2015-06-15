@@ -73,6 +73,7 @@ public class Player extends Observable implements Observer {
     public boolean kill() {
         if (this.tank.getTankState().getCurrentLife() <= 0) {
             this.tank.explode();
+            this.die();
             this.setChanged();
             this.notifyObservers(new Tuple<>(false, 0f, 0f));
             return true;

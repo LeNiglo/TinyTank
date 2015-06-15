@@ -316,7 +316,7 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             Player current = this.players.get(i);
             if (current.isAlive()) {
-                if (current.getTank().getBodyAnimator().currentAnimation().isStopped()) {
+                if (current.getTank().getBodyAnimator().isStopped()) {
                     current.die();
                 } else if (current.getTank().getBodyAnimator().isPrintable()) {
                     current.getTank().getBodyAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
@@ -339,7 +339,7 @@ public class GameController extends Observable implements Observer {
 
         for (int i = 0; i < this.shots.size(); ++i) {
             Shot current = this.shots.get(i);
-            if (current.getAnimator().currentAnimation().isStopped()) {
+            if (current.getAnimator().isStopped()) {
                 this.collisionController.deleteCollisionObject(this.shots.get(i).getId());
                 this.shots.remove(i);
             } else {
@@ -362,7 +362,7 @@ public class GameController extends Observable implements Observer {
                 Obstacle current = this.mapController.getObstacles().get(i);
 
                 if (current.getAnimator() != null) {
-                    if (current.getAnimator().currentAnimation().isStopped()) {
+                    if (current.getAnimator().isStopped()) {
                         this.mapController.deleteObstacle(current.getId());
                     } else {
                         current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);

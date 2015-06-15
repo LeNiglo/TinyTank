@@ -3,8 +3,9 @@ package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
+import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,17 +68,17 @@ public class TankState {
         this.accuracy = tankState.accuracy;
         this.currentLife = tankState.maxLife;
         this.currentArmor = tankState.maxArmor;
-        this.shiftOrigin = new Pair<Float, Float>(tankState.shiftOrigin);
-        this.shiftOriginSave = new Pair<Float, Float>(tankState.shiftOrigin);
-        this.shiftToExplode = new Pair<Float, Float>(tankState.shiftToExplode);
+        this.shiftOrigin = new Pair<>(tankState.shiftOrigin);
+        this.shiftOriginSave = new Pair<>(tankState.shiftOrigin);
+        this.shiftToExplode = new Pair<>(tankState.shiftToExplode);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.positions = new Pair<Float, Float>(0f, 0f);
-        this.collisionObject = new ArrayList<Block>();
+        this.positions = new Pair<>(0f, 0f);
+        this.collisionObject = new ArrayList<>();
         for (int i = 0; i < tankState.collisionObject.size(); ++i) {
             this.collisionObject.add(tankState.collisionObject.get(i));
         }
@@ -91,7 +92,7 @@ public class TankState {
 
     public void explode() {
         this.topAnimator.setPrintable(false);
-        this.bodyAnimator.setIndex(EnumAnimationTank.EXPLODE.getValue());
+        this.bodyAnimator.setCurrent(EnumAnimation.EXPLODE);
         this.shiftOrigin.setV1(this.shiftToExplode.getV1());
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
     }
@@ -101,13 +102,13 @@ public class TankState {
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.positions = new Pair<Float, Float>(positions);
+        this.positions = new Pair<>(positions);
         this.currentLife = this.maxLife;
         this.bodyAnimator.currentAnimation().restart();
-        this.bodyAnimator.setIndex(EnumAnimationTank.BASIC.getValue());
+        this.bodyAnimator.setCurrent(EnumAnimation.BASIC);
         this.bodyAnimator.setPrintable(true);
         this.topAnimator.setPrintable(true);
-        this.shiftOrigin = new Pair<Float, Float>(this.shiftOriginSave);
+        this.shiftOrigin = new Pair<>(this.shiftOriginSave);
     }
 
     // GETTERS

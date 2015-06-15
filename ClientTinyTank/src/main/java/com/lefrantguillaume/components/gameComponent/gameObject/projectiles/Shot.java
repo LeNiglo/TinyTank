@@ -5,6 +5,7 @@ import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
+import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.Graphics;
 
@@ -74,7 +75,7 @@ public class Shot extends Observable implements Observer {
 
         this.savePosShot.clear();
         this.addNewPosition();
-        this.animator.setIndex(EnumAnimationShot.EXPLODE.getIndex());
+        this.animator.setCurrent(EnumAnimation.EXPLODE);
         this.explode = true;
         Block nullBlock = null;
         this.setChanged();

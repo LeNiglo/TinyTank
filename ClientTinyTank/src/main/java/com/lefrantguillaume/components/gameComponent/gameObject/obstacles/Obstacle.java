@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
+import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.ArrayList;
@@ -69,11 +70,11 @@ public class Obstacle {
     public void getHit(){
         if (this.animator != null) {
             if (this.currentLife == 0) {
-                this.animator.setIndex(EnumAnimationObstacle.EXPLODE.getIndex());
+                this.animator.setCurrent(EnumAnimation.EXPLODE);
                 this.shiftOrigin.setV1(-44f);
                 this.shiftOrigin.setV1(-31.5f);
-            } else if (this.currentLife > 0 && this.currentLife <= 10) {
-                this.animator.setIndex(EnumAnimationObstacle.LOW.getIndex());
+            } else {
+                this.animator.nextCurrentIndex();
             }
         }
     }

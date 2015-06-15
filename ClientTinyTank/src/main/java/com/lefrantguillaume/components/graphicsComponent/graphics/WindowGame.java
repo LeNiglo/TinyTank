@@ -44,7 +44,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private int id;
 
     private int frameRate = 60;
-    private float saveAngle = 0f;
     private long runningTime = 0l;
 
     List<Pair<Integer, Integer>> mousePos = new ArrayList<>();
