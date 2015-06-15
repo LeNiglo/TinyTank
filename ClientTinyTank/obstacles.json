@@ -13,6 +13,8 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored" : [
         ]
       }
     },
@@ -29,6 +31,9 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored" : [
+          "laser"
         ]
       }
     },
@@ -45,6 +50,14 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored" : [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
         ]
       }
     }
@@ -63,6 +76,14 @@
             "sizeX": "10.0",
             "sizeY": "-1.0"
           }
+        ],
+        "ignored" : [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
         ]
       }
     },
@@ -79,6 +100,14 @@
             "sizeX": "5.0",
             "sizeY": "-1.0"
           }
+        ],
+        "ignored" : [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
         ]
       }
     }

@@ -2,12 +2,10 @@ package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +15,7 @@ public class Obstacle {
     private final Animator animator;
     private final EnumGameObject type;
     private final List<Block> collisionObject;
+    private final List<EnumGameObject> ignored;
     private final Pair<Float, Float> shiftOrigin;
     private final float maxLife;
     private final float damage;
@@ -29,10 +28,11 @@ public class Obstacle {
     private float angle;
     private boolean created;
 
-    public Obstacle(Animator animator, EnumGameObject type, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
+    public Obstacle(Animator animator, EnumGameObject type, List<EnumGameObject> ignored, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.animator = animator;
         this.type = type;
         this.collisionObject = collisionObject;
+        this.ignored = ignored;
         this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
         this.damage = damage;
@@ -43,6 +43,7 @@ public class Obstacle {
     public Obstacle(Obstacle obstacle, boolean isCreated) {
         this.animator = new Animator(obstacle.animator);
         this.type = obstacle.type;
+        this.ignored = obstacle.ignored;
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
         this.collisionObject = obstacle.collisionObject;
@@ -138,20 +139,7 @@ public class Obstacle {
     }
 
     public List<EnumGameObject> getIgnoredObjectList() {
-        List<EnumGameObject> types = new ArrayList<>();
-
-        Debug.debug("type: " + this.type);
-        if (this.type.equals(EnumGameObject.MINE)) {
-            types.add(EnumGameObject.ROCKET);
-            types.add(EnumGameObject.MACHINE_GUN);
-            types.add(EnumGameObject.LASER);
-            types.add(EnumGameObject.TIGER);
-            types.add(EnumGameObject.RUSHER);
-            types.add(EnumGameObject.SNIPER);
-        } else if (this.type.equals(EnumGameObject.PLASMA_WALL)) {
-            types.add(EnumGameObject.LASER);
-        }
-        return types;
+        return this.ignored;
     }
 
     public List<Block> getCollisionObject(){

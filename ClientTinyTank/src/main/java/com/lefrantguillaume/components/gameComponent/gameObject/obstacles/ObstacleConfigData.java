@@ -65,25 +65,25 @@ public class ObstacleConfigData {
 
         List<Block> block1 = new ArrayList<>();
         block1.add(new Block(origin1, size1));
-        Obstacle obstacle1 = new Obstacle(null, EnumGameObject.UNBREAKABLE, block1, origin1, 1, 0);
+        Obstacle obstacle1 = new Obstacle(null, EnumGameObject.UNBREAKABLE, new ArrayList<>(), block1, origin1, 1, 0);
         obstacle1.setId("admin-UNBREAKABLE-Wall-1");
         this.worldWall.add(obstacle1);
 
         List<Block> block2 = new ArrayList<>();
         block2.add(new Block(origin2, size1));
-        Obstacle obstacle2 = new Obstacle(null, EnumGameObject.UNBREAKABLE, block2, origin2, 1, 0);
+        Obstacle obstacle2 = new Obstacle(null, EnumGameObject.UNBREAKABLE, new ArrayList<>(), block2, origin2, 1, 0);
         obstacle2.setId("admin-UNBREAKABLE-Wall-2");
         this.worldWall.add(obstacle2);
 
         List<Block> block3 = new ArrayList<>();
         block3.add(new Block(origin3, size2));
-        Obstacle obstacle3 = new Obstacle(null, EnumGameObject.UNBREAKABLE, block3, origin3, 1, 0);
+        Obstacle obstacle3 = new Obstacle(null, EnumGameObject.UNBREAKABLE, new ArrayList<>(), block3, origin3, 1, 0);
         obstacle3.setId("admin-UNBREAKABLE-Wall-3");
         this.worldWall.add(obstacle3);
 
         List<Block> block4 = new ArrayList<>();
         block4.add(new Block(origin4, size2));
-        Obstacle obstacle4 = new Obstacle(null, EnumGameObject.UNBREAKABLE, block4, origin4, 1, 0);
+        Obstacle obstacle4 = new Obstacle(null, EnumGameObject.UNBREAKABLE, new ArrayList<>(), block4, origin4, 1, 0);
         obstacle4.setId("admin-UNBREAKABLE-Wall-4");
         this.worldWall.add(obstacle4);
     }

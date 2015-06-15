@@ -141,7 +141,6 @@ public class Player extends Observable implements Observer {
 
     public List<EnumGameObject> getIgnoredObjectList() {
         List<EnumGameObject> types = new ArrayList<>();
-
         return types;
     }
 
