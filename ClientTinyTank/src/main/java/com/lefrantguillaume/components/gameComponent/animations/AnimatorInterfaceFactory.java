@@ -13,10 +13,11 @@ public class AnimatorInterfaceFactory extends AnimatorFactory {
         if (index == EnumSprites.BACKGROUND) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/interface/log_back.png", 1280, 768);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
-        } else if (index == EnumSprites.BUTTONS) {
+        } else if (index == EnumSprites.PREV) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/interface/prev.png", 150, 150);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
-            spriteSheet = new SpriteSheet("assets/img/interface/next.png", 150, 150);
+        } else if (index == EnumSprites.NEXT) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/interface/next.png", 150, 150);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
         } else if (index == EnumSprites.STAT_RANK) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/interface/rank.png", 320, 200);

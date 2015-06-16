@@ -7,18 +7,17 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by andres_k on 24/03/2015.
  */
 public class TankConfigData {
-    private List<Tank> tanks;
+    private HashMap<EnumGameObject, Tank> tanks;
     private boolean valid;
 
     public TankConfigData() {
-        this.tanks = new ArrayList<>();
+        this.tanks = new HashMap<>();
         this.valid = false;
     }
 
@@ -26,24 +25,27 @@ public class TankConfigData {
     public void initTanks(JSONObject config) throws JSONException {
 
         JSONArray tankArray = config.getJSONArray("tanks");
+
         for (int i = 0; i < tankArray.length(); ++i) {
-            tanks.add(TankFactory.createTank(tankArray.getJSONObject(i)));
+            Tank tank = TankFactory.createTank(tankArray.getJSONObject(i));
+
+            this.tanks.put(tank.getTankState().getType(), tank);
         }
         this.valid = true;
     }
 
-    public void clear(){
+    public void clear() {
         this.tanks.clear();
     }
 
     // GETTERS
-    public List<Tank> getTanks() {
+    public HashMap<EnumGameObject, Tank> getTanks() {
         return this.tanks;
     }
 
-    public Tank getTank(EnumGameObject index) {
-        if (this.valid && index.getIndex() < this.tanks.size()) {
-            return new Tank(this.tanks.get(index.getIndex()));
+    public Tank getTank(EnumGameObject type) {
+        if (this.tanks.containsKey(type)) {
+            return new Tank(this.tanks.get(type));
         } else {
             return null;
         }

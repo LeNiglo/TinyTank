@@ -5,59 +5,41 @@ package com.lefrantguillaume.components.gameComponent.gameObject;
  */
 public enum EnumGameObject {
     /* Admin */
-    NULL(-1, "null"),
-    UNBREAKABLE(-1, "unbreakable"),
+    NULL("null"),
+    UNBREAKABLE("unbreakable"),
     /* Tanks */
-    TIGER(0, "tiger"),
-    SNIPER(1, "sniper"),
-    RUSHER(2, "rusher"),
+    TIGER("tiger"),
+    SNIPER("sniper"),
+    RUSHER("rusher"),
+    TIGER_ENEMY("tigerEnemy"),
+    SNIPER_ENEMY("sniperEnemy"),
+    RUSHER_ENEMY("rusherEnemy"),
     /* Spells */
-    SHIELD(0, "shield"),
-    INVISIBILITY(1, "invisibility"),
-    TELEPORT(2, "teleport"),
+    SHIELD("shield"),
+    INVISIBILITY("invisibility"),
+    TELEPORT("teleport"),
     /* Shots */
-    ROCKET(0, "rocket"),
-    LASER(1, "laser"),
-    MACHINE_GUN(2, "machine_gun"),
+    ROCKET("rocket"),
+    LASER("laser"),
+    MACHINE_GUN("machine_gun"),
     /* Obstacles */
-    IRON_WALL(0, "iron_wall"),
-    PLASMA_WALL(1, "plasma_wall"),
-    MINE(2, "mine"),
+    IRON_WALL("iron_wall"),
+    PLASMA_WALL("plasma_wall"),
+    MINE("mine"),
+    MINE_ENEMY("mineEnemy"),
     /* Areas */
-    SPAWN_AREA(0, "spawn_area"),
-    OBJECTIVE_AREA(1, "objective_area");
+    SPAWN_AREA("spawn_area"),
+    OBJECTIVE_AREA("objective_area");
 
 
-    private final int index;
     private final String value;
 
-    EnumGameObject(int index, String value) {
-        this.index = index;
+    EnumGameObject(String value) {
         this.value = value;
-    }
-
-    EnumGameObject(EnumGameObject enumGameObject) {
-        this.index = enumGameObject.index;
-        this.value = enumGameObject.value;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     public String getValue() {
         return value;
-    }
-
-    public static EnumGameObject getEnumByIndex(int index) {
-        EnumGameObject[] tanks = EnumGameObject.values();
-        int valuesNumber = tanks.length;
-        for (int i = 0; i < valuesNumber; i++) {
-            EnumGameObject type = tanks[i];
-            if (type.getIndex() == index)
-                return type;
-        }
-        return NULL;
     }
 
     public static EnumGameObject getEnumByValue(String value) {
@@ -69,5 +51,16 @@ public enum EnumGameObject {
                 return type;
         }
         return NULL;
+    }
+
+    public static EnumGameObject getEnemyEnum(EnumGameObject type){
+        EnumGameObject[] tanks = EnumGameObject.values();
+        int valuesNumber = tanks.length;
+        for (int i = 0; i < valuesNumber; i++) {
+            EnumGameObject enemy = tanks[i];
+            if (enemy.getValue().equals(type.getValue() + "Enemy"))
+                return enemy;
+        }
+        return type;
     }
 }

@@ -11,7 +11,7 @@ public enum EnumSprites {
     RUSHER(3),
     WALL(4),
     //interface
-    BACKGROUND(-1), BUTTONS(-1),
+    BACKGROUND(-1), NEXT(-1), PREV(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),
     PREVIEW_TIGER(-1), PREVIEW_SNIPER(-1), PREVIEW_RUSHER(-1),
     //gameComponent

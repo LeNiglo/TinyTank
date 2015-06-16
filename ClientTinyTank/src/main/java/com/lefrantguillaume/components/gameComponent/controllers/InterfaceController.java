@@ -4,9 +4,9 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.animations.EnumInterfaceComponent;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.AvailableTank;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.EnumInterfaceComponent;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePlayerNew;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
@@ -15,23 +15,20 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.state.StateBasedGame;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public class InterfaceController extends Observable implements Observer {
-    private List<Animator> backgroundAnimator;
-    private List<Animator> buttonAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> backgroundAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> buttonAnimator;
     private AvailableTank availableTank;
     private StateBasedGame stateWindow;
 
     public InterfaceController(){
-        this.backgroundAnimator = new ArrayList<>();
-        this.buttonAnimator = new ArrayList<>();
+        this.backgroundAnimator = new HashMap<>();
+        this.buttonAnimator = new HashMap<>();
         this.availableTank = new AvailableTank();
         this.stateWindow = null;
     }
@@ -59,7 +56,7 @@ public class InterfaceController extends Observable implements Observer {
     }
 
     public void drawBackground(Graphics g){
-        g.drawAnimation(backgroundAnimator.get(EnumInterfaceComponent.BACKGROUND_1.getIndex()).currentAnimation(), 0, 0);
+        g.drawAnimation(backgroundAnimator.get(EnumInterfaceComponent.BACKGROUND_1).currentAnimation(), 0, 0);
     }
 
     public void drawCurrentTankStat(Graphics g){
@@ -75,35 +72,36 @@ public class InterfaceController extends Observable implements Observer {
         }
     }
 
-    public void initAnimator(List<Animator> backgroundAnimator, List<Animator> buttonAnimator, List<Animator> tankStatAnimator, List<Animator> tankPreviewAnimator){
-        for (int i = 0; i < backgroundAnimator.size(); ++i) {
-            this.addBackgroundAnimator(new Animator(backgroundAnimator.get(i)));
+    public void initAnimator(HashMap<EnumInterfaceComponent, Animator> backgroundAnimator, HashMap<EnumInterfaceComponent, Animator> buttonAnimator,
+                             HashMap<EnumInterfaceComponent, Animator> tankStatAnimator, HashMap<EnumInterfaceComponent, Animator> tankPreviewAnimator){
+        for (Map.Entry entry : backgroundAnimator.entrySet()){
+            this.addBackgroundAnimator(new Animator((Animator)entry.getValue()), (EnumInterfaceComponent) entry.getKey());
         }
-        for (int i = 0; i < buttonAnimator.size(); ++i) {
-            this.addButtonAnimator(new Animator(buttonAnimator.get(i)));
+        for (Map.Entry entry : buttonAnimator.entrySet()){
+            this.addButtonAnimator(new Animator((Animator)entry.getValue()), (EnumInterfaceComponent) entry.getKey());
         }
-        for (int i = 0; i < tankStatAnimator.size(); ++i) {
-            this.addTankStatAnimator(new Animator(tankStatAnimator.get(i)));
+        for (Map.Entry entry : tankStatAnimator.entrySet()){
+            this.addTankStatAnimator(new Animator((Animator)entry.getValue()), (EnumInterfaceComponent) entry.getKey());
         }
-        for (int i = 0; i < tankPreviewAnimator.size(); ++i) {
-            this.addTankPreviewAnimator(new Animator(tankPreviewAnimator.get(i)));
+        for (Map.Entry entry : tankPreviewAnimator.entrySet()){
+            this.addTankPreviewAnimator(new Animator((Animator)entry.getValue()), (EnumInterfaceComponent) entry.getKey());
         }
     }
 
-    public void addTankStatAnimator(Animator tankStatAnimator) {
-        this.availableTank.addTankStatAnimator(tankStatAnimator);
+    public void addTankStatAnimator(Animator tankStatAnimator, EnumInterfaceComponent type) {
+        this.availableTank.addTankStatAnimator(tankStatAnimator, type);
     }
 
-    public void addTankPreviewAnimator(Animator tankPreviewAnimator) {
-        this.availableTank.addTankPreviewAnimator(tankPreviewAnimator);
+    public void addTankPreviewAnimator(Animator tankPreviewAnimator, EnumInterfaceComponent type) {
+        this.availableTank.addTankPreviewAnimator(tankPreviewAnimator, type);
     }
 
-    public void addBackgroundAnimator(Animator backgroundAnimator) {
-        this.backgroundAnimator.add(backgroundAnimator);
+    public void addBackgroundAnimator(Animator backgroundAnimator, EnumInterfaceComponent type) {
+        this.backgroundAnimator.put(type, backgroundAnimator);
     }
 
-    public void addButtonAnimator(Animator buttonAnimator) {
-        this.buttonAnimator.add(buttonAnimator);
+    public void addButtonAnimator(Animator buttonAnimator, EnumInterfaceComponent type) {
+        this.buttonAnimator.put(type, buttonAnimator);
     }
 
     //SETTERS
