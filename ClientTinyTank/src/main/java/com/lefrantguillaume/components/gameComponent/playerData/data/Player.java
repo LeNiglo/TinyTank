@@ -19,14 +19,14 @@ import java.util.*;
  */
 public class Player extends Observable implements Observer {
     private List<Shot> shots;
-    private UUID idTeam;
+    private String idTeam;
     private Tank tank;
     private PlayerActionController playerActionController;
     private User user;
     private boolean alive;
     private boolean canDoAction;
 
-    public Player(User user, UUID idTeam, Tank tank, List<Shot> shots, float x, float y) {
+    public Player(User user, String idTeam, Tank tank, List<Shot> shots, float x, float y) {
         this.user = user;
         this.alive = true;
         this.canDoAction = true;
@@ -127,7 +127,7 @@ public class Player extends Observable implements Observer {
         return this.tank;
     }
 
-    public UUID getIdTeam() {
+    public String getIdTeam() {
         return this.idTeam;
     }
 

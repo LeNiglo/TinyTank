@@ -46,12 +46,18 @@ public class AnimatorGameData {
         this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_BODY), EnumGameObject.TIGER);
         this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_BODY), EnumGameObject.SNIPER);
         this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_BODY), EnumGameObject.RUSHER);
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_BODY_ENEMY), EnumGameObject.TIGER_ENEMY);
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_BODY_ENEMY), EnumGameObject.SNIPER_ENEMY);
+        this.addTankAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_BODY_ENEMY), EnumGameObject.RUSHER_ENEMY);
     }
 
     private void initGuns() throws SlickException {
         this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_TOP), EnumGameObject.TIGER);
         this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_TOP), EnumGameObject.SNIPER);
         this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_TOP), EnumGameObject.RUSHER);
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_TOP_ENEMY), EnumGameObject.TIGER_ENEMY);
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.SNIPER_TOP_ENEMY), EnumGameObject.SNIPER_ENEMY);
+        this.addGunAnimator(this.animatorFactory.getAnimator(EnumSprites.RUSHER_TOP_ENEMY), EnumGameObject.RUSHER_ENEMY);
     }
 
     private void initSpells() throws SlickException {
@@ -101,17 +107,29 @@ public class AnimatorGameData {
         this.areaAnimator.put(type, areaAnimator);
     }
 
-    public Animator getTankBodyAnimator(EnumGameObject type) {
+    public HashMap<EnumGameObject, Animator> getTankBodyAnimator(EnumGameObject type) {
         if (this.tankBodyAnimator.containsKey(type)) {
-            return new Animator(this.tankBodyAnimator.get(type));
+            HashMap<EnumGameObject, Animator> result = new HashMap<>();
+            result.put(type, this.tankBodyAnimator.get(type));
+            EnumGameObject newType = EnumGameObject.getEnemyEnum(type);
+            if (newType != type && this.tankBodyAnimator.containsKey(newType)){
+                result.put(newType, this.tankBodyAnimator.get(newType));
+            }
+            return result;
         } else {
             return null;
         }
     }
 
-    public Animator getTankTopAnimator(EnumGameObject type) {
+    public HashMap<EnumGameObject, Animator> getTankTopAnimator(EnumGameObject type) {
         if (this.tankTopAnimator.containsKey(type)) {
-            return new Animator(this.tankTopAnimator.get(type));
+            HashMap<EnumGameObject, Animator> result = new HashMap<>();
+            result.put(type, this.tankTopAnimator.get(type));
+            EnumGameObject newType = EnumGameObject.getEnemyEnum(type);
+            if (newType != type && this.tankTopAnimator.containsKey(newType)){
+                result.put(newType, this.tankTopAnimator.get(newType));
+            }
+            return result;
         } else {
             return null;
         }

@@ -83,6 +83,16 @@ public class AnimatorGameFactory extends AnimatorFactory {
         } else if (index == EnumSprites.TIGER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/tiger_shield.png", 90, 90);
             animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+        } else if (index == EnumSprites.TIGER_BODY_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/tigerE_1.png", 49, 44);
+            animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+            SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/effect/explosionTank.png", 147, 145);
+            Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.EXPLODE, animation);
+        } else if (index == EnumSprites.TIGER_TOP_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/tigerE_2.png", 44, 24);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
         }
     }
 
@@ -107,6 +117,16 @@ public class AnimatorGameFactory extends AnimatorFactory {
         } else if (index == EnumSprites.SNIPER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/snipe_fufu.png", 119, 100);
             animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 4, 0, 1, 200));
+        } else if (index == EnumSprites.SNIPER_BODY_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/sniperE_1.png", 80, 48);
+            animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+            SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/effect/explosionTank.png", 147, 145);
+            Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.EXPLODE, animation);
+        } else if (index == EnumSprites.SNIPER_TOP_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/sniperE_2.png", 80, 48);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
         }
     }
 
@@ -137,6 +157,16 @@ public class AnimatorGameFactory extends AnimatorFactory {
         } else if (index == EnumSprites.RUSHER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/rusher_circle.png", 200, 200);
             animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 3, 0, 1, 200));
+        } else if (index == EnumSprites.RUSHER_BODY_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherE_1.png", 50, 50);
+            animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+            SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/effect/explosionTank.png", 147, 145);
+            Animation animation = this.loadAnimation(spriteSheet2, 0, 2, 0, 2, 200);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.EXPLODE, animation);
+        } else if (index == EnumSprites.RUSHER_TOP_ENEMY) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/rusherE_2.png", 36, 21);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
         }
     }
 

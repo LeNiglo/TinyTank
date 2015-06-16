@@ -11,6 +11,7 @@ public class MessagePlayerNew extends MessageModel {
     private EnumGameObject enumTanks;
     private float posX;
     private float posY;
+    private String teamId;
 
     public MessagePlayerNew() {
     }
@@ -21,6 +22,7 @@ public class MessagePlayerNew extends MessageModel {
         this.posY = player.posY;
         this.id = player.id;
         this.pseudo = player.pseudo;
+        this.teamId = player.teamId;
         this.playerAction = player.playerAction;
     }
 
@@ -38,6 +40,10 @@ public class MessagePlayerNew extends MessageModel {
         return this.posY;
     }
 
+    public String getTeamId(){
+        return this.teamId;
+    }
+
     // SETTERS
 
     public void setEnumTanks(EnumGameObject enumTanks) {
@@ -50,5 +56,9 @@ public class MessagePlayerNew extends MessageModel {
 
     public void setPosY(float posY) {
         this.posY = posY;
+    }
+
+    public void setTeamId(String teamId){
+        this.teamId = teamId;
     }
 }

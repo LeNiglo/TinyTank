@@ -10,9 +10,11 @@ public class MessagePlayerNew extends MessageModel {
     private EnumGameObject enumGameObject;
     private float posX;
     private float posY;
+    private String teamId;
 
     public MessagePlayerNew() {
     }
+
     public MessagePlayerNew(String pseudo, String id, EnumGameObject enumGameObject) {
         this.enumGameObject = enumGameObject;
         this.pseudo = pseudo;
@@ -30,5 +32,9 @@ public class MessagePlayerNew extends MessageModel {
 
     public float getPosY() {
         return this.posY;
+    }
+
+    public String getTeamId(){
+        return this.teamId;
     }
 }

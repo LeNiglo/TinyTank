@@ -28,7 +28,6 @@ public class TankConfigData {
 
         for (int i = 0; i < tankArray.length(); ++i) {
             Tank tank = TankFactory.createTank(tankArray.getJSONObject(i), animatorGameData);
-
             this.tanks.put(tank.getTankState().getType(), tank);
         }
         this.valid = true;
