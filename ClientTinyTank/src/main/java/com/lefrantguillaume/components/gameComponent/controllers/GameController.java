@@ -4,26 +4,26 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.MasterConfig;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.collisionComponent.EnumCollision;
+import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
+import com.lefrantguillaume.components.gameComponent.RoundData.Team;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
-import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
-import com.lefrantguillaume.components.gameComponent.playerData.data.User;
-import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
-import com.lefrantguillaume.components.gameComponent.RoundData.Team;
+import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankConfigData;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.components.collisionComponent.CollisionController;
-import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
+import com.lefrantguillaume.components.gameComponent.playerData.data.User;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.Color;
@@ -74,6 +74,12 @@ public class GameController extends Observable implements Observer {
     }
 
     public void initGame() {
+        Player current = this.getPlayer(CurrentUser.getId());
+        for (Player other : this.players) {
+            if (!current.getIdTeam().equals(other.getIdTeam())) {
+                other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
+            }
+        }
     }
 
     @Override
@@ -91,24 +97,11 @@ public class GameController extends Observable implements Observer {
                     }
                 } else {
                     if (message instanceof MessagePlayerNew) {
-                        MessagePlayerNew task = (MessagePlayerNew) message;
-                        if (this.animatorGameData != null && this.tankConfigData.isValid()) {
-                            Debug.debug("NEW PLAYER");
-                            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()), this.getShots(), task.getPosX(), task.getPosY()));
-                            if (task.getId().equals(CurrentUser.getId())) {
-                                CurrentUser.setInGame(true);
-                                this.initGame();
-                            }
-                            if (CurrentUser.isInGame() == true) {
-                                MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
-                                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
-                                this.setChanged();
-                                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
-                            }
-                        }
+                        Debug.debug("NEW PLAYER");
+                        this.newPlayer((MessagePlayerNew) message);
                     }
                     if (message instanceof MessagePlayerDelete) {
+                        Debug.debug("DELETE PLAYER");
                         this.deletePlayer(message.getId());
                     }
                     if (message instanceof MessagePlayerUpdateState) {
@@ -141,6 +134,29 @@ public class GameController extends Observable implements Observer {
     }
 
     // CHANGE FUNCTIONS
+
+    public void newPlayer(MessagePlayerNew task){
+        if (this.animatorGameData != null && this.tankConfigData.isValid()) {
+            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
+                    this.getShots(), task.getPosX(), task.getPosY()));
+            if (task.getId().equals(CurrentUser.getId())) {
+                CurrentUser.setInGame(true);
+                this.initGame();
+            }
+            if (CurrentUser.isInGame() == true) {
+                Player other = this.getPlayer(task.getId());
+                Player current = this.getPlayer(CurrentUser.getId());
+                if (!current.getIdTeam().equals(other.getIdTeam())){
+                    other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
+                }
+                MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
+            }
+        }
+    }
     public void addPlayer(Player player) {
         Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
 

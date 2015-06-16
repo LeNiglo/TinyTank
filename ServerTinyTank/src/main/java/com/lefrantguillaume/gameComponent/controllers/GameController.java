@@ -418,17 +418,19 @@ public class GameController extends Observable {
             for (int i = 0; i < allMessage.size(); ++i) {
                 MessageModel message = allMessage.get(i);
                 WindowController.addConsoleMsg("messageType: " + message);
-                this.setChanged();
-                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
-                if (message instanceof MessagePlayerUpdateState) {
-                    if (((MessagePlayerUpdateState) message).getCurrentLife() <= 0) {
-                        if (this.gameModeController.isWinnerTeam() != null) {
-                            MessageModel reviveTask = new MessagePlayerRevive(message.getPseudo(), message.getId(), -100, -100);
-                            targets.getPlayer(message.getId()).revive();
-                            setChanged();
-                            notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(reviveTask)));
-                        } else {
-                            this.addReviveTimer(message);
+                if (message != null) {
+                    this.setChanged();
+                    this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
+                    if (message instanceof MessagePlayerUpdateState) {
+                        if (((MessagePlayerUpdateState) message).getCurrentLife() <= 0) {
+                            if (this.gameModeController.isWinnerTeam() != null) {
+                                MessageModel reviveTask = new MessagePlayerRevive(message.getPseudo(), message.getId(), -100, -100);
+                                targets.getPlayer(message.getId()).revive();
+                                setChanged();
+                                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(reviveTask)));
+                            } else {
+                                this.addReviveTimer(message);
+                            }
                         }
                     }
                 }
