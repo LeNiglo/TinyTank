@@ -28,8 +28,8 @@ public class CollisionObject extends Observable implements Observer {
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> savePositions;
     private float angle;
-    private boolean destroyed;
     private boolean alive;
+    private boolean destroyed;
     private CollisionObject saveCollisionObject;
 
     public CollisionObject(List<EnumGameObject> ignoredObject, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin,
@@ -63,14 +63,14 @@ public class CollisionObject extends Observable implements Observer {
             this.positions.setV2(block.getShiftOrigin().getV2());
             this.sizes.setV1(block.getSizes().getV1());
             this.sizes.setV2(block.getSizes().getV2());
-        } else if (arg instanceof Pair) {
+        } else if (arg instanceof Pair) { // changer la position
             Pair<Float, Float> coords = (Pair<Float, Float>) arg;
 
             this.savePositions.setV1(coords.getV1());
             this.savePositions.setV2(coords.getV2());
             this.positions.setV1(coords.getV1());
             this.positions.setV2(coords.getV2());
-        } else if (arg instanceof Tuple) { //changer la position/revive
+        } else if (arg instanceof Tuple) { //revive
             Tuple<Boolean, Float, Float> values = (Tuple<Boolean, Float, Float>) arg;
 
             if (values.getV1() == false) {
@@ -145,13 +145,11 @@ public class CollisionObject extends Observable implements Observer {
     }
 
     public boolean canDoCollisionWithObject(CollisionObject object) {
-        if (this.alive == false || object.isAlive() == false) {
-            return false;
-        }
         if (this.checkLastCollision(object) == true) {
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     // GETTERS
@@ -208,12 +206,12 @@ public class CollisionObject extends Observable implements Observer {
         return this.saveCollisionObject;
     }
 
-    public boolean isAlive() {
-        return this.alive;
-    }
-
     public boolean isDestroyed() {
         return this.destroyed;
+    }
+
+    public boolean isAlive() {
+        return this.alive;
     }
 
     public Shape getShape() {

@@ -90,7 +90,7 @@
         "hit": {
           "shotType": "laser",
           "speed": "200.0",
-          "damage": "40.0",
+          "damage": "60.0",
           "build": {
             "centerX": "-41.0",
             "centerY": "-4.0",

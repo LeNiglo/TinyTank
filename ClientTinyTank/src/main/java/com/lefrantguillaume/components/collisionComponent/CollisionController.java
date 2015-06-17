@@ -50,7 +50,7 @@ public class CollisionController {
                 for (CollisionObject object : objects) {
                     Debug.debug("----------------" + object.getType() + " -> " + current.getType() + "----------------");
                     object.modifCoord(coords);
-                    if (CollisionDetection.checkCollision(object, current) == true && object.getIdUser().equals(current.getIdUser()) != true) { // 1 collision
+                    if (current.isAlive() && object.isAlive() && CollisionDetection.checkCollision(object, current) == true && object.getIdUser().equals(current.getIdUser()) != true) { // 1 collision
                         boolean isIgnored;
                         int upPriority = 0;
 
