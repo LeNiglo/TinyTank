@@ -3,19 +3,19 @@ Template.about.helpers({
         return [
             {
                 name: "Guillaume Lefrant",
-                picture: "http://puu.sh/i7GKO.jpg"
+                picture: "/img/team/ban.jpg"
             },
             {
                 name: "Kévin Andres",
-                picture: "http://puu.sh/i7GBq.jpg"
+                picture: "/img/team/fry.jpg"
             },
             {
                 name: "Styve Simonneau",
-                picture: "http://puu.sh/i7Iyx.png"
+                picture: "/img/team/thugswiti.jpg"
             },
             {
                 name: "Alexandre Quintin",
-                picture: "#"
+                picture: "/img/team/hippolance.png"
             }
         ]
     }

@@ -53,6 +53,20 @@ Router.map(function() {
 		}
 	});
 
+	this.route('forgot-password', {
+		onRun: function() {
+			this.next();
+		}
+	});
+
+	this.route('reset-password', {
+		data: function() {
+			return this.params;
+		},
+		onRun: function() {
+			this.next();
+		}
+	});
 
 	this.route('servers-list');
 	this.route('ladder');

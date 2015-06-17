@@ -1,9 +1,35 @@
 <template name="footer">
-  <footer>
-    <hr />
-    <div class="container text-right">
-      We don't own everything on this project, all rights reserved for their respective owners. <br />
-      Project is still building, you can follow us on <a href="//github.com/LeNiglo/TinyTank" target="_blank">GitHub</a>.
-    </div>
-  </footer>
+    <footer class="container-fluid">
+        <hr/>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-md-4">
+                    <h2 class="page-information">Website</h2>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ pathFor 'home' }}">Home</a></li>
+                        <li><a href="{{ pathFor 'login' }}">Login / Register</a></li>
+                        <li><a href="{{ pathFor 'about' }}">About</a></li>
+                        <li><a href="{{ pathFor 'download' }}">Download</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h2 class="page-information">Contact</h2>
+                    <ul class="list-unstyled">
+                        <li><a href="mailto:lefrantguillaume@gmail.com">Lefrant Guillaume</a></li>
+                        <li><a href="mailto:kevin.draym@gmail.com">Kévin Andres</a></li>
+                        <li><a href="mailto:styve.simonneau@gmail.com">Styve Simonneau</a></li>
+                        <li><a href="mailto:alexandre.quintin@hotmail.fr">Alexandre Quintin</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h2 class="page-information">Contributing</h2>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ pathFor 'about' hash='donate' }}">Donate</a></li>
+                        <li><a href="{{ pathFor 'about' hash='graphic' }}">Content</a></li>
+                        <li><a href="{{ pathFor 'about' hash='development' }}">Development</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 </template>

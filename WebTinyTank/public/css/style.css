@@ -8,6 +8,15 @@ FEFEFE;               // WHITE
 4A4E4F;               // DARKER
 
 */
+#iron-router-progress {
+    background-color: #F15841;
+    box-shadow: 0 0 5px #F15841;
+    z-index: 999;
+}
+
+#iron-router-progress.spinner:before {
+    border-color: #F15841;
+}
 
 table#ladder a {
     color: #F15841;
@@ -49,4 +58,8 @@ table.list-users {
     margin: 0 auto;
     height: 100%;
     width: auto;
+}
+
+#aboutTinyTank section {
+    padding: 50px 0;
 }
