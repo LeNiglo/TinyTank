@@ -267,7 +267,7 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getTank().getTankState().isMove() && this.players.get(i).isAlive()) {
                 if ((impactIds = this.collisionController.checkCollision(this.players.get(i).coordPredict(delta), this.players.get(i).getUser().getId())) != null) {
-                    Debug.debug("Collision: " + impactIds);
+                    // Debug.debug("Collision: " + impactIds);
                     if (impactIds.getV2() == true) {
                         this.players.get(i).move(delta);
                     }
@@ -286,7 +286,7 @@ public class GameController extends Observable implements Observer {
                         this.shots.get(i).move(delta);
                     }
                     if (impactIds.getV1() == true) {
-                        Debug.debug("Collision to Server");
+                        // Debug.debug("Collision to Server");
                         MessageModel request = new MessageCollision(CurrentUser.getPseudo(), CurrentUser.getId(), impactIds.getV3().getV1(), impactIds.getV3().getV2());
                         this.setChanged();
                         this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
