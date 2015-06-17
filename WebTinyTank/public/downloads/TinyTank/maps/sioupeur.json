@@ -1,0 +1,41 @@
+{
+  "name": "Sioupeur",
+  "sizeX": 1280,
+  "sizeY": 768,
+  "gameMode": {
+    "FreeForAll": {
+      "obstacles": [
+      ],
+      "spawnPoint": [
+        {
+          "team": 1,
+          "x": 20,
+          "y": 20,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 2,
+          "x": 1000,
+          "y": 20,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 3,
+          "x": 20,
+          "y": 500,
+          "sizeX": 200,
+          "sizeY": 200
+        },
+        {
+          "team": 4,
+          "x": 1000,
+          "y": 500,
+          "sizeX": 200,
+          "sizeY": 200
+        }
+      ]
+    }
+  }
+}

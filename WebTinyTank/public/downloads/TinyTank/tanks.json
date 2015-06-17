@@ -1,0 +1,215 @@
+{
+  "tanks": [
+    {
+      "tankState": { //BODY
+        "tankType": "tiger",
+        "life": "40.0",
+        "speed": "80.0",
+        "armor": "0.0",
+        "accuracy": "100",
+        "build": {
+          "centerX": "-22.0", //centre arbitraire du tank (là où on pose le centre arbitraire du top)
+          "centerY": "-22.0", // décallage de mon bot en x - cenetrX y -centerY pour affichae
+          "shiftXExplode": "-73.5", // décallage x/y pour afficher l'animation d'explosion
+          "shiftYExplode": "-72.5",
+          "collisions": [
+            {
+              "shiftOriginX": "-22.0", //décallage depuis (x, y) pour créer la collision (si sprite = collision, alors même décallage que cenetrX/Y)
+              "shiftOriginY": "-22.0",
+              "sizeX": "47.0",
+              "sizeY": "43.0"
+            }
+          ]
+        }
+      },
+      "tankWeapon": {
+        "hit": {
+          "shotType": "rocket",
+          "speed": "150.0",
+          "damage": "10.0",
+          "build": {
+            "centerX": "-41.0", // centre arbitraire du hit, signe '-' pour le décalage x/y pour l'affichage
+            "centerY": "-4.0",
+            "shiftXExplode": "-26.0", // décallage x/y pour afficher l'animation d'explosion
+            "shiftYExplode": "-26.0",
+            "headX": "10.0", // point représentant la tête du hit / futur centre de l'explosion
+            "headY": "0.0",
+            "collisions": [
+              {
+                "shiftOriginX": "-14.0", //décallage depuis (x, y) pour créer la collision (si sprite = collision, alors même décallage que sizeX/Y)
+                "shiftOriginY": "-2.0",
+                "sizeX": "23.0", // size x/y de la collision
+                "sizeY": "5.0"
+              }
+            ]
+          }
+        },
+        "weapon": {
+          "centerX": "-15.0",
+          "centerY": "-13.0",
+          "canons": [
+            {
+              "centerX": "0.0", // décallage pour faire la rotation du canon
+              "centerY": "0.0",
+              "shiftXHead": "30.0", // décallage pour avoir le bout du canon
+              "shiftYHead": "1.0"
+            }
+          ]
+        }
+      },
+      "tankSpell": {
+        "spellType": "shield"
+      },
+      "tankBox": {
+        "boxType": "iron_wall"
+      }
+    },
+    {
+      "tankState": {
+        "tankType": "sniper",
+        "life": "30.0",
+        "speed": "70.0",
+        "armor": "0.0",
+        "accuracy": "100",
+        "build": {
+          "centerX": "-22.0",
+          "centerY": "-22.0",
+          "shiftXExplode": "-73.5",
+          "shiftYExplode": "-72.5",
+          "collisions": [
+            {
+              "shiftOriginX": "-21.0",
+              "shiftOriginY": "-22.0",
+              "sizeX": "47.0",
+              "sizeY": "43.0"
+            }
+          ]
+        }
+      },
+      "tankWeapon": {
+        "hit": {
+          "shotType": "laser",
+          "speed": "200.0",
+          "damage": "40.0",
+          "build": {
+            "centerX": "-41.0",
+            "centerY": "-4.0",
+            "shiftXExplode": "-23.0",
+            "shiftYExplode": "-23.0",
+            "headX": "10.0",
+            "headY": "10.0",
+            "collisions": [
+              {
+                "shiftOriginX": "-14.0",
+                "shiftOriginY": "-2.0",
+                "sizeX": "23.0",
+                "sizeY": "5.0"
+              }
+            ]
+          }
+        },
+        "weapon": {
+          "centerX": "-15.0",
+          "centerY": "-13.0",
+          "canons": [
+            {
+              "centerX": "0.0",
+              "centerY": "0.0",
+              "shiftXHead": "30.0",
+              "shiftYHead": "1.0"
+            }
+          ]
+        }
+      },
+      "tankSpell": {
+        "spellType": "invisibility"
+      },
+      "tankBox": {
+        "boxType": "plasma_wall"
+      }
+    },
+    {
+      "tankState": {
+        //BODY
+        "tankType": "rusher",
+        "life": "30.0",
+        "speed": "100.0",
+        "armor": "0.0",
+        "accuracy": "80",
+        "build": {
+          "centerX": "-35.0",
+          "centerY": "-25.0",
+          "shiftXExplode": "-73.5",
+          "shiftYExplode": "-72.5",
+          "collisions": [
+            {
+              "shiftOriginX": "-35.0",
+              "shiftOriginY": "-25.0",
+              "sizeX": "40.0",
+              "sizeY": "10.0"
+            },
+            {
+              "shiftOriginX": "-35.0",
+              "shiftOriginY": "15.0",
+              "sizeX": "40.0",
+              "sizeY": "10.0"
+            },
+            {
+              "shiftOriginX": "-27.0",
+              "shiftOriginY": "-15.0",
+              "sizeX": "41.0",
+              "sizeY": "30.0"
+            }
+          ]
+        }
+      },
+      "tankWeapon": {
+        "hit": {
+          "shotType": "machine_gun",
+          "speed": "250.0",
+          "damage": "10.0",
+          "build": {
+            "centerX": "-16.0",
+            "centerY": "-5.0",
+            "shiftXExplode": "-12.0",
+            "shiftYExplode": "-14.0",
+            "headX": "8.0",
+            "headY": "0.0",
+            "collisions": [
+              {
+                "shiftOriginX": "-6.0",
+                "shiftOriginY": "-5.0",
+                "sizeX": "22.0",
+                "sizeY": "10.0"
+              }
+            ]
+          }
+        },
+        "weapon": {
+          "centerX": "-10.0",
+          "centerY": "-10.0",
+          "canons": [
+            {
+              "centerX": "-10.0",
+              "centerY": "-10.0",
+              "shiftXHead": "25.0",
+              "shiftYHead": "-4.0"
+            },
+            {
+              "centerX": "-10.0",
+              "centerY": "-10.0",
+              "shiftXHead": "25.0",
+              "shiftYHead": "4.0"
+            }
+          ]
+        }
+      },
+      "tankSpell": {
+        "spellType": "teleport"
+      },
+      "tankBox": {
+        "boxType": "mine"
+      }
+    }
+  ]
+}
