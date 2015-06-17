@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.networkComponent.networkGame;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.EndPoint;
+import com.lefrantguillaume.components.collisionComponent.EnumCollision;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
@@ -30,5 +31,6 @@ public class NetworkRegister {
         kryo.register(MessageObstacleUpdateState.class);
         kryo.register(MessageShotUpdateState.class);
         kryo.register(EnumGameObject.class);
+        kryo.register(EnumCollision.class);
     }
 }

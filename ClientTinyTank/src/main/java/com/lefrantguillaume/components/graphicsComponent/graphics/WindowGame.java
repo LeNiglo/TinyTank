@@ -19,9 +19,6 @@ import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -44,7 +41,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private int id;
 
     private int frameRate = 60;
-    private float saveAngle = 0f;
     private long runningTime = 0l;
 
     List<Pair<Integer, Integer>> mousePos = new ArrayList<>();
@@ -117,9 +113,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
                     CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
                     if (current.isAlive()) {
-                        Rectangle r = new Rectangle(current.getOriginX(), current.getOriginY(), current.getSizeX(), current.getSizeY());
-                        Shape nr = r.transform(Transform.createRotateTransform(current.getRadian(), current.getX(), current.getY()));
-                        g.draw(nr);
+                        g.draw(current.getShape());
                     }
                 }
             }
@@ -210,7 +204,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
 
     public void myMouseMoved(double newX, double newY) throws SlickException {
-        if (CurrentUser.isInGame() && this.gameController != null) {
+        if (CurrentUser.isInGame() && this.gameController != null && this.gameController.getPlayer(CurrentUser.getId()).isCanDoAction()) {
             TankState ts = this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState();
 
             double x = ts.getX();

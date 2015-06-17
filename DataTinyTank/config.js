@@ -12,12 +12,12 @@ var Config = function (app, mailer) {
 
     mailer.extend(app, {
         from: 'TinyTank <no-reply@tinytank.lefrantguillaume.com>',
-        host: process.env.SMTP_HOST || 'smtp.sendgrid.net',
-        port: process.env.SMTP_PORT || 587,
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
         transportMethod: 'SMTP',
         auth: {
-            user: process.env.SMTP_USER || 'LeNiglo',
-            pass: process.env.SMTP_PASSWORD || '1tourdavance'
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASSWORD
         }
     });
 

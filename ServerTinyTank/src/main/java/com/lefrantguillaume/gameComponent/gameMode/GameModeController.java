@@ -1,40 +1,40 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
-import com.lefrantguillaume.gameComponent.gameMode.modes.TeamDeathMatch;
-import com.lefrantguillaume.gameComponent.gameMode.modes.FreeForAll;
-import com.lefrantguillaume.gameComponent.gameMode.modes.GameMode;
+import com.lefrantguillaume.gameComponent.gameMode.modes.*;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import javafx.util.Pair;
 
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by andres_k on 13/05/2015.
  */
 public class GameModeController{
-    private List<GameMode> gameModes;
+    private HashMap<EnumGameMode, GameMode> gameModes;
     private EnumGameMode currentGameMode;
 
-    public GameModeController(){
-        this.gameModes = new ArrayList<>();
-        this.currentGameMode = EnumGameMode.TeamDeathMatch;
-        this.initGameModes();
+    public GameModeController(ObstacleConfigData obstacleConfigData){
+        this.gameModes = new HashMap();
+        this.currentGameMode = EnumGameMode.Kingdom;
+        this.initGameModes(obstacleConfigData);
     }
 
     // FUNCTIONS
-    public void doTask(Pair<EnumAction, Object> task) {
-        this.getCurrentMode().doTask(task);
+    public boolean doTask(Pair<EnumAction, Object> task) {
+        return this.getCurrentMode().doTask(task);
     }
 
-    private void initGameModes(){
-        gameModes.add(new FreeForAll(8));
-        gameModes.add(new TeamDeathMatch(2));
+    private void initGameModes(ObstacleConfigData obstacleConfigData){
+        gameModes.put(EnumGameMode.FreeForAll, new FreeForAll(8));
+        gameModes.put(EnumGameMode.TeamDeathMatch, new TeamDeathMatch(2));
+        gameModes.put(EnumGameMode.Kingdom, new Kingdom(2, obstacleConfigData));
+        gameModes.put(EnumGameMode.TouchDown, new TouchDown(2, obstacleConfigData));
     }
 
 
     // GETTERS
     public GameMode getCurrentMode(){
-        return this.gameModes.get(this.currentGameMode.getIndex());
+        return this.gameModes.get(this.currentGameMode);
     }
 
     public EnumGameMode getCurrentGameMode(){
@@ -51,8 +51,10 @@ public class GameModeController{
 
     // SETTERS
     public void setCurrentGameMode(EnumGameMode index){
-        this.getCurrentMode().restart();
-        this.currentGameMode = index;
+        if (this.gameModes.containsKey(index)) {
+            this.getCurrentMode().restart();
+            this.currentGameMode = index;
+        }
     }
 
 }

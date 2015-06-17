@@ -23,11 +23,11 @@ public class Player {
     private int nbHitSomebody = 0;
     private int nbGameObjectsDestroyed = 0;
     private int nbPeopleKilled = 0;
-    private int health = 100;
     private int ammo = 1;
     private int timerAmmo = 2;
     private int ammoCooldown = 100;
     private boolean canShoot = true;
+    private boolean transportObjective = false;
 
     public Player(String id, String pseudo, String teamId, Tank tank, Connection connection) {
         this.id = id;
@@ -35,10 +35,6 @@ public class Player {
         this.tank = tank;
         this.connection = connection;
         this.teamId = teamId;
-    }
-
-    public void hit(int damage) {
-        health = (health - damage < 0 ? 0 : health - damage);
     }
 
     public void addKill() {
@@ -86,6 +82,10 @@ public class Player {
         this.teamId = teamId;
     }
 
+    public void setTransportObjective(boolean value){
+        this.transportObjective = value;
+    }
+
     // GETTERS
     public String getId() {
         return id;
@@ -103,8 +103,8 @@ public class Player {
         return nbDeaths;
     }
 
-    public int getHealth() {
-        return health;
+    public boolean isTransportObjective(){
+        return this.transportObjective;
     }
 
     public Tank getTank() {

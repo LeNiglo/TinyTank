@@ -13,6 +13,8 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored": [
         ]
       }
     },
@@ -29,6 +31,9 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored": [
+          "laser"
         ]
       }
     },
@@ -45,6 +50,91 @@
             "sizeX": "50.0",
             "sizeY": "45.0"
           }
+        ],
+        "ignored": [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
+        ]
+      }
+    }
+  },
+  "area": {
+    "spawn_area": {
+      "life": "1",
+      "damage": "0",
+      "build": {
+        "centerX": "-45.0",
+        "centerY": "-45.0",
+        "collisions": [
+          {
+            "shiftOriginX": "-45.0",
+            "shiftOriginY": "-45.0",
+            "sizeX": "45.0",
+            "sizeY": "-1.0"
+          }
+        ],
+        "ignored": [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
+        ]
+      }
+    },
+    "objective_area": {
+      "life": "1",
+      "damage": "0",
+      "build": {
+        "centerX": "-45.0",
+        "centerY": "-45.0",
+        "collisions": [
+          {
+            "shiftOriginX": "-45.0",
+            "shiftOriginY": "-45.0",
+            "sizeX": "45.0",
+            "sizeY": "-1.0"
+          }
+        ],
+        "ignored": [
+          "rocket",
+          "machine_gun",
+          "laser",
+          "tiger",
+          "rusher",
+          "sniper"
+        ]
+      }
+    }
+  },
+  "spell": {
+    "shield": {
+      "life": "100",
+      "damage": "0",
+      "build": {
+        "centerX": "-45.0",
+        "centerY": "-45.0",
+        "collisions": [
+          {
+            "shiftOriginX": "-45.0",
+            "shiftOriginY": "-45.0",
+            "sizeX": "45.0",
+            "sizeY": "-1.0"
+          }
+        ],
+        "ignored": [
+          "rocket",
+          "tiger",
+          "rusher",
+          "sniper",
+          "iron_wall",
+          "plasma_wall",
+          "mine"
         ]
       }
     }

@@ -40,49 +40,56 @@ public class CollisionController {
         this.items.clear();
     }
 
-    public Tuple<Boolean, Boolean, Pair<String, String>> checkCollision(Pair<Float, Float> coords, String id) {
-        HashMap<Integer, Tuple<Boolean, Boolean, Pair<String, String>>> listSaveActions = new HashMap<>();
+    public Tuple<EnumCollision, Boolean, Pair<CollisionObject, CollisionObject>> checkCollision(Pair<Float, Float> coords, String id) {
+        HashMap<Integer, Tuple<EnumCollision, Boolean, Pair<CollisionObject, CollisionObject>>> listSaveActions = new HashMap<>();
 
         List<CollisionObject> objects = this.getCollisionObject(id);
         if (!objects.isEmpty()) {
             for (int i = 0; i < this.items.size(); ++i) {
                 CollisionObject current = this.items.get(i);
-//                Debug.debug("--------------------" + i + "--------------------");
-
                 for (CollisionObject object : objects) {
+                    //Debug.debug("----------------" + object.getType() + " -> " + current.getType() + "----------------");
                     object.modifCoord(coords);
                     if (CollisionDetection.checkCollision(object, current) == true && object.getIdUser().equals(current.getIdUser()) != true) { // 1 collision
-                        if (current.isIgnored(object.getType()) == false) { // collision pas ignorée
+                        boolean isIgnored;
+                        int upPriority = 0;
+
+                        if ((isIgnored = current.isIgnored(object.getType())) == false) { // collision ignoré ? set isIgnored pour savoir si on avance ou non
                             object.backToSave();
                             object.notifyCollision(current.getType());
                             current.notifyCollision(object.getType());
-                            if (object.canDoCollisionWithObject(current)) { // collision possible
-  //                              Debug.debug("collision ok");
-                                listSaveActions.put(3, new Tuple<>(true, false, new Pair<>(object.getId(), current.getId())));
-                            } else { // collision impossible (déjà en collision)
-    //                            Debug.debug("collision impossible");
-                                listSaveActions.put(4, new Tuple<>(false, false, new Pair<>(object.getId(), current.getId())));
-                            }
-                        } else { // collision ignorée (area)
-      //                      Debug.debug("collision ignoré");
-                            listSaveActions.put(2, new Tuple<>(true, true, new Pair<>(object.getId(), current.getId())));
+                            upPriority = 2;
                         }
-                        object.setSaveCollisionObject(current);
+                        if (object.canDoCollisionWithObject(current)) { // collision possible
+                            //Debug.debug("collision ok");
+                            listSaveActions.put(4 + upPriority, new Tuple<>(EnumCollision.IN, isIgnored, new Pair<>(object, current)));
+                        } else { // collision impossible (déjà en collision)
+                          //  Debug.debug("collision impossible");
+                            listSaveActions.put(3 + upPriority, new Tuple<>(EnumCollision.NOTHING, isIgnored, new Pair<>(object, current)));
+                        }
                     } else { //pas de collision
-        //                Debug.debug("pas de collision");
-                        listSaveActions.put(1, new Tuple<>(false, true, new Pair<>("null", "null")));
+                        //Debug.debug("pas de collision");
+                        if (object.getSaveCollisionObject() != null) {
+                            listSaveActions.put(1, new Tuple<>(EnumCollision.OUT, true, new Pair<>(object, object.getSaveCollisionObject())));
+                        } else {
+                            listSaveActions.put(1, new Tuple<>(EnumCollision.NOTHING, true, null));
+                        }
                     }
                 }
             }
         }
-        listSaveActions.put(0, new Tuple<>(false, false, new Pair<>("null", "null")));
-        int maxPriority = 4;
+        listSaveActions.put(0, new Tuple<>(EnumCollision.NOTHING, false, null));
+        int maxPriority = 6;
         while (maxPriority >= 0) {
             if (listSaveActions.containsKey(maxPriority) == true) {
-                if (maxPriority == 1){
-                    for (CollisionObject object : objects){
+                if (maxPriority == 1) {
+                    for (CollisionObject object : objects) {
                         object.setSaveCollisionObject(null);
                     }
+                }
+                Tuple<EnumCollision, Boolean, Pair<CollisionObject, CollisionObject>> values = listSaveActions.get(maxPriority);
+                if (values.getV1() == EnumCollision.IN){
+                    values.getV3().getV1().setSaveCollisionObject(values.getV3().getV2());
                 }
                 return listSaveActions.get(maxPriority);
             }

@@ -3,8 +3,11 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Transform;
 
 import java.util.List;
 import java.util.Observable;
@@ -32,8 +35,8 @@ public class CollisionObject extends Observable implements Observer {
         this.ignoredObject = ignoredObject;
         this.shiftOrigin = new Pair<>(shiftOrigin);
         this.positions = new Pair<>(positions);
-        this.savePositions = new Pair<>(positions);
         this.sizes = new Pair<>(sizes);
+        this.savePositions = new Pair<>(positions);
         this.type = type;
         this.angle = angle;
         this.idUser = idUser;
@@ -48,29 +51,32 @@ public class CollisionObject extends Observable implements Observer {
     public void update(Observable o, Object arg) {
 
         if (arg instanceof Block) { // modifier la position/size de la collision
-            Block coord = (Block) arg;
+            Block block = (Block) arg;
 
-            if (coord != null) {
-                this.savePositions.setV1(coord.getShiftOrigin().getV1());
-                this.savePositions.setV2(coord.getShiftOrigin().getV2());
-                this.positions.setV1(coord.getShiftOrigin().getV1());
-                this.positions.setV2(coord.getShiftOrigin().getV2());
-                this.sizes.setV1(coord.getSizes().getV1());
-                this.sizes.setV2(coord.getSizes().getV2());
-            }
+            this.savePositions.setV1(block.getShiftOrigin().getV1());
+            this.savePositions.setV2(block.getShiftOrigin().getV2());
+            this.positions.setV1(block.getShiftOrigin().getV1());
+            this.positions.setV2(block.getShiftOrigin().getV2());
+            this.sizes.setV1(block.getSizes().getV1());
+            this.sizes.setV2(block.getSizes().getV2());
+        } else if (arg instanceof Pair) {
+            Pair<Float, Float> coords = (Pair<Float, Float>) arg;
+
+            this.savePositions.setV1(coords.getV1());
+            this.savePositions.setV2(coords.getV2());
+            this.positions.setV1(coords.getV1());
+            this.positions.setV2(coords.getV2());
         } else if (arg instanceof Tuple) { //changer la position/revive
             Tuple<Boolean, Float, Float> values = (Tuple<Boolean, Float, Float>) arg;
 
-            if (values != null) {
-                if (values.getV1() == false) {
-                    this.alive = false;
-                } else if (values.getV1() == true) {
-                    this.alive = true;
-                    this.savePositions.setV1(values.getV2());
-                    this.savePositions.setV2(values.getV3());
-                    this.positions.setV1(values.getV2());
-                    this.positions.setV2(values.getV3());
-                }
+            if (values.getV1() == false) {
+                this.alive = false;
+            } else {
+                this.alive = true;
+                this.savePositions.setV1(values.getV2());
+                this.savePositions.setV2(values.getV3());
+                this.positions.setV1(values.getV2());
+                this.positions.setV2(values.getV3());
             }
         } else {
             this.alive = false;
@@ -79,21 +85,21 @@ public class CollisionObject extends Observable implements Observer {
     }
 
     public boolean checkLastCollision(CollisionObject collisionObject) {
-        if (this.saveCollisionObject == null)
+        if (this.saveCollisionObject == null) {
             return false;
-        if (collisionObject.getId().equals(this.saveCollisionObject.getId())){
+        }
+        //Debug.debug("CHECK LAST : " + collisionObject.getId() + " =? " + this.saveCollisionObject.getId());
+        if (collisionObject.getId().equals(this.saveCollisionObject.getId())) {
             return true;
         }
         return false;
     }
 
-    public boolean isIgnored(EnumGameObject type){
+    public boolean isIgnored(EnumGameObject type) {
         if (this.ignoredObject == null)
             return false;
-        Debug.debug("IgnoredList : " + this.ignoredObject.size());
-        for (int i = 0; i < this.ignoredObject.size(); ++i){
-            Debug.debug("" + type + " =? " + this.ignoredObject.get(i));
-            if (this.ignoredObject.get(i).equals(type)){
+        for (int i = 0; i < this.ignoredObject.size(); ++i) {
+            if (this.ignoredObject.get(i).equals(type)) {
                 return true;
             }
         }
@@ -117,7 +123,7 @@ public class CollisionObject extends Observable implements Observer {
         this.positions.setV2(this.savePositions.getV2());
     }
 
-    public boolean canDoCollisionWithObject(CollisionObject object){
+    public boolean canDoCollisionWithObject(CollisionObject object) {
         if (this.alive == false || object.isAlive() == false) {
             return false;
         }
@@ -173,7 +179,7 @@ public class CollisionObject extends Observable implements Observer {
         return (float) (this.angle * Math.PI / 180);
     }
 
-    public List<EnumGameObject> getIgnoredList(){
+    public List<EnumGameObject> getIgnoredList() {
         return this.ignoredObject;
     }
 
@@ -187,6 +193,17 @@ public class CollisionObject extends Observable implements Observer {
 
     public boolean isDestroyed() {
         return this.destroyed;
+    }
+
+    public Shape getShape() {
+        Shape shape;
+        if (this.getSizeY() == -1) {
+            shape = new Circle(this.getX(), this.getY(), this.getSizeX());
+        } else {
+            shape = new Rectangle(this.getOriginX(), this.getOriginY(), this.getSizeX(), this.getSizeY());
+        }
+        shape = shape.transform(Transform.createRotateTransform(this.getRadian(), this.getX(), this.getY()));
+        return shape;
     }
 
     // SETTERS
@@ -212,5 +229,10 @@ public class CollisionObject extends Observable implements Observer {
 
     public void setSaveCollisionObject(CollisionObject saveCollisionObject) {
         this.saveCollisionObject = saveCollisionObject;
+    }
+
+    @Override
+    public String toString() {
+        return "Id: " + this.getId() + " with type: " + this.getType();
     }
 }

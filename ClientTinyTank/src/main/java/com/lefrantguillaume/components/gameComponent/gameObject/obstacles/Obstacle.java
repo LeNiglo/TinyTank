@@ -2,20 +2,21 @@ package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
+import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by andres_k on 16/03/2015.
  */
-public class Obstacle {
+public class Obstacle extends Observable {
     private final Animator animator;
     private final EnumGameObject type;
     private final List<Block> collisionObject;
+    private final List<EnumGameObject> ignored;
     private final Pair<Float, Float> shiftOrigin;
     private final float maxLife;
     private final float damage;
@@ -28,10 +29,11 @@ public class Obstacle {
     private float angle;
     private boolean created;
 
-    public Obstacle(Animator animator, EnumGameObject type, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
+    public Obstacle(Animator animator, EnumGameObject type, List<EnumGameObject> ignored, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.animator = animator;
         this.type = type;
         this.collisionObject = collisionObject;
+        this.ignored = ignored;
         this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
         this.damage = damage;
@@ -42,6 +44,7 @@ public class Obstacle {
     public Obstacle(Obstacle obstacle, boolean isCreated) {
         this.animator = new Animator(obstacle.animator);
         this.type = obstacle.type;
+        this.ignored = obstacle.ignored;
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
         this.collisionObject = obstacle.collisionObject;
@@ -57,6 +60,7 @@ public class Obstacle {
         }
     }
 
+    // CREATOR
     public void createObstacle(String playerId, String playerPseudo, String id, float angle, float posX, float posY) {
         this.playerId = playerId;
         this.playerPseudo = playerPseudo;
@@ -66,23 +70,30 @@ public class Obstacle {
         this.created = true;
     }
 
-    public void getHit(){
+    // FUNCTIONS
+    public void getHit() {
         if (this.animator != null) {
             if (this.currentLife == 0) {
-                this.animator.setIndex(EnumAnimationObstacle.EXPLODE.getIndex());
-                this.shiftOrigin.setV1(-44f);
-                this.shiftOrigin.setV1(-31.5f);
-            } else if (this.currentLife > 0 && this.currentLife <= 10) {
-                this.animator.setIndex(EnumAnimationObstacle.LOW.getIndex());
+                this.animator.setCurrent(EnumAnimation.EXPLODE);
+            } else {
+                this.animator.nextCurrentIndex();
             }
         }
     }
+
+    public void move(Pair<Float, Float> coords) {
+        this.setX(coords.getV1());
+        this.setY(coords.getV2());
+        this.setChanged();
+        this.notifyObservers(coords);
+    }
+
     // GETTERS
     public String getPlayerId() {
         return this.playerId;
     }
 
-    public String getPlayerPseudo(){
+    public String getPlayerPseudo() {
         return this.playerPseudo;
     }
 
@@ -139,23 +150,10 @@ public class Obstacle {
     }
 
     public List<EnumGameObject> getIgnoredObjectList() {
-        List<EnumGameObject> types = new ArrayList<>();
-
-        Debug.debug("type: " + this.type);
-        if (this.type.equals(EnumGameObject.MINE)) {
-            types.add(EnumGameObject.ROCKET);
-            types.add(EnumGameObject.MACHINE_GUN);
-            types.add(EnumGameObject.LASER);
-            types.add(EnumGameObject.TIGER);
-            types.add(EnumGameObject.RUSHER);
-            types.add(EnumGameObject.SNIPER);
-        } else if (this.type.equals(EnumGameObject.PLASMA_WALL)) {
-            types.add(EnumGameObject.LASER);
-        }
-        return types;
+        return this.ignored;
     }
 
-    public List<Block> getCollisionObject(){
+    public List<Block> getCollisionObject() {
         return this.collisionObject;
     }
 
@@ -177,7 +175,7 @@ public class Obstacle {
         this.getHit();
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
 }

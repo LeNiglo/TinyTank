@@ -7,6 +7,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageDisconnect;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerDelete;
 import com.lefrantguillaume.utils.ServerConfig;
 import javafx.util.Pair;
 

@@ -5,18 +5,12 @@ package com.lefrantguillaume.gameComponent.gameMode;
  * Created by Styve on 19/03/2015.
  */
 public enum EnumGameMode {
-    Nothing(-1, "Nothing"), FreeForAll(0, "FreeForAll"), TeamDeathMatch(1, "TeamDeathMatch"), TouchDawn(2, "TouchDawn"), Kingdom(3, "Kingdom");
+    Nothing("Nothing"), FreeForAll("FreeForAll"), TeamDeathMatch("TeamDeathMatch"), TouchDown("TouchDown"), Kingdom("Kingdom");
 
-    private int index;
     private String value;
 
-    EnumGameMode(int index, String value) {
-        this.index = index;
+    EnumGameMode(String value) {
         this.value = value;
-    }
-
-    public int getIndex(){
-        return this.index;
     }
 
     public String getValue(){

@@ -5,7 +5,6 @@ import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +13,7 @@ import java.util.List;
 public class Obstacle {
     private final EnumGameObject type;
     private final List<Block> collisionObject;
+    private final List<EnumGameObject> ignored;
     private final Pair<Float, Float> shiftOrigin;
     private final float maxLife;
     private final float damage;
@@ -26,8 +26,9 @@ public class Obstacle {
     private float angle;
     private boolean created;
 
-    public Obstacle(EnumGameObject type, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
+    public Obstacle(EnumGameObject type, List<EnumGameObject> ignored, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.type = type;
+        this.ignored = ignored;
         this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
         this.damage = damage;
@@ -38,6 +39,7 @@ public class Obstacle {
 
     public Obstacle(Obstacle obstacle, boolean isCreated) {
         this.type = obstacle.type;
+        this.ignored = obstacle.ignored;
         this.shiftOrigin = new Pair<>(obstacle.shiftOrigin.getKey(), obstacle.shiftOrigin.getValue());
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
@@ -150,16 +152,7 @@ public class Obstacle {
     }
 
     public List<EnumGameObject> getIgnoredObjectList() {
-        List<EnumGameObject> types = new ArrayList<>();
-
-        if (this.type.equals(EnumGameObject.MINE)) {
-            types.add(EnumGameObject.ROCKET);
-            types.add(EnumGameObject.MACHINE_GUN);
-            types.add(EnumGameObject.LASER);
-        } else if (this.type.equals(EnumGameObject.PLASMA_WALL)) {
-            types.add(EnumGameObject.LASER);
-        }
-        return types;
+        return this.ignored;
     }
 
     // SETTERS

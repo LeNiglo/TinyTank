@@ -166,7 +166,7 @@
       "tankWeapon": {
         "hit": {
           "shotType": "machine_gun",
-          "speed": "300.0",
+          "speed": "250.0",
           "damage": "10.0",
           "build": {
             "centerX": "-16.0",

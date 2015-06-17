@@ -16,10 +16,11 @@ import java.util.List;
  */
 public class ObstacleFactory {
 
-    public static Obstacle createBox(AnimatorGameData animatorGameData, EnumGameObject type, JSONObject values) throws JSONException {
-        List<Block> blocks = new ArrayList<>();
+    public static Obstacle createBox(AnimatorGameData animatorGameData, String objectType, EnumGameObject type, JSONObject values) throws JSONException {
         JSONObject build = values.getJSONObject("build");
         Pair<Float, Float> shiftOrigin = new Pair<>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
+
+        List<Block> blocks = new ArrayList<>();
         JSONArray collisions = build.getJSONArray("collisions");
         for (int i = 0; i < collisions.length(); ++i){
             JSONObject current = collisions.getJSONObject(i);
@@ -27,7 +28,21 @@ public class ObstacleFactory {
             Pair<Float, Float> sizes= new Pair<>(Float.valueOf(current.getString("sizeX")), Float.valueOf(current.getString("sizeY")));
             blocks.add(new Block(shiftOrigin2, sizes));
         }
-        Obstacle obstacle = new Obstacle(animatorGameData.getObstacleAnimator(type), type, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+
+        List<EnumGameObject> ignored = new ArrayList<>();
+        JSONArray ignoredList = build.getJSONArray("ignored");
+        for (int i = 0; i < ignoredList.length(); ++i){
+            ignored.add(EnumGameObject.getEnumByValue(ignoredList.getString(i)));
+        }
+
+        Obstacle obstacle = null;
+        if (objectType.equals("area")) {
+            obstacle = new Obstacle(animatorGameData.getAreaAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        } else if (objectType.equals("boxes")) {
+            obstacle = new Obstacle(animatorGameData.getObstacleAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        } else if (objectType.equals("spell")){
+            obstacle = new Obstacle(animatorGameData.getSpellAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        }
         return obstacle;
     }
 }

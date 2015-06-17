@@ -3,65 +3,107 @@ package com.lefrantguillaume.components.gameComponent.animations;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import org.newdawn.slick.Animation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public class Animator implements Observer {
-    private List<Animation> animations;
+    private HashMap<EnumAnimation, List<Animation>> animations;
+    private EnumAnimation current;
     private int index;
     private boolean printable;
+    private boolean deleted;
 
     public Animator() {
-        this.animations = new ArrayList<Animation>();
-        this.index = 0;
+        this.animations = new HashMap<>();
+        this.current = EnumAnimation.BASIC;
         this.printable = true;
+        this.deleted = false;
+        this.index = 0;
     }
 
-    public Animator(Animator animator){
-        this.animations = new ArrayList<Animation>();
-        for (int i = 0; i < animator.animations.size(); ++i) {
-            this.animations.add(animator.animations.get(i).copy());
+    public Animator(Animator animator) {
+        this.animations = new HashMap<>();
+        for (Map.Entry entry : animator.animations.entrySet()) {
+            this.addElement((EnumAnimation) entry.getKey(), (List<Animation>) entry.getValue());
         }
+        this.current = animator.current;
         this.index = animator.index;
         this.printable = animator.printable;
+        this.deleted = animator.deleted;
     }
 
+    // FUNCTIONS
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof Integer) {
-            this.index = (Integer) arg;
+        if (arg instanceof EnumAnimation) {
+            this.setCurrent((EnumAnimation) arg);
         }
     }
 
-    public Animation getAnimation(int index) {
-        return animations.get(index);
+    public void addAnimation(EnumAnimation type, Animation animation) {
+        if (this.animations.containsKey(type)) {
+            this.animations.get(type).add(animation.copy());
+        } else {
+            List<Animation> values = new ArrayList<>();
+            values.add(animation.copy());
+            this.animations.put(type, values);
+        }
     }
 
-    public void addAnimation(Animation animation){
-        this.animations.add(animation);
+    public void addElement(EnumAnimation type, List<Animation> animation) {
+        for (Animation anAnimation : animation) {
+            this.addAnimation(type, anAnimation);
+        }
     }
 
-    public Animation currentAnimation(){
-       return this.animations.get(this.index);
+    public void nextCurrentIndex(){
+        if ((this.index + 1) < this.animations.get(this.current).size()){
+            this.index += 1;
+        }
     }
 
-    public Pair<Float, Float> currentSizeAnimation(){
-        return new Pair<Float, Float>((float)this.animations.get(this.index).getWidth(), (float)this.animations.get(this.index).getHeight());
+    // GETTERS
+    public Animation currentAnimation() {
+        return this.animations.get(this.current).get(this.index);
     }
-    public void setIndex(int index){
-        this.index = index;
+
+    public Pair<Float, Float> currentSizeAnimation() {
+        return new Pair<>((float) this.animations.get(this.current).get(this.index).getWidth(), (float) this.animations.get(this.current).get(this.index).getHeight());
     }
 
     public boolean isPrintable() {
         return this.printable;
     }
 
+    public boolean isDeleted(){
+        if (this.current == EnumAnimation.EXPLODE && this.currentAnimation().isStopped()){
+            this.deleted = true;
+        }
+        return this.deleted;
+    }
+
+    // SETTERS
+
     public void setPrintable(boolean printable) {
         this.printable = printable;
+    }
+
+    public void setCurrent(EnumAnimation current) {
+        if (this.animations.containsKey(current)) {
+            this.current = current;
+            this.index = 0;
+        }
+    }
+
+    public void setIndex(int index){
+        if (index < this.animations.get(this.current).size()){
+            this.index = index;
+        }
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -1,26 +1,26 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.EnumInterfaceComponent;
 import org.newdawn.slick.SlickException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
 public class AnimatorInterfaceData {
     private AnimatorFactory animatorFactory;
-    private List<Animator> tankStatAnimator;
-    private List<Animator> tankPreviewAnimator;
-    private List<Animator> backgroundAnimator;
-    private List<Animator> buttonAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> tankStatAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> tankPreviewAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> backgroundAnimator;
+    private HashMap<EnumInterfaceComponent, Animator> buttonAnimator;
 
     public AnimatorInterfaceData() {
         this.animatorFactory = new AnimatorInterfaceFactory();
-        this.tankStatAnimator = new ArrayList<>();
-        this.tankPreviewAnimator = new ArrayList<>();
-        this.backgroundAnimator = new ArrayList<>();
-        this.buttonAnimator = new ArrayList<>();
+        this.tankStatAnimator = new HashMap<>();
+        this.tankPreviewAnimator = new HashMap<>();
+        this.backgroundAnimator = new HashMap<>();
+        this.buttonAnimator = new HashMap<>();
     }
 
     public void init() throws SlickException {
@@ -30,52 +30,53 @@ public class AnimatorInterfaceData {
     }
 
     public void initTanks() throws SlickException {
-        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_TIGER));
-        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_SNIPER));
-        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RUSHER));
-        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RANK));
-        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_TIGER));
-        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_SNIPER));
-        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_RUSHER));
+        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_TIGER), EnumInterfaceComponent.TIGER);
+        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_SNIPER), EnumInterfaceComponent.SNIPER);
+        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RUSHER), EnumInterfaceComponent.RUSHER);
+        this.addTankStatAnimator(this.animatorFactory.getAnimator(EnumSprites.STAT_RANK), EnumInterfaceComponent.RANK);
+        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_TIGER), EnumInterfaceComponent.TIGER);
+        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_SNIPER), EnumInterfaceComponent.SNIPER);
+        this.addTankPreviewAnimator(this.animatorFactory.getAnimator(EnumSprites.PREVIEW_RUSHER), EnumInterfaceComponent.RUSHER);
     }
 
     public void initBackgrounds() throws SlickException {
-        this.addBackgroundAnimator(this.animatorFactory.getAnimator(EnumSprites.BACKGROUND));
+        this.addBackgroundAnimator(this.animatorFactory.getAnimator(EnumSprites.BACKGROUND), EnumInterfaceComponent.BACKGROUND_1);
     }
 
     public void initButtons() throws SlickException {
-        this.addButtonAnimator(this.animatorFactory.getAnimator(EnumSprites.BUTTONS));
+        this.addButtonAnimator(this.animatorFactory.getAnimator(EnumSprites.NEXT), EnumInterfaceComponent.NEXT);
+        this.addButtonAnimator(this.animatorFactory.getAnimator(EnumSprites.PREV), EnumInterfaceComponent.PREV);
     }
 
-    public void addTankStatAnimator(Animator tankStatAnimator) {
-        this.tankStatAnimator.add(tankStatAnimator);
+    public void addTankStatAnimator(Animator tankStatAnimator, EnumInterfaceComponent type) {
+        this.tankStatAnimator.put(type, tankStatAnimator);
     }
 
-    public void addTankPreviewAnimator(Animator tankPreviewAnimator) {
-        this.tankPreviewAnimator.add(tankPreviewAnimator);
+    public void addTankPreviewAnimator(Animator tankPreviewAnimator, EnumInterfaceComponent type) {
+        this.tankPreviewAnimator.put(type, tankPreviewAnimator);
     }
 
-    public void addBackgroundAnimator(Animator backgroundAnimator) {
-        this.backgroundAnimator.add(backgroundAnimator);
+    public void addBackgroundAnimator(Animator backgroundAnimator, EnumInterfaceComponent type) {
+        this.backgroundAnimator.put(type, backgroundAnimator);
     }
 
-    public void addButtonAnimator(Animator buttonAnimator) {
-        this.buttonAnimator.add(buttonAnimator);
+    public void addButtonAnimator(Animator buttonAnimator, EnumInterfaceComponent type) {
+        this.buttonAnimator.put(type, buttonAnimator);
     }
 
-    public List<Animator> getTankStatAnimators() {
+    public HashMap<EnumInterfaceComponent, Animator> getTankStatAnimators() {
         return this.tankStatAnimator;
     }
 
-    public List<Animator> getBackgroundAnimators() {
+    public HashMap<EnumInterfaceComponent, Animator> getBackgroundAnimators() {
         return this.backgroundAnimator;
     }
 
-    public List<Animator> getButtonAnimators() {
+    public HashMap<EnumInterfaceComponent, Animator> getButtonAnimators() {
         return this.buttonAnimator;
     }
 
-    public List<Animator> getTankPreviewAnimators() {
+    public HashMap<EnumInterfaceComponent, Animator> getTankPreviewAnimators() {
         return tankPreviewAnimator;
     }
 

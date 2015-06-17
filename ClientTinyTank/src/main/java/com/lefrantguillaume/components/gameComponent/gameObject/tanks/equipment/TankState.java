@@ -3,11 +3,14 @@ package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
+import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by andres_k on 18/03/2015.
@@ -18,9 +21,10 @@ public class TankState {
     private Pair<Float, Float> shiftOriginSave;
     private Pair<Float, Float> shiftToExplode;
     private List<Block> collisionObject;
-    private Animator bodyAnimator;
-    private Animator topAnimator;
+    private HashMap<EnumGameObject, Animator> bodyAnimator;
+    private HashMap<EnumGameObject, Animator> topAnimator;
     private EnumGameObject type;
+    private EnumGameObject currentTeam;
     private final float speed;
     private final float maxLife;
     private final float maxArmor;
@@ -34,10 +38,12 @@ public class TankState {
     private float gunAngle;
     private EnumDirection direction;
 
-    public TankState(float speed, float maxLife, float maxArmor, float accuracy, Animator bodyAnimator, Animator topAnimator, EnumGameObject type, Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
+    public TankState(float speed, float maxLife, float maxArmor, float accuracy, HashMap<EnumGameObject, Animator> bodyAnimator, HashMap<EnumGameObject, Animator> topAnimator, EnumGameObject type,
+                     Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode) {
         this.bodyAnimator = bodyAnimator;
         this.topAnimator = topAnimator;
         this.type = type;
+        this.currentTeam = type;
         this.speed = speed;
         this.maxLife = maxLife;
         this.maxArmor = maxArmor;
@@ -58,26 +64,33 @@ public class TankState {
     }
 
     public TankState(TankState tankState) {
-        this.bodyAnimator = new Animator(tankState.bodyAnimator);
-        this.topAnimator = new Animator(tankState.topAnimator);
+        this.bodyAnimator = new HashMap<>();
+        this.topAnimator = new HashMap<>();
+        for (Map.Entry entry : tankState.bodyAnimator.entrySet()){
+            this.bodyAnimator.put((EnumGameObject)entry.getKey(), new Animator((Animator)entry.getValue()));
+        }
+        for (Map.Entry entry : tankState.topAnimator.entrySet()){
+            this.topAnimator.put((EnumGameObject)entry.getKey(), new Animator((Animator)entry.getValue()));
+        }
         this.type = tankState.type;
+        this.currentTeam = tankState.currentTeam;
         this.speed = tankState.speed;
         this.maxLife = tankState.maxLife;
         this.maxArmor = tankState.maxArmor;
         this.accuracy = tankState.accuracy;
         this.currentLife = tankState.maxLife;
         this.currentArmor = tankState.maxArmor;
-        this.shiftOrigin = new Pair<Float, Float>(tankState.shiftOrigin);
-        this.shiftOriginSave = new Pair<Float, Float>(tankState.shiftOrigin);
-        this.shiftToExplode = new Pair<Float, Float>(tankState.shiftToExplode);
+        this.shiftOrigin = new Pair<>(tankState.shiftOrigin);
+        this.shiftOriginSave = new Pair<>(tankState.shiftOrigin);
+        this.shiftToExplode = new Pair<>(tankState.shiftToExplode);
         this.move = false;
         this.direction = EnumDirection.DOWN;
         this.gunAngle = this.direction.getAngle();
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.positions = new Pair<Float, Float>(0f, 0f);
-        this.collisionObject = new ArrayList<Block>();
+        this.positions = new Pair<>(0f, 0f);
+        this.collisionObject = new ArrayList<>();
         for (int i = 0; i < tankState.collisionObject.size(); ++i) {
             this.collisionObject.add(tankState.collisionObject.get(i));
         }
@@ -90,8 +103,8 @@ public class TankState {
     }
 
     public void explode() {
-        this.topAnimator.setPrintable(false);
-        this.bodyAnimator.setIndex(EnumAnimationTank.EXPLODE.getValue());
+        this.topAnimator.get(this.currentTeam).setPrintable(false);
+        this.bodyAnimator.get(this.currentTeam).setCurrent(EnumAnimation.EXPLODE);
         this.shiftOrigin.setV1(this.shiftToExplode.getV1());
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
     }
@@ -101,13 +114,19 @@ public class TankState {
         this.shieldEffect = 0;
         this.slowEffect = 0;
         this.boostEffect = 0;
-        this.positions = new Pair<Float, Float>(positions);
+        this.positions = new Pair<>(positions);
         this.currentLife = this.maxLife;
-        this.bodyAnimator.currentAnimation().restart();
-        this.bodyAnimator.setIndex(EnumAnimationTank.BASIC.getValue());
-        this.bodyAnimator.setPrintable(true);
-        this.topAnimator.setPrintable(true);
-        this.shiftOrigin = new Pair<Float, Float>(this.shiftOriginSave);
+        for (Map.Entry entry : this.bodyAnimator.entrySet()){
+            Animator tmp = (Animator) entry.getValue();
+            tmp.currentAnimation().restart();
+            tmp.setCurrent(EnumAnimation.BASIC);
+            tmp.setPrintable(true);
+        }
+        for (Map.Entry entry : this.topAnimator.entrySet()) {
+            Animator tmp = (Animator) entry.getValue();
+            tmp.setPrintable(true);
+        }
+        this.shiftOrigin = new Pair<>(this.shiftOriginSave);
     }
 
     // GETTERS
@@ -156,11 +175,11 @@ public class TankState {
     }
 
     public Animator getBodyAnimator() {
-        return this.bodyAnimator;
+        return this.bodyAnimator.get(this.currentTeam);
     }
 
     public Animator getTopAnimator() {
-        return this.topAnimator;
+        return this.topAnimator.get(this.currentTeam);
     }
 
     public Pair<Float, Float> getPositions() {
@@ -199,6 +218,14 @@ public class TankState {
         return this.direction;
     }
 
+    public Pair<Float, Float> getShiftToExplode() {
+        return this.shiftToExplode;
+    }
+
+    public EnumGameObject getType() {
+        return type;
+    }
+
     // SETTERS
     public void setCurrentLife(float currentLife) {
         this.currentLife = currentLife;
@@ -218,10 +245,6 @@ public class TankState {
 
     public void setBoostEffect(float boostEffect) {
         this.boostEffect = boostEffect;
-    }
-
-    public EnumGameObject getType() {
-        return type;
     }
 
     public void setPositions(Pair<Float, Float> positions) {
@@ -256,7 +279,9 @@ public class TankState {
         this.direction = direction;
     }
 
-    public Pair<Float, Float> getShiftToExplode() {
-        return this.shiftToExplode;
+    public void setCurrentTeam(EnumGameObject team){
+        if (this.bodyAnimator.containsKey(team) && this.topAnimator.containsKey(team)){
+            this.currentTeam = team;
+        }
     }
 }

@@ -1,6 +1,10 @@
 package com.lefrantguillaume.gameComponent.target;
 
+import com.lefrantguillaume.WindowController;
+import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
+import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
+import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
@@ -9,6 +13,7 @@ import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.Mess
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageShotUpdateState;
 import com.lefrantguillaume.utils.ServerConfig;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,18 +36,19 @@ public class Targets {
 
     // FUNCTIONS
 
-    public void initGame(MapController mapController){
+    public void initGame(MapController mapController, List<Obstacle> moreObstacles) {
         this.shots.clear();
         this.obstacles.clear();
         List<Obstacle> mapObstacles = mapController.getCurrentMap().getMapObstacles();
         if (mapObstacles != null) {
-            for (Obstacle obstacle : mapObstacles){
-                this.obstacles.put(obstacle.getId(), new Obstacle(obstacle, true));
-            }
+            this.addObstacles(mapObstacles);
+        }
+        if (moreObstacles != null){
+            this.addObstacles(moreObstacles);
         }
     }
 
-    public void clearAll(){
+    public void clearAll() {
         this.obstacles.clear();
         this.players.clear();
         this.shots.clear();
@@ -52,10 +58,10 @@ public class Targets {
         return items.contains(type);
     }
 
-    public List<MessageModel> doCollision(String hitterId, String targetId, String saveTeamId) {
+    public List<MessageModel> doCollision(String hitterId, String targetId, EnumCollision type, GameModeController gameModeController) {
         List<MessageModel> messages = new ArrayList<>();
 
-        if (this.getShot(hitterId) != null) {
+        if (this.getShot(hitterId) != null && type == EnumCollision.IN) {
             Shot hitterShot = this.getShot(hitterId);
             float damage = hitterShot.getCurrentDamageShot();
 
@@ -66,9 +72,9 @@ public class Targets {
                     hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
                     if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
                         messages.add(player.getTank().getTankState().getHit(player, damage));
-                        if (player.getTank().getTankState().getCurrentLife() == 0){
+                        if (player.getTank().getTankState().getCurrentLife() == 0) {
                             killer.addKill();
-                            saveTeamId = killer.getTeamId();
+                            gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()));
                             player.addDeath();
                         }
                     }
@@ -112,20 +118,37 @@ public class Targets {
                 }
             }
         } else if (this.getPlayer(hitterId) != null) {
-            if (this.getObstacle(targetId) != null){
+            Player player = this.getPlayer(hitterId);
+
+            if (this.getObstacle(targetId) != null) {
                 Obstacle obstacle = this.getObstacle(targetId);
 
-                if (obstacle.getType().equals(EnumGameObject.MINE)){
-                    Player player = this.getPlayer(hitterId);
+                if (obstacle.getType().equals(EnumGameObject.MINE)) {
                     Player killer = this.getPlayer(obstacle.getPlayerId());
-                    if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
-                        messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
-                        if (player.getTank().getTankState().getCurrentLife() == 0){
-                            killer.addKill();
-                            saveTeamId = killer.getTeamId();
-                            player.addDeath();
+                    if (killer != null) {
+                        if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
+                            messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
+                            if (player.getTank().getTankState().getCurrentLife() == 0) {
+                                killer.addKill();
+                                gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()));
+                                player.addDeath();
+                            }
+                            messages.add(this.deleteObstacle(targetId));
                         }
+                    } else {
                         messages.add(this.deleteObstacle(targetId));
+                    }
+                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)){
+                    WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
+                    if (gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player.getTeamId(), obstacle.getId())))) {
+                        player.setTransportObjective(true);
+                    }
+                } else if (obstacle.getType().equals(EnumGameObject.SPAWN_AREA) && type == EnumCollision.IN) {
+                    WindowController.addConsoleMsg("PLAYER VS SPAWN");
+                    if (player.isTransportObjective()) {
+                        if (gameModeController.doTask(new Pair<>(EnumAction.IN, new Pair<>(player.getTeamId(), obstacle.getId())))) {
+                            player.setTransportObjective(false);
+                        }
                     }
                 }
             }
@@ -145,6 +168,12 @@ public class Targets {
         this.obstacles.put(id, obstacle);
     }
 
+    public void addObstacles(List<Obstacle> obstacles){
+        for (Obstacle obstacle : obstacles) {
+            this.obstacles.put(obstacle.getId(), obstacle);
+        }
+    }
+
     public void deletePlayer(String playerId) {
         this.players.remove(playerId);
     }
@@ -162,7 +191,7 @@ public class Targets {
     public MessageObstacleUpdateState deleteObstacle(String obstacleId) {
         Obstacle obstacle = this.getObstacle(obstacleId);
         MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
-        this.shots.remove(obstacleId);
+        this.obstacles.remove(obstacleId);
         return message;
     }
 

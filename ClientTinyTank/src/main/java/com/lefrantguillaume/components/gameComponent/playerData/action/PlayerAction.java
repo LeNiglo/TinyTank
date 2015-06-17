@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.gameComponent.playerData.action;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageShoot;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageSpell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,11 @@ public class PlayerAction {
 
     public PlayerAction(MessageModel todo) {
         this.action = EnumActions.NOTHING;
-        this.values = new ArrayList<Object>();
+        this.values = new ArrayList<>();
         this.createAction(todo);
     }
 
-    public void createAction(MessageModel todo){
+    public void createAction(MessageModel todo) {
         if (todo instanceof MessageMove) {
             if (((MessageMove) todo).isMove() == true) {
                 this.action = EnumActions.MOVE;
@@ -30,11 +31,13 @@ public class PlayerAction {
             this.values.add(new Integer(((MessageMove) todo).getDirection()));
             this.values.add(new Float(((MessageMove) todo).getPlayerX()));
             this.values.add(new Float(((MessageMove) todo).getPlayerY()));
-        }
-        else if (todo instanceof MessageShoot){
+        } else if (todo instanceof MessageShoot) {
             this.action = EnumActions.SHOOT;
-            this.values.add(((MessageShoot)todo).getShotId());
-            this.values.add(((MessageShoot)todo).getAngle());
+            this.values.add(((MessageShoot) todo).getShotId());
+            this.values.add(((MessageShoot) todo).getAngle());
+        } else if (todo instanceof MessageSpell) {
+            this.action = EnumActions.SPELL;
+            this.values.add(((MessageSpell) todo).getSpellId());
         }
     }
 
