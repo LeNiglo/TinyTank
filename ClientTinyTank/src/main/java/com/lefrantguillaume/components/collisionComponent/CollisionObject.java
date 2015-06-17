@@ -34,7 +34,8 @@ public class CollisionObject extends Observable implements Observer {
 
     public CollisionObject(List<EnumGameObject> ignoredObject, Pair<Float, Float> positions, Pair<Float, Float> sizes, Pair<Float, Float> shiftOrigin,
                            String idUser, String id, EnumGameObject type, float angle) {
-        this.ignoredObject = ignoredObject;
+        this.ignoredObject = new ArrayList<>();
+        this.ignoredObject.addAll(ignoredObject);
         this.shiftOrigin = new Pair<>(shiftOrigin);
         this.positions = new Pair<>(positions);
         this.sizes = new Pair<>(sizes);
@@ -83,10 +84,8 @@ public class CollisionObject extends Observable implements Observer {
             }
         } else if (arg instanceof ArrayList) {
             this.ignoredObject.clear();
-            for (int i = 0; i < ((ArrayList) arg).size(); ++i){
-                this.ignoredObject.add(((ArrayList<EnumGameObject>) arg).get(i));
-            }
-            Debug.debug("new List = " + this.ignoredObject.size());
+            this.ignoredObject.addAll((ArrayList<EnumGameObject>) arg);
+            Debug.debug("new List = " + this.ignoredObject.size() + " on " + this);
         } else {
             this.alive = false;
             this.destroyed = true;
@@ -104,13 +103,24 @@ public class CollisionObject extends Observable implements Observer {
         return false;
     }
 
-    public boolean isIgnored(EnumGameObject type) {
-        if (this.ignoredObject == null)
+    public boolean isObjectIgnored(CollisionObject object) {
+        if (this.isTypeIgnored(this, object.getType())) {
+            return true;
+        } else if (this.isTypeIgnored(object, this.type)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isTypeIgnored(CollisionObject object, EnumGameObject type) {
+        List<EnumGameObject> values = object.getIgnoredList();
+
+        if (values == null)
             return false;
-        Debug.debug("ignored size: " + this.ignoredObject.size());
-        for (int i = 0; i < this.ignoredObject.size(); ++i) {
-            Debug.debug(type.getValue() + " =? " + this.ignoredObject.get(i).getValue());
-            if (this.ignoredObject.get(i).equals(type)) {
+        Debug.debug("ignored size: " + values.size() + " on " + object);
+        for (int i = 0; i < values.size(); ++i) {
+            Debug.debug(type.getValue() + " =? " + values.get(i).getValue());
+            if (values.get(i) == type) {
                 return true;
             }
         }

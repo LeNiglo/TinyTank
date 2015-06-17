@@ -54,7 +54,7 @@ public class CollisionController {
                         boolean isIgnored;
                         int upPriority = 0;
 
-                        if ((isIgnored = current.isIgnored(object.getType())) == false) { // collision ignoré ? set isIgnored pour savoir si on avance ou non
+                        if ((isIgnored = current.isObjectIgnored(object)) == false) { // collision ignoré ? set isIgnored pour savoir si on avance ou non
                             object.backToSave();
                             object.notifyCollision(current.getType());
                             current.notifyCollision(object.getType());
