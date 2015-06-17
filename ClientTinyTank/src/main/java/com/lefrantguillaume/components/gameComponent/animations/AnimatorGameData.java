@@ -110,10 +110,10 @@ public class AnimatorGameData {
     public HashMap<EnumGameObject, Animator> getTankBodyAnimator(EnumGameObject type) {
         if (this.tankBodyAnimator.containsKey(type)) {
             HashMap<EnumGameObject, Animator> result = new HashMap<>();
-            result.put(type, this.tankBodyAnimator.get(type));
+            result.put(type, new Animator(this.tankBodyAnimator.get(type)));
             EnumGameObject newType = EnumGameObject.getEnemyEnum(type);
             if (newType != type && this.tankBodyAnimator.containsKey(newType)){
-                result.put(newType, this.tankBodyAnimator.get(newType));
+                result.put(newType, new Animator(this.tankBodyAnimator.get(newType)));
             }
             return result;
         } else {
@@ -124,10 +124,10 @@ public class AnimatorGameData {
     public HashMap<EnumGameObject, Animator> getTankTopAnimator(EnumGameObject type) {
         if (this.tankTopAnimator.containsKey(type)) {
             HashMap<EnumGameObject, Animator> result = new HashMap<>();
-            result.put(type, this.tankTopAnimator.get(type));
+            result.put(type, new Animator (this.tankTopAnimator.get(type)));
             EnumGameObject newType = EnumGameObject.getEnemyEnum(type);
             if (newType != type && this.tankTopAnimator.containsKey(newType)){
-                result.put(newType, this.tankTopAnimator.get(newType));
+                result.put(newType, new Animator (this.tankTopAnimator.get(newType)));
             }
             return result;
         } else {

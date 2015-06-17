@@ -17,7 +17,7 @@ public class AnimatorGameFactory extends AnimatorFactory {
             this.mapLoad(animator);
         }
         if (index.getIndex() == EnumSprites.TIGER.getIndex()) {
-            this.panzerAnimator(animator, index);
+            this.tigerAnimator(animator, index);
         }
         if (index.getIndex() == EnumSprites.SNIPER.getIndex()) {
             this.sniperAnimator(animator, index);
@@ -56,7 +56,7 @@ public class AnimatorGameFactory extends AnimatorFactory {
         }
     }
 
-    private void panzerAnimator(Animator animator, EnumSprites index) throws SlickException {
+    private void tigerAnimator(Animator animator, EnumSprites index) throws SlickException {
         if (index == EnumSprites.TIGER_BODY) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/tigerA_1.png", 49, 44);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));

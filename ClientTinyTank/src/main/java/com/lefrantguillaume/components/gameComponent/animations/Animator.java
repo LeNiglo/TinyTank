@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 
@@ -29,7 +30,13 @@ public class Animator implements Observer {
     public Animator(Animator animator) {
         this.animations = new HashMap<>();
         for (Map.Entry entry : animator.animations.entrySet()) {
-            this.addElement((EnumAnimation) entry.getKey(), (List<Animation>) entry.getValue());
+            EnumAnimation type = (EnumAnimation) entry.getKey();
+            List<Animation> values = (ArrayList<Animation>) entry.getValue();
+            List<Animation> newValues = new ArrayList<>();
+            for (Animation value : values){
+                newValues.add(value.copy());
+            }
+            this.addElement(type, newValues);
         }
         this.current = animator.current;
         this.index = animator.index;
@@ -88,6 +95,10 @@ public class Animator implements Observer {
         return this.deleted;
     }
 
+    public EnumAnimation getCurrent(){
+        return this.current;
+    }
+
     public Color getFilter(){
         return this.filter;
     }
@@ -99,8 +110,10 @@ public class Animator implements Observer {
     }
 
     public void setCurrent(EnumAnimation current) {
+        Debug.debug("contain: " + current + "?");
         if (this.animations.containsKey(current)) {
             this.current = current;
+            Debug.debug("now current = " + this.current);
             this.index = 0;
         }
     }
