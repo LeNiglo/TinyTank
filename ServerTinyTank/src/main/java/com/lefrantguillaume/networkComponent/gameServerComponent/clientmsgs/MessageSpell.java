@@ -5,19 +5,45 @@ package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
  */
 
 public class MessageSpell extends MessageModel {
-    private int valueKeyPressed;
+    private String idSpell;
     private float angle;
     private float x;
     private float y;
 
-    public MessageSpell() {}
+    public MessageSpell() {
+    }
 
-    public int getValueKeyPressed() { return valueKeyPressed; }
-    public float getAngle() {return angle;}
-    public float getX() {return x;}
-    public float getY() {return y;}
-    public void setValueKeyPressed(int valueKeyPressed) { this.valueKeyPressed = valueKeyPressed; }
-    public void setAngle(float angle) {this.angle = angle;}
-    public void setX(float x) {this.x = x;}
-    public void setY(float y) {this.y = y;}
+    // GETTERS
+    public float getAngle() {
+        return this.angle;
+    }
+
+    public float getX() {
+        return this.x;
+    }
+
+    public float getY() {
+        return this.y;
+    }
+
+    public String getIdSpell(){
+        return this.idSpell;
+    }
+
+    // SETTERS
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setIdSpell(String idSpell){
+        this.idSpell = idSpell;
+    }
 }

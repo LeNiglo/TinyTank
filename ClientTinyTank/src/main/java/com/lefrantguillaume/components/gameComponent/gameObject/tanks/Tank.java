@@ -5,6 +5,7 @@ import com.lefrantguillaume.Utils.tools.RandomTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
@@ -22,14 +23,14 @@ public class Tank {
     private TankSpell tankSpell;
     private EnumGameObject tankBox;
 
-    public Tank(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public Tank(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"), animatorGameData);
         this.tankState = TankFactory.createTankState(config.getJSONObject("tankState"), animatorGameData);
-        this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankSpell"), animatorGameData);
+        this.tankSpell = TankFactory.createTankSpell(config.getJSONObject("tankSpell"), animatorGameData, obstacleConfigData);
         this.tankBox = TankFactory.createTankBox(config.getJSONObject("tankBox"), animatorGameData);
     }
 
-    public Tank(Tank tank){
+    public Tank(Tank tank) {
         this.tankWeapon = new TankWeapon(tank.tankWeapon);
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
@@ -41,7 +42,11 @@ public class Tank {
         return this.tankWeapon.generateShot(userId, id, angle, this.tankState.getPositions());
     }
 
-    public float predictAngleHit(){
+    public Object activeSpell() {
+        return this.tankSpell.activeCurrentSpell();
+    }
+
+    public float predictAngleHit() {
         float angle = this.tankState.getGunAngle();
         float deviate = (100 - this.tankState.getAccuracy()) * 90 / 100;
 
@@ -51,11 +56,11 @@ public class Tank {
         return angle;
     }
 
-    public void explode(){
+    public void explode() {
         this.tankState.explode();
     }
 
-    public void revive(Pair<Float, Float> positions){
+    public void revive(Pair<Float, Float> positions) {
         this.tankState.init(positions);
     }
 
@@ -72,12 +77,16 @@ public class Tank {
         return this.getTankWeapon().getShotAnimator();
     }
 
-    public TankWeapon getTankWeapon(){
+    public TankWeapon getTankWeapon() {
         return this.tankWeapon;
     }
 
-    public TankState getTankState(){
+    public TankState getTankState() {
         return this.tankState;
+    }
+
+    public TankSpell getTankSpell() {
+        return this.tankSpell;
     }
 
     public EnumGameObject getTankBox() {

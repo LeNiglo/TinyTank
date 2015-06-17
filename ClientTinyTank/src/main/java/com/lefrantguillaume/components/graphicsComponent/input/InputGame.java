@@ -6,10 +6,7 @@ import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePlayerDelete;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePutObstacle;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageShoot;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.codehaus.jettison.json.JSONException;
@@ -88,6 +85,8 @@ public class InputGame extends Observable {
             if (boxValues != null) {
                 message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankBox() , boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
             }
+        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SPELL)) && mode == EnumInput.PRESSED){
+            message = new MessageSpell(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankState().getGunAngle(), posX, posY);
         }
         return message;
     }

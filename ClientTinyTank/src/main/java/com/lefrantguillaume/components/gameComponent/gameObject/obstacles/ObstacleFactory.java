@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ObstacleFactory {
 
-    public static Obstacle createBox(AnimatorGameData animatorGameData, EnumGameObject type, JSONObject values) throws JSONException {
+    public static Obstacle createBox(AnimatorGameData animatorGameData, String objectType, EnumGameObject type, JSONObject values) throws JSONException {
         JSONObject build = values.getJSONObject("build");
         Pair<Float, Float> shiftOrigin = new Pair<>(Float.valueOf(build.getString("centerX")), Float.valueOf(build.getString("centerY")));
 
@@ -35,11 +35,13 @@ public class ObstacleFactory {
             ignored.add(EnumGameObject.getEnumByValue(ignoredList.getString(i)));
         }
 
-        Obstacle obstacle;
-        if (type.getValue().contains("area")) {
+        Obstacle obstacle = null;
+        if (objectType.equals("area")) {
             obstacle = new Obstacle(animatorGameData.getAreaAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
-        } else {
+        } else if (objectType.equals("boxes")) {
             obstacle = new Obstacle(animatorGameData.getObstacleAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
+        } else if (objectType.equals("spell")){
+            obstacle = new Obstacle(animatorGameData.getSpellAnimator(type), type, ignored, blocks, shiftOrigin, Float.valueOf(values.getString("life")), Float.valueOf(values.getString("damage")));
         }
         return obstacle;
     }

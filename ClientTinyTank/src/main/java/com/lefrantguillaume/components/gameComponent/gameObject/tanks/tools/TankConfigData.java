@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools;
 
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -22,12 +23,12 @@ public class TankConfigData {
     }
 
     // FUNCTIONS
-    public void initTanks(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public void initTanks(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
 
         JSONArray tankArray = config.getJSONArray("tanks");
 
         for (int i = 0; i < tankArray.length(); ++i) {
-            Tank tank = TankFactory.createTank(tankArray.getJSONObject(i), animatorGameData);
+            Tank tank = TankFactory.createTank(tankArray.getJSONObject(i), animatorGameData, obstacleConfigData);
             this.tanks.put(tank.getTankState().getType(), tank);
         }
         this.valid = true;

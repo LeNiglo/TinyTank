@@ -4,6 +4,8 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.components.gameComponent.gameObject.spells.SpellFactory;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.*;
 import org.codehaus.jettison.json.JSONArray;
@@ -14,8 +16,8 @@ import org.codehaus.jettison.json.JSONObject;
  * Created by andres_k on 13/03/2015.
  */
 public class TankFactory {
-    public static Tank createTank(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
-        Tank tank = new Tank(config, animatorGameData);
+    public static Tank createTank(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
+        Tank tank = new Tank(config, animatorGameData, obstacleConfigData);
         return tank;
     }
 
@@ -71,9 +73,9 @@ public class TankFactory {
         return tankState;
     }
 
-    public static TankSpell createTankSpell(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public static TankSpell createTankSpell(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
         EnumGameObject spellType = EnumGameObject.getEnumByValue(config.getString("spellType"));
-        TankSpell tankSpell = new TankSpell();
+        TankSpell tankSpell = new TankSpell(SpellFactory.createSpell(spellType, obstacleConfigData));
         return tankSpell;
     }
 

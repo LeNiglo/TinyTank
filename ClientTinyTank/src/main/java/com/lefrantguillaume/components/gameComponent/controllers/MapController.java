@@ -47,6 +47,7 @@ public class MapController {
                     block.get(i).getShiftOrigin(), obstacle.getId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
             Debug.debug("addCollision obstacle: pos["  + collisionObject.getX() + "," + collisionObject.getY() + "] + origin["
                     + collisionObject.getOriginX() + ","  + collisionObject.getOriginY() + "] size[" + collisionObject.getSizeX() + "," + collisionObject.getSizeY()+"]");
+            obstacle.addObserver(collisionObject);
             this.collisionController.addCollisionObject(collisionObject);
         }
         this.obstacles.add(obstacle);

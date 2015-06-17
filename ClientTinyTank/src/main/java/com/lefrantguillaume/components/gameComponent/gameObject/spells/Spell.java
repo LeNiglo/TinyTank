@@ -1,7 +1,11 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.spells;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by andres_k on 18/03/2015.
@@ -9,9 +13,40 @@ import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 public class Spell {
     protected EnumGameObject type;
     protected Animator animator;
+    protected Timer timer;
+    protected int duration;
+    protected boolean isActive;
 
     // FUNCTIONS
-    public int activeSpell(){
+    public Object activeSpell() {
         return 0;
+    }
+
+    public int deleteSpell() {
+        return 0;
+    }
+
+    public void move(Pair<Float, Float> coords) {
+    }
+
+    // GETTERS
+    public EnumGameObject getType() {
+        return this.type;
+    }
+
+    public Animator getAnimator() {
+        return this.animator;
+    }
+
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    // CLASSES
+    class myTask extends TimerTask {
+        @Override
+        public void run() {
+            deleteSpell();
+        }
     }
 }

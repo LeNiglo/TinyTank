@@ -46,9 +46,10 @@ public class Player extends Observable implements Observer {
 
     }
 
-    public void doAction(PlayerAction playerAction, CollisionController collisionController) {
+    public Object doAction(PlayerAction playerAction, CollisionController collisionController) {
         if (this.canDoAction == true)
-            this.playerActionController.doAction(playerAction, collisionController, this);
+            return this.playerActionController.doAction(playerAction, collisionController, this);
+        return false;
     }
 
     public void move(float delta) {
@@ -56,6 +57,7 @@ public class Player extends Observable implements Observer {
             Pair<Float, Float> coords = this.movePredict(delta);
             this.tank.getTankState().addX(coords.getV1());
             this.tank.getTankState().addY(coords.getV2());
+            this.tank.getTankSpell().move(new Pair<>(this.tank.getTankState().getX(), this.tank.getTankState().getY()));
         }
     }
 
@@ -131,10 +133,6 @@ public class Player extends Observable implements Observer {
         return this.idTeam;
     }
 
-    public void setShots(List<Shot> shots) {
-        this.shots = shots;
-    }
-
     public User getUser() {
         return user;
     }
@@ -145,6 +143,9 @@ public class Player extends Observable implements Observer {
     }
 
     // SETTERS
+    public void setShots(List<Shot> shots) {
+        this.shots = shots;
+    }
 
     public void setCanDoAction(boolean value){
         this.canDoAction = value;

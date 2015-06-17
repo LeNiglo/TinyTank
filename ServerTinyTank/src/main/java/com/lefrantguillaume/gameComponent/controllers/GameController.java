@@ -242,6 +242,7 @@ public class GameController extends Observable {
     public void doMessageSpell(MessageSpell received) {
         if (!this.gameModeController.isPlayable())
             return;
+        received.setIdSpell(UUID.randomUUID().toString());
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }

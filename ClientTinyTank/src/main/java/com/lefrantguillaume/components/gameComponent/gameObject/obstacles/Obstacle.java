@@ -7,11 +7,12 @@ import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by andres_k on 16/03/2015.
  */
-public class Obstacle {
+public class Obstacle extends Observable {
     private final Animator animator;
     private final EnumGameObject type;
     private final List<Block> collisionObject;
@@ -59,6 +60,7 @@ public class Obstacle {
         }
     }
 
+    // CREATOR
     public void createObstacle(String playerId, String playerPseudo, String id, float angle, float posX, float posY) {
         this.playerId = playerId;
         this.playerPseudo = playerPseudo;
@@ -68,7 +70,8 @@ public class Obstacle {
         this.created = true;
     }
 
-    public void getHit(){
+    // FUNCTIONS
+    public void getHit() {
         if (this.animator != null) {
             if (this.currentLife == 0) {
                 this.animator.setCurrent(EnumAnimation.EXPLODE);
@@ -77,12 +80,20 @@ public class Obstacle {
             }
         }
     }
+
+    public void move(Pair<Float, Float> coords) {
+        this.setX(coords.getV1());
+        this.setY(coords.getV2());
+        this.setChanged();
+        this.notifyObservers(coords);
+    }
+
     // GETTERS
     public String getPlayerId() {
         return this.playerId;
     }
 
-    public String getPlayerPseudo(){
+    public String getPlayerPseudo() {
         return this.playerPseudo;
     }
 
@@ -142,7 +153,7 @@ public class Obstacle {
         return this.ignored;
     }
 
-    public List<Block> getCollisionObject(){
+    public List<Block> getCollisionObject() {
         return this.collisionObject;
     }
 
@@ -164,7 +175,7 @@ public class Obstacle {
         this.getHit();
     }
 
-    public void setId(String id){
+    public void setId(String id) {
         this.id = id;
     }
 }

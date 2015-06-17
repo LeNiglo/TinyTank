@@ -39,7 +39,7 @@ public class ObstacleConfigData {
                 String typeObstacle = (String) iterator2.next();
                 JSONObject obstacle = obj.getJSONObject(typeObstacle);
                 EnumGameObject type = EnumGameObject.getEnumByValue(typeObstacle);
-                this.obstacles.put(type, ObstacleFactory.createBox(animatorGameData, type, obstacle));
+                this.obstacles.put(type, ObstacleFactory.createBox(animatorGameData, value, type, obstacle));
             }
         }
         this.valid = true;

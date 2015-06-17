@@ -93,7 +93,10 @@ public class GameController extends Observable implements Observer {
                 if (message.getPlayerAction() == true) {
                     Player current = this.getPlayer(message.getId());
                     if (current != null) {
-                        current.doAction(new PlayerAction(message), this.collisionController);
+                        Object result = current.doAction(new PlayerAction(message), this.collisionController);
+                        if (result instanceof Obstacle){
+                            this.mapController.addObstacle((Obstacle) result);
+                        }
                     }
                 } else {
                     if (message instanceof MessagePlayerNew) {
@@ -257,7 +260,7 @@ public class GameController extends Observable implements Observer {
     public void initTankConfigData(JSONObject config) throws JSONException {
         if (this.animatorGameData == null)
             throw new JSONException("tankConfigData failed");
-        this.tankConfigData.initTanks(config, this.animatorGameData);
+        this.tankConfigData.initTanks(config, this.animatorGameData, this.obstacleConfigData);
     }
 
     public void initObstacleConfigData(JSONObject config) throws JSONException {
@@ -323,7 +326,7 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             Player current = this.players.get(i);
             if (current.isAlive()) {
-                if (current.getTank().getBodyAnimator().isStopped()) {
+                if (current.getTank().getBodyAnimator().isDeleted()) {
                     current.die();
                 } else if (current.getTank().getBodyAnimator().isPrintable()) {
                     current.getTank().getBodyAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
@@ -346,7 +349,7 @@ public class GameController extends Observable implements Observer {
 
         for (int i = 0; i < this.shots.size(); ++i) {
             Shot current = this.shots.get(i);
-            if (current.getAnimator().isStopped()) {
+            if (current.getAnimator().isDeleted()) {
                 this.collisionController.deleteCollisionObject(this.shots.get(i).getId());
                 this.shots.remove(i);
             } else {
@@ -369,7 +372,7 @@ public class GameController extends Observable implements Observer {
                 Obstacle current = this.mapController.getObstacles().get(i);
 
                 if (current.getAnimator() != null) {
-                    if (current.getAnimator().isStopped()) {
+                    if (current.getAnimator().isDeleted()) {
                         this.mapController.deleteObstacle(current.getId());
                     } else {
                         current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);

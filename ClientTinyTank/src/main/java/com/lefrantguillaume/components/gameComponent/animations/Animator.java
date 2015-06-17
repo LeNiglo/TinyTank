@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import org.newdawn.slick.Animation;
 
 import java.util.*;
@@ -14,11 +13,13 @@ public class Animator implements Observer {
     private EnumAnimation current;
     private int index;
     private boolean printable;
+    private boolean deleted;
 
     public Animator() {
         this.animations = new HashMap<>();
         this.current = EnumAnimation.BASIC;
         this.printable = true;
+        this.deleted = false;
         this.index = 0;
     }
 
@@ -30,6 +31,7 @@ public class Animator implements Observer {
         this.current = animator.current;
         this.index = animator.index;
         this.printable = animator.printable;
+        this.deleted = animator.deleted;
     }
 
     // FUNCTIONS
@@ -75,13 +77,15 @@ public class Animator implements Observer {
         return this.printable;
     }
 
-    // SETTERS
-    public boolean isStopped(){
+    public boolean isDeleted(){
         if (this.current == EnumAnimation.EXPLODE && this.currentAnimation().isStopped()){
-            return true;
+            this.deleted = true;
         }
-        return false;
+        return this.deleted;
     }
+
+    // SETTERS
+
     public void setPrintable(boolean printable) {
         this.printable = printable;
     }
@@ -97,5 +101,9 @@ public class Animator implements Observer {
         if (index < this.animations.get(this.current).size()){
             this.index = index;
         }
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
