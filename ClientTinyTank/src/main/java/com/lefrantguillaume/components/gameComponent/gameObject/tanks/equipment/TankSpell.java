@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.spells.Spell;
 
 /**
@@ -24,5 +25,11 @@ public class TankSpell {
 
     public void move(Pair<Float, Float> coords){
         this.spell.move(coords);
+    }
+
+    // GETTERS
+
+    public EnumGameObject getType(){
+        return this.spell.getType();
     }
 }

@@ -37,7 +37,7 @@ public class PlayerAction {
             this.values.add(((MessageShoot) todo).getAngle());
         } else if (todo instanceof MessageSpell) {
             this.action = EnumActions.SPELL;
-            this.values.add(((MessageSpell) todo).getIdSpell());
+            this.values.add(((MessageSpell) todo).getSpellId());
         }
     }
 

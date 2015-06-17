@@ -1,14 +1,17 @@
 package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
 
+import com.lefrantguillaume.gameComponent.EnumGameObject;
+
 /**
  * Created by Styve on 25/03/2015.
  */
 
 public class MessageSpell extends MessageModel {
-    private String idSpell;
+    private String spellId;
+    private EnumGameObject type;
     private float angle;
-    private float x;
-    private float y;
+    private float posX;
+    private float posY;
 
     public MessageSpell() {
     }
@@ -18,16 +21,20 @@ public class MessageSpell extends MessageModel {
         return this.angle;
     }
 
-    public float getX() {
-        return this.x;
+    public float getPosX() {
+        return this.posX;
     }
 
-    public float getY() {
-        return this.y;
+    public float getPosY() {
+        return this.posY;
     }
 
-    public String getIdSpell(){
-        return this.idSpell;
+    public String getSpellId(){
+        return this.spellId;
+    }
+
+    public EnumGameObject getType(){
+        return this.type;
     }
 
     // SETTERS
@@ -35,15 +42,19 @@ public class MessageSpell extends MessageModel {
         this.angle = angle;
     }
 
-    public void setX(float x) {
-        this.x = x;
+    public void setPosX(float posX) {
+        this.posX = posX;
     }
 
-    public void setY(float y) {
-        this.y = y;
+    public void setPosY(float posY) {
+        this.posY = posY;
     }
 
-    public void setIdSpell(String idSpell){
-        this.idSpell = idSpell;
+    public void setSpellId(String spellId){
+        this.spellId = spellId;
+    }
+
+    public void setType(EnumGameObject type){
+        this.type = type;
     }
 }

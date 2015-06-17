@@ -242,7 +242,10 @@ public class GameController extends Observable {
     public void doMessageSpell(MessageSpell received) {
         if (!this.gameModeController.isPlayable())
             return;
-        received.setIdSpell(UUID.randomUUID().toString());
+        received.setSpellId(UUID.randomUUID().toString());
+        Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
+        obstacle.createObstacle(received.getId(), received.getPseudo(), received.getSpellId(), received.getAngle(), received.getPosX(), received.getPosY());
+        this.targets.addObstacle(received.getSpellId(), obstacle);
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
