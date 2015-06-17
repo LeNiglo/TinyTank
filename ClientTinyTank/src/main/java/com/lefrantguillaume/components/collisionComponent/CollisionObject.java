@@ -3,7 +3,6 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
@@ -53,7 +52,6 @@ public class CollisionObject extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        Debug.debug("RECEIVED");
         if (arg instanceof Block) { // modifier la position/size de la collision
             Block block = (Block) arg;
 
@@ -85,7 +83,6 @@ public class CollisionObject extends Observable implements Observer {
         } else if (arg instanceof ArrayList) {
             this.ignoredObject.clear();
             this.ignoredObject.addAll((ArrayList<EnumGameObject>) arg);
-            Debug.debug("new List = " + this.ignoredObject.size() + " on " + this);
         } else {
             this.alive = false;
             this.destroyed = true;
@@ -117,9 +114,9 @@ public class CollisionObject extends Observable implements Observer {
 
         if (values == null)
             return false;
-        Debug.debug("ignored size: " + values.size() + " on " + object);
+//        Debug.debug("ignored size: " + values.size() + " on " + object);
         for (int i = 0; i < values.size(); ++i) {
-            Debug.debug(type.getValue() + " =? " + values.get(i).getValue());
+  //          Debug.debug(type.getValue() + " =? " + values.get(i).getValue());
             if (values.get(i) == type) {
                 return true;
             }

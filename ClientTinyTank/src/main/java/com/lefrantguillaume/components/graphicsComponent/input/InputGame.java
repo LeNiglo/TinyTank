@@ -85,7 +85,7 @@ public class InputGame extends Observable {
             if (boxValues != null) {
                 message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankBox() , boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
             }
-        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SPELL)) && mode == EnumInput.PRESSED){
+        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SPELL)) && mode == EnumInput.RELEASED){
             message = new MessageSpell(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankSpell().getType(), player.getTank().getTankState().getGunAngle(), posX, posY);
         }
         return message;
