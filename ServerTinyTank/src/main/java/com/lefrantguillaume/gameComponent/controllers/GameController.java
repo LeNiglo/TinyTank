@@ -134,7 +134,7 @@ public class GameController extends Observable {
         Player player = this.targets.getPlayer(received.getId());
         this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
         Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
-                this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()), player.getTank().getTankState().getCollisionObject());
+                this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()), player.getTank().getTankState().getCollisionObject(), false);
         WindowController.addConsoleMsg("joueur team: " + this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()) + " at position: " + newPositions);
 
         if (newPositions != null) {
@@ -247,6 +247,7 @@ public class GameController extends Observable {
         if (received.getType() == EnumGameObject.SHIELD) {
             Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
             obstacle.createObstacle(received.getId(), received.getPseudo(), received.getSpellId(), received.getAngle(), received.getPosX(), received.getPosY());
+            WindowController.addConsoleMsg("create SpellObstacle " + received.getType() + "with playerId:" + received.getId() + " idBox: " + received.getSpellId());
             this.targets.addObstacle(received.getSpellId(), obstacle);
         }
         setChanged();
@@ -282,10 +283,9 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable())
             return;
         received.setObstacleId(UUID.randomUUID().toString());
-        WindowController.addConsoleMsg("create Box " + received.getType() + "with playerId:" + received.getId());
         Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
         obstacle.createObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
-        WindowController.addConsoleMsg("new Box : " + received.getObstacleId());
+        WindowController.addConsoleMsg("create Box " + received.getType() + "with playerId:" + received.getId() + " idBox: " + received.getObstacleId());
         this.targets.addObstacle(received.getObstacleId(), obstacle);
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
@@ -352,7 +352,7 @@ public class GameController extends Observable {
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
             Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
-                    this.gameModeController.getCurrentMode().getIndexTeam(entry.getValue().getTeamId().toString()), entry.getValue().getTank().getTankState().getCollisionObject());
+                    this.gameModeController.getCurrentMode().getIndexTeam(entry.getValue().getTeamId().toString()), entry.getValue().getTank().getTankState().getCollisionObject(), true);
             if (newPositions != null) {
                 MessagePlayerUpdatePosition tmp = new MessagePlayerUpdatePosition();
                 tmp.setPseudo(entry.getValue().getPseudo());
@@ -470,7 +470,8 @@ public class GameController extends Observable {
             @Override
             public void run() {
                 Player player = targets.getPlayer(values.getId());
-                Pair<Float, Float> newPositions = mapController.getCurrentMap().calcRespawnPoint(gameModeController.getCurrentGameMode(), gameModeController.getCurrentMode().getIndexTeam(player.getTeamId().toString()), player.getTank().getTankState().getCollisionObject());
+                Pair<Float, Float> newPositions = mapController.getCurrentMap().calcRespawnPoint(gameModeController.getCurrentGameMode(),
+                        gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()), player.getTank().getTankState().getCollisionObject(), false);
                 if (newPositions != null) {
                     MessageModel message = new MessagePlayerRevive(player.getPseudo(), player.getId(), newPositions.getKey(), newPositions.getValue());
                     player.revive();

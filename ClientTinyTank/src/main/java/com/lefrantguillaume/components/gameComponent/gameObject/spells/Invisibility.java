@@ -45,7 +45,7 @@ public class Invisibility extends Spell {
     }
 
     @Override
-    public int deleteSpell(){
+    protected int deleteSpell(){
         this.isActive = false;
         this.tankState.setFilter(new Color(1f, 1f, 1f));
         return 0;

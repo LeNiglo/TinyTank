@@ -37,25 +37,27 @@ public class Kingdom extends GameMode {
 
     @Override
     public boolean doTask(Pair<EnumAction, Object> task) {
-        Pair<String, String> values = (Pair<String, String>) task.getValue();
         if (task.getKey().equals(EnumAction.KILL)) {
-            this.incrementScore(values.getKey(), 5);
-        } else if (task.getKey().equals(EnumAction.IN)) {
-            if (this.playersInObjective.containsKey(values.getKey())) {
-                this.playersInObjective.replace(values.getKey(), this.playersInObjective.get(values.getKey()) + 1);
-                if (this.timerRunning == false) {
-                    this.startTimer();
+            this.incrementScore((String)task.getValue(), 5);
+        } else {
+            Pair<String, String> values = (Pair<String, String>) task.getValue();
+            if (task.getKey().equals(EnumAction.IN)) {
+                if (this.playersInObjective.containsKey(values.getKey())) {
+                    this.playersInObjective.replace(values.getKey(), this.playersInObjective.get(values.getKey()) + 1);
+                    if (this.timerRunning == false) {
+                        this.startTimer();
+                    }
                 }
-            }
-        } else if (task.getKey().equals(EnumAction.OUT)) {
-            if (this.playersInObjective.containsKey(values.getKey())) {
-                int value = this.playersInObjective.get(values.getKey()) - 1;
-                if (value < 0)
-                    value = 0;
-                this.playersInObjective.replace(values.getKey(), value);
-            }
-            if (this.getPlayersInObjective() == 0) {
-                this.resumeTimer();
+            } else if (task.getKey().equals(EnumAction.OUT)) {
+                if (this.playersInObjective.containsKey(values.getKey())) {
+                    int value = this.playersInObjective.get(values.getKey()) - 1;
+                    if (value < 0)
+                        value = 0;
+                    this.playersInObjective.replace(values.getKey(), value);
+                }
+                if (this.getPlayersInObjective() == 0) {
+                    this.resumeTimer();
+                }
             }
         }
         return false;
@@ -116,7 +118,7 @@ public class Kingdom extends GameMode {
 
         for (Map.Entry item : this.playersInObjective.entrySet()) {
             Integer value = (Integer) item.getValue();
-            if (value != 0){
+            if (value != 0) {
                 if (number != 0)
                     return null;
                 number = value;
@@ -126,7 +128,7 @@ public class Kingdom extends GameMode {
         return idTeam;
     }
 
-    private class myTask extends TimerTask{
+    private class myTask extends TimerTask {
         @Override
         public void run() {
             String idTeam = getTeamInObjective();

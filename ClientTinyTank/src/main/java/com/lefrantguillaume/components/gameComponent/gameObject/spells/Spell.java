@@ -14,7 +14,7 @@ import java.util.TimerTask;
 public class Spell {
     protected EnumGameObject type;
     protected Animator animator;
-    protected Timer timer;
+    protected Timer timer = null;
     protected long duration;
     protected boolean isActive;
 
@@ -23,12 +23,20 @@ public class Spell {
         return 0;
     }
 
-    public int deleteSpell() {
+    public void stopSpell(){
+        if (timer != null) {
+            this.timer.cancel();
+            this.deleteSpell();
+        }
+    }
+
+    protected int deleteSpell() {
         return 0;
     }
 
     public void move(Pair<Float, Float> coords) {
     }
+
 
     public void init(TankState tankState){
     }

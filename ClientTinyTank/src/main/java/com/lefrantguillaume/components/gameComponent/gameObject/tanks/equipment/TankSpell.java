@@ -24,6 +24,10 @@ public class TankSpell {
         return this.spell.activeSpell();
     }
 
+    public void stopCurrentSpell(){
+        this.spell.stopSpell();
+    }
+
     public void move(Pair<Float, Float> coords) {
         this.spell.move(coords);
     }

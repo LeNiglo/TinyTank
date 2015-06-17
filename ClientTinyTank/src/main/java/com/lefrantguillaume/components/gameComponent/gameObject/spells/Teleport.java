@@ -49,7 +49,7 @@ public class Teleport extends Spell {
     }
 
     @Override
-    public int deleteSpell() {
+    protected int deleteSpell() {
         if (tankState != null) {
             Debug.debug("DESACTIVATE");
             this.isActive = false;

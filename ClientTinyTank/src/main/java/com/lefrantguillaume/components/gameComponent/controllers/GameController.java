@@ -221,6 +221,9 @@ public class GameController extends Observable implements Observer {
         Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
         Obstacle obstacle;
 
+        if (task.getType() == EnumGameObject.SHIELD){
+            return;
+        }
         if (task.getType() == EnumGameObject.UNBREAKABLE) {
             obstacle = this.obstacleConfigData.getWorldWall(task.getObstacleId());
         } else {

@@ -20,6 +20,7 @@ public class MessageSpell extends MessageModel {
         this.pseudo = pseudo;
         this.id = id;
         this.playerAction = true;
+        this.type = type;
         this.angle = angle;
         this.posX = posX;
         this.posY = posY;

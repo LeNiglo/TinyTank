@@ -74,7 +74,7 @@ public class Map {
         return false;
     }
 
-    public Pair<Float, Float> calcRespawnPoint(EnumGameMode gameMode, int team, List<Block> collisionObject) {
+    public Pair<Float, Float> calcRespawnPoint(EnumGameMode gameMode, int team, List<Block> collisionObject, boolean newRound) {
         Pair<Float, Float> positions = null;
         MapGameMode current = this.getGameMode(gameMode);
         if (current == null) {
@@ -86,16 +86,17 @@ public class Map {
         }
         for (int i = 0; i < respawnPoints.size(); ++i) {
             for (int i2 = 0; i2 < 10; ++i2) {
-                WindowController.addConsoleMsg("respawn : [" + respawnPoints.get(i).getMinX() + "," + respawnPoints.get(i).getMinY() + "][" + respawnPoints.get(i).getWidth() + "," + respawnPoints.get(i).getHeight() + "]");
                 int x = (int) (RandomTools.getInt((int) respawnPoints.get(i).getWidth()) + respawnPoints.get(i).getMinX());
                 int y = (int) (RandomTools.getInt((int) respawnPoints.get(i).getHeight()) + respawnPoints.get(i).getMinY());
 
+                WindowController.addConsoleMsg("respawn : [" + x +", "+ y +"] into [" + respawnPoints.get(i).getMinX() + "," + respawnPoints.get(i).getMinY() + "][" + respawnPoints.get(i).getWidth() + "," + respawnPoints.get(i).getHeight() + "]");
                 for (int i3 = 0; i3 < collisionObject.size(); ++i3) {
                     Rectangle2D object = new Rectangle2D(x - collisionObject.get(i).getShiftOrigin().getKey(), y - collisionObject.get(i).getShiftOrigin().getValue(),
                             collisionObject.get(i).getSizes().getKey(), collisionObject.get(i).getSizes().getValue());
                     if (!this.detectCollision(this.mapObstacles, this.currentObjects, object)) {
                         positions = new Pair<>((float) x, (float) y);
-                        this.currentObjects.add(object);
+                        if (newRound == true)
+                            this.currentObjects.add(object);
                         return positions;
                     }
                 }

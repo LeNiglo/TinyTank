@@ -34,7 +34,7 @@ public class Shield extends Spell {
     }
 
     @Override
-    public int deleteSpell(){
+    protected int deleteSpell(){
         this.shield.getAnimator().setDeleted(true);
         this.isActive = false;
         return 0;

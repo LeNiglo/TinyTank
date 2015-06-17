@@ -86,6 +86,7 @@ public class PlayerActionController extends Observable {
     }
 
     private void addShootTimer(PlayerAction playerAction, CollisionController collisionController, Player player) {
+        player.getTank().getTankSpell().stopCurrentSpell();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
