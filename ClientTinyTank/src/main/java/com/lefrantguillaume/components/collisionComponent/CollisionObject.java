@@ -3,12 +3,14 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -50,6 +52,7 @@ public class CollisionObject extends Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
+        Debug.debug("RECEIVED");
         if (arg instanceof Block) { // modifier la position/size de la collision
             Block block = (Block) arg;
 
@@ -78,6 +81,12 @@ public class CollisionObject extends Observable implements Observer {
                 this.positions.setV1(values.getV2());
                 this.positions.setV2(values.getV3());
             }
+        } else if (arg instanceof ArrayList) {
+            this.ignoredObject.clear();
+            for (int i = 0; i < ((ArrayList) arg).size(); ++i){
+                this.ignoredObject.add(((ArrayList<EnumGameObject>) arg).get(i));
+            }
+            Debug.debug("new List = " + this.ignoredObject.size());
         } else {
             this.alive = false;
             this.destroyed = true;
@@ -98,7 +107,9 @@ public class CollisionObject extends Observable implements Observer {
     public boolean isIgnored(EnumGameObject type) {
         if (this.ignoredObject == null)
             return false;
+        Debug.debug("ignored size: " + this.ignoredObject.size());
         for (int i = 0; i < this.ignoredObject.size(); ++i) {
+            Debug.debug(type.getValue() + " =? " + this.ignoredObject.get(i).getValue());
             if (this.ignoredObject.get(i).equals(type)) {
                 return true;
             }

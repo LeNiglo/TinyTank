@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
@@ -243,9 +244,11 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable())
             return;
         received.setSpellId(UUID.randomUUID().toString());
-        Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
-        obstacle.createObstacle(received.getId(), received.getPseudo(), received.getSpellId(), received.getAngle(), received.getPosX(), received.getPosY());
-        this.targets.addObstacle(received.getSpellId(), obstacle);
+        if (received.getType() == EnumGameObject.SHIELD) {
+            Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
+            obstacle.createObstacle(received.getId(), received.getPseudo(), received.getSpellId(), received.getAngle(), received.getPosX(), received.getPosY());
+            this.targets.addObstacle(received.getSpellId(), obstacle);
+        }
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }

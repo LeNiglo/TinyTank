@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 
 import java.util.*;
 
@@ -10,6 +11,7 @@ import java.util.*;
  */
 public class Animator implements Observer {
     private HashMap<EnumAnimation, List<Animation>> animations;
+    private Color filter;
     private EnumAnimation current;
     private int index;
     private boolean printable;
@@ -21,6 +23,7 @@ public class Animator implements Observer {
         this.printable = true;
         this.deleted = false;
         this.index = 0;
+        this.filter = new Color(1f, 1f, 1f);
     }
 
     public Animator(Animator animator) {
@@ -32,6 +35,7 @@ public class Animator implements Observer {
         this.index = animator.index;
         this.printable = animator.printable;
         this.deleted = animator.deleted;
+        this.filter = animator.filter;
     }
 
     // FUNCTIONS
@@ -84,6 +88,10 @@ public class Animator implements Observer {
         return this.deleted;
     }
 
+    public Color getFilter(){
+        return this.filter;
+    }
+
     // SETTERS
 
     public void setPrintable(boolean printable) {
@@ -95,6 +103,10 @@ public class Animator implements Observer {
             this.current = current;
             this.index = 0;
         }
+    }
+
+    public void setFilter(Color filter){
+        this.filter = filter;
     }
 
     public void setIndex(int index){

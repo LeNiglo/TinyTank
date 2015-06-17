@@ -75,7 +75,7 @@ public class TankFactory {
 
     public static TankSpell createTankSpell(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
         EnumGameObject spellType = EnumGameObject.getEnumByValue(config.getString("spellType"));
-        TankSpell tankSpell = new TankSpell(SpellFactory.createSpell(spellType, obstacleConfigData));
+        TankSpell tankSpell = new TankSpell(SpellFactory.createSpell(spellType, obstacleConfigData, animatorGameData.getSpellAnimator(spellType)));
         return tankSpell;
     }
 

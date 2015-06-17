@@ -116,8 +116,11 @@ public class AnimatorGameFactory extends AnimatorFactory {
             animator.addAnimation(EnumAnimation.EXPLODE, animation2);
         } else if (index == EnumSprites.SNIPER_SPELL) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/effect/snipe_fufu.png", 119, 100);
-            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 4, 0, 1, 200));
-        } else if (index == EnumSprites.SNIPER_BODY_ENEMY) {
+            Animation animation = loadAnimation(spriteSheet, 0, 4, 0, 1, 200);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+        }
+        else if (index == EnumSprites.SNIPER_BODY_ENEMY) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/img/game/tank/sniperE_1.png", 80, 48);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
             SpriteSheet spriteSheet2 = new SpriteSheet("assets/img/game/effect/explosionTank.png", 147, 145);

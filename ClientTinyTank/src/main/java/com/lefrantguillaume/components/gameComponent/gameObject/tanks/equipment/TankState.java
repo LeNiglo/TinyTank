@@ -6,16 +6,14 @@ import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
+import org.newdawn.slick.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by andres_k on 18/03/2015.
  */
-public class TankState {
+public class TankState extends Observable implements Observer {
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private Pair<Float, Float> shiftOriginSave;
@@ -97,6 +95,16 @@ public class TankState {
     }
 
     // FUNCTIONS
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+
+    public void myNotify(Object object){
+        this.setChanged();
+        this.notifyObservers(object);
+    }
 
     public void addCollisionObject(Block block) {
         this.collisionObject.add(block);
@@ -223,7 +231,11 @@ public class TankState {
     }
 
     public EnumGameObject getType() {
-        return type;
+        return this.type;
+    }
+
+    public EnumGameObject getCurrentTeam(){
+        return this.currentTeam;
     }
 
     // SETTERS
@@ -282,6 +294,28 @@ public class TankState {
     public void setCurrentTeam(EnumGameObject team){
         if (this.bodyAnimator.containsKey(team) && this.topAnimator.containsKey(team)){
             this.currentTeam = team;
+        }
+    }
+
+    public void setVisible(boolean value){
+        for (Map.Entry entry : this.bodyAnimator.entrySet()){
+            Animator tmp = (Animator) entry.getValue();
+            tmp.setPrintable(value);
+        }
+        for (Map.Entry entry : this.topAnimator.entrySet()) {
+            Animator tmp = (Animator) entry.getValue();
+            tmp.setPrintable(value);
+        }
+    }
+
+    public void setFilter(Color filter){
+        for (Map.Entry entry : this.bodyAnimator.entrySet()){
+            Animator tmp = (Animator) entry.getValue();
+            tmp.setFilter(filter);
+        }
+        for (Map.Entry entry : this.topAnimator.entrySet()) {
+            Animator tmp = (Animator) entry.getValue();
+            tmp.setFilter(filter);
         }
     }
 }

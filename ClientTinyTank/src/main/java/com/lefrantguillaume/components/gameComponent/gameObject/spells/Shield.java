@@ -18,7 +18,7 @@ public class Shield extends Spell {
         this.type = EnumGameObject.SHIELD;
         this.obstacleConfigData = obstacleConfigData;
         this.animator = null;
-        this.duration = 20;
+        this.duration = 20000;
         this.isActive = false;
     }
 
@@ -29,7 +29,7 @@ public class Shield extends Spell {
         this.isActive = true;
         this.shield = this.obstacleConfigData.getObstacle(EnumGameObject.SHIELD);
         this.timer = new Timer();
-        this.timer.schedule(new myTask(), this.duration * 1000);
+        this.timer.schedule(new myTask(), this.duration);
         return shield;
     }
 

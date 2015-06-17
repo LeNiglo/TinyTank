@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.spells.Spell;
 
@@ -10,26 +11,38 @@ import com.lefrantguillaume.components.gameComponent.gameObject.spells.Spell;
 public class TankSpell {
     private Spell spell;
 
-    public TankSpell(Spell spell){
+    public TankSpell(Spell spell) {
         this.spell = spell;
     }
 
-    public TankSpell(TankSpell tankSpell){
+    public TankSpell(TankSpell tankSpell) {
         this.spell = tankSpell.spell;
     }
 
     // FUNCTIONS
-    public Object activeCurrentSpell(){
+    public Object activeCurrentSpell() {
         return this.spell.activeSpell();
     }
 
-    public void move(Pair<Float, Float> coords){
+    public void move(Pair<Float, Float> coords) {
         this.spell.move(coords);
+    }
+
+    public void init(TankState tankState){
+        this.spell.init(tankState);
     }
 
     // GETTERS
 
-    public EnumGameObject getType(){
+    public EnumGameObject getType() {
         return this.spell.getType();
+    }
+
+    public Animator getAnimator(){
+        return this.spell.getAnimator();
+    }
+
+    public boolean isActivate(){
+        return this.spell.isActive();
     }
 }

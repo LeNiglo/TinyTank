@@ -17,7 +17,7 @@ import java.util.*;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Player extends Observable implements Observer {
+public class Player {
     private List<Shot> shots;
     private String idTeam;
     private Tank tank;
@@ -40,12 +40,6 @@ public class Player extends Observable implements Observer {
 
     // FUNCTIONS
 
-    @Override
-    public void update(Observable o, Object arg) {
-        Tuple<Float, Float, EnumGameObject> order = (Tuple<Float, Float, EnumGameObject>) arg;
-
-    }
-
     public Object doAction(PlayerAction playerAction, CollisionController collisionController) {
         if (this.canDoAction == true)
             return this.playerActionController.doAction(playerAction, collisionController, this);
@@ -62,7 +56,7 @@ public class Player extends Observable implements Observer {
     }
 
     public Pair<Float, Float> movePredict(float delta) {
-        return MathTools.movePredict(this.tank.getTankState().getDirection().getAngle(), this.tank.getTankState().getSpeed(), delta);
+        return MathTools.movePredict(this.tank.getTankState().getDirection().getAngle(), this.tank.getTankState().getCurrentSpeed(), delta);
     }
 
     public Pair<Float, Float> coordPredict(float delta) {
@@ -76,8 +70,7 @@ public class Player extends Observable implements Observer {
         if (this.tank.getTankState().getCurrentLife() <= 0) {
             this.tank.explode();
             this.die();
-            this.setChanged();
-            this.notifyObservers(new Tuple<>(false, 0f, 0f));
+            this.tank.myNotify(new Tuple<>(false, 0f, 0f));
             return true;
         }
         return false;
@@ -92,8 +85,7 @@ public class Player extends Observable implements Observer {
         this.alive = true;
         this.canDoAction = true;
         this.getTank().revive(positions);
-        this.setChanged();
-        this.notifyObservers(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
+        this.tank.myNotify(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
     }
 
     public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController, ObstacleConfigData obstacleConfigData) {

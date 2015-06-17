@@ -35,6 +35,7 @@ public class Tank {
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
         this.tankBox = tank.tankBox;
+        this.tankSpell.init(this.tankState);
     }
 
     // FUNCTIONS
@@ -56,6 +57,10 @@ public class Tank {
         return angle;
     }
 
+    public void myNotify(Object object){
+        this.tankState.myNotify(object);
+    }
+
     public void explode() {
         this.tankState.explode();
     }
@@ -75,6 +80,10 @@ public class Tank {
 
     public Animator getShotAnimator() {
         return this.getTankWeapon().getShotAnimator();
+    }
+
+    public Animator getSpellAnimator(){
+        return this.tankSpell.getAnimator();
     }
 
     public TankWeapon getTankWeapon() {

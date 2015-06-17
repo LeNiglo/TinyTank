@@ -11,6 +11,7 @@ import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.collisionComponent.EnumCollision;
 import com.lefrantguillaume.components.gameComponent.RoundData.RoundController;
 import com.lefrantguillaume.components.gameComponent.RoundData.Team;
+import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
@@ -94,7 +95,7 @@ public class GameController extends Observable implements Observer {
                     Player current = this.getPlayer(message.getId());
                     if (current != null) {
                         Object result = current.doAction(new PlayerAction(message), this.collisionController);
-                        if (result instanceof Obstacle){
+                        if (result instanceof Obstacle) {
                             this.mapController.addObstacle((Obstacle) result);
                         }
                     }
@@ -138,7 +139,7 @@ public class GameController extends Observable implements Observer {
 
     // CHANGE FUNCTIONS
 
-    public void newPlayer(MessagePlayerNew task){
+    public void newPlayer(MessagePlayerNew task) {
         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
             this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
                     this.getShots(), task.getPosX(), task.getPosY()));
@@ -149,7 +150,7 @@ public class GameController extends Observable implements Observer {
             if (CurrentUser.isInGame() == true) {
                 Player other = this.getPlayer(task.getId());
                 Player current = this.getPlayer(CurrentUser.getId());
-                if (!current.getIdTeam().equals(other.getIdTeam())){
+                if (!current.getIdTeam().equals(other.getIdTeam())) {
                     other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
                 }
                 MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
@@ -160,6 +161,7 @@ public class GameController extends Observable implements Observer {
             }
         }
     }
+
     public void addPlayer(Player player) {
         Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
 
@@ -169,8 +171,8 @@ public class GameController extends Observable implements Observer {
                     current.getShiftOrigin(), player.getUser().getIdUser(),
                     player.getUser().getId(), player.getTank().getTankState().getType(),
                     player.getTank().getTankState().getDirection().getAngle());
-            obj.addObserver(player);
-            player.addObserver(obj);
+            obj.addObserver(player.getTank().getTankState());
+            player.getTank().getTankState().addObserver(obj);
             this.collisionController.addCollisionObject(obj);
         }
         this.players.add(player);
@@ -202,7 +204,7 @@ public class GameController extends Observable implements Observer {
                 object.setSaveX(task.getX());
                 object.setSaveY(task.getY());
             }
-            if (task.isResetMove() == true){
+            if (task.isResetMove() == true) {
                 player.getTank().getTankState().setMove(false);
             }
         }
@@ -326,21 +328,35 @@ public class GameController extends Observable implements Observer {
         for (int i = 0; i < this.players.size(); ++i) {
             Player current = this.players.get(i);
             if (current.isAlive()) {
-                if (current.getTank().getBodyAnimator().isDeleted()) {
-                    current.die();
-                } else if (current.getTank().getBodyAnimator().isPrintable()) {
-                    current.getTank().getBodyAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
-                            current.getTank().getTankState().getShiftOrigin().getV2() * -1);
-                    current.getTank().getBodyAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getDirection().getAngle());
-                    g.drawAnimation(current.getTank().getBodyAnimator().currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY());
-                }
-                if (current.getTank().getTopAnimator().isPrintable()) {
-                    current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankWeapon().getShiftWeaponOrigin().getV1() * -1, -1 * current.getTank().getTankWeapon().getShiftWeaponOrigin().getV2());
-                    current.getTank().getTopAnimator().currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getGunAngle());
-                    g.drawAnimation(current.getTank().getTopAnimator().currentAnimation(), current.getTank().getTankWeapon().getGraphicalX(current.getTank().getTankState().getPositions().getV1()),
-                            current.getTank().getTankWeapon().getGraphicalY(current.getTank().getTankState().getPositions().getV2()));
-                }
+                Animator bodyAnimator = current.getTank().getBodyAnimator();
+                Animator topAnimator = current.getTank().getTopAnimator();
+                Animator spellAnimator = current.getTank().getSpellAnimator();
 
+                if (bodyAnimator != null) {
+                    if (bodyAnimator.isDeleted()) {
+                        current.die();
+                    } else if (bodyAnimator.isPrintable()) {
+                        bodyAnimator.currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
+                                current.getTank().getTankState().getShiftOrigin().getV2() * -1);
+                        bodyAnimator.currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getDirection().getAngle());
+                        g.drawAnimation(bodyAnimator.currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY(),
+                                bodyAnimator.getFilter());
+                    }
+                }
+                if (topAnimator != null && topAnimator.isPrintable()) {
+                    topAnimator.currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankWeapon().getShiftWeaponOrigin().getV1() * -1, -1 * current.getTank().getTankWeapon().getShiftWeaponOrigin().getV2());
+                    topAnimator.currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getGunAngle());
+                    g.drawAnimation(topAnimator.currentAnimation(), current.getTank().getTankWeapon().getGraphicalX(current.getTank().getTankState().getPositions().getV1()),
+                            current.getTank().getTankWeapon().getGraphicalY(current.getTank().getTankState().getPositions().getV2()),
+                            topAnimator.getFilter());
+                }
+                if (spellAnimator != null && spellAnimator.isPrintable() && current.getTank().getTankSpell().isActivate() && spellAnimator.currentAnimation().isStopped() == false) {
+                    spellAnimator.currentAnimation().getCurrentFrame().setCenterOfRotation(current.getTank().getTankState().getShiftOrigin().getV1() * -1,
+                            current.getTank().getTankState().getShiftOrigin().getV2() * -1);
+                    spellAnimator.currentAnimation().getCurrentFrame().setRotation(current.getTank().getTankState().getDirection().getAngle());
+                    g.drawAnimation(spellAnimator.currentAnimation(), current.getTank().getTankState().getGraphicalX(), current.getTank().getTankState().getGraphicalY(),
+                            spellAnimator.getFilter());
+                }
             }
         }
     }
