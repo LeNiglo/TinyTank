@@ -11,6 +11,7 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
+import com.lefrantguillaume.components.graphicsComponent.overlay.GameOverlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -32,6 +33,7 @@ import java.util.List;
 public class WindowGame extends BasicGameState implements ScreenController {
     private AnimatorGameData animatorGameData;
     private GameController gameController;
+    private GameOverlay gameOverlay;
     private InputGame input;
 
     private GameContainer container;
@@ -49,6 +51,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
+        this.gameOverlay = new GameOverlay();
 
         String configs = StringTools.readFile("configInput.json");
         this.input = new InputGame(configs);
@@ -56,6 +59,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
         gameTask.addObserver(this.gameController);
         this.gameController.addObserver(gameTask);
+        gameTask.addObserver(this.gameOverlay);
+        this.gameOverlay.addObserver(gameTask);
     }
 
     @Override
@@ -129,6 +134,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
             for (Pair<Integer, Integer> pos : this.mousePos) {
                 g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
             }
+        }
+        if (this.gameOverlay != null && this.gameOverlay.isActivated()){
+            this.gameOverlay.draw(g);
         }
     }
 

@@ -5,17 +5,41 @@ package com.lefrantguillaume.components.taskComponent;
  */
 public enum EnumTargetTask {
     UNKNOWN("UNKNOWN"), NETWORK("NETWORK"), WINDOWS("WINDOWS"),
-    MESSAGE_SERVER("NETWORK"), CONFIG_SERVER("NETWORK"),
-    INPUT("WINDOWS"), GAME("WINDOWS"), INTERFACE("WINDOWS"), ACCOUNT("WINDOWS");
+    MESSAGE_SERVER("MESSAGE_SERVER", "NETWORK"), CONFIG_SERVER("CONFIG_SERVER", "NETWORK"),
+    INPUT("INPUT", "WINDOWS"), GAME("GAME", "WINDOWS"), INTERFACE("INTERFACE", "WINDOWS"), ACCOUNT("ACCOUNT", "WINDOWS"),
+    GAME_OVERLAY("GAME_OVERLAY", "GAME");
 
     private String dir;
+    private String value;
 
     EnumTargetTask(String dir) {
         this.dir = dir;
+        this.value = dir;
     }
 
-    public String getDir() {
+    EnumTargetTask(String value, String dir) {
+        this.value = value;
+        this.dir = dir;
+    }
+
+    private String getDir() {
         return this.dir;
+    }
+
+    private String getValue() {
+        return this.value;
+    }
+
+    public static EnumTargetTask getEnumByDir(String value) {
+        EnumTargetTask[] enums = EnumTargetTask.values();
+        int enumsNumber = enums.length;
+        for (int i = 0; i < enumsNumber; i++) {
+            EnumTargetTask type = enums[i];
+            if (value.equals(type.getValue())) {
+                return type;
+            }
+        }
+        return UNKNOWN;
     }
 
     public static EnumTargetTask getEnumByValue(String value) {
@@ -23,7 +47,7 @@ public enum EnumTargetTask {
         int enumsNumber = enums.length;
         for (int i = 0; i < enumsNumber; i++) {
             EnumTargetTask type = enums[i];
-            if (value.equals(type.getDir())) {
+            if (value.equals(type.getValue())) {
                 return type;
             }
         }
@@ -31,10 +55,18 @@ public enum EnumTargetTask {
     }
 
     public boolean isIn(EnumTargetTask dir) {
-        if (EnumTargetTask.getEnumByValue(this.dir).equals(dir)) {
-            return true;
-        } else {
-            return false;
+        EnumTargetTask current = EnumTargetTask.getEnumByValue(this.value);
+
+        while (!current.getValue().equals(current.getDir())) {
+            if (current == dir) {
+                return true;
+            } else {
+                current = EnumTargetTask.getEnumByDir(current.getDir());
+            }
         }
+        if (current == dir) {
+            return true;
+        }
+        return false;
     }
 }

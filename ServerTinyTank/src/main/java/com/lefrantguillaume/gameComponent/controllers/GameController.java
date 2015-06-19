@@ -84,6 +84,8 @@ public class GameController extends Observable {
                 System.out.println("Il a besoin de la map");
             } else if (received instanceof MessageShoot) {
                 this.doMessageShoot((MessageShoot) received);
+            } else if (received instanceof MessageChat) {
+                this.doMessageChat((MessageChat) received);
             }
         }
     }
@@ -221,11 +223,18 @@ public class GameController extends Observable {
     }
 
     public void doMessagePlayerUpdatePosition(MessagePlayerUpdatePosition received) {
-        if (!this.gameModeController.isPlayable())
+        if (!this.gameModeController.isPlayable() || this.targets == null || this.targets.getPlayers() == null)
             return;
         System.out.println("Update: " + received.getX() + " / " + received.getY());
-        setChanged();
-        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+        for (java.util.Map.Entry entry : this.targets.getPlayers().entrySet()) {
+            String id = (String) entry.getKey();
+            Player player = (Player) entry.getValue();
+
+            if (!id.equals(received.getId())){
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(player.getConnection(), received)));
+            }
+        }
     }
 
     public void doMessageMove(MessageMove received) {
@@ -287,6 +296,11 @@ public class GameController extends Observable {
         obstacle.createObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
         WindowController.addConsoleMsg("create Box " + received.getType() + "with playerId:" + received.getId() + " idBox: " + received.getObstacleId());
         this.targets.addObstacle(received.getObstacleId(), obstacle);
+        setChanged();
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+    }
+
+    public void doMessageChat(MessageChat received) {
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
