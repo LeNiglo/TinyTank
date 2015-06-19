@@ -69,7 +69,7 @@ public class Player {
     public boolean kill() {
         if (this.tank.getTankState().getCurrentLife() <= 0) {
             this.tank.explode();
-            this.die();
+            this.canDoAction = false;
             this.tank.myNotify(new Tuple<>(false, 0f, 0f));
             return true;
         }
@@ -79,6 +79,7 @@ public class Player {
     public void die() {
         this.alive = false;
         this.canDoAction = false;
+        this.tank.myNotify(new Tuple<>(false, 0f, 0f));
     }
 
     public void revive(Pair<Float, Float> positions) {

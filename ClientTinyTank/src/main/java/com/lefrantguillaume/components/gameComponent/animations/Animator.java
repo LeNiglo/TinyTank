@@ -111,7 +111,6 @@ public class Animator implements Observer {
     public void setCurrent(EnumAnimation current) {
         if (this.animations.containsKey(current)) {
             this.current = current;
-            //Debug.debug("now current = " + this.current);
             this.index = 0;
         } else if (current == EnumAnimation.EXPLODE){
             this.setDeleted(true);

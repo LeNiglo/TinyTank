@@ -111,7 +111,7 @@ public class TankState extends Observable implements Observer {
     }
 
     public void explode() {
-        this.topAnimator.get(this.currentTeam).setPrintable(false);
+        //this.topAnimator.get(this.currentTeam).setPrintable(false);
         this.bodyAnimator.get(this.currentTeam).setCurrent(EnumAnimation.EXPLODE);
         this.shiftOrigin.setV1(this.shiftToExplode.getV1());
         this.shiftOrigin.setV2(this.shiftToExplode.getV2());
