@@ -8,7 +8,7 @@ public enum EnumInput {
     RELEASED(-2, "RELEASED"), PRESSED(-1, "PRESSED"),
     MOVE_UP(0, "MOVE_UP"), MOVE_DOWN(1, "MOVE_DOWN"), MOVE_RIGHT(2, "MOVE_RIGHT"), MOVE_LEFT(3, "MOVE_LEFT"),
     PUT_OBJECT(4, "PUT_OBJECT"), SHOOT(5, "SHOOT"), SPELL(6, "SPELL"),
-    ESCAPE(7, "ESCAPE");
+    ESCAPE(7, "ESCAPE"), OVERLAY(8, "OVERLAY");
 
 
     private final int index;

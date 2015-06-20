@@ -2,14 +2,13 @@ package com.lefrantguillaume.master;
 
 import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.components.networkComponent.networkGame.NetworkController;
+import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
+import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
-import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
-import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -49,7 +48,7 @@ public class MasterGame implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> task = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        Debug.debug("masterTask " + task);
+        //Debug.debug("masterTask " + task);
         if (task.getV2().isIn(EnumTargetTask.WINDOWS)){
             this.windows.doTask(o, task);
         } else if (task.getV2().isIn(EnumTargetTask.NETWORK)) {

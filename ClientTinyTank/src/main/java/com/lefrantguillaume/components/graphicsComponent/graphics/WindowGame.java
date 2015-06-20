@@ -14,6 +14,7 @@ import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.graphicsComponent.overlay.GameOverlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
@@ -39,6 +40,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateWindow;
     private Nifty nifty;
+    private ListBox chatBox;
     private int id;
 
     private int frameRate = 60;
@@ -51,7 +53,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
-        this.gameOverlay = new GameOverlay();
+        this.gameOverlay = new GameOverlay(this.chatBox);
 
         String configs = StringTools.readFile("configInput.json");
         this.input = new InputGame(configs);
@@ -135,8 +137,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
             }
         }
-        if (this.gameOverlay != null && this.gameOverlay.isActivated()){
-            this.gameOverlay.draw(g);
+        if (this.gameOverlay != null && this.gameOverlay.isActivated()) {
+            this.gameOverlay.draw(g, this.nifty);
         }
     }
 
@@ -164,6 +166,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 this.myMouseMoved(xpos, ypos);
                 this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
             }
+            if (this.gameOverlay != null) {
+                this.gameOverlay.updateNifty(this.nifty);
+            }
             this.runningTime = 0;
         }
     }
@@ -182,8 +187,15 @@ public class WindowGame extends BasicGameState implements ScreenController {
     @Override
     public void keyReleased(int key, char c) {
         if (input != null && this.gameController != null) {
-            if (input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY()) == -1) {
+            int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+            if (result == EnumInput.ESCAPE.getIndex()) {
                 this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
+            } else if (result == EnumInput.OVERLAY.getIndex()){
+                if (this.gameOverlay.isActivated()) {
+                    this.gameOverlay.setActivated(false);
+                } else {
+                    this.gameOverlay.setActivated(true);
+                }
             }
         }
     }
@@ -281,17 +293,19 @@ public class WindowGame extends BasicGameState implements ScreenController {
         }
     }
 
+    // NIFTY
     @Override
     public void bind(Nifty nifty, Screen screen) {
-
+        this.gameOverlay.bind(nifty, screen);
     }
 
     @Override
     public void onStartScreen() {
+        this.gameOverlay.onStartScreen();
     }
 
     @Override
     public void onEndScreen() {
-
+        this.gameOverlay.onEndScreen();
     }
 }
