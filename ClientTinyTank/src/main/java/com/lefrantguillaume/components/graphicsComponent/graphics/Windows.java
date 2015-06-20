@@ -131,11 +131,11 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     public void doTask(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> task = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        if (task.getV2().equals(EnumTargetTask.GAME)) {
+        if (task.getV2().isIn(EnumTargetTask.GAME)) {
             this.gameTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
-        } else if (task.getV2().equals(EnumTargetTask.ACCOUNT)) {
+        } else if (task.getV2().isIn(EnumTargetTask.ACCOUNT)) {
             this.accountTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
-        } else if (task.getV2().equals(EnumTargetTask.INTERFACE)) {
+        } else if (task.getV2().isIn(EnumTargetTask.INTERFACE)) {
             this.interfaceTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
         }
     }
