@@ -106,11 +106,11 @@ public class Windows extends NiftyStateBasedGame implements Observer {
             this.nifty.registerScreenController(this.windowAccount);
             this.nifty.registerScreenController(this.windowInterface);
             this.nifty.registerScreenController(this.windowGame);
-            this.nifty.addXml("assets/interface/gui-login.xml");
-            this.nifty.addXml("assets/interface/gui-account.xml");
-            this.nifty.addXml("assets/interface/gui-interface.xml");
-            this.nifty.addXml("assets/interface/gui-game.xml");
-            this.nifty.registerMouseCursor("crosshair", "assets/img/game/cursor.png", 14, 15);
+            this.nifty.addXml("assets/old/interface/gui-login.xml");
+            this.nifty.addXml("assets/old/interface/gui-account.xml");
+            this.nifty.addXml("assets/old/interface/gui-interface.xml");
+            this.nifty.addXml("assets/old/interface/gui-game.xml");
+            this.nifty.registerMouseCursor("crosshair", "assets/old/img/game/cursor.png", 14, 15);
             // this.nifty.setDebugOptionPanelColors(true);
             return true;
         }
