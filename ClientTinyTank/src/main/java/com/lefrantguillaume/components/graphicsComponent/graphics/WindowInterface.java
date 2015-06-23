@@ -1,6 +1,5 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.components.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -70,6 +69,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     }
 
     public void update(GameContainer gameContainer, StateBasedGame sbg, int i) throws SlickException {
+        this.nifty.update();
     }
 
     @Override

@@ -40,7 +40,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateWindow;
     private Nifty nifty;
-    private ListBox chatBox;
+    private ListBox listBox = null;
     private int id;
 
     private int frameRate = 60;
@@ -53,7 +53,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
-        this.gameOverlay = new GameOverlay(this.chatBox);
+        this.gameOverlay = new GameOverlay(this.listBox);
 
         String configs = StringTools.readFile("configInput.json");
         this.input = new InputGame(configs);
@@ -97,8 +97,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
 
         this.nifty.gotoScreen("screen-game");
-        this.nifty.getNiftyMouse().enableMouseCursor("crosshair");
-
+        // this.nifty.getNiftyMouse().enableMouseCursor("crosshair");
     }
 
     @Override
@@ -137,9 +136,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                 g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
             }
         }
-        if (this.gameOverlay != null && this.gameOverlay.isActivated()) {
-            this.gameOverlay.draw(g, this.nifty);
-        }
+        this.gameOverlay.draw(g, this.nifty);
     }
 
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
@@ -148,6 +145,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         int xpos = input.getMouseX();
         int ypos = input.getMouseY();
 
+        this.gameOverlay.updateNifty(this.nifty);
         if (runningTime > 10) {
             if (this.mousePos.size() > 10) {
                 this.mousePos.remove(0);
@@ -155,8 +153,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
             this.mousePos.add(new Pair<>(xpos, ypos));
         }
         if (runningTime > 30) {
-
-
             if (this.mousePos.size() > 10) {
                 this.mousePos.remove(0);
             }
@@ -165,9 +161,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
             if (this.gameController != null) {
                 this.myMouseMoved(xpos, ypos);
                 this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
-            }
-            if (this.gameOverlay != null) {
-                this.gameOverlay.updateNifty(this.nifty);
             }
             this.runningTime = 0;
         }
@@ -190,7 +183,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
             int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
             if (result == EnumInput.ESCAPE.getIndex()) {
                 this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
-            } else if (result == EnumInput.OVERLAY.getIndex()){
+            } else if (result == EnumInput.OVERLAY.getIndex()) {
                 if (this.gameOverlay.isActivated()) {
                     this.gameOverlay.setActivated(false);
                 } else {
@@ -296,16 +289,24 @@ public class WindowGame extends BasicGameState implements ScreenController {
     // NIFTY
     @Override
     public void bind(Nifty nifty, Screen screen) {
+/*
+        this.listBox = screen.findNiftyControl("list-chat", ListBox.class);
+        this.listBox.addItem("salut A");
+        this.listBox.addItem("salut B");
+        this.listBox.addItem("bye A");
+        this.listBox.addItem("noob");
+  */
         this.gameOverlay.bind(nifty, screen);
     }
 
     @Override
     public void onStartScreen() {
-        this.gameOverlay.onStartScreen();
+
+        //      this.gameOverlay.onStartScreen();
     }
 
     @Override
     public void onEndScreen() {
-        this.gameOverlay.onEndScreen();
+        //    this.gameOverlay.onEndScreen();
     }
 }

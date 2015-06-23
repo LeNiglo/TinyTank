@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import de.lessvoid.nifty.controls.ListBox;
 
@@ -22,8 +23,12 @@ public class ChatController {
 
     // FUNCTIONS
     public void addAllElement(ListBox list){
-        for (Tuple<String, String, String> values : messages){
-            list.addItem(values.getV2() + ": " + values.getV3());
+        if (list != null) {
+            for (Tuple<String, String, String> values : messages) {
+                list.addItem(values.getV2() + ": " + values.getV3());
+            }
+        } else {
+            Debug.debug("list = null");
         }
     }
 
