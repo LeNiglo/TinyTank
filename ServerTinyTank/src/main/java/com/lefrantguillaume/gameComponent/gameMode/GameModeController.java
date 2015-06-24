@@ -16,7 +16,7 @@ public class GameModeController{
 
     public GameModeController(ObstacleConfigData obstacleConfigData){
         this.gameModes = new HashMap();
-        this.currentGameMode = GameConfig.gameMode == null ? EnumGameMode.TouchDown : GameConfig.gameMode;
+        this.currentGameMode = GameConfig.gameMode == null ? EnumGameMode.Kingdom : GameConfig.gameMode;
         this.initGameModes(obstacleConfigData);
     }
 

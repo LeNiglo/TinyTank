@@ -140,23 +140,25 @@ public class GameController extends Observable implements Observer {
 
     public void newPlayer(MessagePlayerNew task) {
         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
-            this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
-                    this.getShots(), task.getPosX(), task.getPosY()));
-            if (task.getId().equals(CurrentUser.getId())) {
-                CurrentUser.setInGame(true);
-                this.initGame();
-            }
-            if (CurrentUser.isInGame() == true) {
-                Player other = this.getPlayer(task.getId());
-                Player current = this.getPlayer(CurrentUser.getId());
-                if (!current.getIdTeam().equals(other.getIdTeam())) {
-                    other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
+            if (this.getPlayer(task.getId()) != null) {
+                this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
+                        this.getShots(), task.getPosX(), task.getPosY()));
+                if (task.getId().equals(CurrentUser.getId())) {
+                    CurrentUser.setInGame(true);
+                    this.initGame();
                 }
-                MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
-                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
-                        this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
-                this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
+                if (CurrentUser.isInGame() == true) {
+                    Player other = this.getPlayer(task.getId());
+                    Player current = this.getPlayer(CurrentUser.getId());
+                    if (!current.getIdTeam().equals(other.getIdTeam())) {
+                        other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
+                    }
+                    MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                            this.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(),
+                            this.getPlayer(CurrentUser.getId()).getTank().getTankState().getY());
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
+                }
             }
         }
     }

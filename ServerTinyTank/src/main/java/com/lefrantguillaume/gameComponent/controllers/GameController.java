@@ -130,7 +130,7 @@ public class GameController extends Observable {
     public void doMessagePlayerNew(MessagePlayerNew received, Connection connection) {
         WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
 
-        this.sendAllTargetsToSomeone(connection);
+        this.sendAllTargetsToSomeone(connection, true, true);
         this.targets.addPlayer(received.getId(), new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(),
                 this.tankConfigData.getTank(received.getEnumTanks()), connection));
         Player player = this.targets.getPlayer(received.getId());
@@ -381,39 +381,43 @@ public class GameController extends Observable {
             }
             setChanged();
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
-            this.sendAllTargetsToSomeone(entry.getValue().getConnection());
+            this.sendAllTargetsToSomeone(entry.getValue().getConnection(), false, true);
         }
         this.mapController.getCurrentMap().resetCurrentObject();
         this.addNewRoundTimer();
     }
 
-    public void sendAllTargetsToSomeone(Connection connection) {
-        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-            if (!entry.getValue().getConnection().equals(connection)) {
-                MessagePlayerNew tmpMessage = new MessagePlayerNew();
-                tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
-                tmpMessage.setId(entry.getValue().getId());
-                tmpMessage.setPseudo(entry.getValue().getPseudo());
-                tmpMessage.setPosX(0);
-                tmpMessage.setPosY(0);
-                this.setChanged();
-                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+    public void sendAllTargetsToSomeone(Connection connection, boolean players, boolean obstacles) {
+        if (players == true) {
+            for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+                if (!entry.getValue().getConnection().equals(connection)) {
+                    MessagePlayerNew tmpMessage = new MessagePlayerNew();
+                    tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
+                    tmpMessage.setId(entry.getValue().getId());
+                    tmpMessage.setPseudo(entry.getValue().getPseudo());
+                    tmpMessage.setPosX(0);
+                    tmpMessage.setPosY(0);
+                    this.setChanged();
+                    this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+                }
             }
         }
 
-        for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
-            MessagePutObstacle tmpMessage = new MessagePutObstacle();
+        if (obstacles == true) {
+            for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
+                MessagePutObstacle tmpMessage = new MessagePutObstacle();
 
-            WindowController.addConsoleMsg("send Box: " + entry.getKey());
-            tmpMessage.setId(entry.getValue().getPlayerId());
-            tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
-            tmpMessage.setObstacleId(entry.getValue().getId());
-            tmpMessage.setType(entry.getValue().getType());
-            tmpMessage.setAngle(entry.getValue().getAngle());
-            tmpMessage.setPosX(entry.getValue().getX());
-            tmpMessage.setPosY(entry.getValue().getY());
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+                WindowController.addConsoleMsg("send Box: " + entry.getKey());
+                tmpMessage.setId(entry.getValue().getPlayerId());
+                tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
+                tmpMessage.setObstacleId(entry.getValue().getId());
+                tmpMessage.setType(entry.getValue().getType());
+                tmpMessage.setAngle(entry.getValue().getAngle());
+                tmpMessage.setPosX(entry.getValue().getX());
+                tmpMessage.setPosY(entry.getValue().getY());
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            }
         }
     }
 

@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.overlay;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
@@ -34,7 +33,6 @@ public class GameOverlay extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        Debug.debug("received: " + received);
         if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
             if (received.getV3() instanceof MessageChat) {
                 this.elements.get(EnumInterfaceElement.CHAT).doTask(received.getV3());
