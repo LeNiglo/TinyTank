@@ -88,7 +88,6 @@ public class GameController extends Observable implements Observer {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
         if (received.getV2().equals(EnumTargetTask.GAME)) {
-//            Debug.debug("gameTask " + received);
             if (received.getV3() instanceof MessageModel) {
                 MessageModel message = (MessageModel) received.getV3();
                 if (message.getPlayerAction() == true) {

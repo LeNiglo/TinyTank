@@ -2,30 +2,30 @@ package com.lefrantguillaume.components.graphicsComponent.overlay;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.ChatController;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.ListBox;
-import de.lessvoid.nifty.screen.Screen;
+import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.opengl.SlickCallable;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Created by andres_k on 20/06/2015.
  */
-public class GameOverlay extends Observable implements Observer{
+public class GameOverlay extends Observable implements Observer {
     private boolean activated;
-    private ChatController chatController;
-    private ListBox chatBox;
+    private HashMap<EnumInterfaceElement, InterfaceElement> elements;
 
-    public GameOverlay(ListBox chatBox) {
-        this.chatBox = chatBox;
+    public GameOverlay() {
         this.activated = false;
-        this.chatController = new ChatController();
+        this.elements = new HashMap<>();
+        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement());
     }
 
 
@@ -34,40 +34,71 @@ public class GameOverlay extends Observable implements Observer{
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        if (received.getV2().equals(EnumTargetTask.GAME_OVERLAY)) {
+        Debug.debug("received: " + received);
+        if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
             if (received.getV3() instanceof MessageChat) {
-                this.chatController.addMessage((MessageChat) received.getV3());
+                this.elements.get(EnumInterfaceElement.CHAT).doTask(received.getV3());
             }
         }
     }
 
-    // NIFTY
-
-    public void bind(Nifty nifty, Screen screen) {
-        this.chatBox = screen.findNiftyControl("list-messages", ListBox.class);
-        this.chatController.addAllElement(this.chatBox);
-    }
-
-    public void onStartScreen() {
-
-    }
-
-    public void onEndScreen() {
-
-    }
-
-    public void updateNifty(Nifty nifty) {
-        nifty.update();
-    }
-
     // FUNCTIONS
 
-    public void draw(Graphics g, Nifty nifty) {
-        SlickCallable.enterSafeBlock();
-        nifty.render(false);
-        SlickCallable.leaveSafeBlock();
+    public void draw(Graphics g) {
+        if (this.isActivated()) {
+            for (Map.Entry entry : this.elements.entrySet()) {
+                ((InterfaceElement) entry.getValue()).draw(g);
+            }
+        }
     }
 
+    public void updateOverlay() {
+        for (Map.Entry entry : this.elements.entrySet()) {
+            ((InterfaceElement) entry.getValue()).update();
+        }
+    }
+
+    public Object event(int key, char c) {
+        if (this.isActivated()) {
+            for (Map.Entry entry : this.elements.entrySet()) {
+                Object result = ((InterfaceElement) entry.getValue()).event(key, c);
+                if (result instanceof MessageChat) {
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.MESSAGE_SERVER, result));
+                }
+                return result;
+            }
+        }
+        return null;
+    }
+
+    public boolean isOnFocus(int x, int y) {
+        if (this.isActivated()) {
+            for (Map.Entry entry : this.elements.entrySet()) {
+                if (((InterfaceElement) entry.getValue()).isOnFocus(x, y)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void unFocusAll() {
+        for (Map.Entry entry : this.elements.entrySet()) {
+            ((InterfaceElement) entry.getValue()).setFocused(false);
+        }
+    }
+
+    public boolean isFocused() {
+        if (this.isActivated()) {
+            for (Map.Entry entry : this.elements.entrySet()) {
+                if (((InterfaceElement) entry.getValue()).isFocused()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     // GETTERS
     public boolean isActivated() {
@@ -77,6 +108,8 @@ public class GameOverlay extends Observable implements Observer{
     // SETTERS
     public void setActivated(boolean value) {
         this.activated = value;
-        Debug.debug("overlay: " + value);
+        if (this.activated == false) {
+            this.unFocusAll();
+        }
     }
 }
