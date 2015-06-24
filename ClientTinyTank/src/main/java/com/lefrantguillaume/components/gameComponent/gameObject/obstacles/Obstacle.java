@@ -6,8 +6,10 @@ import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.stream.Collectors;
 
 /**
  * Created by andres_k on 16/03/2015.
@@ -47,7 +49,8 @@ public class Obstacle extends Observable {
         this.ignored = obstacle.ignored;
         this.maxLife = obstacle.maxLife;
         this.damage = obstacle.damage;
-        this.collisionObject = obstacle.collisionObject;
+        this.collisionObject = new ArrayList<>();
+        this.collisionObject.addAll(obstacle.collisionObject.stream().map(block -> new Block(block.getShiftOrigin(), block.getSizes())).collect(Collectors.toList()));
         this.created = obstacle.created;
         this.currentLife = obstacle.currentLife;
         this.shiftOrigin = obstacle.shiftOrigin;
