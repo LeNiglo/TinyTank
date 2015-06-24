@@ -363,6 +363,7 @@ public class GameController extends Observable {
         this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
         this.clearTargets();
+        this.targets.initGame(this.mapController, this.gameModeController.getCurrentMode().getObstacles());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
             Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
@@ -380,6 +381,7 @@ public class GameController extends Observable {
             }
             setChanged();
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
+            this.sendAllTargetsToSomeone(entry.getValue().getConnection());
         }
         this.mapController.getCurrentMap().resetCurrentObject();
         this.addNewRoundTimer();
@@ -387,14 +389,16 @@ public class GameController extends Observable {
 
     public void sendAllTargetsToSomeone(Connection connection) {
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-            MessagePlayerNew tmpMessage = new MessagePlayerNew();
-            tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
-            tmpMessage.setId(entry.getValue().getId());
-            tmpMessage.setPseudo(entry.getValue().getPseudo());
-            tmpMessage.setPosX(0);
-            tmpMessage.setPosY(0);
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            if (!entry.getValue().getConnection().equals(connection)) {
+                MessagePlayerNew tmpMessage = new MessagePlayerNew();
+                tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
+                tmpMessage.setId(entry.getValue().getId());
+                tmpMessage.setPseudo(entry.getValue().getPseudo());
+                tmpMessage.setPosX(0);
+                tmpMessage.setPosY(0);
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            }
         }
 
         for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {

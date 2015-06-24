@@ -4,6 +4,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
+import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
@@ -139,13 +140,13 @@ public class Targets {
                         messages.add(this.deleteObstacle(targetId));
                     }
                 } else if (obstacle.getType().equals(EnumGameObject.SPAWN_AREA)){
-                    WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
+                    WindowController.addConsoleMsg("PLAYER VS SPAWN");
                     if (gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player.getTeamId(), obstacle.getId())))) {
                         player.setTransportObjective(true);
                     }
                 } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA) && type == EnumCollision.IN) {
-                    WindowController.addConsoleMsg("PLAYER VS SPAWN");
-                    if (player.isTransportObjective()) {
+                    WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
+                    if (player.isTransportObjective() || gameModeController.getCurrentGameMode() == EnumGameMode.Kingdom) {
                         if (gameModeController.doTask(new Pair<>(EnumAction.IN, new Pair<>(player.getTeamId(), obstacle.getId())))) {
                             player.setTransportObjective(false);
                         }
