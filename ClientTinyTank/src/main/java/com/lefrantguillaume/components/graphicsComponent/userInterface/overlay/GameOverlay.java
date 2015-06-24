@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.overlay;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
@@ -43,23 +43,26 @@ public class GameOverlay extends Observable implements Observer {
     // FUNCTIONS
 
     public void draw(Graphics g) {
-        if (this.isActivated()) {
-            for (Map.Entry entry : this.elements.entrySet()) {
-                ((InterfaceElement) entry.getValue()).draw(g);
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+                entry.getValue().draw(g);
             }
         }
     }
 
     public void updateOverlay() {
-        for (Map.Entry entry : this.elements.entrySet()) {
-            ((InterfaceElement) entry.getValue()).update();
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+                entry.getValue().update();
+            }
         }
     }
 
+
     public Object event(int key, char c) {
-        if (this.isActivated()) {
-            for (Map.Entry entry : this.elements.entrySet()) {
-                Object result = ((InterfaceElement) entry.getValue()).event(key, c);
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+                Object result = entry.getValue().event(key, c);
                 if (result instanceof MessageChat) {
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.MESSAGE_SERVER, result));
@@ -71,9 +74,9 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public boolean isOnFocus(int x, int y) {
-        if (this.isActivated()) {
-            for (Map.Entry entry : this.elements.entrySet()) {
-                if (((InterfaceElement) entry.getValue()).isOnFocus(x, y)) {
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+                if (entry.getValue().isOnFocus(x, y)) {
                     return true;
                 }
             }
@@ -82,15 +85,15 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public void unFocusAll() {
-        for (Map.Entry entry : this.elements.entrySet()) {
-            ((InterfaceElement) entry.getValue()).setFocused(false);
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            entry.getValue().setFocused(false);
         }
     }
 
     public boolean isFocused() {
-        if (this.isActivated()) {
-            for (Map.Entry entry : this.elements.entrySet()) {
-                if (((InterfaceElement) entry.getValue()).isFocused()) {
+        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+                if (entry.getValue().isFocused()) {
                     return true;
                 }
             }

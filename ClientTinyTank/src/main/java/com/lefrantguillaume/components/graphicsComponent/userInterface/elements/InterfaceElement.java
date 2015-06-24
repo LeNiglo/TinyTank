@@ -9,6 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 public class InterfaceElement {
     protected Rectangle body;
     protected boolean focused;
+    protected boolean needActivated;
 
     // FUNCTION
     public void doTask(Object task){
@@ -40,6 +41,10 @@ public class InterfaceElement {
 
     public Rectangle getBody(){
         return this.body;
+    }
+
+    public boolean isNeedActivated(){
+        return this.needActivated;
     }
 
     // SETTERS

@@ -25,12 +25,14 @@ public class ChatElement extends InterfaceElement {
     private int maxLength;
 
     public ChatElement() {
+        this.focused = false;
+        this.needActivated = true;
+        this.body = new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200);
+
         this.messageData = new ArrayList<>();
         this.messageData.add(new Tuple<>("6416541", "Admin", "Welcome!"));
-        this.body = new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200);
         this.maxLength = 40;
         this.current = "";
-        this.focused = false;
         this.initMessageBodies();
     }
 

@@ -140,7 +140,7 @@ public class GameController extends Observable implements Observer {
 
     public void newPlayer(MessagePlayerNew task) {
         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
-            if (this.getPlayer(task.getId()) != null) {
+            if (this.getPlayer(task.getId()) == null) {
                 this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
                         this.getShots(), task.getPosX(), task.getPosY()));
                 if (task.getId().equals(CurrentUser.getId())) {

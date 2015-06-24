@@ -11,7 +11,7 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
-import com.lefrantguillaume.components.graphicsComponent.overlay.GameOverlay;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
