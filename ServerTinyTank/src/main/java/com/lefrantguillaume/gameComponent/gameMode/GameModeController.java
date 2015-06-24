@@ -2,6 +2,7 @@ package com.lefrantguillaume.gameComponent.gameMode;
 
 import com.lefrantguillaume.gameComponent.gameMode.modes.*;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.utils.GameConfig;
 import javafx.util.Pair;
 
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class GameModeController{
 
     public GameModeController(ObstacleConfigData obstacleConfigData){
         this.gameModes = new HashMap();
-        this.currentGameMode = EnumGameMode.Kingdom;
+        this.currentGameMode = GameConfig.gameMode == null ? EnumGameMode.FreeForAll : GameConfig.gameMode;
         this.initGameModes(obstacleConfigData);
     }
 

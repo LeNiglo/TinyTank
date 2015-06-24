@@ -7,6 +7,7 @@ import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class Shot extends Observable implements Observer {
 
     // FUNCTIONS
 
-    public void explode(Pair<Float, Float> newPos){
+    public void explode(Pair<Float, Float> newPos) {
         Pair<Float, Float> newPoint = new Pair<>(newPos.getV1() + this.shiftHead.getV1(), newPos.getV2() + this.shiftHead.getV2());
         MathTools.rotate(newPos, newPoint, angle);
         this.positions.setV1(newPoint.getV1());
@@ -84,7 +85,16 @@ public class Shot extends Observable implements Observer {
         this.animator.currentAnimation().getCurrentFrame().setCenterOfRotation(this.getShiftOrigin().getV1() * -1, this.getShiftOrigin().getV2() * -1);
         this.animator.currentAnimation().getCurrentFrame().setRotation(this.getAngle());
         for (int i = 0; i < this.savePosShot.size(); ++i) {
-            g.drawAnimation(this.animator.currentAnimation(), this.savePosShot.get(i).getV1(), this.savePosShot.get(i).getV2());
+            if (this.type == EnumGameObject.LASER && i != this.savePosShot.size() - 1) {
+                Animation animation = this.animator.getAnimation(EnumAnimation.BASIC2, 0);
+                if (animation != null)
+                    g.drawAnimation(
+                            animation,
+                            this.savePosShot.get(i).getV1(),
+                            this.savePosShot.get(i).getV2());
+            } else {
+                g.drawAnimation(this.animator.currentAnimation(), this.savePosShot.get(i).getV1(), this.savePosShot.get(i).getV2());
+            }
         }
     }
 
@@ -196,9 +206,9 @@ public class Shot extends Observable implements Observer {
 
 
     // SETTERS
-    public void setCurrentLife(float currentLife){
+    public void setCurrentLife(float currentLife) {
         this.currentDamageShot = currentLife;
-        if (this.currentDamageShot == 0){
+        if (this.currentDamageShot == 0) {
             this.explode(new Pair<>(this.positions));
         }
     }

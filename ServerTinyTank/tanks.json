@@ -72,17 +72,30 @@
         "armor": "0.0",
         "accuracy": "100",
         "build": {
-          "centerX": "-22.0",
-          "centerY": "-22.0",
+          "centerX": "-46.0",
+          "centerY": "-23.0",
           "shiftXExplode": "-73.5",
           "shiftYExplode": "-72.5",
           "collisions": [
             {
-              "shiftOriginX": "-21.0",
-              "shiftOriginY": "-22.0",
-              "sizeX": "47.0",
-              "sizeY": "43.0"
+              "shiftOriginX": "-33.0",
+              "shiftOriginY": "-23.0",
+              "sizeX": "42.0",
+              "sizeY": "11.0"
+            },
+            {
+              "shiftOriginX": "-33.0",
+              "shiftOriginY": "15.0",
+              "sizeX": "42.0",
+              "sizeY": "11.0"
+            },
+            {
+              "shiftOriginX": "-24.0",
+              "shiftOriginY": "-13.0",
+              "sizeX": "42.0",
+              "sizeY": "27.0"
             }
+
           ]
         }
       },
@@ -92,8 +105,8 @@
           "speed": "200.0",
           "damage": "60.0",
           "build": {
-            "centerX": "-41.0",
-            "centerY": "-4.0",
+            "centerX": "-40.0",
+            "centerY": "-24.0",
             "shiftXExplode": "-23.0",
             "shiftYExplode": "-23.0",
             "headX": "10.0",
@@ -109,14 +122,14 @@
           }
         },
         "weapon": {
-          "centerX": "-15.0",
-          "centerY": "-13.0",
+          "centerX": "-40.0",
+          "centerY": "-24.0",
           "canons": [
             {
               "centerX": "0.0",
               "centerY": "0.0",
-              "shiftXHead": "30.0",
-              "shiftYHead": "1.0"
+              "shiftXHead": "40.0",
+              "shiftYHead": "0.0"
             }
           ]
         }

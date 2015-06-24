@@ -12,9 +12,11 @@ public class WindowController {
 
     public static void addConsoleMsg(String msg) {
         WindowController.messages.addInfo(msg);
+        System.out.println(msg);
     }
 
     public static void addConsoleErr(String msg) {
         WindowController.messages.addError(msg);
+        System.err.println(msg);
     }
 }

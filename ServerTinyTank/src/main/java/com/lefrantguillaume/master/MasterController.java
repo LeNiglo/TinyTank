@@ -55,9 +55,7 @@ public class MasterController extends Observable implements Observer {
             this.userInterface = new GraphicalUserInterface(this);
         } else if (type.equals("Console")) {
             this.userInterface = new ConsoleUserInterface(MasterController.this);
-            new Thread(() -> {
-                ((ConsoleUserInterface) MasterController.this.userInterface).fromConsole();
-            }).start();
+            new Thread(((ConsoleUserInterface) MasterController.this.userInterface)::fromConsole).start();
         }
         WindowObserver a = new WindowObserver(userInterface);
         new WindowController(a);
@@ -100,36 +98,31 @@ public class MasterController extends Observable implements Observer {
         if (this.gameController.getMapController().getMaps().size() > 0) {
             new Thread() {
                 public void run() {
-                    new CallbackTask(new Runnable() {
-                        public void run() {
-                            WindowController.addConsoleMsg("Connecting to the data server...");
-                            if (dataServer.initServer()) {
-                                WindowController.addConsoleMsg("Connected to data server !");
-                            }
+                    new CallbackTask(() -> {
+                        WindowController.addConsoleMsg("Connecting to the data server...");
+                        if (dataServer.initServer()) {
+                            WindowController.addConsoleMsg("Connected to data server !");
                         }
-                    }, new Callback() {
-                        @Override
-                        public void complete() {
-                            gameController.getMapController().setCurrentMapIndex(userInterface.getSelectedMapIndex());
-                            //config = theInterface.getGameConfig();
-                            //config.setMap(currentMap);
-                            if (MasterController.this.server.start()) {
-                                MasterController.this.gameController.startGame();
-                                if (!gameStarted) {
-                                    gameStarted = true;
-                                    //WindowController.addConsoleMsg("Starting server...");
-                                } else {
-                                    //WindowController.addConsoleMsg("Restarting server...");
-                                }
-                                userInterface.startGame();
+                    }, () -> {
+                        gameController.getMapController().setCurrentMapIndex(userInterface.getSelectedMapIndex());
+                        //config = theInterface.getGameConfig();
+                        //config.setMap(currentMap);
+                        if (MasterController.this.server.start()) {
+                            MasterController.this.gameController.startGame();
+                            if (!gameStarted) {
+                                gameStarted = true;
+                                //WindowController.addConsoleMsg("Starting server...");
                             } else {
-                                gameStarted = false;
-                                userInterface.stopGame();
-                                //WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
+                                //WindowController.addConsoleMsg("Restarting server...");
                             }
-
-
+                            userInterface.startGame();
+                        } else {
+                            gameStarted = false;
+                            userInterface.stopGame();
+                            //WindowController.addConsoleMsg("Can't start server because you did not fill all the fields correctly !");
                         }
+
+
                     }).run();
                 }
             }.start();
