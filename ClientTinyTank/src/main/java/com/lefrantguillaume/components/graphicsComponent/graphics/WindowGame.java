@@ -14,7 +14,6 @@ import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.graphicsComponent.overlay.GameOverlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
@@ -40,8 +39,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateWindow;
     private Nifty nifty;
-    private ListBox listBox = null;
     private int id;
+    private boolean debug = false;
 
     private int frameRate = 60;
     private long runningTime = 0l;
@@ -53,7 +52,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
-        this.gameOverlay = new GameOverlay(this.listBox);
+        this.gameOverlay = new GameOverlay();
 
         String configs = StringTools.readFile("configInput.json");
         this.input = new InputGame(configs);
@@ -112,31 +111,32 @@ public class WindowGame extends BasicGameState implements ScreenController {
             this.gameController.drawGamePlayers(g);
             this.gameController.drawGameShots(g);
 
-            // debug
-            if (this.gameController.getCollisionController() != null) {
-                g.setColor(Color.red);
-                for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
-                    CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
-                    if (current.isAlive()) {
-                        g.draw(current.getShape());
+            if (debug == true) {
+                // debug
+                if (this.gameController.getCollisionController() != null) {
+                    g.setColor(Color.red);
+                    for (int i = 0; i < this.gameController.getCollisionController().getCollisionObjects().size(); ++i) {
+                        CollisionObject current = this.gameController.getCollisionController().getCollisionObjects().get(i);
+                        if (current.isAlive()) {
+                            g.draw(current.getShape());
+                        }
                     }
                 }
-            }
-            //debug
-            if (CurrentUser.isInGame()) {
-                g.setColor(Color.red);
-                g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY() - 2, 5, 5);
-                g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY(), 1, 1);
-                g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() - 2, 5, 5);
-                g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), 1, 1);
-            }
-
-            g.setColor(Color.darkGray);
-            for (Pair<Integer, Integer> pos : this.mousePos) {
-                g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
+                //debug
+                if (CurrentUser.isInGame()) {
+                    g.setColor(Color.red);
+                    g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY() - 2, 5, 5);
+                    g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY(), 1, 1);
+                    g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() - 2, 5, 5);
+                    g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), 1, 1);
+                }
+                g.setColor(Color.darkGray);
+                for (Pair<Integer, Integer> pos : this.mousePos) {
+                    g.drawRoundRect(pos.getV1() - 1, pos.getV2() - 1, 3, 3, 50);
+                }
             }
         }
-        this.gameOverlay.draw(g, this.nifty);
+        this.gameOverlay.draw(g);
     }
 
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
@@ -145,7 +145,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
         int xpos = input.getMouseX();
         int ypos = input.getMouseY();
 
-        this.gameOverlay.updateNifty(this.nifty);
         if (runningTime > 10) {
             if (this.mousePos.size() > 10) {
                 this.mousePos.remove(0);
@@ -153,15 +152,11 @@ public class WindowGame extends BasicGameState implements ScreenController {
             this.mousePos.add(new Pair<>(xpos, ypos));
         }
         if (runningTime > 30) {
-            if (this.mousePos.size() > 10) {
-                this.mousePos.remove(0);
-            }
-            this.mousePos.add(new Pair<>(xpos, ypos));
+            this.gameOverlay.updateOverlay();
 
-            if (this.gameController != null) {
-                this.myMouseMoved(xpos, ypos);
-                this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
-            }
+            this.myMouseMoved(xpos, ypos);
+            this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
+
             this.runningTime = 0;
         }
     }
@@ -172,22 +167,27 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyPressed(int key, char c) {
-        if (input != null && this.gameController != null) {
-            input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+        Object result = this.gameOverlay.event(key, c);
+        if (result == null) {
+            if (input != null && this.gameController != null) {
+                input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+            }
         }
     }
 
     @Override
     public void keyReleased(int key, char c) {
-        if (input != null && this.gameController != null) {
-            int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
-            if (result == EnumInput.ESCAPE.getIndex()) {
-                this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
-            } else if (result == EnumInput.OVERLAY.getIndex()) {
-                if (this.gameOverlay.isActivated()) {
-                    this.gameOverlay.setActivated(false);
-                } else {
-                    this.gameOverlay.setActivated(true);
+        if (!this.gameOverlay.isFocused()) {
+            if (input != null && this.gameController != null) {
+                int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+                if (result == EnumInput.ESCAPE.getIndex()) {
+                    this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
+                } else if (result == EnumInput.OVERLAY.getIndex()) {
+                    if (this.gameOverlay.isActivated()) {
+                        this.gameOverlay.setActivated(false);
+                    } else {
+                        this.gameOverlay.setActivated(true);
+                    }
                 }
             }
         }
@@ -206,10 +206,12 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void mouseReleased(int button, int x, int y) {
-        if (input != null && button == 0) {
-            input.checkInput(this.gameController, -2, EnumInput.RELEASED, x, y);
-        } else if (input != null && button == 1) {
-            input.checkInput(this.gameController, -3, EnumInput.RELEASED, x, y);
+        if (!this.gameOverlay.isOnFocus(x, y)) {
+            if (input != null && button == 0) {
+                input.checkInput(this.gameController, -2, EnumInput.RELEASED, x, y);
+            } else if (input != null && button == 1) {
+                input.checkInput(this.gameController, -3, EnumInput.RELEASED, x, y);
+            }
         }
     }
 
@@ -289,24 +291,13 @@ public class WindowGame extends BasicGameState implements ScreenController {
     // NIFTY
     @Override
     public void bind(Nifty nifty, Screen screen) {
-/*
-        this.listBox = screen.findNiftyControl("list-chat", ListBox.class);
-        this.listBox.addItem("salut A");
-        this.listBox.addItem("salut B");
-        this.listBox.addItem("bye A");
-        this.listBox.addItem("noob");
-  */
-        this.gameOverlay.bind(nifty, screen);
     }
 
     @Override
     public void onStartScreen() {
-
-        //      this.gameOverlay.onStartScreen();
     }
 
     @Override
     public void onEndScreen() {
-        //    this.gameOverlay.onEndScreen();
     }
 }

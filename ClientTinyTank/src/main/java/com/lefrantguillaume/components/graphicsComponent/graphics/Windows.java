@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
@@ -132,11 +133,18 @@ public class Windows extends NiftyStateBasedGame implements Observer {
         Tuple<EnumTargetTask, EnumTargetTask, Object> task = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
         if (task.getV2().isIn(EnumTargetTask.GAME)) {
+            this.redirectGame(task);
             this.gameTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
         } else if (task.getV2().isIn(EnumTargetTask.ACCOUNT)) {
             this.accountTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
         } else if (task.getV2().isIn(EnumTargetTask.INTERFACE)) {
             this.interfaceTask.sendTask(TaskFactory.createTask(EnumTargetTask.WINDOWS, task));
+        }
+    }
+
+    private void redirectGame(Tuple<EnumTargetTask, EnumTargetTask, Object> task){
+        if (task.getV3() instanceof MessageChat){
+            task.setV2(EnumTargetTask.GAME_OVERLAY);
         }
     }
 }

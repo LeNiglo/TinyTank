@@ -117,7 +117,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
 
     public void connect() {
         try {
-            Pair<Boolean, String> authentication = DataServer.authentification(this.loginField.getDisplayedText(), this.passField.getRealText());
+            Pair<Boolean, String> authentication = DataServer.authentification(this.loginField.getRealText(), this.passField.getRealText());
             if (authentication.getV1()) {
                 JSONObject object = new JSONObject(authentication.getV2());
                 Debug.debug("my id = " + object.get("_id"));
