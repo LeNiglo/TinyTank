@@ -34,7 +34,8 @@ public class Obstacle extends Observable {
     public Obstacle(Animator animator, EnumGameObject type, List<EnumGameObject> ignored, List<Block> collisionObject, Pair<Float, Float> shiftOrigin, float maxLife, float damage) {
         this.animator = animator;
         this.type = type;
-        this.collisionObject = collisionObject;
+        this.collisionObject = new ArrayList<>();
+        this.collisionObject.addAll(collisionObject.stream().map(block -> new Block(block.getShiftOrigin(), block.getSizes())).collect(Collectors.toList()));
         this.ignored = ignored;
         this.shiftOrigin = shiftOrigin;
         this.maxLife = maxLife;
