@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 
@@ -105,13 +104,10 @@ public class Animator implements Observer {
 
     public Animation getAnimation(EnumAnimation type, int index) {
         if (this.animations.containsKey(type)) {
-            Debug.debug("lol1");
             if (index < this.animations.get(type).size()) {
-                Debug.debug("lol2");
                 return this.animations.get(type).get(index);
             }
         }
-        Debug.debug("lol3");
         return null;
     }
     // SETTERS
