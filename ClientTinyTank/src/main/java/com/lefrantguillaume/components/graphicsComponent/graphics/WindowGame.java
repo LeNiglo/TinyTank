@@ -40,7 +40,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private StateBasedGame stateWindow;
     private Nifty nifty;
     private int id;
-    private boolean debug = false;
+    private boolean debug = true;
 
     private int frameRate = 60;
     private long runningTime = 0l;

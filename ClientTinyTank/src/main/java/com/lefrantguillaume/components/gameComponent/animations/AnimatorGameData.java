@@ -74,13 +74,15 @@ public class AnimatorGameData {
 
     private void initObstacles() throws SlickException {
         this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL), EnumGameObject.IRON_WALL);
-        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL), EnumGameObject.PLASMA_WALL);
-        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.IRON_WALL), EnumGameObject.MINE);
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.PLASMA_WALL), EnumGameObject.PLASMA_WALL);
+        this.addObstacleAnimator(this.animatorFactory.getAnimator(EnumSprites.MINE), EnumGameObject.MINE);
     }
 
     private void initAreas() throws SlickException {
-        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_SPELL), EnumGameObject.SPAWN_AREA);
-        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.TIGER_SPELL), EnumGameObject.OBJECTIVE_AREA);
+        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.OBJECTIVE), EnumGameObject.OBJECTIVE_AREA);
+
+        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.BOMB), EnumGameObject.SPAWN_AREA);
+        //TODO -> AREA devient BOMB ( server + client )
     }
 
     public void addTankAnimator(Animator tankAnimator, EnumGameObject type) {

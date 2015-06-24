@@ -10,6 +10,9 @@ public enum EnumSprites {
     SNIPER(2),
     RUSHER(3),
     WALL(4),
+    AREA(5),
+    OBJECTIVE(AREA.getIndex()),
+    BOMB(AREA.getIndex()),
     //interface
     BACKGROUND(-1), NEXT(-1), PREV(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),

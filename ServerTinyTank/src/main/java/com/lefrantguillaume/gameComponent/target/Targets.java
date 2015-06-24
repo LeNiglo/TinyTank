@@ -138,12 +138,12 @@ public class Targets {
                     } else {
                         messages.add(this.deleteObstacle(targetId));
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)){
+                } else if (obstacle.getType().equals(EnumGameObject.SPAWN_AREA)){
                     WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
                     if (gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player.getTeamId(), obstacle.getId())))) {
                         player.setTransportObjective(true);
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.SPAWN_AREA) && type == EnumCollision.IN) {
+                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA) && type == EnumCollision.IN) {
                     WindowController.addConsoleMsg("PLAYER VS SPAWN");
                     if (player.isTransportObjective()) {
                         if (gameModeController.doTask(new Pair<>(EnumAction.IN, new Pair<>(player.getTeamId(), obstacle.getId())))) {

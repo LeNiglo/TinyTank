@@ -28,6 +28,9 @@ public class AnimatorGameFactory extends AnimatorFactory {
         if (index.getIndex() == EnumSprites.WALL.getIndex()) {
             this.wallAnimator(animator, index);
         }
+        if (index.getIndex() == EnumSprites.AREA.getIndex()) {
+            this.areaLoad(animator, index);
+        }
         return animator;
     }
 
@@ -66,7 +69,7 @@ public class AnimatorGameFactory extends AnimatorFactory {
             animator.addAnimation(EnumAnimation.BASIC, animation3);
         } else if (index == EnumSprites.MINE) {
             Animation animation1 = new Animation();
-            Image img1 = new Image("assets/img/rusher/box1.png");
+            Image img1 = new Image("assets/img/rusher/box.png");
             animation1.addFrame(img1, 150);
             animation1.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation1);
@@ -183,8 +186,10 @@ public class AnimatorGameFactory extends AnimatorFactory {
             animation2.setLooping(false);
             animator.addAnimation(EnumAnimation.EXPLODE, animation2);
         } else if (index == EnumSprites.RUSHER_SPELL) {
-            SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/effect/rusher_circle.png", 200, 200);
-            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 3, 0, 1, 200));
+            Animation animation = new Animation();
+            Image img1 = new Image("assets/img/blank.png");
+            animation.addFrame(img1, 300);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
         } else if (index == EnumSprites.RUSHER_BODY_ENEMY) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/tank/rusherE_1.png", 50, 50);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
@@ -201,5 +206,15 @@ public class AnimatorGameFactory extends AnimatorFactory {
     private void mapLoad(Animator animator) throws SlickException {
         SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/game_bg.png", 1280, 768);
         animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+    }
+
+    private void areaLoad(Animator animator, EnumSprites index) throws SlickException {
+        if (index == EnumSprites.OBJECTIVE) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/objective.png", 100, 98);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+        } else if (index == EnumSprites.BOMB) {
+            SpriteSheet spriteSheet = new SpriteSheet("assets/img/bomb.png", 30, 30);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+        }
     }
 }

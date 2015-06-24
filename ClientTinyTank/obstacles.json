@@ -4,14 +4,14 @@
       "life": "20",
       "damage": "0",
       "build": {
-        "centerX": "-25.0",
-        "centerY": "-22.5",
+        "centerX": "-22.5",
+        "centerY": "-22.0",
         "collisions": [
           {
-            "shiftOriginX": "-25.0",
-            "shiftOriginY": "-22.5",
-            "sizeX": "50.0",
-            "sizeY": "45.0"
+            "shiftOriginX": "-22.5",
+            "shiftOriginY": "-22.0",
+            "sizeX": "45.0",
+            "sizeY": "44.0"
           }
         ],
         "ignored": [
@@ -22,14 +22,14 @@
       "life": "20",
       "damage": "0",
       "build": {
-        "centerX": "-25.0",
-        "centerY": "-22.5",
+        "centerX": "-22.5",
+        "centerY": "-12.5",
         "collisions": [
           {
-            "shiftOriginX": "-25.0",
-            "shiftOriginY": "-22.5",
-            "sizeX": "50.0",
-            "sizeY": "45.0"
+            "shiftOriginX": "-22.5",
+            "shiftOriginY": "-12.5",
+            "sizeX": "45.0",
+            "sizeY": "25.0"
           }
         ],
         "ignored": [
@@ -41,14 +41,14 @@
       "life": "1",
       "damage": "50",
       "build": {
-        "centerX": "-25.0",
-        "centerY": "-22.5",
+        "centerX": "-7.0",
+        "centerY": "-7.0",
         "collisions": [
           {
-            "shiftOriginX": "-25.0",
-            "shiftOriginY": "-22.5",
-            "sizeX": "50.0",
-            "sizeY": "45.0"
+            "shiftOriginX": "-7.0",
+            "shiftOriginY": "-7.0",
+            "sizeX": "15.0",
+            "sizeY": "15.0"
           }
         ],
         "ignored": [
@@ -67,13 +67,13 @@
       "life": "1",
       "damage": "0",
       "build": {
-        "centerX": "-45.0",
-        "centerY": "-45.0",
+        "centerX": "-15.0",
+        "centerY": "-15.0",
         "collisions": [
           {
-            "shiftOriginX": "-45.0",
-            "shiftOriginY": "-45.0",
-            "sizeX": "45.0",
+            "shiftOriginX": "-15.0",
+            "shiftOriginY": "-15.0",
+            "sizeX": "15.0",
             "sizeY": "-1.0"
           }
         ],
@@ -91,13 +91,13 @@
       "life": "1",
       "damage": "0",
       "build": {
-        "centerX": "-45.0",
-        "centerY": "-45.0",
+        "centerX": "-50.0",
+        "centerY": "-49.0",
         "collisions": [
           {
-            "shiftOriginX": "-45.0",
-            "shiftOriginY": "-45.0",
-            "sizeX": "45.0",
+            "shiftOriginX": "-50.0",
+            "shiftOriginY": "-49.0",
+            "sizeX": "50.0",
             "sizeY": "-1.0"
           }
         ],
