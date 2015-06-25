@@ -42,17 +42,18 @@ public class TouchDown extends GameMode {
             WindowController.addConsoleMsg("IN AREA");
             if (values.getValue().getType() == EnumGameObject.BOMB_AREA) {
                 WindowController.addConsoleMsg("GET OBJECTIVE");
-                values.getKey().setTransportObjective(true);
+
+                values.getKey().setTransportObjective(this.obstacles.get(0));
                 messages.add(targets.deleteObstacle(values.getValue().getId()));
+
             } else if (values.getValue().getType() == EnumGameObject.OBJECTIVE_AREA && !values.getValue().getPlayerId().equals(values.getKey().getId())) {
                 if (values.getKey().isTransportObjective()) {
-                    values.getKey().setTransportObjective(false);
+                    values.getKey().setTransportObjective(null);
+
                     WindowController.addConsoleMsg("GET POINTS");
                     this.incrementScore(values.getKey().getTeamId(), 1);
-                    targets.addObstacle(this.obstacles.get(0));
-                    Obstacle tmp = this.obstacles.get(0);
-                    MessagePutObstacle message = new MessagePutObstacle(tmp.getPlayerId(), tmp.getPlayerPseudo(), tmp.getId(), tmp.getType(), tmp.getX(), tmp.getY(), tmp.getAngle());
-                    messages.add(message);
+
+                    messages.add(targets.addObstacle(this.obstacles.get(0)));
                 }
             }
             return messages;

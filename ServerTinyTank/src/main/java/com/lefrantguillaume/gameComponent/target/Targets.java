@@ -11,6 +11,7 @@ import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.gameComponent.maps.MapController;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePutObstacle;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageShotUpdateState;
 import com.lefrantguillaume.utils.ServerConfig;
 import javafx.util.Pair;
@@ -77,12 +78,15 @@ public class Targets {
                             killer.addKill();
                             gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
                             player.addDeath();
+                            if (player.isTransportObjective()){
+                                messages.add(this.addObstacle(player.getTransportObjective()));
+                                player.setTransportObjective(null);
+                            }
                         }
                     }
                     if (hitterShot.getCurrentDamageShot() == 0) {
                         messages.add(this.deleteShot(hitterShot.getId()));
                     }
-
                 }
             }
             if (this.getObstacle(targetId) != null) {
@@ -133,6 +137,10 @@ public class Targets {
                                 killer.addKill();
                                 gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
                                 player.addDeath();
+                                if (player.isTransportObjective()){
+                                    messages.add(this.addObstacle(player.getTransportObjective()));
+                                    player.setTransportObjective(null);
+                                }
                             }
                             messages.add(this.deleteObstacle(targetId));
                         }
@@ -165,8 +173,9 @@ public class Targets {
         this.shots.put(shot.getId(), shot);
     }
 
-    public void addObstacle(Obstacle obstacle) {
+    public MessagePutObstacle addObstacle(Obstacle obstacle) {
         this.obstacles.put(obstacle.getId(), obstacle);
+        return new MessagePutObstacle(obstacle.getPlayerId(), obstacle.getPlayerPseudo(), obstacle.getId(), obstacle.getType(), obstacle.getX(), obstacle.getY(), obstacle.getAngle());
     }
 
     public void addObstacles(List<Obstacle> obstacles) {

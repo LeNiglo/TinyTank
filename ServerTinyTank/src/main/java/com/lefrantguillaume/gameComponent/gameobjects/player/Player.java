@@ -2,6 +2,7 @@ package com.lefrantguillaume.gameComponent.gameobjects.player;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.Tank;
 
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ public class Player {
     private int ammo = 1;
     private int timerAmmo = 2;
     private int ammoCooldown = 100;
-    private boolean canShoot = true;
-    private boolean transportObjective = false;
+    private boolean canShoot;
+    private Obstacle transportObjective;
 
     public Player(String id, String pseudo, String teamId, Tank tank, Connection connection) {
         this.id = id;
@@ -35,6 +36,8 @@ public class Player {
         this.tank = tank;
         this.connection = connection;
         this.teamId = teamId;
+        this.canShoot = true;
+        this.transportObjective = null;
     }
 
     public void addKill() {
@@ -82,7 +85,7 @@ public class Player {
         this.teamId = teamId;
     }
 
-    public void setTransportObjective(boolean value){
+    public void setTransportObjective(Obstacle value){
         this.transportObjective = value;
     }
 
@@ -103,8 +106,16 @@ public class Player {
         return nbDeaths;
     }
 
-    public boolean isTransportObjective(){
+    public Obstacle getTransportObjective(){
         return this.transportObjective;
+    }
+
+    public boolean isTransportObjective(){
+        if (this.transportObjective == null){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public Tank getTank() {
