@@ -81,7 +81,7 @@ public class AnimatorGameData {
     private void initAreas() throws SlickException {
         this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.OBJECTIVE), EnumGameObject.OBJECTIVE_AREA);
 
-        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.BOMB), EnumGameObject.SPAWN_AREA);
+        this.addAreaAnimator(this.animatorFactory.getAnimator(EnumSprites.BOMB), EnumGameObject.BOMB_AREA);
         //TODO -> AREA devient BOMB ( server + client )
     }
 

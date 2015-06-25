@@ -63,7 +63,7 @@
     }
   },
   "area": {
-    "spawn_area": {
+    "bomb_area": {
       "life": "1",
       "damage": "0",
       "build": {

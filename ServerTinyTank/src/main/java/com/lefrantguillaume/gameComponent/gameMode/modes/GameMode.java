@@ -50,7 +50,7 @@ public class GameMode {
         this.playable = false;
     }
 
-    public boolean doTask(Pair<EnumAction, Object> task) {
+    public Object doTask(Pair<EnumAction, Object> task, Object data) {
         return false;
     }
 
@@ -144,13 +144,6 @@ public class GameMode {
         return this.obstacles;
     }
 
-    public Obstacle getSpecificObstacle(String id){
-        for (Obstacle obstacle : this.obstacles){
-            if (obstacle.getId().equals(id))
-                return obstacle;
-        }
-        return null;
-    }
 
     public boolean isPlayable() {
         return this.playable;

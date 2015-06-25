@@ -4,7 +4,6 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
-import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
@@ -19,6 +18,7 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by leniglo on 23/04/15.
@@ -44,7 +44,7 @@ public class Targets {
         if (mapObstacles != null) {
             this.addObstacles(mapObstacles);
         }
-        if (moreObstacles != null){
+        if (moreObstacles != null) {
             this.addObstacles(moreObstacles);
         }
     }
@@ -75,7 +75,7 @@ public class Targets {
                         messages.add(player.getTank().getTankState().getHit(player, damage));
                         if (player.getTank().getTankState().getCurrentLife() == 0) {
                             killer.addKill();
-                            gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()));
+                            gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
                             player.addDeath();
                         }
                     }
@@ -131,7 +131,7 @@ public class Targets {
                             messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
                             if (player.getTank().getTankState().getCurrentLife() == 0) {
                                 killer.addKill();
-                                gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()));
+                                gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
                                 player.addDeath();
                             }
                             messages.add(this.deleteObstacle(targetId));
@@ -139,17 +139,17 @@ public class Targets {
                     } else {
                         messages.add(this.deleteObstacle(targetId));
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.SPAWN_AREA)){
-                    WindowController.addConsoleMsg("PLAYER VS SPAWN");
-                    if (gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player.getTeamId(), obstacle.getId())))) {
-                        player.setTransportObjective(true);
+                } else if (obstacle.getType().equals(EnumGameObject.BOMB_AREA)) {
+                    WindowController.addConsoleMsg("PLAYER VS BOMB");
+                    Object value = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                    if (value instanceof List){
+                        messages.addAll(((List<MessageModel>) value).stream().collect(Collectors.toList()));
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA) && type == EnumCollision.IN) {
+                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)) {
                     WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
-                    if (player.isTransportObjective() || gameModeController.getCurrentGameMode() == EnumGameMode.Kingdom) {
-                        if (gameModeController.doTask(new Pair<>(EnumAction.IN, new Pair<>(player.getTeamId(), obstacle.getId())))) {
-                            player.setTransportObjective(false);
-                        }
+                    Object value = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                    if (value instanceof List){
+                        messages.addAll(((List<MessageModel>) value).stream().collect(Collectors.toList()));
                     }
                 }
             }
@@ -157,19 +157,19 @@ public class Targets {
         return messages;
     }
 
-    public void addPlayer(String id, Player player) {
-        this.players.put(id, player);
+    public void addPlayer(Player player) {
+        this.players.put(player.getId(), player);
     }
 
-    public void addShot(String id, Shot shot) {
-        this.shots.put(id, shot);
+    public void addShot(Shot shot) {
+        this.shots.put(shot.getId(), shot);
     }
 
-    public void addObstacle(String id, Obstacle obstacle) {
-        this.obstacles.put(id, obstacle);
+    public void addObstacle(Obstacle obstacle) {
+        this.obstacles.put(obstacle.getId(), obstacle);
     }
 
-    public void addObstacles(List<Obstacle> obstacles){
+    public void addObstacles(List<Obstacle> obstacles) {
         for (Obstacle obstacle : obstacles) {
             this.obstacles.put(obstacle.getId(), obstacle);
         }

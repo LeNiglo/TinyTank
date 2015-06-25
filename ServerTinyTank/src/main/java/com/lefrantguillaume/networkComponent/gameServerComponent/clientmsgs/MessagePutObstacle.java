@@ -15,6 +15,16 @@ public class MessagePutObstacle extends MessageModel {
 
     public MessagePutObstacle() {}
 
+    public MessagePutObstacle(String pseudo, String id,  String obstacleId, EnumGameObject type, float posX, float posY, float angle){
+        this.pseudo = pseudo;
+        this.id = id;
+        this.obstacleId = obstacleId;
+        this.posX = posX;
+        this.posY = posY;
+        this.angle = angle;
+        this.type = type;
+    }
+
     // GETTERS
     public float getPosX() {
         return this.posX;

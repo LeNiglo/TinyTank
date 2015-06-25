@@ -5,11 +5,16 @@ import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
+import com.lefrantguillaume.gameComponent.target.Targets;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePutObstacle;
 import com.lefrantguillaume.utils.WindowConfig;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by andres_k on 13/05/2015.
@@ -27,39 +32,38 @@ public class TouchDown extends GameMode {
     // FUNCTIONS
 
     @Override
-    public boolean doTask(Pair<EnumAction, Object> task) {
+    public Object doTask(Pair<EnumAction, Object> task, Object data) {
 
-        if (task.getKey().equals(EnumAction.IN)) {
-            Pair<String, String> values = (Pair<String, String>) task.getValue();
+        if (task.getKey().equals(EnumAction.IN) && data instanceof Targets) {
+            Pair<Player, Obstacle> values = (Pair<Player, Obstacle>) task.getValue();
+            List<MessageModel> messages = new ArrayList<>();
+            Targets targets = (Targets) data;
 
             WindowController.addConsoleMsg("IN AREA");
-            Obstacle obstacle = this.getSpecificObstacle(values.getValue());
-            if (obstacle != null) {
-                if (obstacle.getType() == EnumGameObject.SPAWN_AREA) {
-                    if (this.canDoObjective == true) {
-                        WindowController.addConsoleMsg("GET OBJECTIVE");
-                        this.canDoObjective = false;
-                        return true;
-                    }
-                } else if (obstacle.getType() == EnumGameObject.OBJECTIVE_AREA && !obstacle.getPlayerId().equals(values.getKey())) {
-                    if (this.canDoObjective == false) {
-                        this.canDoObjective = true;
-                        WindowController.addConsoleMsg("GET POINTS");
-                        this.incrementScore(values.getKey(), 1);
-                        return true;
-                    }
-                } else {
-                    WindowController.addConsoleMsg("FUCK KEVIN");
+            if (values.getValue().getType() == EnumGameObject.BOMB_AREA) {
+                WindowController.addConsoleMsg("GET OBJECTIVE");
+                values.getKey().setTransportObjective(true);
+                messages.add(targets.deleteObstacle(values.getValue().getId()));
+            } else if (values.getValue().getType() == EnumGameObject.OBJECTIVE_AREA && !values.getValue().getPlayerId().equals(values.getKey().getId())) {
+                if (values.getKey().isTransportObjective()) {
+                    values.getKey().setTransportObjective(false);
+                    WindowController.addConsoleMsg("GET POINTS");
+                    this.incrementScore(values.getKey().getTeamId(), 1);
+                    targets.addObstacle(this.obstacles.get(0));
+                    Obstacle tmp = this.obstacles.get(0);
+                    MessagePutObstacle message = new MessagePutObstacle(tmp.getPlayerId(), tmp.getPlayerPseudo(), tmp.getId(), tmp.getType(), tmp.getX(), tmp.getY(), tmp.getAngle());
+                    messages.add(message);
                 }
             }
+            return messages;
         }
         return false;
     }
 
     @Override
-    public void initObstacles(ObstacleConfigData obstacleConfigData){
-        Obstacle obstacle1 = obstacleConfigData.getObstacle(EnumGameObject.SPAWN_AREA);
-        obstacle1.createObstacle(DataServer.getId(), "admin", EnumGameObject.SPAWN_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
+    public void initObstacles(ObstacleConfigData obstacleConfigData) {
+        Obstacle obstacle1 = obstacleConfigData.getObstacle(EnumGameObject.BOMB_AREA);
+        obstacle1.createObstacle(DataServer.getId(), "admin", EnumGameObject.BOMB_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
         this.obstacles.add(obstacle1);
         Obstacle obstacle2 = obstacleConfigData.getObstacle(EnumGameObject.OBJECTIVE_AREA);
         obstacle2.createObstacle(this.teams.get(0).getId(), "admin", EnumGameObject.OBJECTIVE_AREA.getValue() + "1", 0, 50, 50);

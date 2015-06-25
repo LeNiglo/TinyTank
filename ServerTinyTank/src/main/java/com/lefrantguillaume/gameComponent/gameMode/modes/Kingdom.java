@@ -6,6 +6,7 @@ import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
 import com.lefrantguillaume.utils.WindowConfig;
 import javafx.util.Pair;
@@ -36,26 +37,33 @@ public class Kingdom extends GameMode {
     // FUNCTIONS
 
     @Override
-    public boolean doTask(Pair<EnumAction, Object> task) {
+    public Object doTask(Pair<EnumAction, Object> task, Object data) {
         if (task.getKey().equals(EnumAction.KILL)) {
             this.incrementScore((String)task.getValue(), 5);
         } else {
-            Pair<String, String> values = (Pair<String, String>) task.getValue();
+            Pair<Player, Obstacle> values = (Pair<Player, Obstacle>) task.getValue();
+
+            WindowController.addConsoleMsg("type: " + task.getKey());
             if (task.getKey().equals(EnumAction.IN)) {
-                if (this.playersInObjective.containsKey(values.getKey())) {
-                    this.playersInObjective.replace(values.getKey(), this.playersInObjective.get(values.getKey()) + 1);
+                if (this.playersInObjective.containsKey(values.getKey().getTeamId())) {
+                    this.playersInObjective.replace(values.getKey().getTeamId(), this.playersInObjective.get(values.getKey().getTeamId()) + 1);
                     if (this.timerRunning == false) {
                         this.startTimer();
                     }
                 }
             } else if (task.getKey().equals(EnumAction.OUT)) {
-                if (this.playersInObjective.containsKey(values.getKey())) {
-                    int value = this.playersInObjective.get(values.getKey()) - 1;
+                WindowController.addConsoleMsg("a");
+                if (this.playersInObjective.containsKey(values.getKey().getTeamId())) {
+                    WindowController.addConsoleMsg("b");
+                    int value = this.playersInObjective.get(values.getKey().getTeamId()) - 1;
+                    WindowController.addConsoleMsg("value: " + value);
                     if (value < 0)
                         value = 0;
-                    this.playersInObjective.replace(values.getKey(), value);
+                    this.playersInObjective.replace(values.getKey().getTeamId(), value);
                 }
+                WindowController.addConsoleMsg("playerInObj: " + this.getPlayersInObjective());
                 if (this.getPlayersInObjective() == 0) {
+                    WindowController.addConsoleMsg("c");
                     this.resumeTimer();
                 }
             }
@@ -106,8 +114,8 @@ public class Kingdom extends GameMode {
     private int getPlayersInObjective() {
         int number = 0;
 
-        for (Map.Entry item : this.playersInObjective.entrySet()) {
-            number += (Integer) item.getValue();
+        for (Map.Entry<String, Integer> item : this.playersInObjective.entrySet()) {
+            number += item.getValue();
         }
         return number;
     }
@@ -116,13 +124,13 @@ public class Kingdom extends GameMode {
         int number = 0;
         String idTeam = null;
 
-        for (Map.Entry item : this.playersInObjective.entrySet()) {
-            Integer value = (Integer) item.getValue();
+        for (Map.Entry<String, Integer> item : this.playersInObjective.entrySet()) {
+            Integer value = item.getValue();
             if (value != 0) {
                 if (number != 0)
                     return null;
                 number = value;
-                idTeam = (String) item.getKey();
+                idTeam = item.getKey();
             }
         }
         return idTeam;
@@ -133,7 +141,7 @@ public class Kingdom extends GameMode {
         public void run() {
             String idTeam = getTeamInObjective();
             WindowController.addConsoleMsg("team? " + idTeam);
-            if (idTeam != null) {
+            if (idTeam != null && isWinnerTeam() == null) {
                 WindowController.addConsoleMsg("ADD POINTS, so winner ? " + isWinnerTeam());
                 incrementScore(idTeam, 10);
             }

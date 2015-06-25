@@ -131,7 +131,7 @@ public class GameController extends Observable {
         WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
 
         this.sendAllTargetsToSomeone(connection, true, true);
-        this.targets.addPlayer(received.getId(), new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(),
+        this.targets.addPlayer(new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(),
                 this.tankConfigData.getTank(received.getEnumTanks()), connection));
         Player player = this.targets.getPlayer(received.getId());
         this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
@@ -257,7 +257,7 @@ public class GameController extends Observable {
             Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
             obstacle.createObstacle(received.getId(), received.getPseudo(), received.getSpellId(), received.getAngle(), received.getPosX(), received.getPosY());
             WindowController.addConsoleMsg("create SpellObstacle " + received.getType() + "with playerId:" + received.getId() + " idBox: " + received.getSpellId());
-            this.targets.addObstacle(received.getSpellId(), obstacle);
+            this.targets.addObstacle(obstacle);
         }
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
@@ -272,7 +272,7 @@ public class GameController extends Observable {
             player.setCanShoot(false);
             message.setShootId(UUID.randomUUID().toString());
             WindowController.addConsoleMsg("new Shoot : " + message.getShotId());
-            this.targets.addShot(message.getShotId(), player.getTank().getTankWeapon().generateShot(message.getShotId(), player.getId()));
+            this.targets.addShot(player.getTank().getTankWeapon().generateShot(message.getShotId(), player.getId()));
 
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
@@ -295,7 +295,7 @@ public class GameController extends Observable {
         Obstacle obstacle = this.obstacleConfigData.getObstacle(received.getType());
         obstacle.createObstacle(received.getId(), received.getPseudo(), received.getObstacleId(), received.getAngle(), received.getPosX(), received.getPosY());
         WindowController.addConsoleMsg("create Box " + received.getType() + "with playerId:" + received.getId() + " idBox: " + received.getObstacleId());
-        this.targets.addObstacle(received.getObstacleId(), obstacle);
+        this.targets.addObstacle(obstacle);
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
@@ -405,16 +405,9 @@ public class GameController extends Observable {
 
         if (obstacles == true) {
             for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
-                MessagePutObstacle tmpMessage = new MessagePutObstacle();
-
+                Obstacle tmp = entry.getValue();
+                MessagePutObstacle tmpMessage = new MessagePutObstacle(tmp.getPlayerId(), tmp.getPlayerPseudo(), tmp.getId(), tmp.getType(), tmp.getX(), tmp.getY(), tmp.getAngle());
                 WindowController.addConsoleMsg("send Box: " + entry.getKey());
-                tmpMessage.setId(entry.getValue().getPlayerId());
-                tmpMessage.setPseudo(entry.getValue().getPlayerPseudo());
-                tmpMessage.setObstacleId(entry.getValue().getId());
-                tmpMessage.setType(entry.getValue().getType());
-                tmpMessage.setAngle(entry.getValue().getAngle());
-                tmpMessage.setPosX(entry.getValue().getX());
-                tmpMessage.setPosY(entry.getValue().getY());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
             }

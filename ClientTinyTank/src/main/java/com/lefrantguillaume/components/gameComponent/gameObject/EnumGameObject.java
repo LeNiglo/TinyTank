@@ -28,7 +28,7 @@ public enum EnumGameObject {
     MINE("mine"),
     MINE_ENEMY("mineEnemy"),
     /* Areas */
-    SPAWN_AREA("spawn_area"),
+    BOMB_AREA("bomb_area"),
     OBJECTIVE_AREA("objective_area");
 
 

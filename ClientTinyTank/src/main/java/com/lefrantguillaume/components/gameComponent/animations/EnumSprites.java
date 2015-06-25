@@ -11,8 +11,6 @@ public enum EnumSprites {
     RUSHER(3),
     WALL(4),
     AREA(5),
-    OBJECTIVE(AREA.getIndex()),
-    BOMB(AREA.getIndex()),
     //interface
     BACKGROUND(-1), NEXT(-1), PREV(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),
@@ -25,7 +23,10 @@ public enum EnumSprites {
     SNIPER_BODY(SNIPER.getIndex()), SNIPER_TOP(SNIPER.getIndex()), SNIPER_SPELL(SNIPER.getIndex()), SNIPER_HIT(SNIPER.getIndex()),
     SNIPER_BODY_ENEMY(SNIPER.getIndex()), SNIPER_TOP_ENEMY(SNIPER.getIndex()),
     RUSHER_BODY(RUSHER.getIndex()), RUSHER_TOP(RUSHER.getIndex()), RUSHER_SPELL(RUSHER.getIndex()), RUSHER_HIT(RUSHER.getIndex()),
-    RUSHER_BODY_ENEMY(RUSHER.getIndex()), RUSHER_TOP_ENEMY(RUSHER.getIndex());
+    RUSHER_BODY_ENEMY(RUSHER.getIndex()), RUSHER_TOP_ENEMY(RUSHER.getIndex()),
+    // area
+    OBJECTIVE(AREA.getIndex()),
+    BOMB(AREA.getIndex());
 
 
     private final int index;
