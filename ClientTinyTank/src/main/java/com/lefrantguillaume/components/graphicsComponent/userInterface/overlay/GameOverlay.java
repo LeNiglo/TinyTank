@@ -7,10 +7,12 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -29,8 +31,8 @@ public class GameOverlay extends Observable implements Observer {
     public GameOverlay() {
         this.activated = false;
         this.elements = new HashMap<>();
-        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200)));
-        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400)));
+        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400), null)));
     }
 
 

@@ -1,18 +1,18 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.geom.Rectangle;
 
 /**
  * Created by andres_k on 23/06/2015.
  */
 public abstract class InterfaceElement {
-    protected Rectangle body;
+    protected BodyRect body;
     protected boolean focused;
     protected boolean needActivated;
 
     // FUNCTION
-    protected abstract void parentInit(Rectangle body);
+    protected abstract void parentInit(BodyRect body);
 
     public abstract void doTask(Object task);
 
@@ -34,10 +34,6 @@ public abstract class InterfaceElement {
     // GETTERS
     public boolean isFocused() {
         return this.focused;
-    }
-
-    public Rectangle getBody(){
-        return this.body;
     }
 
     public boolean isNeedActivated(){

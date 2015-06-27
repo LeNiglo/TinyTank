@@ -11,27 +11,26 @@ import java.util.List;
 /**
  * Created by andres_k on 27/06/2015.
  */
-public class StringListBody {
+public class StringListElement extends Element {
     private List<Pair<Color, StringTimer>> printMessages;
     private List<Rectangle> positionMessages;
-    private Rectangle body;
     private int maxLength;
     private int toPrint;
 
-    public StringListBody(Rectangle body) {
+    public StringListElement(BodyRect body) {
         this.body = body;
-        this.toPrint = (int) (body.getHeight() / 20);
+        this.toPrint = (int) (body.getSizeY() / 20);
         this.init();
     }
 
-    public StringListBody(Rectangle body, int toPrint) {
+    public StringListElement(BodyRect body, int toPrint) {
         this.body = body;
         this.toPrint = toPrint;
         this.init();
     }
 
     private void init() {
-        this.maxLength = (int) (body.getWidth() / 10);
+        this.maxLength = (int) (body.getSizeX() / 10);
         this.printMessages = new ArrayList<>();
         this.positionMessages = new ArrayList<>();
 
@@ -42,14 +41,16 @@ public class StringListBody {
     private void initPositionMessage() {
         int line = 10;
         for (int i = 0; i < this.toPrint; ++i) {
-            this.positionMessages.add(0, new Rectangle(this.body.getMinX(), this.body.getMinY() + line, 0, 0));
+            this.positionMessages.add(0, new Rectangle(this.body.getX(), this.body.getY() + line, 0, 0));
             line += 20;
         }
     }
 
+    @Override
     public void draw(Graphics g) {
         int i = 0;
 
+        this.body.draw(g);
         while (i < this.positionMessages.size()) {
             if (i < this.printMessages.size()) {
                 g.setColor(this.printMessages.get(i).getV1());
@@ -57,9 +58,9 @@ public class StringListBody {
             }
             ++i;
         }
-        g.setColor(Color.black);
     }
 
+    @Override
     public void update() {
         boolean removed = false;
 

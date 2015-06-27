@@ -3,7 +3,8 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListBody;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -19,17 +20,18 @@ import java.util.List;
 
 public class ChatElement extends InterfaceElement {
     private List<Pair<Color, Tuple<String, String, String>>> messageData;
-    private StringListBody stringListBody;
+    private StringListElement stringListElement;
     private Rectangle writer;
     private String current;
 
-    public ChatElement(Rectangle body) {
+    public ChatElement(BodyRect body) {
         this.parentInit(body);
         this.childInit();
     }
 
+    // INIT
     @Override
-    protected void parentInit(Rectangle body) {
+    protected void parentInit(BodyRect body) {
         this.focused = false;
         this.needActivated = true;
         this.body = body;
@@ -39,30 +41,27 @@ public class ChatElement extends InterfaceElement {
         this.messageData = new ArrayList<>();
         this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "Welcome!")));
         this.current = "";
-        this.stringListBody = new StringListBody(this.body, 7);
-        this.writer = new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, 20);
-        this.stringListBody.addAllToPrint(this.getMessagesToPrint());
+        this.stringListElement = new StringListElement(this.body, 7);
+        this.writer = new Rectangle(this.body.getX() + 20, this.body.getY() + 170, 300, 20);
+        this.stringListElement.addAllToPrint(this.getMessagesToPrint());
     }
 
     // FUNCTIONS
-
     @Override
     public void draw(Graphics g) {
-        g.setColor(new Color(0.1f, 0.2f, 0.3f, 0.5f));
-        g.fill(this.body);
+        this.stringListElement.draw(g);
         g.setColor(new Color(0.2f, 0.2f, 0.3f, 0.6f));
         g.fill(this.writer);
         if (this.focused) {
             g.setColor(Color.white);
             g.drawRect(this.writer.getMinX(), this.writer.getMaxY(), this.writer.getWidth(), 1);
         }
-        g.setColor(Color.black);
+        g.setColor(Color.white);
         int begin = this.current.length() - (int)(this.writer.getWidth() / 10);
         if (begin < 0) {
             begin = 0;
         }
         g.drawString(this.current.substring(begin), this.writer.getMinX(), this.writer.getMinY());
-        this.stringListBody.draw(g);
     }
 
     @Override
@@ -101,7 +100,7 @@ public class ChatElement extends InterfaceElement {
 
     public void addMessage(MessageChat message) {
         this.messageData.add(new Pair<>(Color.black, new Tuple<>(message.getId(), message.getPseudo(), message.getMessage())));
-        this.stringListBody.addAllToPrint(this.getMessagesToPrint());
+        this.stringListElement.addAllToPrint(this.getMessagesToPrint());
     }
 
     public List<Pair<Color, String>> getMessagesToPrint(){
