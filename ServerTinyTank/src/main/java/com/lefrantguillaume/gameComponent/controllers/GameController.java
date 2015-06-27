@@ -155,6 +155,12 @@ public class GameController extends Observable {
         Player player = this.targets.getPlayer(received.getId());
         if (player != null) {
             this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), -1);
+            if (player.isTransportObjective()){
+                MessagePutObstacle message = this.targets.addObstacle(player.getTransportObjective());
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
+                player.setTransportObjective(null);
+            }
             this.targets.deletePlayer(received.getId());
         }
         this.setChanged();
