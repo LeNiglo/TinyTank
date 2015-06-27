@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
 
 /**

@@ -3,7 +3,7 @@ package com.lefrantguillaume.Utils.stockage;
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class Pair<T1, T2> {
+public class Pair<T1, T2> extends Object {
     T1 v1;
     T2 v2;
 

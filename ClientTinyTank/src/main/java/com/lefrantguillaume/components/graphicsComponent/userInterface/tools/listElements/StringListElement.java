@@ -1,6 +1,8 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.tools;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -11,7 +13,7 @@ import java.util.List;
 /**
  * Created by andres_k on 27/06/2015.
  */
-public class StringListElement extends Element {
+public class StringListElement extends ListElement {
     private List<Pair<Color, StringTimer>> printMessages;
     private List<Rectangle> positionMessages;
     private int maxLength;
@@ -76,7 +78,8 @@ public class StringListElement extends Element {
         }
     }
 
-    public void addAllToPrint(List<Pair<Color, String>> messageData) {
+    @Override
+    public void addAllToPrint(List<Object> messageData) {
         this.printMessages.clear();
         for (int i = 0; i < messageData.size(); ++i) {
             this.addToPrint(messageData.get(i));
@@ -84,36 +87,44 @@ public class StringListElement extends Element {
         this.addEmpty();
     }
 
-    public void addToPrint(Pair<Color, String> message) {
-        int pos = 0;
-        int max;
-        this.clearEmpty();
-        while (pos < message.getV2().length()) {
-            max = this.maxLength + pos;
-            if (max >= message.getV2().length()) {
-                max = message.getV2().length();
+    @Override
+    public void addToPrint(Object object) {
+        if (object instanceof Pair) {
+            Pair<Color, String> message = (Pair<Color, String>) object;
+            int pos = 0;
+            int max;
+            this.clearEmpty();
+            while (pos < message.getV2().length()) {
+                max = this.maxLength + pos;
+                if (max >= message.getV2().length()) {
+                    max = message.getV2().length();
+                }
+                String tmp = message.getV2().substring(pos, max);
+                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)));
+                pos += max;
             }
-            String tmp = message.getV2().substring(pos, max);
-            this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)));
-            pos += max;
+            this.addEmpty();
         }
-        this.addEmpty();
     }
 
-    public void addToPrint(Pair<Color, String> message, long time) {
-        int pos = 0;
-        int max;
-        this.clearEmpty();
-        while (pos < message.getV2().length()) {
-            max = this.maxLength + pos;
-            if (max >= message.getV2().length()) {
-                max = message.getV2().length();
+    @Override
+    public void addToPrint(Object object, long time) {
+        if (object instanceof Pair) {
+            Pair<Color, String> message = (Pair<Color, String>) object;
+            int pos = 0;
+            int max;
+            this.clearEmpty();
+            while (pos < message.getV2().length()) {
+                max = this.maxLength + pos;
+                if (max >= message.getV2().length()) {
+                    max = message.getV2().length();
+                }
+                String tmp = message.getV2().substring(pos, max);
+                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)));
+                pos += max;
             }
-            String tmp = message.getV2().substring(pos, max);
-            this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)));
-            pos += max;
+            this.addEmpty();
         }
-        this.addEmpty();
     }
 
     private void addMessage(Pair<Color, StringTimer> message) {

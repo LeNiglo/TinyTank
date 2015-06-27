@@ -1,5 +1,7 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.tools;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 

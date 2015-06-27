@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.tools;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

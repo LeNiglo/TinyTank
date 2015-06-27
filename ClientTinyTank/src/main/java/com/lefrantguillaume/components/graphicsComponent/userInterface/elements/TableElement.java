@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.Element;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import org.newdawn.slick.Graphics;
 
 import java.util.HashMap;
@@ -41,6 +41,7 @@ public class TableElement extends InterfaceElement {
 
     @Override
     public void draw(Graphics g) {
+        this.body.draw(g);
         for (Element element : this.elements){
             element.draw(g);
         }

@@ -2,8 +2,8 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

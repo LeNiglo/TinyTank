@@ -3,8 +3,9 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class ChatElement extends InterfaceElement {
     private List<Pair<Color, Tuple<String, String, String>>> messageData;
-    private StringListElement stringListElement;
+    private ListElement stringListElement;
     private Rectangle writer;
     private String current;
 
@@ -103,8 +104,8 @@ public class ChatElement extends InterfaceElement {
         this.stringListElement.addAllToPrint(this.getMessagesToPrint());
     }
 
-    public List<Pair<Color, String>> getMessagesToPrint(){
-        List<Pair<Color, String>> printMessages = new ArrayList<>();
+    public List<Object> getMessagesToPrint(){
+        List<Object> printMessages = new ArrayList<>();
 
         for (int i = 0; i < this.messageData.size(); ++i){
             printMessages.add(new Pair<>(this.messageData.get(i).getV1(), this.getMessageToPrint(this.messageData.get(i).getV2())));

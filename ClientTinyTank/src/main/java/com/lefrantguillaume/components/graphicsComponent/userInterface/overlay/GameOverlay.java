@@ -7,7 +7,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;

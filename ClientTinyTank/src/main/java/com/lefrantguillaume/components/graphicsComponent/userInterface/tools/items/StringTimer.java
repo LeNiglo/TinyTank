@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.tools;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items;
 
 import java.util.Timer;
 import java.util.TimerTask;
