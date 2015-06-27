@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
@@ -113,12 +114,14 @@ public class CollisionController {
         return listSaveActions.get(0);
     }
 
-    public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle) {
+    public boolean checkCollision(Pair<Float, Float> point, Pair<Float, Float> sizes, float angle, List<EnumGameObject> ignoredObjects, EnumGameObject type) {
         Rectangle rectangle = new Rectangle(point.getV1(), point.getV2(), sizes.getV1(), sizes.getV2());
         Float radianAngle = MathTools.toRadian(angle);
         for (int i = 0; i < this.items.size(); ++i) {
-            if (CollisionDetection.checkCollision(this.items.get(i), rectangle, radianAngle)) {
-                return true;
+            if (!this.items.get(i).isObjectIgnored(ignoredObjects, type)) {
+                if (CollisionDetection.checkCollision(this.items.get(i), rectangle, radianAngle)) {
+                    return true;
+                }
             }
         }
         return false;

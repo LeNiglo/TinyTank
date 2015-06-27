@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstacle;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
@@ -105,9 +106,9 @@ public class Player {
         boxValues.setV1(newPoint.getV1());
         boxValues.setV2(newPoint.getV2());
         boxValues.setV3(boxAngle);
-        List<Block> block = obstacleConfigData.getObstacle(this.getTank().getTankBox()).getCollisionObject();
-        for (int i = 0; i < block.size(); ++i) {
-            if (collisionController.checkCollision(newPoint, block.get(i).getSizes(), boxAngle)) {
+        Obstacle obstacle = obstacleConfigData.getObstacle(this.getTank().getTankBox());
+        for (int i = 0; i < obstacle.getCollisionObject().size(); ++i) {
+            if (collisionController.checkCollision(newPoint, obstacle.getCollisionObject().get(i).getSizes(), boxAngle, obstacle.getIgnoredObjectList(), obstacle.getType())) {
                 return null;
             }
         }

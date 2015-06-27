@@ -75,7 +75,7 @@ public class CollisionObject extends Observable implements Observer {
                 this.alive = false;
                 //Debug.debug(this.type + ": collision DIE");
             } else {
-              //  Debug.debug(this.type + ": collision REVIVE");
+                //  Debug.debug(this.type + ": collision REVIVE");
                 this.alive = true;
                 this.savePositions.setV1(values.getV2());
                 this.savePositions.setV2(values.getV3());
@@ -104,26 +104,40 @@ public class CollisionObject extends Observable implements Observer {
     }
 
     public boolean isObjectIgnored(CollisionObject object) {
-        if (this.isTypeIgnored(this, object.getType())) {
+        if (this.isTypeIgnored(this.getIgnoredList(), object.getType())) {
             return true;
-        } else if (this.isTypeIgnored(object, this.type)) {
+        } else if (this.isTypeIgnored(object.getIgnoredList(), this.type)) {
             return true;
         }
         return false;
     }
 
-    public boolean isTypeIgnored(CollisionObject object, EnumGameObject type) {
-        List<EnumGameObject> values = object.getIgnoredList();
 
-        if (values == null)
+    public boolean isObjectIgnored(List<EnumGameObject> ignoredObjects, EnumGameObject type) {
+        if (this.isTypeIgnored(this.getIgnoredList(), type)) {
+            return true;
+        } else if (this.isTypeIgnored(ignoredObjects, this.type)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isTypeIgnored(List<EnumGameObject> ignoredObjects, EnumGameObject type) {
+
+        if (ignoredObjects == null)
             return false;
 //        Debug.debug("ignored size: " + values.size() + " on " + object);
+        if (ignoredObjects.contains(type)) {
+            return true;
+        }
+        /*
         for (int i = 0; i < values.size(); ++i) {
   //          Debug.debug(type.getValue() + " =? " + values.get(i).getValue());
             if (values.get(i) == type) {
                 return true;
             }
-        }
+            }
+            */
         return false;
     }
 
