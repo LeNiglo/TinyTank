@@ -23,7 +23,7 @@ public class CollisionController {
     // FUNCTIONS
 
     public void addCollisionObject(CollisionObject object) {
-        Debug.debug("Add object with user:" + String.valueOf(object.getIdUser() + " and id:" + String.valueOf(object.getId())));
+        Debug.debug("Add collisionObject: " + object);
         this.items.add(object);
     }
 

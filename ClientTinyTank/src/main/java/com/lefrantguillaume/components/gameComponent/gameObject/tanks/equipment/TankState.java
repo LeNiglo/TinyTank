@@ -124,15 +124,11 @@ public class TankState extends Observable implements Observer {
         this.boostEffect = 0;
         this.positions = new Pair<>(positions);
         this.currentLife = this.maxLife;
-        for (Map.Entry entry : this.bodyAnimator.entrySet()){
-            Animator tmp = (Animator) entry.getValue();
-            tmp.currentAnimation().restart();
-            tmp.setCurrent(EnumAnimation.BASIC);
-            tmp.setPrintable(true);
+        for (Map.Entry<EnumGameObject, Animator> entry : this.bodyAnimator.entrySet()){
+            entry.getValue().restart();
         }
-        for (Map.Entry entry : this.topAnimator.entrySet()) {
-            Animator tmp = (Animator) entry.getValue();
-            tmp.setPrintable(true);
+        for (Map.Entry<EnumGameObject, Animator> entry : this.topAnimator.entrySet()) {
+            entry.getValue().restart();
         }
         this.shiftOrigin = new Pair<>(this.shiftOriginSave);
     }

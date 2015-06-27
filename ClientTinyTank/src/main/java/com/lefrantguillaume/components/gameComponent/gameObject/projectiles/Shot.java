@@ -76,9 +76,8 @@ public class Shot extends Observable implements Observer {
         this.addNewPosition();
         this.animator.setCurrent(EnumAnimation.EXPLODE);
         this.explode = true;
-        Block nullBlock = null;
         this.setChanged();
-        this.notifyObservers(nullBlock);
+        this.notifyObservers(null);
     }
 
     public void draw(Graphics g) {
@@ -208,7 +207,7 @@ public class Shot extends Observable implements Observer {
     // SETTERS
     public void setCurrentLife(float currentLife) {
         this.currentDamageShot = currentLife;
-        if (this.currentDamageShot == 0) {
+        if (this.currentDamageShot <= 0) {
             this.explode(new Pair<>(this.positions));
         }
     }

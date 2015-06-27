@@ -74,6 +74,15 @@ public class Animator implements Observer {
         }
     }
 
+    public void restart(){
+        for (Map.Entry<EnumAnimation, List<Animation>> entry : this.animations.entrySet()){
+            entry.getValue().forEach(org.newdawn.slick.Animation::restart);
+        }
+        this.setCurrent(EnumAnimation.BASIC);
+        this.printable = true;
+        this.deleted = false;
+    }
+
     // GETTERS
     public Animation currentAnimation() {
         return this.animations.get(this.current).get(this.index);

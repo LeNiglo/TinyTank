@@ -77,7 +77,7 @@ public class Obstacle extends Observable {
     // FUNCTIONS
     public void getHit() {
         if (this.animator != null) {
-            if (this.currentLife == 0) {
+            if (this.currentLife <= 0) {
                 this.animator.setCurrent(EnumAnimation.EXPLODE);
             } else {
                 this.animator.nextCurrentIndex();

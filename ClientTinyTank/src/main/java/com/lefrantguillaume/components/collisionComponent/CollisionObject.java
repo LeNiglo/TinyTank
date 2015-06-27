@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.collisionComponent;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
@@ -73,7 +74,9 @@ public class CollisionObject extends Observable implements Observer {
 
             if (values.getV1() == false) {
                 this.alive = false;
+                Debug.debug(this.type + ": collision DIE");
             } else {
+                Debug.debug(this.type + ": collision REVIVE");
                 this.alive = true;
                 this.savePositions.setV1(values.getV2());
                 this.savePositions.setV2(values.getV3());
@@ -86,6 +89,7 @@ public class CollisionObject extends Observable implements Observer {
         } else {
             this.alive = false;
             this.destroyed = true;
+            Debug.debug(this.type + ": collision DESTROYED");
         }
     }
 
@@ -249,6 +253,6 @@ public class CollisionObject extends Observable implements Observer {
 
     @Override
     public String toString() {
-        return "Id: " + this.getId() + " with type: " + this.getType();
+        return "Id: " + this.getId() + " with type: " + this.getType() + " and idUser: " + this.getIdUser();
     }
 }

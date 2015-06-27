@@ -25,11 +25,13 @@ public class Player {
     private User user;
     private boolean alive;
     private boolean canDoAction;
+    private boolean explose;
 
     public Player(User user, String idTeam, Tank tank, List<Shot> shots, float x, float y) {
         this.user = user;
         this.alive = true;
         this.canDoAction = true;
+        this.explose = false;
         this.shots = shots;
         this.idTeam = idTeam;
         this.tank = tank;
@@ -67,9 +69,10 @@ public class Player {
     }
 
     public boolean kill() {
-        if (this.tank.getTankState().getCurrentLife() <= 0) {
-            this.tank.explode();
+        if (this.tank.getTankState().getCurrentLife() <= 0 && this.explose == false) {
             this.canDoAction = false;
+            this.explose = true;
+            this.tank.explode();
             this.tank.myNotify(new Tuple<>(false, 0f, 0f));
             return true;
         }
@@ -79,14 +82,17 @@ public class Player {
     public void die() {
         this.alive = false;
         this.canDoAction = false;
-        this.tank.myNotify(new Tuple<>(false, 0f, 0f));
+        //this.tank.myNotify(new Tuple<>(false, 0f, 0f));
     }
 
     public void revive(Pair<Float, Float> positions) {
-        this.alive = true;
-        this.canDoAction = true;
-        this.getTank().revive(positions);
-        this.tank.myNotify(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
+        if (this.alive == false) {
+            this.alive = true;
+            this.canDoAction = true;
+            this.explose = true;
+            this.getTank().revive(positions);
+            this.tank.myNotify(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
+        }
     }
 
     public Tuple<Float, Float, Float> predictCreateBox(CollisionController collisionController, ObstacleConfigData obstacleConfigData) {
