@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.EnumInterfaceComponent;
+import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.EnumInterfaceComponent;
 import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;

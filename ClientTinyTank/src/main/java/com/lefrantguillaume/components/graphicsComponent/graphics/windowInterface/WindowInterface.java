@@ -1,7 +1,8 @@
-package com.lefrantguillaume.components.graphicsComponent.graphics;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface;
 
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.components.gameComponent.controllers.InterfaceController;
+import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;

@@ -1,7 +1,8 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface;
 
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.EnumInterfaceComponent;
 import org.newdawn.slick.Graphics;
 
 import java.util.HashMap;

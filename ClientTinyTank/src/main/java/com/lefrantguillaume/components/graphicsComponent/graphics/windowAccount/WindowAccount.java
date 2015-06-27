@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.graphics;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount;
 
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.AccountController;

@@ -2,7 +2,7 @@
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd
 http://nifty-gui.sourceforge.net/nifty-1.3.xsd ">
-    <screen id="screen-interface" controller="com.lefrantguillaume.components.graphicsComponent.graphics.WindowInterface">
+    <screen id="screen-interface" controller="com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.WindowInterface">
         <layer id="background" childLayout="center">
             <panel valign="top" height="100%" align="center" childLayout="vertical">
                 <panel height="5%" width="100%" childLayout="vertical">

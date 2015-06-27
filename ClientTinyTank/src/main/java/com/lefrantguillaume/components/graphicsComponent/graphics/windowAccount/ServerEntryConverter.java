@@ -1,7 +1,6 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount;
 
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
-import de.lessvoid.nifty.controls.Controller;
 import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
