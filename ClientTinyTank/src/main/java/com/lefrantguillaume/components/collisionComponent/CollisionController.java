@@ -23,8 +23,18 @@ public class CollisionController {
     // FUNCTIONS
 
     public void addCollisionObject(CollisionObject object) {
-        Debug.debug("Add collisionObject: " + object);
         this.items.add(object);
+
+        Debug.debug("Add collisionObject: " + object);
+        // Debug
+        /*
+        Debug.debug("\n************");
+        List<CollisionObject> tmp = this.items;
+        for (CollisionObject collisionObject : tmp){
+            Debug.debug("**" + collisionObject);
+        }
+        Debug.debug("************\n");
+        */
     }
 
     public void deleteCollisionObject(String id) {
@@ -126,7 +136,7 @@ public class CollisionController {
     // GETTERS
 
     public List<CollisionObject> getCollisionObject(String id) {
-        List<CollisionObject> result = new ArrayList<CollisionObject>();
+        List<CollisionObject> result = new ArrayList<>();
         for (int i = 0; i < this.items.size(); ++i) {
             if (this.items.get(i) != null) {
                 if (this.items.get(i).getId().equals(id)) {

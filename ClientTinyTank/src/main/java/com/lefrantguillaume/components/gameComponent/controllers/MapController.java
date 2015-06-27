@@ -60,7 +60,6 @@ public class MapController {
                 break;
             }
         }
-        this.collisionController.deleteCollisionObject(id);
     }
 
     public void clearObstacles() {

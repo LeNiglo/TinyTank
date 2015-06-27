@@ -83,6 +83,10 @@ public class Obstacle extends Observable {
                 this.animator.nextCurrentIndex();
             }
         }
+        if (this.currentLife <= 0){
+            this.setChanged();
+            this.notifyObservers(null);
+        }
     }
 
     public void move(Pair<Float, Float> coords) {
