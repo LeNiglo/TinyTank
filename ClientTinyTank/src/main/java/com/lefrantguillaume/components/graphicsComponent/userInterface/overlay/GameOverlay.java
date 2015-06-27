@@ -1,13 +1,16 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
+import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Rectangle;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,8 @@ public class GameOverlay extends Observable implements Observer {
     public GameOverlay() {
         this.activated = false;
         this.elements = new HashMap<>();
-        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement());
+        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200)));
+        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new Rectangle(WindowConfig.getSizeX() - 200, 20, 400, 200)));
     }
 
 
@@ -59,18 +63,22 @@ public class GameOverlay extends Observable implements Observer {
     }
 
 
-    public Object event(int key, char c) {
+    public boolean event(int key, char c) {
+        boolean used = false;
+
         for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 Object result = entry.getValue().event(key, c);
                 if (result instanceof MessageChat) {
+                    used = true;
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.MESSAGE_SERVER, result));
+                } else if (result instanceof Boolean) {
+                    used = (Boolean) result;
                 }
-                return result;
             }
         }
-        return null;
+        return used;
     }
 
     public boolean isOnFocus(int x, int y) {

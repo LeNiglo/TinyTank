@@ -167,8 +167,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyPressed(int key, char c) {
-        Object result = this.gameOverlay.event(key, c);
-        if (result == null) {
+        boolean result = this.gameOverlay.event(key, c);
+        if (result == false) {
             if (input != null && this.gameController != null) {
                 input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
             }

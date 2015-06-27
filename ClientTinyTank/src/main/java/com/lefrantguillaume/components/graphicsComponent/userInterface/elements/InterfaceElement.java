@@ -6,24 +6,21 @@ import org.newdawn.slick.geom.Rectangle;
 /**
  * Created by andres_k on 23/06/2015.
  */
-public class InterfaceElement {
+public abstract class InterfaceElement {
     protected Rectangle body;
     protected boolean focused;
     protected boolean needActivated;
 
     // FUNCTION
-    public void doTask(Object task){
-    }
+    protected abstract void parentInit(Rectangle body);
 
-    public void draw(Graphics g){
-    }
+    public abstract void doTask(Object task);
 
-    public void update(){
-    }
+    public abstract void draw(Graphics g);
 
-    public Object event(int key, char c){
-        return null;
-    }
+    public abstract void update();
+
+    public abstract Object event(int key, char c);
 
     public boolean isOnFocus(int x, int y){
         if (this.body.contains(x, y)){
