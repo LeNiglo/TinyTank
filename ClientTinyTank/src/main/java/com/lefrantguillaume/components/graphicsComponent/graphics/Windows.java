@@ -2,7 +2,9 @@ package com.lefrantguillaume.components.graphicsComponent.graphics;
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount.WindowAccount;
+import com.lefrantguillaume.components.graphicsComponent.graphics.windowGame.WindowGame;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.WindowInterface;
+import com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;

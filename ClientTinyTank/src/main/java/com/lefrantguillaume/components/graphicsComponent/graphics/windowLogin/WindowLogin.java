@@ -1,9 +1,10 @@
-package com.lefrantguillaume.components.graphicsComponent.graphics;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Browser;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;

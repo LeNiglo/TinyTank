@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.graphics;
+package com.lefrantguillaume.components.graphicsComponent.graphics.windowGame;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
