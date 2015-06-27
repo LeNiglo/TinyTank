@@ -8,10 +8,13 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.Mes
 public class MessageRoundKill extends MessageModel {
     private String killer;
     private String target;
-    private boolean ally;
+    private String killerTeam;
+    private String targetTeam;
 
     public MessageRoundKill(){
     }
+
+    // GETTERS
 
     public String getKiller(){
         return this.killer;
@@ -21,7 +24,11 @@ public class MessageRoundKill extends MessageModel {
         return this.target;
     }
 
-    public boolean isAlly(){
-        return this.ally;
+    public String getKillerTeam() {
+        return this.killerTeam;
+    }
+
+    public String getTargetTeam() {
+        return this.targetTeam;
     }
 }

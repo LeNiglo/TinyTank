@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListBody;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
@@ -56,15 +57,24 @@ public class StringPopElement extends InterfaceElement {
     @Override
     public void doTask(Object task) {
         if (task instanceof MessageRoundKill) {
-            this.stringListBody.addToPrint(new Pair<>(Color.red, this.getMessageToPrint((MessageRoundKill) task)), 3000);
+            this.stringListBody.addToPrint(this.getMessageToPrint((MessageRoundKill) task), 3000);
         }
     }
 
-    public String getMessageToPrint(MessageRoundKill message) {
-        if (message.isAlly() == true) {
-            return message.getKiller() + " killed is ally " + message.getTarget() + " *shame on him!*";
+    public Pair<Color, String> getMessageToPrint(MessageRoundKill message) {
+        Pair<Color, String> result = new Pair<>(null, null);
+
+        if (CurrentUser.getIdTeam().equals(message.getKiller()))
+        {
+            result.setV1(Color.cyan);
         } else {
-            return message.getKiller() + " killed " + message.getTarget();
+            result.setV1(Color.red);
         }
+        if (message.getKillerTeam().equals(message.getTargetTeam())) {
+            result.setV2(message.getKiller() + " killed is ally " + message.getTarget() + " *shame on him!*");
+        } else {
+            result.setV2(message.getKiller() + " killed " + message.getTarget());
+        }
+        return result;
     }
 }

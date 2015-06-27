@@ -79,7 +79,7 @@ public class Targets {
                                 messages.add(this.addObstacle(player.getTransportObjective()));
                                 player.setTransportObjective(null);
                             }
-                            messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId().equals(player.getTeamId())));
+                            messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId(), player.getTeamId()));
                         }
                     }
                     if (hitterShot.getCurrentDamageShot() == 0) {
@@ -139,7 +139,7 @@ public class Targets {
                                     messages.add(this.addObstacle(player.getTransportObjective()));
                                     player.setTransportObjective(null);
                                 }
-                                messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId().equals(player.getTeamId())));
+                                messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId(), player.getTeamId()));
                             }
                             messages.add(this.deleteObstacle(targetId));
                         }

@@ -145,6 +145,7 @@ public class GameController extends Observable implements Observer {
                         this.getShots(), task.getPosX(), task.getPosY()));
                 if (task.getId().equals(CurrentUser.getId())) {
                     CurrentUser.setInGame(true);
+                    CurrentUser.setIdTeam(task.getTeamId());
                     this.initGame();
                 }
                 if (CurrentUser.isInGame() == true) {
