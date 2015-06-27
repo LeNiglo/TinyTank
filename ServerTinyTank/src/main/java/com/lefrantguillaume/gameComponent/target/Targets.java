@@ -9,10 +9,7 @@ import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.gameComponent.maps.MapController;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageObstacleUpdateState;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePutObstacle;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageShotUpdateState;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.*;
 import com.lefrantguillaume.utils.ServerConfig;
 import javafx.util.Pair;
 
@@ -82,6 +79,7 @@ public class Targets {
                                 messages.add(this.addObstacle(player.getTransportObjective()));
                                 player.setTransportObjective(null);
                             }
+                            messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId().equals(player.getTeamId())));
                         }
                     }
                     if (hitterShot.getCurrentDamageShot() == 0) {
@@ -141,6 +139,7 @@ public class Targets {
                                     messages.add(this.addObstacle(player.getTransportObjective()));
                                     player.setTransportObjective(null);
                                 }
+                                messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId().equals(player.getTeamId())));
                             }
                             messages.add(this.deleteObstacle(targetId));
                         }

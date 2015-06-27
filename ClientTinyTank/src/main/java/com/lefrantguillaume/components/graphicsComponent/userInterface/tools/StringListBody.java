@@ -18,9 +18,19 @@ public class StringListBody {
     private int maxLength;
     private int toPrint;
 
-    public StringListBody(Rectangle body, int toPrint){
-        this.toPrint = toPrint;
+    public StringListBody(Rectangle body) {
         this.body = body;
+        this.toPrint = (int) (body.getHeight() / 20);
+        this.init();
+    }
+
+    public StringListBody(Rectangle body, int toPrint) {
+        this.body = body;
+        this.toPrint = toPrint;
+        this.init();
+    }
+
+    private void init() {
         this.maxLength = (int) (body.getWidth() / 10);
         this.printMessages = new ArrayList<>();
         this.positionMessages = new ArrayList<>();
@@ -29,19 +39,19 @@ public class StringListBody {
     }
 
     // FUNCTIONS
-    private void initPositionMessage(){
+    private void initPositionMessage() {
         int line = 10;
-        for (int i = 0; i < this.toPrint; ++i){
+        for (int i = 0; i < this.toPrint; ++i) {
             this.positionMessages.add(0, new Rectangle(this.body.getMinX(), this.body.getMinY() + line, 0, 0));
             line += 20;
         }
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         int i = 0;
 
-        while (i < this.positionMessages.size()){
-            if (i < this.printMessages.size()){
+        while (i < this.positionMessages.size()) {
+            if (i < this.printMessages.size()) {
                 g.setColor(this.printMessages.get(i).getV1());
                 g.drawString(this.printMessages.get(i).getV2().getValue(), this.positionMessages.get(i).getMinX(), this.positionMessages.get(i).getMinY());
             }
@@ -50,12 +60,18 @@ public class StringListBody {
         g.setColor(Color.black);
     }
 
-    public void update(){
-        for (int i = 0; i < this.printMessages.size(); ++i){
-            if (this.printMessages.get(i).getV2().isActivated() == false){
+    public void update() {
+        boolean removed = false;
+
+        for (int i = 0; i < this.printMessages.size(); ++i) {
+            if (this.printMessages.get(i).getV2().isActivated() == false) {
                 this.printMessages.remove(i);
+                removed = true;
                 --i;
             }
+        }
+        if (removed == true){
+            this.addEmpty();
         }
     }
 
@@ -64,24 +80,13 @@ public class StringListBody {
         for (int i = 0; i < messageData.size(); ++i) {
             this.addToPrint(messageData.get(i));
         }
-        while (this.printMessages.size() < this.toPrint){
-            this.addMessage(new Pair<>(Color.black, new StringTimer("")));
-        }
+        this.addEmpty();
     }
 
-    public void addAllToPrint(List<Pair<Color, String>> messageData, long time) {
-        this.printMessages.clear();
-        for (int i = 0; i < messageData.size(); ++i) {
-            this.addToPrint(messageData.get(i), time);
-        }
-        while (this.printMessages.size() < this.toPrint){
-            this.addMessage(new Pair<>(Color.black, new StringTimer("", time)));
-        }
-    }
-
-    public void addToPrint(Pair<Color, String> message){
+    public void addToPrint(Pair<Color, String> message) {
         int pos = 0;
         int max;
+        this.clearEmpty();
         while (pos < message.getV2().length()) {
             max = this.maxLength + pos;
             if (max >= message.getV2().length()) {
@@ -91,11 +96,13 @@ public class StringListBody {
             this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)));
             pos += max;
         }
+        this.addEmpty();
     }
 
-    public void addToPrint(Pair<Color, String> message, long time){
+    public void addToPrint(Pair<Color, String> message, long time) {
         int pos = 0;
         int max;
+        this.clearEmpty();
         while (pos < message.getV2().length()) {
             max = this.maxLength + pos;
             if (max >= message.getV2().length()) {
@@ -105,9 +112,25 @@ public class StringListBody {
             this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)));
             pos += max;
         }
+        this.addEmpty();
     }
 
-    private void addMessage(Pair<Color, StringTimer> message){
+    private void addMessage(Pair<Color, StringTimer> message) {
         this.printMessages.add(0, message);
+    }
+
+    private void clearEmpty() {
+        for (int i = 0; i < this.printMessages.size(); ++i) {
+            if (this.printMessages.get(i).getV2().getValue().equals("")) {
+                this.printMessages.remove(i);
+                --i;
+            }
+        }
+    }
+
+    private void addEmpty() {
+        while (this.printMessages.size() < this.toPrint) {
+            this.printMessages.add(0, new Pair<>(Color.black, new StringTimer("")));
+        }
     }
 }

@@ -2,11 +2,13 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
 import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Graphics;
@@ -28,7 +30,7 @@ public class GameOverlay extends Observable implements Observer {
         this.activated = false;
         this.elements = new HashMap<>();
         this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200)));
-        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new Rectangle(WindowConfig.getSizeX() - 200, 20, 400, 200)));
+        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400)));
     }
 
 
@@ -37,9 +39,13 @@ public class GameOverlay extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
+        Debug.debug("RECEIVED : " + received);
         if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
             if (received.getV3() instanceof MessageChat) {
                 this.elements.get(EnumInterfaceElement.CHAT).doTask(received.getV3());
+            }
+            if (received.getV3() instanceof MessageRoundKill) {
+                this.elements.get(EnumInterfaceElement.POP_ELEMENT).doTask(received.getV3());
             }
         }
     }

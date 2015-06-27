@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.StringListBody;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -19,14 +20,14 @@ public class StringPopElement extends InterfaceElement {
     }
 
     @Override
-    public void parentInit(Rectangle body){
+    public void parentInit(Rectangle body) {
         this.focused = false;
         this.needActivated = false;
         this.body = body;
     }
 
-    public void childInit(){
-        this.stringListBody = new StringListBody(this.body, 4);
+    public void childInit() {
+        this.stringListBody = new StringListBody(this.body);
     }
 
     // FUNCTIONS
@@ -41,16 +42,29 @@ public class StringPopElement extends InterfaceElement {
         this.stringListBody.update();
     }
 
+    int i = 0;
+
     @Override
     public Object event(int key, char c) {
-        if (key == Input.KEY_K){
-            this.stringListBody.addToPrint(new Pair<>(Color.red, "machin a tué bidule"), 3000);
+        if (key == Input.KEY_K) {
+            this.stringListBody.addToPrint(new Pair<>(Color.red, "test" + i), 3000);
+            ++i;
         }
         return null;
     }
 
     @Override
     public void doTask(Object task) {
+        if (task instanceof MessageRoundKill) {
+            this.stringListBody.addToPrint(new Pair<>(Color.red, this.getMessageToPrint((MessageRoundKill) task)), 3000);
+        }
+    }
 
+    public String getMessageToPrint(MessageRoundKill message) {
+        if (message.isAlly() == true) {
+            return message.getKiller() + " killed is ally " + message.getTarget() + " *shame on him!*";
+        } else {
+            return message.getKiller() + " killed " + message.getTarget();
+        }
     }
 }

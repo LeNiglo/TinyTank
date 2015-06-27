@@ -38,12 +38,6 @@ public class ChatElement extends InterfaceElement {
     private void childInit(){
         this.messageData = new ArrayList<>();
         this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "Welcome!")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "A")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "B")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "C")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "D")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "E")));
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "F")));
         this.current = "";
         this.stringListBody = new StringListBody(this.body, 7);
         this.writer = new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, 20);
@@ -120,6 +114,6 @@ public class ChatElement extends InterfaceElement {
     }
 
     public String getMessageToPrint(Tuple<String, String, String> values) {
-        return new String(values.getV2() + ": " + values.getV3());
+        return values.getV2() + ": " + values.getV3();
     }
 }
