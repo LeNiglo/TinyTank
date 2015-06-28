@@ -22,14 +22,7 @@ public abstract class InterfaceElement {
 
     public abstract Object event(int key, char c);
 
-    public boolean isOnFocus(int x, int y){
-        if (this.body.contains(x, y)){
-            this.focused = true;
-            return true;
-        }
-        this.focused = false;
-        return false;
-    }
+    public abstract Boolean isOnFocus(int x, int y);
 
     // GETTERS
     public boolean isFocused() {

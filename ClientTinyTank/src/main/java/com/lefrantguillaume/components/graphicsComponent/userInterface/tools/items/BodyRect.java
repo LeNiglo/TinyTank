@@ -11,6 +11,12 @@ public class BodyRect {
     private Rectangle body;
     private Color color;
 
+
+    public BodyRect(Rectangle body){
+        this.body = body;
+        this.color = null;
+    }
+
     public BodyRect(Rectangle body, Color color){
         this.body = body;
         this.color = color;
@@ -25,6 +31,10 @@ public class BodyRect {
     }
 
     public boolean contains(float x, float y){
+        return this.body.contains(x, y);
+    }
+
+    public boolean isOnFocus(float x, float y){
         return this.body.contains(x, y);
     }
 

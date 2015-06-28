@@ -32,7 +32,7 @@ public class GameOverlay extends Observable implements Observer {
         this.activated = false;
         this.elements = new HashMap<>();
         this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
-        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400), null)));
+        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
     }
 
 

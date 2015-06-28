@@ -56,4 +56,9 @@ public class TableElement extends InterfaceElement {
     public Object event(int key, char c) {
         return null;
     }
+
+    @Override
+    public Boolean isOnFocus(int x, int y) {
+        return false;
+    }
 }

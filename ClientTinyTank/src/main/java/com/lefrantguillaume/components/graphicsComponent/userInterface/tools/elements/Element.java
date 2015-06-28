@@ -11,5 +11,22 @@ public abstract class Element {
 
     public abstract void draw(Graphics g);
 
+    public abstract void draw(Graphics g, BodyRect body);
+
     public abstract void update();
+
+    public boolean isOnFocus(float x, float y){
+        if (this.body == null){
+            return false;
+        }
+        return this.body.isOnFocus(x, y);
+    }
+
+    public abstract boolean isActivated();
+
+    public abstract boolean isEmpty();
+
+    public void setBody(BodyRect body){
+        this.body = body;
+    }
 }

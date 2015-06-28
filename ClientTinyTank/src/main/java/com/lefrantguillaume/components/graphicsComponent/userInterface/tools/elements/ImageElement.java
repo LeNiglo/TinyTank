@@ -22,6 +22,24 @@ public class ImageElement extends Element {
     }
 
     @Override
+    public void draw(Graphics g, BodyRect body) {
+
+    }
+
+    @Override
     public void update() {
+    }
+
+    @Override
+    public boolean isActivated() {
+        return true;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        if (this.animator == null || this.animator.isDeleted()){
+            return true;
+        }
+        return false;
     }
 }

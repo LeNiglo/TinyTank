@@ -38,7 +38,7 @@ public class ChatElement extends InterfaceElement {
         this.body = body;
     }
 
-    private void childInit(){
+    private void childInit() {
         this.messageData = new ArrayList<>();
         this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "Welcome!")));
         this.current = "";
@@ -58,7 +58,7 @@ public class ChatElement extends InterfaceElement {
             g.drawRect(this.writer.getMinX(), this.writer.getMaxY(), this.writer.getWidth(), 1);
         }
         g.setColor(Color.white);
-        int begin = this.current.length() - (int)(this.writer.getWidth() / 10);
+        int begin = this.current.length() - (int) (this.writer.getWidth() / 10);
         if (begin < 0) {
             begin = 0;
         }
@@ -84,12 +84,26 @@ public class ChatElement extends InterfaceElement {
             }
         } else if (this.focused) {
             this.current += c;
-        } else if (key == Input.KEY_ESCAPE){
+        } else if (key == Input.KEY_ESCAPE) {
             this.setFocused(false);
         } else {
             return null;
         }
         return true;
+    }
+
+    @Override
+    public Boolean isOnFocus(int x, int y) {
+        if (this.stringListElement.isOnFocus(x, y)) {
+            this.focused = true;
+            return true;
+        }
+        if (this.body.contains(x, y)) {
+            this.focused = true;
+            return true;
+        }
+        this.focused = false;
+        return false;
     }
 
     @Override
@@ -104,10 +118,10 @@ public class ChatElement extends InterfaceElement {
         this.stringListElement.addAllToPrint(this.getMessagesToPrint());
     }
 
-    public List<Object> getMessagesToPrint(){
+    public List<Object> getMessagesToPrint() {
         List<Object> printMessages = new ArrayList<>();
 
-        for (int i = 0; i < this.messageData.size(); ++i){
+        for (int i = 0; i < this.messageData.size(); ++i) {
             printMessages.add(new Pair<>(this.messageData.get(i).getV1(), this.getMessageToPrint(this.messageData.get(i).getV2())));
         }
         return printMessages;

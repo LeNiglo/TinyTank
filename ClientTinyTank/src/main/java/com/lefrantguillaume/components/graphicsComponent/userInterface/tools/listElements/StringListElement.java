@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import org.newdawn.slick.Color;
@@ -14,26 +15,26 @@ import java.util.List;
  * Created by andres_k on 27/06/2015.
  */
 public class StringListElement extends ListElement {
-    private List<Pair<Color, StringTimer>> printMessages;
-    private List<Rectangle> positionMessages;
+    private List<BodyRect> positionMessages;
     private int maxLength;
     private int toPrint;
 
     public StringListElement(BodyRect body) {
         this.body = body;
+        this.elements = new ArrayList<>();
         this.toPrint = (int) (body.getSizeY() / 20);
         this.init();
     }
 
     public StringListElement(BodyRect body, int toPrint) {
         this.body = body;
+        this.elements = new ArrayList<>();
         this.toPrint = toPrint;
         this.init();
     }
 
     private void init() {
         this.maxLength = (int) (body.getSizeX() / 10);
-        this.printMessages = new ArrayList<>();
         this.positionMessages = new ArrayList<>();
 
         this.initPositionMessage();
@@ -43,7 +44,7 @@ public class StringListElement extends ListElement {
     private void initPositionMessage() {
         int line = 10;
         for (int i = 0; i < this.toPrint; ++i) {
-            this.positionMessages.add(0, new Rectangle(this.body.getX(), this.body.getY() + line, 0, 0));
+            this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getX(), this.body.getY() + line, 0, 0)));
             line += 20;
         }
     }
@@ -54,9 +55,8 @@ public class StringListElement extends ListElement {
 
         this.body.draw(g);
         while (i < this.positionMessages.size()) {
-            if (i < this.printMessages.size()) {
-                g.setColor(this.printMessages.get(i).getV1());
-                g.drawString(this.printMessages.get(i).getV2().getValue(), this.positionMessages.get(i).getMinX(), this.positionMessages.get(i).getMinY());
+            if (i < this.elements.size()) {
+                this.elements.get(i).draw(g, this.positionMessages.get(i));
             }
             ++i;
         }
@@ -66,9 +66,9 @@ public class StringListElement extends ListElement {
     public void update() {
         boolean removed = false;
 
-        for (int i = 0; i < this.printMessages.size(); ++i) {
-            if (this.printMessages.get(i).getV2().isActivated() == false) {
-                this.printMessages.remove(i);
+        for (int i = 0; i < this.elements.size(); ++i) {
+            if (this.elements.get(i).isActivated() == false) {
+                this.elements.remove(i);
                 removed = true;
                 --i;
             }
@@ -80,7 +80,7 @@ public class StringListElement extends ListElement {
 
     @Override
     public void addAllToPrint(List<Object> messageData) {
-        this.printMessages.clear();
+        this.elements.clear();
         for (int i = 0; i < messageData.size(); ++i) {
             this.addToPrint(messageData.get(i));
         }
@@ -128,21 +128,21 @@ public class StringListElement extends ListElement {
     }
 
     private void addMessage(Pair<Color, StringTimer> message) {
-        this.printMessages.add(0, message);
+        this.elements.add(0, new StringElement(message.getV2(), message.getV1()));
     }
 
     private void clearEmpty() {
-        for (int i = 0; i < this.printMessages.size(); ++i) {
-            if (this.printMessages.get(i).getV2().getValue().equals("")) {
-                this.printMessages.remove(i);
+        for (int i = 0; i < this.elements.size(); ++i) {
+            if (this.elements.get(i).isEmpty()) {
+                this.elements.remove(i);
                 --i;
             }
         }
     }
 
     private void addEmpty() {
-        while (this.printMessages.size() < this.toPrint) {
-            this.printMessages.add(0, new Pair<>(Color.black, new StringTimer("")));
+        while (this.elements.size() < this.toPrint) {
+            this.elements.add(0, new StringElement(new StringTimer(""), Color.black));
         }
     }
 }
