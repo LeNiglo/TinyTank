@@ -13,6 +13,13 @@ public class ImageElement extends Element {
     public ImageElement(BodyRect body, Animator animator){
         this.body = body;
         this.animator = animator;
+        this.id = "";
+    }
+
+    public ImageElement(BodyRect body, Animator animator, String id){
+        this.body = body;
+        this.animator = animator;
+        this.id = id;
     }
 
     @Override
@@ -41,5 +48,10 @@ public class ImageElement extends Element {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "imageType: " + this.animator.getCurrent();
     }
 }

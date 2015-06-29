@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
@@ -42,7 +43,7 @@ public class GameOverlay extends Observable implements Observer {
 
         Debug.debug("RECEIVED : " + received);
         if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
-            for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()){
+            for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
                 entry.getValue().doTask(received.getV3());
             }
         }
@@ -67,12 +68,17 @@ public class GameOverlay extends Observable implements Observer {
     }
 
 
-    public boolean event(int key, char c) {
+    public boolean event(int key, char c, EnumInput type) {
         boolean used = false;
 
         for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
-                Object result = entry.getValue().event(key, c);
+                Object result = null;
+                if (type == EnumInput.PRESSED) {
+                    result = entry.getValue().eventPressed(key, c);
+                } else if (type == EnumInput.RELEASED) {
+                    result = entry.getValue().eventReleased(key, c);
+                }
                 if (result instanceof MessageChat) {
                     used = true;
                     this.setChanged();
@@ -96,16 +102,10 @@ public class GameOverlay extends Observable implements Observer {
         return false;
     }
 
-    public void unFocusAll() {
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
-            entry.getValue().setFocused(false);
-        }
-    }
-
     public boolean isFocused() {
         for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
-                if (entry.getValue().isFocused()) {
+                if (entry.getValue().isActivated()) {
                     return true;
                 }
             }
@@ -121,8 +121,5 @@ public class GameOverlay extends Observable implements Observer {
     // SETTERS
     public void setActivated(boolean value) {
         this.activated = value;
-        if (this.activated == false) {
-            this.unFocusAll();
-        }
     }
 }

@@ -8,6 +8,7 @@ import org.newdawn.slick.Graphics;
  */
 public abstract class Element {
     protected BodyRect body;
+    protected String id;
 
     public abstract void draw(Graphics g);
 
@@ -15,6 +16,7 @@ public abstract class Element {
 
     public abstract void update();
 
+    // GETTERS
     public boolean isOnFocus(float x, float y){
         if (this.body == null){
             return false;
@@ -29,4 +31,10 @@ public abstract class Element {
     public void setBody(BodyRect body){
         this.body = body;
     }
+
+    public String getId(){
+        return this.id;
+    }
+
+    public abstract String toString();
 }

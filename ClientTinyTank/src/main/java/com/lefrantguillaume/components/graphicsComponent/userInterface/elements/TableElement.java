@@ -1,11 +1,12 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
 import org.newdawn.slick.Graphics;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,12 +14,11 @@ import java.util.List;
  */
 public class TableElement extends InterfaceElement {
     private List<Element> elements;
-    private HashMap<String, StringListElement> table;
+    private List<ListElement> table;
 
-    public TableElement(BodyRect body, List<Element> elements){
+    public TableElement(BodyRect body){
         this.parentInit(body);
         this.childInit();
-        this.elements = elements;
     }
 
     // INIT
@@ -26,11 +26,12 @@ public class TableElement extends InterfaceElement {
     protected void parentInit(BodyRect body) {
         this.body = body;
         this.needActivated = true;
-        this.focused = false;
+        this.activatedTimer = new ActivatedTimer(false);
     }
 
     private void childInit(){
-        this.table = new HashMap<>();
+        this.table = new ArrayList<>();
+        this.elements = new ArrayList<>();
     }
 
     // FUNCTIONS
@@ -53,7 +54,12 @@ public class TableElement extends InterfaceElement {
     }
 
     @Override
-    public Object event(int key, char c) {
+    public Object eventPressed(int key, char c) {
+        return null;
+    }
+
+    @Override
+    public Object eventReleased(int key, char c) {
         return null;
     }
 
@@ -61,4 +67,5 @@ public class TableElement extends InterfaceElement {
     public Boolean isOnFocus(int x, int y) {
         return false;
     }
+
 }

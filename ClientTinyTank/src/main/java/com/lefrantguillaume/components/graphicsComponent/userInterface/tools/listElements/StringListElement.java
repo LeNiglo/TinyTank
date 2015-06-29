@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
@@ -44,7 +45,7 @@ public class StringListElement extends ListElement {
     private void initPositionMessage() {
         int line = 10;
         for (int i = 0; i < this.toPrint; ++i) {
-            this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getX(), this.body.getY() + line, 0, 0)));
+            this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getX() + 10, this.body.getY() + line, this.body.getSizeX() - 10, 20)));
             line += 20;
         }
     }
@@ -89,8 +90,8 @@ public class StringListElement extends ListElement {
 
     @Override
     public void addToPrint(Object object) {
-        if (object instanceof Pair) {
-            Pair<Color, String> message = (Pair<Color, String>) object;
+        if (object instanceof Tuple) {
+            Tuple<Color, String, String> message = (Tuple<Color, String, String>) object;
             int pos = 0;
             int max;
             this.clearEmpty();
@@ -100,7 +101,7 @@ public class StringListElement extends ListElement {
                     max = message.getV2().length();
                 }
                 String tmp = message.getV2().substring(pos, max);
-                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)));
+                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)), message.getV3());
                 pos += max;
             }
             this.addEmpty();
@@ -109,8 +110,8 @@ public class StringListElement extends ListElement {
 
     @Override
     public void addToPrint(Object object, long time) {
-        if (object instanceof Pair) {
-            Pair<Color, String> message = (Pair<Color, String>) object;
+        if (object instanceof Tuple) {
+            Tuple<Color, String, String> message = (Tuple<Color, String, String>) object;
             int pos = 0;
             int max;
             this.clearEmpty();
@@ -120,15 +121,30 @@ public class StringListElement extends ListElement {
                     max = message.getV2().length();
                 }
                 String tmp = message.getV2().substring(pos, max);
-                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)));
+                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)), message.getV3());
                 pos += max;
             }
             this.addEmpty();
         }
     }
 
-    private void addMessage(Pair<Color, StringTimer> message) {
-        this.elements.add(0, new StringElement(message.getV2(), message.getV1()));
+    @Override
+    public Object isOnFocus(float x, float y) {
+        for (int i = 0; i < this.positionMessages.size(); ++i) {
+            if (i < this.elements.size() && this.positionMessages.get(i).isOnFocus(x, y)) {
+                if (this.elements.get(i).isEmpty() == false) {
+                    return elements.get(i);
+                }
+            }
+        }
+        if (body.isOnFocus(x, y)){
+            return null;
+        }
+        return null;
+    }
+
+    private void addMessage(Pair<Color, StringTimer> message, String id) {
+        this.elements.add(0, new StringElement(message.getV2(), message.getV1(), id));
     }
 
     private void clearEmpty() {

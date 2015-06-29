@@ -30,10 +30,6 @@ public class BodyRect {
         }
     }
 
-    public boolean contains(float x, float y){
-        return this.body.contains(x, y);
-    }
-
     public boolean isOnFocus(float x, float y){
         return this.body.contains(x, y);
     }

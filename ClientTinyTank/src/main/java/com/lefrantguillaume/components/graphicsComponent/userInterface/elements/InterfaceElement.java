@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
 
@@ -8,7 +9,7 @@ import org.newdawn.slick.Graphics;
  */
 public abstract class InterfaceElement {
     protected BodyRect body;
-    protected boolean focused;
+    protected ActivatedTimer activatedTimer;
     protected boolean needActivated;
 
     // FUNCTION
@@ -20,21 +21,18 @@ public abstract class InterfaceElement {
 
     public abstract void update();
 
-    public abstract Object event(int key, char c);
+    public abstract Object eventPressed(int key, char c);
+
+    public abstract Object eventReleased(int key, char c);
 
     public abstract Boolean isOnFocus(int x, int y);
 
     // GETTERS
-    public boolean isFocused() {
-        return this.focused;
+    public boolean isActivated(){
+        return this.activatedTimer.isActivated();
     }
 
     public boolean isNeedActivated(){
         return this.needActivated;
-    }
-
-    // SETTERS
-    public void setFocused(boolean value){
-        this.focused = value;
     }
 }

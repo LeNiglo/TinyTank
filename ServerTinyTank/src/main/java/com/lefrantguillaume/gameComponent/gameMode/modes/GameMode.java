@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by andres_k on 13/05/2015.
  */
-public class GameMode {
+public abstract class GameMode {
     protected List<Team> teams;
     protected List<Obstacle> obstacles;
     protected int maxPlayerTeam;
@@ -50,9 +50,7 @@ public class GameMode {
         this.playable = false;
     }
 
-    public Object doTask(Pair<EnumAction, Object> task, Object data) {
-        return false;
-    }
+    public abstract Object doTask(Pair<EnumAction, Object> task, Object data);
 
     public String attributeATeam() {
         String idTeam = null;

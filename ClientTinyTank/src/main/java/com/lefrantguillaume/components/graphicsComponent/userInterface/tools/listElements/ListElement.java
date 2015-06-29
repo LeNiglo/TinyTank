@@ -23,15 +23,15 @@ public abstract class ListElement {
 
     public abstract void addToPrint(Object object, long time);
 
-    public Boolean isOnFocus(float x, float y){
+    public Object isOnFocus(float x, float y){
         for (Element element : this.elements){
-            if (element.isOnFocus(x, y)){
-                return true;
+            if (element.isOnFocus(x, y) && element.isEmpty() == false){
+                return element;
             }
         }
         if (body.isOnFocus(x, y)){
-            return true;
+            return null;
         }
-        return false;
+        return null;
     }
 }

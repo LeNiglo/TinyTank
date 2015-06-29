@@ -1,7 +1,8 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
@@ -23,9 +24,9 @@ public class StringPopElement extends InterfaceElement {
     // INIT
     @Override
     public void parentInit(BodyRect body) {
-        this.focused = false;
         this.needActivated = false;
         this.body = body;
+        this.activatedTimer = new ActivatedTimer(true);
     }
 
     public void childInit() {
@@ -36,7 +37,9 @@ public class StringPopElement extends InterfaceElement {
 
     @Override
     public void draw(Graphics g) {
-        this.stringListElement.draw(g);
+        if (this.isActivated()) {
+            this.stringListElement.draw(g);
+        }
     }
 
     @Override
@@ -47,21 +50,25 @@ public class StringPopElement extends InterfaceElement {
     int i = 0;
 
     @Override
-    public Object event(int key, char c) {
+    public Object eventPressed(int key, char c) {
         if (key == Input.KEY_K) {
-            this.stringListElement.addToPrint(new Pair<>(Color.red, "test" + i), 3000);
+            this.stringListElement.addToPrint(new Tuple<>(Color.red, "test" + i, "overlay"), 3000);
             ++i;
         }
         return null;
     }
 
     @Override
+    public Object eventReleased(int key, char c) {
+        return null;
+    }
+
+    @Override
     public Boolean isOnFocus(int x, int y) {
-        if (this.stringListElement.isOnFocus(x, y)) {
+        if (this.stringListElement.isOnFocus(x, y) != null) {
         }
-        if (this.body.contains(x, y)) {
+        if (this.body.isOnFocus(x, y)) {
         }
-        this.focused = false;
         return false;
     }
 
@@ -72,8 +79,8 @@ public class StringPopElement extends InterfaceElement {
         }
     }
 
-    public Pair<Color, String> getMessageToPrint(MessageRoundKill message) {
-        Pair<Color, String> result = new Pair<>(null, null);
+    public Tuple<Color, String, String> getMessageToPrint(MessageRoundKill message) {
+        Tuple<Color, String, String> result = new Tuple<>(null, null, "overlay");
 
         if (CurrentUser.getIdTeam().equals(message.getKiller()))
         {

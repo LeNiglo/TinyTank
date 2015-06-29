@@ -168,8 +168,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyPressed(int key, char c) {
-        boolean result = this.gameOverlay.event(key, c);
-        if (result == false) {
+        boolean absorbed = this.gameOverlay.event(key, c, EnumInput.PRESSED);
+        if (absorbed == false) {
             if (input != null && this.gameController != null) {
                 input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
             }
@@ -178,7 +178,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void keyReleased(int key, char c) {
-        if (!this.gameOverlay.isFocused()) {
+        boolean absorbed = this.gameOverlay.event(key, c, EnumInput.RELEASED);
+        if (absorbed == false) {
             if (input != null && this.gameController != null) {
                 int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
                 if (result == EnumInput.ESCAPE.getIndex()) {
