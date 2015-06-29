@@ -9,7 +9,6 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Color;
@@ -43,11 +42,8 @@ public class GameOverlay extends Observable implements Observer {
 
         Debug.debug("RECEIVED : " + received);
         if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
-            if (received.getV3() instanceof MessageChat) {
-                this.elements.get(EnumInterfaceElement.CHAT).doTask(received.getV3());
-            }
-            if (received.getV3() instanceof MessageRoundKill) {
-                this.elements.get(EnumInterfaceElement.POP_ELEMENT).doTask(received.getV3());
+            for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()){
+                entry.getValue().doTask(received.getV3());
             }
         }
     }

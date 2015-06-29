@@ -33,6 +33,7 @@ public class NetworkRegister {
         kryo.register(MessageChat.class);
         kryo.register(MessageRoundKill.class);
         kryo.register(MessageRoundUpScore.class);
+        kryo.register(MessageRoundState.class);
 
         kryo.register(EnumGameObject.class);
         kryo.register(EnumCollision.class);

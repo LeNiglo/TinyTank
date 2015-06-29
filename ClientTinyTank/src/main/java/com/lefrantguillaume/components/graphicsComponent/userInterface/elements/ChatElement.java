@@ -2,7 +2,6 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
@@ -12,15 +11,11 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by andres_k on 20/06/2015.
  */
 
 public class ChatElement extends InterfaceElement {
-    private List<Pair<Color, Tuple<String, String, String>>> messageData;
     private ListElement stringListElement;
     private Rectangle writer;
     private String current;
@@ -39,12 +34,10 @@ public class ChatElement extends InterfaceElement {
     }
 
     private void childInit() {
-        this.messageData = new ArrayList<>();
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>("6416541", "Admin", "Welcome!")));
         this.current = "";
         this.stringListElement = new StringListElement(this.body, 7);
         this.writer = new Rectangle(this.body.getX() + 20, this.body.getY() + 170, 300, 20);
-        this.stringListElement.addAllToPrint(this.getMessagesToPrint());
+        this.stringListElement.addToPrint(new Pair<>(Color.black, this.getMessageToPrint("admin", "Admin", "Welcome!")));
     }
 
     // FUNCTIONS
@@ -114,20 +107,10 @@ public class ChatElement extends InterfaceElement {
     }
 
     public void addMessage(MessageChat message) {
-        this.messageData.add(new Pair<>(Color.black, new Tuple<>(message.getId(), message.getPseudo(), message.getMessage())));
-        this.stringListElement.addAllToPrint(this.getMessagesToPrint());
+        this.stringListElement.addToPrint(new Pair<>(Color.black, this.getMessageToPrint(message.getId(), message.getPseudo(), message.getMessage())));
     }
 
-    public List<Object> getMessagesToPrint() {
-        List<Object> printMessages = new ArrayList<>();
-
-        for (int i = 0; i < this.messageData.size(); ++i) {
-            printMessages.add(new Pair<>(this.messageData.get(i).getV1(), this.getMessageToPrint(this.messageData.get(i).getV2())));
-        }
-        return printMessages;
-    }
-
-    public String getMessageToPrint(Tuple<String, String, String> values) {
-        return values.getV2() + ": " + values.getV3();
+    public String getMessageToPrint(String id, String pseudo, String message) {
+        return pseudo + ": " + message;
     }
 }
