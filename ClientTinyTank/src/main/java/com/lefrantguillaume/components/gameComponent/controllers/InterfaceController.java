@@ -55,11 +55,10 @@ public class InterfaceController extends Observable implements Observer {
         return false;
     }
 
-    public void drawBackground(Graphics g){
-        g.drawAnimation(backgroundAnimator.get(EnumInterfaceComponent.BACKGROUND_1).currentAnimation(), 0, 0);
-    }
-
-    public void drawCurrentTankStat(Graphics g){
+    public void draw(Graphics g){
+        g.drawAnimation(this.backgroundAnimator.get(EnumInterfaceComponent.BACKGROUND_1).currentAnimation(), 0, 0);
+        g.drawAnimation(this.buttonAnimator.get(EnumInterfaceComponent.PREV).currentAnimation(), 300, 500);
+        g.drawAnimation(this.buttonAnimator.get(EnumInterfaceComponent.NEXT).currentAnimation(), 770, 500);
         this.availableTank.drawCurrentTankStat(g);
     }
 

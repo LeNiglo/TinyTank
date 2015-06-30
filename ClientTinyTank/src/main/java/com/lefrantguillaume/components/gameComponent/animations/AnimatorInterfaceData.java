@@ -26,7 +26,7 @@ public class AnimatorInterfaceData {
     public void init() throws SlickException {
         this.initTanks();
         this.initBackgrounds();
-//        this.initButtons();
+        this.initButtons();
     }
 
     public void initTanks() throws SlickException {

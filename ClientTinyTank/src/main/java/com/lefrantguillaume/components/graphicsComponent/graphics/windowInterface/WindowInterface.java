@@ -50,7 +50,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     }
 
     public void enter(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
-        container = gameContainer;
+        this.container = gameContainer;
         this.container.setTargetFrameRate(10);
         this.container.setShowFPS(false);
         this.container.setAlwaysRender(false);
@@ -65,8 +65,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     }
 
     public void render(GameContainer gameContainer, StateBasedGame sbg, Graphics g) throws SlickException {
-        this.interfaceController.drawBackground(g);
-        this.interfaceController.drawCurrentTankStat(g);
+        this.interfaceController.draw(g);
     }
 
     public void update(GameContainer gameContainer, StateBasedGame sbg, int i) throws SlickException {
