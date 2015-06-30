@@ -14,6 +14,14 @@ public class MessageRoundUpScore extends MessageModel {
     public MessageRoundUpScore(){
     }
 
+    public MessageRoundUpScore(String pseudo, String id, String teamId, EnumGameObject object, int upgrade){
+        this.pseudo = pseudo;
+        this.id = id;
+        this.teamId = teamId;
+        this.object = object;
+        this.upgrade = upgrade;
+    }
+
     // GETTERS
     public String getTeamId() {
         return this.teamId;

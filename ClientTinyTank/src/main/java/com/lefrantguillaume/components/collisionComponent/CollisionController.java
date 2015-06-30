@@ -61,7 +61,7 @@ public class CollisionController {
                 CollisionObject current = this.items.get(i);
                 for (CollisionObject object : objects) {
                     if (object.getIdUser().equals(current.getIdUser()) != true) {
-                        //                  Debug.debug("-------------" + object.getType() + "" + " -> " + current.getType() + "-------------");
+                        //                  Debug.debug("-------------" + object.getIndex() + "" + " -> " + current.getIndex() + "-------------");
                         object.modifCoord(coords);
                         if (current.isAlive() && object.isAlive() && CollisionDetection.checkCollision(object, current) == true) { // 1 collision
                             boolean isIgnored;

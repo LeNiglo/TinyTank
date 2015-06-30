@@ -17,18 +17,18 @@ import org.newdawn.slick.Input;
 public class StringPopElement extends InterfaceElement {
     private StringListElement stringListElement;
 
-    public StringPopElement(BodyRect body) {
-        this.parentInit(body);
+    public StringPopElement(EnumOverlayElement type, BodyRect body) {
+        this.parentInit(body, type);
         this.childInit();
     }
 
     // INIT
     @Override
-    public void parentInit(BodyRect body) {
+    public void parentInit(BodyRect body, EnumOverlayElement type) {
         this.body = body;
         this.needActivated = false;
         this.activatedTimer = new ActivatedTimer(true);
-        this.type = EnumOverlayElement.POP_ELEMENT;
+        this.type = type;
     }
 
     public void childInit() {

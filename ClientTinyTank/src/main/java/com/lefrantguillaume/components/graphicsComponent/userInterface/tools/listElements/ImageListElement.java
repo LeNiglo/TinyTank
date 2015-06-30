@@ -104,15 +104,11 @@ public class ImageListElement extends ListElement {
             float currentX = this.body.getMinX();
             float currentY = this.body.getMaxY();
 
-            Debug.debug("UpdatePosition");
             for (Element element : this.elements) {
-                Debug.debug("elem find");
                 if (currentY - element.getAbsoluteHeight() >= this.body.getMinY()) {
-                    Debug.debug("ok");
                     currentY -= element.getAbsoluteHeight();
                     element.setBody(new BodyRect(new Rectangle(currentX, currentY, this.body.getSizeX(), element.getAbsoluteHeight())));
                 } else {
-                    Debug.debug("pas de place");
                     element.setBody(new BodyRect(new Rectangle(-1f, -1f, this.body.getSizeX(), element.getAbsoluteHeight())));
                 }
             }

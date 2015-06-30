@@ -31,9 +31,10 @@ public class GameOverlay extends Observable implements Observer {
     public GameOverlay() {
         this.activated = false;
         this.elements = new HashMap<>();
-        this.elements.put(EnumOverlayElement.CHAT1, new ChatElement(new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
-        this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
-        this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableElement(new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumOverlayElement.CHAT, new ChatElement(EnumOverlayElement.CHAT, new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(EnumOverlayElement.POP_KILL, new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
+        this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableElement(EnumOverlayElement.TABLE_NEW_ROUND, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumOverlayElement.TABLE_STAT, new TableElement(EnumOverlayElement.TABLE_STAT, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
     }
 
     public void init(AnimatorOverlayData animatorOverlayData) {
@@ -41,16 +42,6 @@ public class GameOverlay extends Observable implements Observer {
 
         tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound", Element.PositionInBody.MIDDLE_UP));
         tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound2", Element.PositionInBody.MIDDLE_UP));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound3", Element.PositionInBody.MIDDLE_UP));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
-        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
     }
 
     // TASK

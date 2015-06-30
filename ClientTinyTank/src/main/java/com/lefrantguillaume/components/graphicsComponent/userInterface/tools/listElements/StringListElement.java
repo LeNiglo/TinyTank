@@ -24,6 +24,7 @@ public class StringListElement extends ListElement {
     public StringListElement() {
         this.body = null;
         this.elements = new ArrayList<>();
+        this.positionMessages = new ArrayList<>();
     }
 
     public StringListElement(BodyRect body) {

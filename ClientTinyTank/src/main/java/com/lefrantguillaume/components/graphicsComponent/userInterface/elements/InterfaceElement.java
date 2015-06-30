@@ -14,7 +14,7 @@ public abstract class InterfaceElement {
     protected EnumOverlayElement type;
 
     // FUNCTION
-    protected abstract void parentInit(BodyRect body);
+    protected abstract void parentInit(BodyRect body, EnumOverlayElement type);
 
     public abstract void doTask(Object task);
 

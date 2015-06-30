@@ -25,6 +25,7 @@ public class AnimatorOverlayFactory extends AnimatorFactory {
             }
             Image img = new Image("assets/old/img/overlay/roundGo.png");
             animation.addFrame(img, 1000);
+            animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);
         }
         return animator;

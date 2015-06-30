@@ -25,18 +25,18 @@ public class ChatElement extends InterfaceElement {
     private ListElement stringListElement;
     private SelectionField selectionField;
 
-    public ChatElement(BodyRect body) {
-        this.parentInit(body);
+    public ChatElement(EnumOverlayElement type, BodyRect body) {
+        this.parentInit(body, type);
         this.childInit();
     }
 
     // INIT
     @Override
-    protected void parentInit(BodyRect body) {
+    protected void parentInit(BodyRect body, EnumOverlayElement type) {
         this.body = body;
         this.needActivated = true;
         this.activatedTimer = new ActivatedTimer(true, false, 7000);
-        this.type = EnumOverlayElement.CHAT;
+        this.type = type;
     }
 
     private void childInit() {
