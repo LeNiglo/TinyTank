@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import org.newdawn.slick.Color;
@@ -12,72 +13,79 @@ public class StringElement extends Element {
     private StringTimer stringTimer;
     private Color color;
 
-    public StringElement(StringTimer stringTimer, Color color) {
-        this.body = null;
+    public StringElement(StringTimer stringTimer, Color color, PositionInBody position) {
+        this.init(null, "", position, EnumOverlayElement.STRING);
         this.stringTimer = stringTimer;
         this.color = color;
-        this.id = "";
     }
 
-    public StringElement(StringTimer stringTimer, Color color, String id) {
-        this.body = null;
+    public StringElement(StringTimer stringTimer, Color color, String id, PositionInBody position) {
+        this.init(null, id, position, EnumOverlayElement.STRING);
         this.stringTimer = stringTimer;
         this.color = color;
-        this.id = id;
     }
 
-    public StringElement(BodyRect body, StringTimer stringTimer, Color color) {
-        this.body = body;
+    public StringElement(BodyRect body, StringTimer stringTimer, Color color, PositionInBody position) {
+        this.init(body, "", position, EnumOverlayElement.STRING);
         this.stringTimer = stringTimer;
         this.color = color;
-        this.id = "";
     }
 
-    public StringElement(BodyRect body, StringTimer stringTimer, Color color, String id) {
-        this.body = body;
+    public StringElement(BodyRect body, StringTimer stringTimer, Color color, String id, PositionInBody position) {
+        this.init(body, id, position, EnumOverlayElement.STRING);
         this.stringTimer = stringTimer;
         this.color = color;
-        this.id = id;
     }
+
 
     @Override
     public void draw(Graphics g) {
-        int begin;
-
         if (body != null) {
-            this.body.draw(g);
-            begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);
-            if (begin < 0) {
-                begin = 0;
+            float x = this.body.getMinX();
+            float y = this.body.getMinY();
+            int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);
+            begin = (begin < 0 ? 0 : begin);
+            String value = this.stringTimer.getValue().substring(begin);
+
+            if (this.position == PositionInBody.MIDDLE_MID || this.position == PositionInBody.MIDDLE_UP) {
+                x += (this.body.getSizeX() / 2) - ((value.length() * 10) / 2);
+            } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
+                x += (this.body.getSizeX() - (value.length() * 10));
             }
+            this.body.draw(g);
             g.setColor(this.color);
-            g.drawString(this.stringTimer.getValue().substring(begin), this.body.getX(), this.body.getY());
+            g.drawString(value, x, y);
         }
     }
 
     @Override
-    public void draw(Graphics g, BodyRect bodyRect) {
-        int begin;
+    public void draw(Graphics g, BodyRect body) {
+        int begin = this.stringTimer.getValue().length() - (int) (body.getSizeX() / 10);
+        float x = body.getMinX();
+        float y = body.getMinY();
 
-        bodyRect.draw(g);
-            bodyRect.draw(g);
-            begin = this.stringTimer.getValue().length() - (int) (bodyRect.getSizeX() / 10);
-            if (begin < 0) {
-                begin = 0;
-            }
+        begin = (begin < 0 ? 0 : begin);
+        String value = this.stringTimer.getValue().substring(begin);
+
+        if (this.position == PositionInBody.MIDDLE_MID || this.position == PositionInBody.MIDDLE_UP) {
+            x += (body.getSizeX() / 2) - ((value.length() * 10) / 2);
+        } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
+            x += (body.getSizeX() - (value.length() * 10));
+        }
+        body.draw(g);
         g.setColor(this.color);
-        g.drawString(this.stringTimer.getValue().substring(begin), bodyRect.getX(), bodyRect.getY());
+        g.drawString(value , x, y);
     }
 
     @Override
     public void update() {
     }
 
-    public void addToValue(int position, String add){
+    public void addToValue(int position, String add) {
         this.stringTimer.add(position, add);
     }
 
-    public void deleteValue(int start, int number){
+    public void deleteValue(int start, int number) {
         this.stringTimer.delete(start, number);
     }
 
@@ -92,7 +100,17 @@ public class StringElement extends Element {
         return this.stringTimer.getValue().equals("");
     }
 
-    public String getValue(){
+    @Override
+    public float getAbsoluteWidth() {
+        return this.stringTimer.getValue().length() * 10;
+    }
+
+    @Override
+    public float getAbsoluteHeight() {
+        return 20;
+    }
+
+    public String getValue() {
         return this.stringTimer.getValue();
     }
 
@@ -102,7 +120,7 @@ public class StringElement extends Element {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return this.stringTimer.getValue();
     }
 }

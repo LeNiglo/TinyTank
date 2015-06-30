@@ -3,7 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterfa
 /**
  * Created by andres_k on 20/03/2015.
  */
-public enum EnumInterfaceComponent {
+public enum EnumInterfaceElement {
     TIGER(0, "tiger"), SNIPER(1, "sniper"), RUSHER(2, "rusher"),
     RANK("rank"), BACKGROUND_1("background_1"),
     PREV("prev"), NEXT("next");
@@ -11,12 +11,12 @@ public enum EnumInterfaceComponent {
     private final String value;
     private final int index;
 
-    EnumInterfaceComponent(int index, String value) {
+    EnumInterfaceElement(int index, String value) {
         this.index = index;
         this.value = value;
     }
 
-    EnumInterfaceComponent(String value) {
+    EnumInterfaceElement(String value) {
         this.index = -1;
         this.value = value;
     }

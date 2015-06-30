@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
@@ -24,9 +25,10 @@ public class StringPopElement extends InterfaceElement {
     // INIT
     @Override
     public void parentInit(BodyRect body) {
-        this.needActivated = false;
         this.body = body;
+        this.needActivated = false;
         this.activatedTimer = new ActivatedTimer(true);
+        this.type = EnumOverlayElement.POP_ELEMENT;
     }
 
     public void childInit() {
@@ -52,7 +54,7 @@ public class StringPopElement extends InterfaceElement {
     @Override
     public Object eventPressed(int key, char c) {
         if (key == Input.KEY_K) {
-            this.stringListElement.addToPrint(new Tuple<>(Color.red, "test" + i, "overlay"), 3000);
+            this.stringListElement.addToPrint(new Tuple<>(Color.red, "test" + i, "overlay"), 3000, Element.PositionInBody.MIDDLE_MID);
             ++i;
         }
         return null;
@@ -75,7 +77,7 @@ public class StringPopElement extends InterfaceElement {
     @Override
     public void doTask(Object task) {
         if (task instanceof MessageRoundKill) {
-            this.stringListElement.addToPrint(this.getMessageToPrint((MessageRoundKill) task), 3000);
+            this.stringListElement.addToPrint(this.getMessageToPrint((MessageRoundKill) task), 3000, Element.PositionInBody.MIDDLE_MID);
         }
     }
 

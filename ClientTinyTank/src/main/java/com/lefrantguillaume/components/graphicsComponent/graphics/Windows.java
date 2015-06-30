@@ -7,6 +7,7 @@ import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterfac
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundState;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundUpScore;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -149,7 +150,8 @@ public class Windows extends NiftyStateBasedGame implements Observer {
     }
 
     private void redirectGame(Tuple<EnumTargetTask, EnumTargetTask, Object> task){
-        if (task.getV3() instanceof MessageChat || task.getV3() instanceof MessageRoundKill || task.getV3() instanceof MessageRoundUpScore){
+        if (task.getV3() instanceof MessageChat || task.getV3() instanceof MessageRoundKill || task.getV3() instanceof MessageRoundUpScore
+                || task.getV3() instanceof MessageRoundState){
             task.setV2(EnumTargetTask.GAME_OVERLAY);
         }
     }

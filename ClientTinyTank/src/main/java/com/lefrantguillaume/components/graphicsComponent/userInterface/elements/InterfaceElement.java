@@ -11,6 +11,7 @@ public abstract class InterfaceElement {
     protected BodyRect body;
     protected ActivatedTimer activatedTimer;
     protected boolean needActivated;
+    protected EnumOverlayElement type;
 
     // FUNCTION
     protected abstract void parentInit(BodyRect body);
@@ -34,5 +35,13 @@ public abstract class InterfaceElement {
 
     public boolean isNeedActivated(){
         return this.needActivated;
+    }
+
+    public EnumOverlayElement getType(){
+        return this.type;
+    }
+
+    public BodyRect getBody(){
+        return this.body;
     }
 }

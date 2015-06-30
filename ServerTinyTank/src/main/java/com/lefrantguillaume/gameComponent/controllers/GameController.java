@@ -369,6 +369,10 @@ public class GameController extends Observable {
         this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
         this.clearTargets();
+
+        setChanged();
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundState("admin", "admin", false))));
+
         this.targets.initGame(this.mapController, this.gameModeController.getCurrentMode().getObstacles());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             MessageModel message;
@@ -508,6 +512,8 @@ public class GameController extends Observable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundState("admin", "admin", true))));
                 gameModeController.getCurrentMode().start();
             }
         }, 7000);

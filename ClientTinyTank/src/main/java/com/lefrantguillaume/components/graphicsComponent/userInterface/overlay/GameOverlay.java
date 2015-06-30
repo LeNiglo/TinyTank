@@ -3,11 +3,11 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.ChatElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumInterfaceElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.StringPopElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.*;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.ImageElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
@@ -26,15 +26,32 @@ import java.util.Observer;
  */
 public class GameOverlay extends Observable implements Observer {
     private boolean activated;
-    private HashMap<EnumInterfaceElement, InterfaceElement> elements;
+    private HashMap<EnumOverlayElement, InterfaceElement> elements;
 
     public GameOverlay() {
         this.activated = false;
         this.elements = new HashMap<>();
-        this.elements.put(EnumInterfaceElement.CHAT, new ChatElement(new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
-        this.elements.put(EnumInterfaceElement.POP_ELEMENT, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
+        this.elements.put(EnumOverlayElement.CHAT1, new ChatElement(new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
+        this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableElement(new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
     }
 
+    public void init(AnimatorOverlayData animatorOverlayData) {
+        InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_NEW_ROUND);
+
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound", Element.PositionInBody.MIDDLE_UP));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound2", Element.PositionInBody.MIDDLE_UP));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound2", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound3", Element.PositionInBody.MIDDLE_UP));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound3", Element.PositionInBody.MIDDLE_MID));
+    }
 
     // TASK
     @Override
@@ -43,7 +60,7 @@ public class GameOverlay extends Observable implements Observer {
 
         Debug.debug("RECEIVED : " + received);
         if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
-            for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+            for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
                 entry.getValue().doTask(received.getV3());
             }
         }
@@ -52,7 +69,7 @@ public class GameOverlay extends Observable implements Observer {
     // FUNCTIONS
 
     public void draw(Graphics g) {
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 entry.getValue().draw(g);
             }
@@ -60,7 +77,7 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public void updateOverlay() {
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 entry.getValue().update();
             }
@@ -71,7 +88,7 @@ public class GameOverlay extends Observable implements Observer {
     public boolean event(int key, char c, EnumInput type) {
         boolean used = false;
 
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 Object result = null;
                 if (type == EnumInput.PRESSED) {
@@ -92,7 +109,7 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public boolean isOnFocus(int x, int y) {
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 if (entry.getValue().isOnFocus(x, y)) {
                     return true;
@@ -103,7 +120,7 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public boolean isFocused() {
-        for (Map.Entry<EnumInterfaceElement, InterfaceElement> entry : this.elements.entrySet()) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
                 if (entry.getValue().isActivated()) {
                     return true;

@@ -11,6 +11,7 @@ public enum EnumSprites {
     RUSHER(3),
     WALL(4),
     AREA(5),
+    ROUND(6),
     //interface
     BACKGROUND(-1), NEXT(-1), PREV(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),
@@ -26,8 +27,10 @@ public enum EnumSprites {
     RUSHER_BODY_ENEMY(RUSHER.getIndex()), RUSHER_TOP_ENEMY(RUSHER.getIndex()),
     // area
     OBJECTIVE(AREA.getIndex()),
-    BOMB(AREA.getIndex());
+    BOMB(AREA.getIndex()),
 
+    //roundOverlay
+    NEW_ROUND(ROUND.getIndex()), STATE(ROUND.getIndex());
 
     private final int index;
 

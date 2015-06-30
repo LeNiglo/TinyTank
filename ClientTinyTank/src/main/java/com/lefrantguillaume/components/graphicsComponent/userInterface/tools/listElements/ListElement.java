@@ -17,11 +17,13 @@ public abstract class ListElement {
 
     public abstract void update();
 
-    public abstract void addAllToPrint(List<Object> messageData);
+    protected abstract void updatePosition();
 
-    public abstract void addToPrint(Object object);
+    public abstract void addAllToPrint(List<Object> messageData, Element.PositionInBody positionInBody);
 
-    public abstract void addToPrint(Object object, long time);
+    public abstract void addToPrint(Object object, Element.PositionInBody positionInBody);
+
+    public abstract void addToPrint(Object object, long time, Element.PositionInBody positionInBody);
 
     public Object isOnFocus(float x, float y){
         for (Element element : this.elements){
@@ -33,5 +35,12 @@ public abstract class ListElement {
             return null;
         }
         return null;
+    }
+
+    // SETTERS
+
+    public void setBody(BodyRect body){
+        this.body = body;
+        this.updatePosition();
     }
 }

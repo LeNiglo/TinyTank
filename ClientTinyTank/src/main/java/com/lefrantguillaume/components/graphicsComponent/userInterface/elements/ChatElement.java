@@ -33,16 +33,17 @@ public class ChatElement extends InterfaceElement {
     // INIT
     @Override
     protected void parentInit(BodyRect body) {
-        this.activatedTimer = new ActivatedTimer(true, false, 7000);
-        this.needActivated = true;
         this.body = body;
+        this.needActivated = true;
+        this.activatedTimer = new ActivatedTimer(true, false, 7000);
+        this.type = EnumOverlayElement.CHAT;
     }
 
     private void childInit() {
         this.stringListElement = new StringListElement(this.body, 7);
-        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getX() + 20, this.body.getY() + 170, 300, 20), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
-                new StringTimer(""), Color.white));
-        this.stringListElement.addToPrint(new Tuple<>(Color.black, this.getMessageToPrint("Admin", "Welcome!"), "admin"));
+        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, 20), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
+                new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID));
+        this.stringListElement.addToPrint(new Tuple<>(Color.black, this.getMessageToPrint("Admin", "Welcome!"), "admin"), Element.PositionInBody.LEFT_MID);
     }
 
     // FUNCTIONS
@@ -119,7 +120,7 @@ public class ChatElement extends InterfaceElement {
     }
 
     public void addMessage(MessageChat message) {
-        this.stringListElement.addToPrint(new Tuple<>(Color.black, this.getMessageToPrint(message.getPseudo(), message.getMessage()), message.getId()));
+        this.stringListElement.addToPrint(new Tuple<>(Color.black, this.getMessageToPrint(message.getPseudo(), message.getMessage()), message.getId()), Element.PositionInBody.LEFT_MID);
     }
 
     public String getMessageToPrint(String pseudo, String message) {

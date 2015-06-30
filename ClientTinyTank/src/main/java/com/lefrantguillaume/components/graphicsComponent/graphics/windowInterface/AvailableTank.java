@@ -2,7 +2,6 @@ package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterfa
 
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
-import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.EnumInterfaceComponent;
 import org.newdawn.slick.Graphics;
 
 import java.util.HashMap;
@@ -11,10 +10,10 @@ import java.util.HashMap;
  * Created by andres_k on 20/03/2015.
  */
 public class AvailableTank {
-    private HashMap<EnumInterfaceComponent, Animator> tankStatAnimator;
-    private HashMap<EnumInterfaceComponent, Animator> tankPreviewAnimator;
-    private HashMap<EnumInterfaceComponent, Boolean> available;
-    private EnumInterfaceComponent currentTankStat;
+    private HashMap<EnumInterfaceElement, Animator> tankStatAnimator;
+    private HashMap<EnumInterfaceElement, Animator> tankPreviewAnimator;
+    private HashMap<EnumInterfaceElement, Boolean> available;
+    private EnumInterfaceElement currentTankStat;
     private final float xStat;
     private final float yStat;
     private final float xPreview;
@@ -27,32 +26,32 @@ public class AvailableTank {
         this.xPreview = 500;
         this.yPreview = 300;
         this.available = new HashMap<>();
-        this.available.put(EnumInterfaceComponent.TIGER, true);
-        this.available.put(EnumInterfaceComponent.SNIPER, true);
-        this.available.put(EnumInterfaceComponent.RUSHER, true);
+        this.available.put(EnumInterfaceElement.TIGER, true);
+        this.available.put(EnumInterfaceElement.SNIPER, true);
+        this.available.put(EnumInterfaceElement.RUSHER, true);
         this.tankStatAnimator = new HashMap<>();
         this.tankPreviewAnimator = new HashMap<>();
-        this.currentTankStat = EnumInterfaceComponent.SNIPER;
+        this.currentTankStat = EnumInterfaceElement.SNIPER;
     }
 
     public void drawCurrentTankStat(Graphics g) {
         float sizex = this.tankPreviewAnimator.get(this.currentTankStat).currentSizeAnimation().getV1();
         float sizey = this.tankPreviewAnimator.get(this.currentTankStat).currentSizeAnimation().getV2();
-        g.drawAnimation(this.tankStatAnimator.get(EnumInterfaceComponent.RANK).currentAnimation(), this.xStat, this.yStat);
+        g.drawAnimation(this.tankStatAnimator.get(EnumInterfaceElement.RANK).currentAnimation(), this.xStat, this.yStat);
         g.drawAnimation(this.tankStatAnimator.get(this.currentTankStat).currentAnimation(), this.xStat, this.yStat);
         this.tankPreviewAnimator.get(this.currentTankStat).currentAnimation().draw(this.xPreview, this.yPreview, 2 * sizex, 2 * sizey);
     }
 
-    public void addTankStatAnimator(Animator tankStatAnimator, EnumInterfaceComponent type) {
+    public void addTankStatAnimator(Animator tankStatAnimator, EnumInterfaceElement type) {
         this.tankStatAnimator.put(type, tankStatAnimator);
     }
 
-    public void addTankPreviewAnimator(Animator tankPreviewAnimator, EnumInterfaceComponent type) {
+    public void addTankPreviewAnimator(Animator tankPreviewAnimator, EnumInterfaceElement type) {
         this.tankPreviewAnimator.put(type, tankPreviewAnimator);
     }
 
     public void nextTankStat() {
-        EnumInterfaceComponent[] values = {EnumInterfaceComponent.TIGER, EnumInterfaceComponent.SNIPER, EnumInterfaceComponent.RUSHER};
+        EnumInterfaceElement[] values = {EnumInterfaceElement.TIGER, EnumInterfaceElement.SNIPER, EnumInterfaceElement.RUSHER};
         int index = this.currentTankStat.getIndex();
 
         if (index == 2) {
@@ -64,7 +63,7 @@ public class AvailableTank {
     }
 
     public void prevTankStat() {
-        EnumInterfaceComponent[] values = {EnumInterfaceComponent.TIGER, EnumInterfaceComponent.SNIPER, EnumInterfaceComponent.RUSHER};
+        EnumInterfaceElement[] values = {EnumInterfaceElement.TIGER, EnumInterfaceElement.SNIPER, EnumInterfaceElement.RUSHER};
         int index = this.currentTankStat.getIndex();
 
         if (index == 0) {

@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
+import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
@@ -33,6 +34,7 @@ import java.util.List;
 
 public class WindowGame extends BasicGameState implements ScreenController {
     private AnimatorGameData animatorGameData;
+    private AnimatorOverlayData animatorOverlayData;
     private GameController gameController;
     private GameOverlay gameOverlay;
     private InputGame input;
@@ -53,6 +55,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.nifty = nifty;
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
+        this.animatorOverlayData = new AnimatorOverlayData();
         this.gameOverlay = new GameOverlay();
 
         String configs = StringTools.readFile("configInput.json");
@@ -74,10 +77,15 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.container = gameContainer;
         this.stateWindow = stateBasedGame;
         this.container.setForceExit(false);
+
         this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
-        this.animatorGameData.initGame();
+        this.animatorGameData.init();
         this.gameController.getMapController().setMapAnimator(this.animatorGameData.getMapAnimator());
         this.gameController.setAnimatorGameData(this.animatorGameData);
+
+        this.animatorOverlayData.init();
+        this.gameOverlay.init(this.animatorOverlayData);
+
         try {
             JSONObject tanksConfig = new JSONObject(StringTools.readFile("tanks.json"));
             JSONObject obstaclesConfig = new JSONObject(StringTools.readFile("obstacles.json"));

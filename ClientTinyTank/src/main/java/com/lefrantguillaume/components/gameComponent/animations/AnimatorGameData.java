@@ -28,7 +28,7 @@ public class AnimatorGameData {
         this.areaAnimator = new HashMap<>();
     }
 
-    public void initGame() throws SlickException {
+    public void init() throws SlickException {
         this.initTanks();
         this.initGuns();
         this.initShots();

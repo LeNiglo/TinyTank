@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -35,11 +36,19 @@ public class BodyRect {
     }
 
     // GETTERS
-    public float getX(){
+    public float getMaxX(){
+        return this.body.getMinX() + this.getSizeX();
+    }
+
+    public float getMaxY(){
+        return this.body.getMinY() + this.getSizeY();
+    }
+
+    public float getMinX(){
         return this.body.getMinX();
     }
 
-    public float getY(){
+    public float getMinY(){
         return this.body.getMinY();
     }
 
@@ -49,5 +58,11 @@ public class BodyRect {
 
     public float getSizeY(){
         return this.body.getHeight();
+    }
+
+    // SETTERS
+    public void setPosition(Pair<Float, Float> position){
+        this.body.setX(position.getV1());
+        this.body.setY(position.getV2());
     }
 }
