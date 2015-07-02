@@ -1,6 +1,5 @@
 package com.lefrantguillaume.userInterface;
 
-import com.lefrantguillaume.utils.GameConfig;
 
 /**
  * Created by Styve on 08/05/2015.

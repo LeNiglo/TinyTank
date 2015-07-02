@@ -164,6 +164,8 @@ public class GameController extends Observable {
                 player.setTransportObjective(null);
             }
             this.targets.deletePlayer(received.getId());
+            this.setChanged();
+            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
         }
         this.setChanged();
         this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
@@ -173,9 +175,7 @@ public class GameController extends Observable {
         WindowController.addConsoleMsg("Disonnected: Client ID " + connection.getID());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             if (entry.getValue().getConnection().getID() == connection.getID()) {
-                this.setChanged();
-                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessagePlayerDelete(entry.getKey(), entry.getValue().getPseudo()))));
-                break;
+                this.doMessagePlayerDelete(new MessagePlayerDelete(entry.getKey(), entry.getValue().getPseudo()));
             }
         }
     }

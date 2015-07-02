@@ -1,6 +1,5 @@
 package com.lefrantguillaume.master;
 
-import com.esotericsoftware.kryonet.Connection;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
@@ -8,13 +7,9 @@ import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
 import com.lefrantguillaume.networkComponent.gameServerComponent.GameServer;
-import com.lefrantguillaume.networkComponent.gameServerComponent.Request;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageDisconnect;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerDelete;
 import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.userInterface.GraphicalUserInterface;
 import com.lefrantguillaume.userInterface.UserInterface;
-import com.lefrantguillaume.utils.Callback;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.StringTools;
 import javafx.util.Pair;
@@ -174,10 +169,10 @@ public class MasterController extends Observable implements Observer {
                     }.start();
                     break;
                 case "stop game":
-                    stopGame();
+                    this.stopGame();
                     break;
                 case "reload maps":
-                    loadMaps();
+                    this.loadMaps();
                     break;
                 default:
                     WindowController.addConsoleMsg("Not handled: " + msg);
