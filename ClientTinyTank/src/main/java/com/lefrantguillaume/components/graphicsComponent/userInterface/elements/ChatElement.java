@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;

@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumOverlayElement;
+import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import org.newdawn.slick.Color;
@@ -41,42 +42,50 @@ public class StringElement extends Element {
     @Override
     public void draw(Graphics g) {
         if (body != null) {
-            float x = this.body.getMinX();
-            float y = this.body.getMinY();
             int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);
             begin = (begin < 0 ? 0 : begin);
+
             String value = this.stringTimer.getValue().substring(begin);
 
-            if (this.position == PositionInBody.MIDDLE_MID || this.position == PositionInBody.MIDDLE_UP) {
-                x += (this.body.getSizeX() / 2) - ((value.length() * 10) / 2);
-            } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
-                x += (this.body.getSizeX() - (value.length() * 10));
-            }
+            Pair<Float, Float> position = this.getChoicePosition(this.body, value);
+
             this.body.draw(g);
             g.setColor(this.color);
-            g.drawString(value, x, y);
+            g.drawString(value, position.getV1(), position.getV2());
         }
     }
 
     @Override
     public void draw(Graphics g, BodyRect body) {
         int begin = this.stringTimer.getValue().length() - (int) (body.getSizeX() / 10);
+        begin = (begin < 0 ? 0 : begin);
+
+        String value = this.stringTimer.getValue().substring(begin);
+
+        Pair<Float, Float> position = this.getChoicePosition(body, value);
+
+        body.draw(g);
+        g.setColor(this.color);
+        g.drawString(value, position.getV1(), position.getV2());
+    }
+
+    private Pair<Float, Float> getChoicePosition(BodyRect body, String value){
         float x = body.getMinX();
         float y = body.getMinY();
 
-        begin = (begin < 0 ? 0 : begin);
-        String value = this.stringTimer.getValue().substring(begin);
-
         if (this.position == PositionInBody.MIDDLE_MID || this.position == PositionInBody.MIDDLE_UP) {
-            x += (body.getSizeX() / 2) - ((value.length() * 10) / 2);
-        } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
-            x += (body.getSizeX() - (value.length() * 10));
-        }
-        body.draw(g);
-        g.setColor(this.color);
-        g.drawString(value, x, y);
-    }
+            float sizeX = (body.getSizeX() / 2) - ((value.length() * 10) / 2);
 
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            x += sizeX;
+        } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
+            float sizeX = (body.getSizeX() - (value.length() * 10));
+
+            sizeX = (sizeX < 0 ? 0: sizeX);
+            x += sizeX;
+        }
+        return new Pair<>(x, y);
+    }
     @Override
     public void update() {
     }

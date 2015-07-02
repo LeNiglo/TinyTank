@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundState;

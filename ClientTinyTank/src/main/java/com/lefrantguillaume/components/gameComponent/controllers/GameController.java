@@ -147,6 +147,8 @@ public class GameController extends Observable implements Observer {
                     CurrentUser.setInGame(true);
                     CurrentUser.setIdTeam(task.getTeamId());
                     this.initGame();
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, this.getPlayer(CurrentUser.getId())));
                 }
                 if (CurrentUser.isInGame() == true) {
                     Player other = this.getPlayer(task.getId());

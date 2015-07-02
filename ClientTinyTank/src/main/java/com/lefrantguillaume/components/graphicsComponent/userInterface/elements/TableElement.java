@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -102,7 +103,7 @@ public class TableElement extends InterfaceElement {
                 } else {
                     return;
                 }
-                Debug.debug("add table: " + item.getId());
+                Debug.debug("add table: " + item.toString());
                 this.initPositionBody();
                 this.initTableBody();
             }
@@ -151,9 +152,9 @@ public class TableElement extends InterfaceElement {
         this.positionBody.clear();
         for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
             float height = this.body.getSizeY() - entry.getKey().getAbsoluteHeight() - border;
-
+            height = (height < 0 ? 0 : height);
             if (entry.getKey().getType() == EnumOverlayElement.IMAGE) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, width, height)),
                         new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), width - (border * 2), height))));
             } else if (entry.getKey().getType() == EnumOverlayElement.STRING) {
                 this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),

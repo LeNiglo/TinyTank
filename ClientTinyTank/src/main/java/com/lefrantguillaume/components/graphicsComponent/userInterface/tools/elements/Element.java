@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumOverlayElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
 

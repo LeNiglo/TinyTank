@@ -1,7 +1,8 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumOverlayElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
 
@@ -30,63 +31,75 @@ public class ImageElement extends Element {
     @Override
     public void draw(Graphics g) {
         if (this.body != null && this.body.getMinX() != -1) {
-            float x = this.body.getMinX();
-            float y = this.body.getMinY();
-
-            if (this.position == PositionInBody.MIDDLE_MID) {
-                x += (this.body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-                y += (this.body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
-            } else if (this.position == PositionInBody.RIGHT_MID) {
-                x += (this.body.getSizeX() - this.animator.currentAnimation().getWidth());
-                y += (this.body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
-            } else if (this.position == PositionInBody.MIDDLE_DOWN) {
-                x += (this.body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-                y += (this.body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.RIGHT_DOWN) {
-                x += (this.body.getSizeX() - this.animator.currentAnimation().getWidth());
-                y += (this.body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.LEFT_DOWN) {
-                y += (this.body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.MIDDLE_UP) {
-                x += (this.body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-            } else if (this.position == PositionInBody.RIGHT_UP) {
-                x += (this.body.getSizeX() - this.animator.currentAnimation().getWidth());
-            }
-
+            Pair<Float, Float> position = this.getChoicePosition(this.body);
             this.body.draw(g);
-            g.drawAnimation(this.animator.currentAnimation(), x, y);
+            g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
         }
     }
 
     @Override
     public void draw(Graphics g, BodyRect body) {
         if (body.getMinX() != -1) {
-            float x = body.getMinX();
-            float y = body.getMinY();
-
-            if (this.position == PositionInBody.MIDDLE_MID) {
-                x += (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-                y += (body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
-            } else if (this.position == PositionInBody.RIGHT_MID) {
-                x += (body.getSizeX() - this.animator.currentAnimation().getWidth());
-                y += (body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
-            } else if (this.position == PositionInBody.MIDDLE_DOWN) {
-                x += (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-                y += (body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.RIGHT_DOWN) {
-                x += (body.getSizeX() - this.animator.currentAnimation().getWidth());
-                y += (body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.LEFT_DOWN) {
-                y += (body.getSizeY() - this.animator.currentAnimation().getHeight());
-            } else if (this.position == PositionInBody.MIDDLE_UP) {
-                x += (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
-            } else if (this.position == PositionInBody.RIGHT_UP) {
-                x += (body.getSizeX() - this.animator.currentAnimation().getWidth());
-            }
-
+            Pair<Float, Float> position = this.getChoicePosition(body);
             body.draw(g);
-            g.drawAnimation(this.animator.currentAnimation(), x, y);
+            g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
         }
+    }
+
+    private Pair<Float, Float> getChoicePosition(BodyRect body){
+        float x = body.getMinX();
+        float y = body.getMinY();
+
+        if (this.position == PositionInBody.MIDDLE_MID) {
+            float sizeX = (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
+            float sizeY = (body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            sizeY = (sizeY < 0 ? 0 : sizeY);
+            x += sizeX;
+            y += sizeY;
+        } else if (this.position == PositionInBody.RIGHT_MID) {
+            float sizeX = (body.getSizeX() - this.animator.currentAnimation().getWidth());
+            float sizeY = (body.getSizeY() / 2) - (this.animator.currentAnimation().getHeight() / 2);
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            sizeY = (sizeY < 0 ? 0 : sizeY);
+            x += sizeX;
+            y += sizeY;
+        } else if (this.position == PositionInBody.MIDDLE_DOWN) {
+            float sizeX = (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
+            float sizeY = (body.getSizeY() - this.animator.currentAnimation().getHeight());
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            sizeY = (sizeY < 0 ? 0 : sizeY);
+            x += sizeX;
+            y += sizeY;
+        } else if (this.position == PositionInBody.RIGHT_DOWN) {
+            float sizeX = (body.getSizeX() - this.animator.currentAnimation().getWidth());
+            float sizeY = (body.getSizeY() - this.animator.currentAnimation().getHeight());
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            sizeY = (sizeY < 0 ? 0 : sizeY);
+            x += sizeX;
+            y += sizeY;
+        } else if (this.position == PositionInBody.LEFT_DOWN) {
+            float sizeY = (body.getSizeY() - this.animator.currentAnimation().getHeight());
+
+            sizeY = (sizeY < 0 ? 0 : sizeY);
+            y += sizeY;
+        } else if (this.position == PositionInBody.MIDDLE_UP) {
+            float sizeX = (body.getSizeX() / 2) - (this.animator.currentAnimation().getWidth() / 2);
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            x += sizeX;
+        } else if (this.position == PositionInBody.RIGHT_UP) {
+            float sizeX = (body.getSizeX() - this.animator.currentAnimation().getWidth());
+
+            sizeX = (sizeX < 0 ? 0 : sizeX);
+            x += sizeX;
+        }
+
+        return new Pair<>(x, y);
     }
 
     @Override
