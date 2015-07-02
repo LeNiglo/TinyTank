@@ -50,6 +50,12 @@ public class ChatElement extends InterfaceElement {
 
     // FUNCTIONS
     @Override
+    public void leave(){
+        this.activatedTimer.leave();
+        this.stringListElement.leave();
+    }
+
+    @Override
     public void draw(Graphics g) {
         if (this.isActivated()) {
             this.body.draw(g);

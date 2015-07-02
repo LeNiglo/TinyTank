@@ -81,6 +81,13 @@ public class GameOverlay extends Observable implements Observer {
 
     // FUNCTIONS
 
+    public void leave() {
+        this.activated = false;
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
+            entry.getValue().leave();
+        }
+    }
+
     public void draw(Graphics g) {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {

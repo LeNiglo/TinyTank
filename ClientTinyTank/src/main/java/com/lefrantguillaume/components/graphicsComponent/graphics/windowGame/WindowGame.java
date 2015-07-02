@@ -112,6 +112,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.gameController.clearData();
         this.nifty.getNiftyMouse().resetMouseCursor();
+        this.gameOverlay.leave();
     }
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {

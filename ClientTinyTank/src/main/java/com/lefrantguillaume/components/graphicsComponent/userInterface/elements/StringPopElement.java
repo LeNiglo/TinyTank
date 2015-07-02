@@ -39,6 +39,12 @@ public class StringPopElement extends InterfaceElement {
     // FUNCTIONS
 
     @Override
+    public void leave(){
+        this.stringListElement.leave();
+        this.activatedTimer.leave();
+    }
+
+    @Override
     public void draw(Graphics g) {
         if (this.isActivated()) {
             this.stringListElement.draw(g);

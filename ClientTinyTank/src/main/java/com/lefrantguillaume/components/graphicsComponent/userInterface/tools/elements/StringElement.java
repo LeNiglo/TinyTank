@@ -40,6 +40,10 @@ public class StringElement extends Element {
 
 
     @Override
+    public void leave(){
+        this.stringTimer.leave();
+    }
+
     public void draw(Graphics g) {
         if (body != null) {
             int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);

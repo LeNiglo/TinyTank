@@ -20,6 +20,10 @@ public class StringTimer {
 
     // FUNCTIONS
 
+    public void leave(){
+        this.activatedTimer.leave();
+    }
+
     public void replace(StringTimer stringTimer) {
         this.value = stringTimer.value;
         this.activatedTimer.stopTimer();

@@ -23,20 +23,33 @@ public class ActivatedTimer {
     public ActivatedTimer(boolean activated, boolean run, long delay) {
         this.activated = activated;
         this.delay = delay;
-        this.timer = new Timer();
         this.running = false;
         if (run == true) {
             this.startTimer();
         }
     }
 
+    public void leave(){
+        if (this.delay != 0){
+            if (this.activatedTask != null) {
+                this.activatedTask.run();
+                this.activatedTask.cancel();
+            }
+            if (this.timer != null) {
+                this.timer.purge();
+                this.timer.cancel();
+            }
+        }
+    }
+
     public void startTimer() {
-        if (this.timer != null) {
+        if (this.delay != 0) {
             if (this.running == true) {
                 this.stopTimer();
                 this.startTimer();
             } else {
                 this.running = true;
+                this.timer = new Timer();
                 this.activatedTask = new ActivatedTask();
                 this.timer.schedule(this.activatedTask, this.delay);
             }
@@ -50,6 +63,7 @@ public class ActivatedTimer {
             this.running = false;
             this.activatedTask.cancel();
             this.timer.purge();
+            this.timer.cancel();
         } else {
             this.activated = false;
         }

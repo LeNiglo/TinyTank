@@ -13,6 +13,12 @@ public abstract class ListElement {
     protected List<Element> elements;
     protected BodyRect body;
 
+    public void leave(){
+        for (Element element : this.elements){
+            element.leave();
+        }
+    }
+
     public abstract void draw(Graphics g);
 
     public abstract void update();

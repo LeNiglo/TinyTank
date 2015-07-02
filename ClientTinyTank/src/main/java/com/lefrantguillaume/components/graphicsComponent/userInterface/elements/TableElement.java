@@ -44,6 +44,15 @@ public class TableElement extends InterfaceElement {
 
     // FUNCTIONS
     @Override
+    public void leave() {
+        this.activatedTimer.leave();
+        for (Map.Entry<Element, ListElement> item : this.table.entrySet()) {
+            item.getKey().leave();
+            item.getValue().leave();
+        }
+    }
+
+    @Override
     public void doTask(Object task) {
         if (task instanceof Element) {
             this.addElement((Element) task);

@@ -29,6 +29,9 @@ public class ImageElement extends Element {
 
 
     @Override
+    public void leave(){
+    }
+
     public void draw(Graphics g) {
         if (this.body != null && this.body.getMinX() != -1) {
             Pair<Float, Float> position = this.getChoicePosition(this.body);

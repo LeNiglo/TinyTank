@@ -19,6 +19,8 @@ public abstract class InterfaceElement {
 
     public abstract void doTask(Object task);
 
+    public abstract void leave();
+
     public abstract void draw(Graphics g);
 
     public abstract void update();

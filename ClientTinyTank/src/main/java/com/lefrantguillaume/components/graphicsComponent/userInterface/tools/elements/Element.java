@@ -26,6 +26,8 @@ public abstract class Element {
         this.type = type;
     }
 
+    public abstract void leave();
+
     public abstract void draw(Graphics g);
 
     public abstract void draw(Graphics g, BodyRect body);
