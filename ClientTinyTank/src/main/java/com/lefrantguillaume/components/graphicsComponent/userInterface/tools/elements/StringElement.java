@@ -74,11 +74,28 @@ public class StringElement extends Element {
         }
         body.draw(g);
         g.setColor(this.color);
-        g.drawString(value , x, y);
+        g.drawString(value, x, y);
     }
 
     @Override
     public void update() {
+    }
+
+    @Override
+    public boolean replace(Element element) {
+        if (element.getType() == EnumOverlayElement.STRING){
+            StringElement newElement = (StringElement) element;
+
+            this.stringTimer.replace(newElement.stringTimer);
+            this.color = newElement.color;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object doTask(Object task) {
+        return null;
     }
 
     public void addToValue(int position, String add) {
@@ -112,6 +129,10 @@ public class StringElement extends Element {
 
     public String getValue() {
         return this.stringTimer.getValue();
+    }
+
+    public Color getColor() {
+        return this.color;
     }
 
     // SETTERS

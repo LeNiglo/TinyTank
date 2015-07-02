@@ -13,55 +13,63 @@ public class BodyRect {
     private Color color;
 
 
-    public BodyRect(Rectangle body){
+    public BodyRect(Rectangle body) {
         this.body = body;
         this.color = null;
     }
 
-    public BodyRect(Rectangle body, Color color){
+    public BodyRect(Rectangle body, Color color) {
         this.body = body;
         this.color = color;
     }
 
     // FUNCTIONS
-    public void draw(Graphics g){
-        if (this.color != null){
+    public void draw(Graphics g) {
+        if (this.color != null) {
             g.setColor(this.color);
             g.fill(this.body);
         }
     }
 
-    public boolean isOnFocus(float x, float y){
+    public boolean isOnFocus(float x, float y) {
         return this.body.contains(x, y);
     }
 
     // GETTERS
-    public float getMaxX(){
+    public float getMaxX() {
         return this.body.getMinX() + this.getSizeX();
     }
 
-    public float getMaxY(){
+    public float getMaxY() {
         return this.body.getMinY() + this.getSizeY();
     }
 
-    public float getMinX(){
+    public float getMinX() {
         return this.body.getMinX();
     }
 
-    public float getMinY(){
+    public float getMinY() {
         return this.body.getMinY();
     }
 
-    public float getSizeX(){
+    public float getSizeX() {
         return this.body.getWidth();
     }
 
-    public float getSizeY(){
+    public float getSizeY() {
         return this.body.getHeight();
     }
 
+    public Color getColor() {
+        return this.color;
+    }
+
+    public Rectangle getBody() {
+        return this.body;
+    }
+
     // SETTERS
-    public void setPosition(Pair<Float, Float> position){
+    public void setPosition(Pair<Float, Float> position) {
         this.body.setX(position.getV1());
         this.body.setY(position.getV2());
     }

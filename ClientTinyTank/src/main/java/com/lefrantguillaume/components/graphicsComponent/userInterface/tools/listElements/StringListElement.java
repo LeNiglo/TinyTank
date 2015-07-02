@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -30,33 +30,22 @@ public class StringListElement extends ListElement {
     public StringListElement(BodyRect body) {
         this.body = body;
         this.elements = new ArrayList<>();
-        this.init((int) (body.getSizeY() / 20));
-    }
-
-    public StringListElement(BodyRect body, int toPrint) {
-        this.body = body;
-        this.elements = new ArrayList<>();
-        this.toPrint = toPrint;
-        this.init(toPrint);
-    }
-
-    private void init(int toPrint) {
-        if (this.body != null) {
-            this.toPrint = toPrint;
-            this.maxLength = (int) (body.getSizeX() / 10);
-            this.positionMessages = new ArrayList<>();
-
-            this.updatePosition();
-        }
+        this.positionMessages = new ArrayList<>();
+        this.updatePosition();
     }
 
     // FUNCTIONS
     @Override
     protected void updatePosition() {
-        int line = 10;
-        for (int i = 0; i < this.toPrint; ++i) {
-            this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getMinX() + 10, this.body.getMinY() + line, this.body.getSizeX() - 10, 20)));
-            line += 20;
+        if (this.body != null) {
+            this.toPrint = (int) (body.getSizeY() / 20);
+            this.maxLength = (int) (this.body.getSizeX() / 10) - 1;
+
+            int line = 10;
+            for (int i = 0; i < this.toPrint; ++i) {
+                this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getMinX() + 10, this.body.getMinY() + line, this.body.getSizeX() - 10, 20)));
+                line += 20;
+            }
         }
     }
 
@@ -86,7 +75,7 @@ public class StringListElement extends ListElement {
                 --i;
             }
         }
-        if (removed == true){
+        if (removed == true) {
             this.addEmpty();
         }
     }
@@ -103,40 +92,21 @@ public class StringListElement extends ListElement {
     @Override
     public void addToPrint(Object object, Element.PositionInBody positionInBody) {
         if (object instanceof Tuple) {
-            Tuple<Color, String, String> message = (Tuple<Color, String, String>) object;
-            int pos = 0;
-            int max;
-            this.clearEmpty();
-            while (pos < message.getV2().length()) {
-                max = this.maxLength + pos;
-                if (max >= message.getV2().length()) {
-                    max = message.getV2().length();
-                }
-                String tmp = message.getV2().substring(pos, max);
-                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp)), message.getV3(), positionInBody);
-                pos += max;
-            }
-            this.addEmpty();
+            this.addMessage((Tuple<Color, String, String>) object, null, positionInBody, 0);
+        } else if (object instanceof StringElement) {
+            StringElement task = (StringElement) object;
+            Debug.debug("TOPRINT: " + task.getValue());
+
+            int position = this.deleteElemIfExist(task.getId());
+            Debug.debug("position: " + position);
+            this.addMessage(new Tuple<>(task.getColor(), task.getValue(), task.getId()), null, positionInBody, position);
         }
     }
 
     @Override
     public void addToPrint(Object object, long time, Element.PositionInBody positionInBody) {
         if (object instanceof Tuple) {
-            Tuple<Color, String, String> message = (Tuple<Color, String, String>) object;
-            int pos = 0;
-            int max;
-            this.clearEmpty();
-            while (pos < message.getV2().length()) {
-                max = this.maxLength + pos;
-                if (max >= message.getV2().length()) {
-                    max = message.getV2().length();
-                }
-                String tmp = message.getV2().substring(pos, max);
-                this.addMessage(new Pair<>(message.getV1(), new StringTimer(tmp, time)), message.getV3(), positionInBody);
-                pos += max;
-            }
-            this.addEmpty();
+            this.addMessage((Tuple<Color, String, String>) object, time, positionInBody, 0);
         }
     }
 
@@ -149,14 +119,65 @@ public class StringListElement extends ListElement {
                 }
             }
         }
-        if (this.body != null && this.body.isOnFocus(x, y)){
+        if (this.body != null && this.body.isOnFocus(x, y)) {
             return null;
         }
         return null;
     }
 
-    private void addMessage(Pair<Color, StringTimer> message, String id, Element.PositionInBody positionInBody) {
-        this.elements.add(0, new StringElement(message.getV2(), message.getV1(), id, positionInBody));
+    private int deleteElemIfExist(String id) {
+        this.clearEmpty();
+        int position = this.containsElement(id);
+        if (position != -1) {
+            for (int i = position; i < this.elements.size(); ++i) {
+                if (this.containsHeadId(elements.get(i).getId(), id)) {
+                    this.elements.remove(i);
+                    --i;
+                    if (position > 0) {
+                        --position;
+                    }
+                }
+            }
+            return position;
+        } else {
+            return 0;
+        }
+    }
+
+    private List<StringElement> createMessage(Tuple<Color, String, String> message, Long time, Element.PositionInBody positionInBody) {
+        List<StringElement> messages = new ArrayList<>();
+        int posInString = 0;
+        int max;
+
+        Debug.debug("start ADD Message: " + message.getV2());
+        while (posInString < message.getV2().length()) {
+            Debug.debug("pos: " + posInString + " <? " + message.getV2().length());
+            max = this.maxLength + posInString;
+            if (max >= message.getV2().length()) {
+                max = message.getV2().length();
+            }
+            String tmp = message.getV2().substring(posInString, max);
+            Debug.debug("tmp: " + tmp);
+            if (time != null) {
+                messages.add(new StringElement(new StringTimer(tmp, time), message.getV1(), message.getV3(), positionInBody));
+            } else {
+                messages.add(new StringElement(new StringTimer(tmp), message.getV1(), message.getV3(), positionInBody));
+            }
+            posInString += max;
+        }
+        Debug.debug("end ADD");
+        return messages;
+    }
+
+    private void addMessage(Tuple<Color, String, String> message, Long time, Element.PositionInBody positionInBody, int position) {
+        List<StringElement> messages = this.createMessage(message, time, positionInBody);
+
+        this.clearEmpty();
+        Debug.debug("position: " + position);
+        for (StringElement element : messages) {
+            this.elements.add(position, element);
+        }
+        this.addEmpty();
     }
 
     private void clearEmpty() {

@@ -58,6 +58,10 @@ public class SelectionField {
         return this.stringElement.getValue();
     }
 
+    public BodyRect getBody(){
+        return this.stringElement.getBody();
+    }
+
     // SETTERS
     public void setFocused(boolean focused) {
         this.focused = focused;

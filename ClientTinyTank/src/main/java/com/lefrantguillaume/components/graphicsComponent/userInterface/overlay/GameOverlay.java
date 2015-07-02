@@ -33,8 +33,8 @@ public class GameOverlay extends Observable implements Observer {
         this.elements = new HashMap<>();
         this.elements.put(EnumOverlayElement.CHAT, new ChatElement(EnumOverlayElement.CHAT, new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
         this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(EnumOverlayElement.POP_KILL, new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
-        this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableElement(EnumOverlayElement.TABLE_NEW_ROUND, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300))));
-        this.elements.put(EnumOverlayElement.TABLE_STAT, new TableElement(EnumOverlayElement.TABLE_STAT, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+        this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableNewRoundElement(EnumOverlayElement.TABLE_NEW_ROUND, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300))));
+        this.elements.put(EnumOverlayElement.TABLE_STAT, new TableStatElement(EnumOverlayElement.TABLE_STAT, new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
     }
 
     public void init(AnimatorOverlayData animatorOverlayData) {

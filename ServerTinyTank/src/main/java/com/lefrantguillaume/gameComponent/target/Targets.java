@@ -16,7 +16,7 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
  * Created by leniglo on 23/04/15.
@@ -45,6 +45,9 @@ public class Targets {
         if (moreObstacles != null) {
             this.addObstacles(moreObstacles);
         }
+        for (Map.Entry<String, Player> entry : this.players.entrySet()){
+            entry.getValue().init();
+        }
     }
 
     public void clearAll() {
@@ -71,15 +74,9 @@ public class Targets {
                     hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
                     if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
                         messages.add(player.getTank().getTankState().getHit(player, damage));
+
                         if (player.getTank().getTankState().getCurrentLife() == 0) {
-                            killer.addKill();
-                            gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
-                            player.addDeath();
-                            if (player.isTransportObjective()){
-                                messages.add(this.addObstacle(player.getTransportObjective()));
-                                player.setTransportObjective(null);
-                            }
-                            messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId(), player.getTeamId()));
+                            messages.addAll(this.doAKill(killer, player, gameModeController));
                         }
                     }
                     if (hitterShot.getCurrentDamageShot() == 0) {
@@ -132,14 +129,7 @@ public class Targets {
                         if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
                             messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
                             if (player.getTank().getTankState().getCurrentLife() == 0) {
-                                killer.addKill();
-                                gameModeController.doTask(new Pair<>(EnumAction.KILL, killer.getTeamId()), null);
-                                player.addDeath();
-                                if (player.isTransportObjective()){
-                                    messages.add(this.addObstacle(player.getTransportObjective()));
-                                    player.setTransportObjective(null);
-                                }
-                                messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), player.getPseudo(), killer.getTeamId(), player.getTeamId()));
+                                messages.addAll(this.doAKill(killer, player, gameModeController));
                             }
                             messages.add(this.deleteObstacle(targetId));
                         }
@@ -148,15 +138,15 @@ public class Targets {
                     }
                 } else if (obstacle.getType().equals(EnumGameObject.BOMB_AREA)) {
                     WindowController.addConsoleMsg("PLAYER VS BOMB");
-                    Object value = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
-                    if (value instanceof List){
-                        messages.addAll(((List<MessageModel>) value).stream().collect(Collectors.toList()));
+                    Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                    if (result instanceof List){
+                        messages.addAll((List<MessageModel>)result);
                     }
                 } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)) {
                     WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
-                    Object value = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
-                    if (value instanceof List){
-                        messages.addAll(((List<MessageModel>) value).stream().collect(Collectors.toList()));
+                    Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                    if (result instanceof List){
+                        messages.addAll((List<MessageModel>)result);
                     }
                 }
             }
@@ -202,6 +192,21 @@ public class Targets {
         MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
         this.obstacles.remove(obstacleId);
         return message;
+    }
+
+    private List<MessageModel> doAKill(Player killer, Player target, GameModeController gameModeController){
+        List<MessageModel> messages = new ArrayList<>();
+        Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
+
+        if (result instanceof List){
+            messages.addAll((List<MessageModel>)result);
+        }
+        if (target.isTransportObjective()){
+            messages.add(this.addObstacle(target.getTransportObjective()));
+            target.setTransportObjective(null);
+        }
+        messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), target.getPseudo(), killer.getTeamId(), target.getTeamId()));
+        return messages;
     }
 
     // GETTERS

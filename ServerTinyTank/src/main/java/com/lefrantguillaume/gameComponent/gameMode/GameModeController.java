@@ -26,7 +26,7 @@ public class GameModeController{
     }
 
     private void initGameModes(ObstacleConfigData obstacleConfigData){
-        gameModes.put(EnumGameMode.FreeForAll, new FreeForAll(8));
+        gameModes.put(EnumGameMode.FreeForAll, new FreeForAll(4));
         gameModes.put(EnumGameMode.TeamDeathMatch, new TeamDeathMatch(2));
         gameModes.put(EnumGameMode.Kingdom, new Kingdom(2, obstacleConfigData));
         gameModes.put(EnumGameMode.TouchDown, new TouchDown(2, obstacleConfigData));

@@ -94,6 +94,26 @@ public class ImageElement extends Element {
     }
 
     @Override
+    public boolean replace(Element element) {
+        if (element.getType() == EnumOverlayElement.IMAGE){
+            this.animator = new Animator(((ImageElement)element).animator);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object doTask(Object task) {
+        if (task instanceof String){
+            String value = (String)task;
+            if (value.equals("start")){
+                this.start();
+            }
+        }
+        return null;
+    }
+
+    @Override
     public boolean isActivated() {
         return true;
     }
@@ -119,5 +139,9 @@ public class ImageElement extends Element {
     @Override
     public String toString() {
         return "imageType: " + this.animator.getCurrent();
+    }
+
+    private void start(){
+        this.animator.restart();
     }
 }

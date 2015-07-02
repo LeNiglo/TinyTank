@@ -8,6 +8,7 @@ import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import com.lefrantguillaume.utils.WindowConfig;
 import javafx.util.Pair;
 
@@ -38,8 +39,18 @@ public class Kingdom extends GameMode {
 
     @Override
     public Object doTask(Pair<EnumAction, Object> task, Object data) {
+        List<MessageModel> messages = new ArrayList<>();
+
         if (task.getKey().equals(EnumAction.KILL)) {
-            this.incrementScore((String)task.getValue(), 5);
+            Player killer = (Player) task.getValue();
+            Player target = (Player) data;
+            messages.add(this.incrementScore(killer.getTeamId(), 5));
+            messages.add(this.incrementScore(target.getTeamId(), -2));
+
+            killer.addKill();
+            target.addDeath();
+            messages.add(killer.addScore(5));
+            messages.add(target.addScore(-2));
         } else {
             Pair<Player, Obstacle> values = (Pair<Player, Obstacle>) task.getValue();
 
@@ -68,7 +79,7 @@ public class Kingdom extends GameMode {
                 }
             }
         }
-        return false;
+        return messages;
     }
 
     @Override

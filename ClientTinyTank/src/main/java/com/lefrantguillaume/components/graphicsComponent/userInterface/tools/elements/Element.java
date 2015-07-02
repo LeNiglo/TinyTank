@@ -1,7 +1,5 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
@@ -34,6 +32,10 @@ public abstract class Element {
 
     public abstract void update();
 
+    public abstract boolean replace(Element element);
+
+    public abstract Object doTask(Object task);
+
     // GETTERS
     public boolean isOnFocus(float x, float y){
         if (this.body == null){
@@ -65,11 +67,6 @@ public abstract class Element {
     // SETTERS
     public void setBody(BodyRect body){
         this.body = body;
-    }
-
-    public void setPositionBody(Pair<Float, Float> positionBody){
-        Debug.debug("changePosition: " + positionBody);
-        this.body.setPosition(positionBody);
     }
 
     public abstract String toString();

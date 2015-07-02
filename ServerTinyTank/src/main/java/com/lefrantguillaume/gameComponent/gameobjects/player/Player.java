@@ -4,6 +4,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.Tank;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageRoundScore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class Player {
     private Connection connection;
     private Tank tank;
 
+    private int currentScore = 0;
     private int nbDeaths = 0;
     private int nbShots = 0;
     private int nbHitSomebody = 0;
@@ -40,24 +43,34 @@ public class Player {
         this.transportObjective = null;
     }
 
+    public void init(){
+        this.currentScore = 0;
+        this.tank.revive();
+    }
+
     public void addKill() {
-        nbPeopleKilled += 1;
+        this.nbPeopleKilled += 1;
     }
 
     public void addDeath() {
-        nbDeaths += 1;
+        this.nbDeaths += 1;
+    }
+
+    public MessageModel addScore(int score){
+        this.currentScore += score;
+        return new MessageRoundScore(this.pseudo, this.id, this.teamId, EnumGameObject.NULL, this.currentScore);
     }
 
     public void addShoot() {
-        nbShots += 1;
+        this.nbShots += 1;
     }
 
     public void addhitSomebody() {
-        nbHitSomebody += 1;
+        this.nbHitSomebody += 1;
     }
 
     public void addGameObjectDestroyed() {
-        nbGameObjectsDestroyed += 1;
+        this.nbGameObjectsDestroyed += 1;
     }
 
     public void revive() {
@@ -67,6 +80,10 @@ public class Player {
     // SETTERS
     public void setTank(Tank tank) {
         this.tank = tank;
+    }
+
+    public void setCurrentScore(int score) {
+        this.currentScore = score;
     }
 
     public void setConnection(Connection connectionID) {
@@ -85,7 +102,7 @@ public class Player {
         this.teamId = teamId;
     }
 
-    public void setTransportObjective(Obstacle value){
+    public void setTransportObjective(Obstacle value) {
         this.transportObjective = value;
     }
 
@@ -98,6 +115,10 @@ public class Player {
         return pseudo;
     }
 
+    public int getCurrentScore() {
+        return this.currentScore;
+    }
+
     public int getKills() {
         return nbPeopleKilled;
     }
@@ -106,12 +127,12 @@ public class Player {
         return nbDeaths;
     }
 
-    public Obstacle getTransportObjective(){
+    public Obstacle getTransportObjective() {
         return this.transportObjective;
     }
 
-    public boolean isTransportObjective(){
-        if (this.transportObjective == null){
+    public boolean isTransportObjective() {
+        if (this.transportObjective == null) {
             return false;
         } else {
             return true;

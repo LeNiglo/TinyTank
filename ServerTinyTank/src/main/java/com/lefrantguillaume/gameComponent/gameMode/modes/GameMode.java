@@ -1,9 +1,12 @@
 package com.lefrantguillaume.gameComponent.gameMode.modes;
 
+import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageRoundScore;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ public abstract class GameMode {
         this.maxPlayerTeam = maxPlayer;
         this.teams = new ArrayList<>();
         for (int i = 0; i < maxTeam; ++i) {
-            this.teams.add(new Team(UUID.randomUUID().toString()));
+            this.teams.add(new Team(UUID.randomUUID().toString(), "Team n°" + String.valueOf(i)));
         }
     }
 
@@ -74,12 +77,14 @@ public abstract class GameMode {
             }
         }
     }
-    protected void incrementScore(String teamId, int value) {
+    protected MessageModel incrementScore(String teamId, int value) {
         for (int i = 0; i < this.teams.size(); ++i) {
             if (this.teams.get(i).getId().equals(teamId)) {
                 this.teams.get(i).addToCurrentScore(value);
+                return new MessageRoundScore(this.teams.get(i).getName(), this.teams.get(i).getId(), this.teams.get(i).getId(), EnumGameObject.NULL, this.teams.get(i).getCurrentScore());
             }
         }
+        return null;
     }
 
     public int countOpenSlot() {
@@ -98,7 +103,7 @@ public abstract class GameMode {
             }
         } else {
             for (int i = this.teams.size(); i < maxTeam; ++i) {
-                this.teams.add(new Team(UUID.randomUUID().toString()));
+                this.teams.add(new Team(UUID.randomUUID().toString(), "Team n°" + String.valueOf(i)));
             }
 
         }
@@ -118,8 +123,8 @@ public abstract class GameMode {
         return this.objectiveScore;
     }
 
-    public int getMaxTeam() {
-        return this.teams.size();
+    public List<Team> getTeams() {
+        return this.teams;
     }
 
     public int getMaxPlayerTeam() {

@@ -5,20 +5,20 @@ import com.lefrantguillaume.gameComponent.EnumGameObject;
 /**
  * Created by andres_k on 27/06/2015.
  */
-public class MessageRoundUpScore extends MessageModel {
+public class MessageRoundScore extends MessageModel {
     private String teamId;
     private EnumGameObject object;
-    private int upgrade;
+    private int score;
 
-    public MessageRoundUpScore(){
+    public MessageRoundScore(){
     }
 
-    public MessageRoundUpScore(String pseudo, String id, String teamId, EnumGameObject object, int upgrade){
+    public MessageRoundScore(String pseudo, String id, String teamId, EnumGameObject object, int score){
         this.pseudo = pseudo;
         this.id = id;
         this.teamId = teamId;
         this.object = object;
-        this.upgrade = upgrade;
+        this.score = score;
     }
 
     // GETTERS
@@ -30,7 +30,7 @@ public class MessageRoundUpScore extends MessageModel {
         return this.object;
     }
 
-    public int getUpgrade() {
-        return this.upgrade;
+    public int getScore() {
+        return this.score;
     }
 }

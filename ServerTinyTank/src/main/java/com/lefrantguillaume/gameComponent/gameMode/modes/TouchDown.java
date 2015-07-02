@@ -9,7 +9,6 @@ import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.target.Targets;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePutObstacle;
 import com.lefrantguillaume.utils.WindowConfig;
 import javafx.util.Pair;
 
@@ -51,8 +50,8 @@ public class TouchDown extends GameMode {
                     values.getKey().setTransportObjective(null);
 
                     WindowController.addConsoleMsg("GET POINTS");
-                    this.incrementScore(values.getKey().getTeamId(), 1);
-
+                    messages.add(this.incrementScore(values.getKey().getTeamId(), 1));
+                    messages.add(values.getKey().addScore(1));
                     messages.add(targets.addObstacle(this.obstacles.get(0)));
                 }
             }

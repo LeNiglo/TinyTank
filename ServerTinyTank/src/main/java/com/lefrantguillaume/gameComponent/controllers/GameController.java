@@ -6,6 +6,7 @@ import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
+import com.lefrantguillaume.gameComponent.gameMode.Team;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
@@ -130,7 +131,7 @@ public class GameController extends Observable {
     public void doMessagePlayerNew(MessagePlayerNew received, Connection connection) {
         WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
 
-        this.sendAllTargetsToSomeone(connection, true, true);
+        this.sendAllTargetsToSomeone(connection, true, true, false);
         this.targets.addPlayer(new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(),
                 this.tankConfigData.getTank(received.getEnumTanks()), connection));
         Player player = this.targets.getPlayer(received.getId());
@@ -148,6 +149,7 @@ public class GameController extends Observable {
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
         }
+        this.sendAllTargetsToSomeone(connection, false, false, true);
     }
 
     public void doMessagePlayerDelete(MessagePlayerDelete received) {
@@ -391,15 +393,15 @@ public class GameController extends Observable {
             }
             setChanged();
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
-            this.sendAllTargetsToSomeone(entry.getValue().getConnection(), false, true);
+            this.sendAllTargetsToSomeone(entry.getValue().getConnection(), false, true, true);
         }
         this.mapController.getCurrentMap().resetCurrentObject();
         this.addNewRoundTimer();
     }
 
-    public void sendAllTargetsToSomeone(Connection connection, boolean players, boolean obstacles) {
+    public void sendAllTargetsToSomeone(Connection connection, boolean players, boolean obstacles, boolean teams) {
         if (players == true) {
-            for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
+            for (java.util.Map.Entry<String, Player> entry : this.getPlayers().entrySet()) {
                 if (!entry.getValue().getConnection().equals(connection)) {
                     MessagePlayerNew tmpMessage = new MessagePlayerNew();
                     tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
@@ -418,6 +420,19 @@ public class GameController extends Observable {
                 Obstacle tmp = entry.getValue();
                 MessagePutObstacle tmpMessage = new MessagePutObstacle(tmp.getPlayerId(), tmp.getPlayerPseudo(), tmp.getId(), tmp.getType(), tmp.getX(), tmp.getY(), tmp.getAngle());
                 WindowController.addConsoleMsg("send Box: " + entry.getKey());
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            }
+        }
+
+        if (teams == true){
+            for (Team team : this.gameModeController.getCurrentMode().getTeams()){
+                MessageRoundScore tmpMessage = new MessageRoundScore(team.getName(), team.getId(), team.getId(), EnumGameObject.NULL, team.getCurrentScore());
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
+            }
+            for (java.util.Map.Entry<String, Player> entry : this.getPlayers().entrySet()){
+                MessageRoundScore tmpMessage = new MessageRoundScore(entry.getValue().getPseudo(), entry.getValue().getId(), entry.getValue().getTeamId(), EnumGameObject.NULL, entry.getValue().getCurrentScore());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
             }

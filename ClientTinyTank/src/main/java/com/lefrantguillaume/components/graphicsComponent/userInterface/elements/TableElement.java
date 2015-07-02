@@ -3,15 +3,11 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ImageListElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundState;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundUpScore;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
@@ -26,21 +22,18 @@ public class TableElement extends InterfaceElement {
     private HashMap<Element, ListElement> table;
     private HashMap<String, Pair<BodyRect, BodyRect>> positionBody;
 
-    public TableElement(EnumOverlayElement type, BodyRect body) {
-        this.parentInit(body, type);
+    public TableElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean needActivatedParent) {
+        this.parentInit(body, type, activated, needActivatedParent);
         this.childInit();
     }
 
     // INIT
     @Override
-    protected void parentInit(BodyRect body, EnumOverlayElement type) {
+    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent) {
         this.body = body;
-        this.activatedTimer = new ActivatedTimer(false);
+        this.activatedTimer = new ActivatedTimer(activated);
         this.type = type;
-        this.needActivated = true;
-        if (this.type == EnumOverlayElement.NEW_ROUND) {
-            this.needActivated = false;
-        }
+        this.needActivated = needActivatedParent;
     }
 
     private void childInit() {
@@ -52,23 +45,7 @@ public class TableElement extends InterfaceElement {
     @Override
     public void doTask(Object task) {
         if (task instanceof Element) {
-            this.addElement((Element)task);
-        } else if (this.type == EnumOverlayElement.TABLE_STAT) {
-            if (task instanceof MessageRoundUpScore) {
-                MessageRoundUpScore message = (MessageRoundUpScore)task;
-
-                Element element = new StringElement(new StringTimer(message.getPseudo() + String.valueOf(message.getUpgrade())), Color.black, message.getTeamId(), Element.PositionInBody.MIDDLE_MID);
-                this.addElement(element);
-            }
-        } else if (this.type == EnumOverlayElement.TABLE_NEW_ROUND) {
-            if (task instanceof MessageRoundState) {
-                MessageRoundState message = (MessageRoundState) task;
-                if (message.isStarted() == false) {
-                    this.activatedTimer.startTimer();
-                } else {
-                    this.activatedTimer.stopTimer();
-                }
-            }
+            this.addElement((Element) task);
         }
     }
 
@@ -106,48 +83,81 @@ public class TableElement extends InterfaceElement {
         return false;
     }
 
-    public void addElement(Element item){
+    public void addElement(Element item) {
         Element key = this.containsKey(item);
         if (key != null) {
-            Debug.debug("add elem");
-            item.setBody(this.positionBody.get(key.getId()).getV2());
-            this.table.get(key).addToPrint(item, Element.PositionInBody.MIDDLE_MID);
-        } else {
-            if (item.getType() == EnumOverlayElement.STRING) {
-                this.table.put(item, new StringListElement());
-            } else if (item.getType() == EnumOverlayElement.IMAGE) {
-                Debug.debug("add table");
-                this.table.put(item, new ImageListElement());
+            Debug.debug("add elem: " + item.toString());
+            if (checkSameHeadId(item.getId())){
+                key.replace(item);
+            } else {
+                this.table.get(key).setBody(this.positionBody.get(key.getId()).getV2());
+                this.table.get(key).addToPrint(item, Element.PositionInBody.MIDDLE_MID);
             }
-            this.initPositionBody();
-            this.initTableBody();
+        } else {
+            if (this.checkSameHeadId(item.getId())) {
+                if (item.getType() == EnumOverlayElement.STRING) {
+                    this.table.put(item, new StringListElement());
+                } else if (item.getType() == EnumOverlayElement.IMAGE) {
+                    this.table.put(item, new ImageListElement());
+                } else {
+                    return;
+                }
+                Debug.debug("add table: " + item.getId());
+                this.initPositionBody();
+                this.initTableBody();
+            }
+        }
+    }
+
+    private boolean checkSameHeadId(String id) {
+        if (id.contains(":")) {
+            String v1 = id.substring(0, id.indexOf(":"));
+            String v2 = id.substring(id.indexOf(":") + 1, id.length());
+            return v1.equals(v2);
+        }
+        return true;
+    }
+
+    private boolean containsHeadId(String head, String id){
+        if (head.contains(":")){
+            return head.substring(0, head.indexOf(":")).equals(id.substring(0, id.indexOf(":")));
+        } else {
+            return head.equals(id);
         }
     }
 
     private Element containsKey(Element item) {
         for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
-            if (entry.getKey().getId().equals(item.getId())) {
+            if (this.containsHeadId(entry.getKey().getId(), item.getId())) {
                 return entry.getKey();
             }
         }
         return null;
     }
 
+    protected void sendTaskToAll(Object task){
+        for (Map.Entry<Element, ListElement> entry : this.table.entrySet()){
+            entry.getKey().doTask(task);
+            entry.getValue().sendTask(task);
+        }
+    }
+
     private void initPositionBody() {
+        float border = 10;
         float currentX = this.body.getMinX();
         float width = this.body.getSizeX() / this.table.size();
         float currentY = this.body.getMinY();
 
         this.positionBody.clear();
         for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
-            float height = this.body.getSizeY() - entry.getKey().getAbsoluteHeight();
+            float height = this.body.getSizeY() - entry.getKey().getAbsoluteHeight() - border;
 
             if (entry.getKey().getType() == EnumOverlayElement.IMAGE) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, width, height)),
-                        new BodyRect(new Rectangle(currentX, currentY + entry.getKey().getAbsoluteHeight(), width, height))));
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),
+                        new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), width - (border * 2), height))));
             } else if (entry.getKey().getType() == EnumOverlayElement.STRING) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, width, height), new Color(0.1f, 0.2f, 0.3f, 0.5f)),
-                        new BodyRect(new Rectangle(currentX, currentY + entry.getKey().getAbsoluteHeight(), width, height), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),
+                        new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), width - (border * 2), height), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
             }
             currentX += width;
         }

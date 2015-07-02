@@ -18,16 +18,16 @@ public class StringPopElement extends InterfaceElement {
     private StringListElement stringListElement;
 
     public StringPopElement(EnumOverlayElement type, BodyRect body) {
-        this.parentInit(body, type);
+        this.parentInit(body, type, true, false);
         this.childInit();
     }
 
     // INIT
     @Override
-    public void parentInit(BodyRect body, EnumOverlayElement type) {
+    public void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent) {
         this.body = body;
-        this.needActivated = false;
-        this.activatedTimer = new ActivatedTimer(true);
+        this.needActivated = needActivatedParent;
+        this.activatedTimer = new ActivatedTimer(activated);
         this.type = type;
     }
 

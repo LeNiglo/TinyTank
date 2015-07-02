@@ -5,12 +5,14 @@ package com.lefrantguillaume.gameComponent.gameMode;
  */
 public class Team {
     private String id;
+    private String name;
     private int currentScore;
     private int currentPlayers;
 
-    public Team(String id) {
+    public Team(String id, String name) {
         this.currentPlayers = 0;
         this.id = id;
+        this.name = name;
         this.init();
     }
 
@@ -30,6 +32,10 @@ public class Team {
     }
 
     // GETTERS
+
+    public String getName() {
+        return this.name;
+    }
 
     public String getId() {
         return this.id;
