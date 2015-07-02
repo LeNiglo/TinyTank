@@ -30,13 +30,6 @@ public class ActivatedTimer {
         }
     }
 
-    public void finalize(){
-        this.stopTimer();
-        if (timer != null) {
-            this.timer.cancel();
-        }
-    }
-
     public void startTimer() {
         if (this.timer != null) {
             if (this.running == true) {

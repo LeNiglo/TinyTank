@@ -17,26 +17,23 @@ public class StringTimer {
         this.activatedTimer = new ActivatedTimer(true, true, time);
     }
 
-    public void finalize() {
-        this.activatedTimer.finalize();
-    }
 
     // FUNCTIONS
 
-    public void replace(StringTimer stringTimer){
+    public void replace(StringTimer stringTimer) {
         this.value = stringTimer.value;
-        this.activatedTimer.finalize();
+        this.activatedTimer.stopTimer();
         this.activatedTimer = stringTimer.activatedTimer;
     }
 
-    public void delete(int start, int number){
+    public void delete(int start, int number) {
         this.value.delete(start, start + number);
     }
 
-    public void add(int position, String value){
+    public void add(int position, String value) {
         this.value.insert(position, value);
     }
-    
+
     // GETTERS
     public String getValue() {
         return this.value.toString();
