@@ -45,7 +45,7 @@ public class TouchDown extends GameMode {
                 values.getKey().setTransportObjective(this.obstacles.get(0));
                 messages.add(targets.deleteObstacle(values.getValue().getId()));
 
-            } else if (values.getValue().getType() == EnumGameObject.OBJECTIVE_AREA && !values.getValue().getPlayerId().equals(values.getKey().getId())) {
+            } else if (values.getValue().getType() == EnumGameObject.OBJECTIVE_AREA && !values.getValue().getPlayerId().equals(values.getKey().getTeamId())) {
                 if (values.getKey().isTransportObjective()) {
                     values.getKey().setTransportObjective(null);
 
