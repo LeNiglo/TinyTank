@@ -281,7 +281,7 @@ public class GameController extends Observable {
             message.setShootId(UUID.randomUUID().toString());
             WindowController.addConsoleMsg("new Shoot : " + message.getShotId());
             this.targets.addShot(player.getTank().getTankWeapon().generateShot(message.getShotId(), player.getId()));
-
+            player.addShoot();
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
 

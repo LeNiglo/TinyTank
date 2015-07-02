@@ -23,10 +23,12 @@ public class Player {
 
     private int currentScore = 0;
     private int nbDeaths = 0;
+    private int nbPeopleKilled = 0;
+
     private int nbShots = 0;
     private int nbHitSomebody = 0;
     private int nbGameObjectsDestroyed = 0;
-    private int nbPeopleKilled = 0;
+
     private int ammo = 1;
     private int timerAmmo = 2;
     private int ammoCooldown = 100;
