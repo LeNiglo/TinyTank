@@ -55,8 +55,6 @@ public class DataServer {
     public static Pair<Boolean, String> getServerList() {
 
         try {
-
-
             ClientResponse response = DataServer.getClientResponse(null, "list_servers");
             ServerListRcv output = response.getEntity(ServerListRcv.class);
 
@@ -65,8 +63,6 @@ public class DataServer {
             } else {
                 return new Pair<>(true, output.getRes());
             }
-
-
         } catch (ClientHandlerException e) {
             e.printStackTrace();
             return new Pair<>(false, e.getCause().getMessage());

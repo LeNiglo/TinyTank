@@ -2,6 +2,7 @@ package com.lefrantguillaume;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.configs.WindowConfig;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.master.MasterGame;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.SlickException;
@@ -29,5 +30,6 @@ public class Main {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Debug.debug("END MAIN");
     }
 }
