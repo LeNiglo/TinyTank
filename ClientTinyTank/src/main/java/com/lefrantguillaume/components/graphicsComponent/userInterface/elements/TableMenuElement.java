@@ -41,7 +41,7 @@ public class TableMenuElement extends TableElement {
                 }
             }
         } else {
-            if (this.focusedElement != null){
+            if (this.focusedElement != null) {
                 String keyString = Input.getKeyName(key);
                 String value = this.focusedElement.toString();
                 String newValue;
@@ -52,8 +52,7 @@ public class TableMenuElement extends TableElement {
                     newValue = keyString;
                 }
                 this.focusedElement.doTask(newValue);
-                this.focusedElement.setBodyColor(null);
-                this.focusedElement = null;
+                this.initFocusElement();
                 return new Pair<>(EnumInput.getEnumByValue(value), keyString);
             }
         }
@@ -68,11 +67,12 @@ public class TableMenuElement extends TableElement {
 
                 if (result != null) {
                     if (result instanceof Element) {
-                        if (((Element)result).getType() == EnumOverlayElement.CONTROLS) {
+                        if (((Element) result).getType() == EnumOverlayElement.CONTROLS) {
+                            this.initFocusElement();
                             this.focusedElement = (Element) result;
                             this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
-                        } else if (((Element)result).getType() == EnumOverlayElement.SCREEN){
-                            if (ColorTools.compareColor(this.focusedElement.getBody().getColor(), ColorTools.Colors.TRANSPARENT_GREEN)){
+                        } else if (((Element) result).getType() == EnumOverlayElement.SCREEN) {
+                            if (ColorTools.compareColor(this.focusedElement.getBody().getColor(), ColorTools.Colors.TRANSPARENT_GREEN)) {
                                 this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_RED));
                             } else {
                                 this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN));
@@ -87,5 +87,12 @@ public class TableMenuElement extends TableElement {
             }
         }
         return false;
+    }
+
+    private void initFocusElement() {
+        if (this.focusedElement != null) {
+            this.focusedElement.setBodyColor(null);
+            this.focusedElement = null;
+        }
     }
 }

@@ -49,23 +49,23 @@ public class GameOverlay extends Observable implements Observer {
 
         this.elements = new LinkedHashMap<>();
         this.elements.put(EnumOverlayElement.CHAT, new ChatElement(EnumOverlayElement.CHAT,
-                new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY))));
+                new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 400, 200), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
         this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(EnumOverlayElement.POP_KILL,
                 new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
         this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableAppearElement(EnumOverlayElement.TABLE_NEW_ROUND,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300))));
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)), Input.KEY_TAB));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2), WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)), true, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2), WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_SCREEN, new CustomElement(EnumOverlayElement.CUSTOM_MENU_SCREEN, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)), false, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_CONTROLS, new TableMenuElement(EnumOverlayElement.CUSTOM_MENU_CONTROLS, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 400, 240), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY))));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 400, 240), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_SETTINGS, new CustomElement(EnumOverlayElement.CUSTOM_MENU_SETTINGS, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)), false, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU, new CustomElement(EnumOverlayElement.CUSTOM_MENU, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)), false, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
     }
 
     public void init(AnimatorOverlayData animatorOverlayData) {
@@ -86,13 +86,13 @@ public class GameOverlay extends Observable implements Observer {
 
     private void initTableMenu() {
         InterfaceElement tableMenu = this.elements.get(EnumOverlayElement.CUSTOM_MENU);
-        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 20, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)),
+        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 20, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)),
                 this.animatorOverlayData.getMenuAnimator(EnumOverlayElement.SCREEN), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CUSTOM_MENU_SCREEN));
-        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 90, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)),
+        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 90, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)),
                 this.animatorOverlayData.getMenuAnimator(EnumOverlayElement.CONTROLS), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CUSTOM_MENU_CONTROLS));
-        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 160, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)),
+        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 160, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)),
                 this.animatorOverlayData.getMenuAnimator(EnumOverlayElement.SETTINGS), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CUSTOM_MENU_SETTINGS));
-        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 230, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREY)),
+        tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 230, tableMenu.getBody().getSizeX() - 40, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)),
                 this.animatorOverlayData.getMenuAnimator(EnumOverlayElement.EXIT), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.EXIT));
     }
 

@@ -12,6 +12,7 @@ public class ColorTools {
     private static Map<Colors, Color> colors;
 
     public enum Colors {
+        TRANSPARENT_GREYBLUE,
         TRANSPARENT_GREY,
         TRANSPARENT_YELLOW,
         TRANSPARENT_GREEN,
@@ -21,7 +22,8 @@ public class ColorTools {
 
     public static void init(){
         colors = new HashMap<>();
-        colors.put(Colors.TRANSPARENT_GREY, new Color(0.2f, 0.2f, 0.2f, 0.5f));
+        colors.put(Colors.TRANSPARENT_GREYBLUE, new Color(0.1f, 0.2f, 0.3f, 0.5f));
+        colors.put(Colors.TRANSPARENT_GREY, new Color(0.6f, 0.6f, 0.6f, 0.5f));
         colors.put(Colors.TRANSPARENT_RED, new Color(1f, 0f, 0f, 0.5f));
         colors.put(Colors.TRANSPARENT_GREEN, new Color(0f, 1f, 0f, 0.5f));
         colors.put(Colors.TRANSPARENT_BLUE, new Color(0f, 0f, 1f, 0.5f));
