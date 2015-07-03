@@ -4,7 +4,6 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
@@ -24,13 +23,6 @@ public class StringPopElement extends InterfaceElement {
     }
 
     // INIT
-    @Override
-    public void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent) {
-        this.body = body;
-        this.needActivated = needActivatedParent;
-        this.activatedTimer = new ActivatedTimer(activated);
-        this.type = type;
-    }
 
     public void childInit() {
         this.stringListElement = new StringListElement(this.body);
@@ -73,7 +65,7 @@ public class StringPopElement extends InterfaceElement {
     }
 
     @Override
-    public Boolean isOnFocus(int x, int y) {
+    public boolean isOnFocus(int x, int y) {
         if (this.stringListElement.isOnFocus(x, y) != null) {
         }
         if (this.body.isOnFocus(x, y)) {

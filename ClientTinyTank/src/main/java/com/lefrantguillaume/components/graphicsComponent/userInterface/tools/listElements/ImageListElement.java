@@ -1,6 +1,5 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import org.newdawn.slick.Graphics;
@@ -86,7 +85,7 @@ public class ImageListElement extends ListElement {
     @Override
     public Object isOnFocus(float x, float y) {
         for (int i = 0; i < this.elements.size(); ++i) {
-            if (this.elements.get(i).isOnFocus(x, y)) {
+            if (this.elements.get(i).isOnFocus(x, y) != null) {
                 if (this.elements.get(i).isEmpty() == false) {
                     return elements.get(i);
                 }

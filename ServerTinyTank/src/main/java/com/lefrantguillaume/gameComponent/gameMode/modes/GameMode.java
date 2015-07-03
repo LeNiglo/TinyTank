@@ -56,12 +56,12 @@ public abstract class GameMode {
     public abstract Object doTask(Pair<EnumAction, Object> task, Object data);
 
     public String attributeATeam() {
-        String idTeam = null;
+        String idTeam = "";
         int lastNumber = 0;
 
         if (this.countOpenSlot() != 0) {
             for (int i = 0; i < this.teams.size(); ++i) {
-                if (idTeam == null || lastNumber > this.teams.get(i).getCurrentPlayers()) {
+                if (idTeam.equals("") || lastNumber > this.teams.get(i).getCurrentPlayers()) {
                     idTeam = this.teams.get(i).getId();
                     lastNumber = this.teams.get(i).getCurrentPlayers();
                 }

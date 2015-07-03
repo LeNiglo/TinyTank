@@ -39,7 +39,7 @@ public abstract class ListElement {
 
     public Object isOnFocus(float x, float y){
         for (Element element : this.elements){
-            if (element.isOnFocus(x, y) && element.isEmpty() == false){
+            if (element.isOnFocus(x, y) != null && element.isEmpty() == false){
                 return element;
             }
         }

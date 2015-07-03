@@ -15,7 +15,20 @@ public abstract class InterfaceElement {
     protected EnumOverlayElement type;
 
     // FUNCTION
-    protected abstract void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent);
+    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent){
+        this.body = body;
+        this.activatedTimer = new ActivatedTimer(activated);
+        this.type = type;
+        this.needActivated = needActivatedParent;
+    }
+
+    public void start(){
+        this.activatedTimer.startTimer();
+    }
+
+    public void stop(){
+        this.activatedTimer.stopTimer();
+    }
 
     public abstract void doTask(Object task);
 
@@ -29,7 +42,7 @@ public abstract class InterfaceElement {
 
     public abstract Object eventReleased(int key, char c);
 
-    public abstract Boolean isOnFocus(int x, int y);
+    public abstract boolean isOnFocus(int x, int y);
 
     // GETTERS
     public boolean isActivated(){

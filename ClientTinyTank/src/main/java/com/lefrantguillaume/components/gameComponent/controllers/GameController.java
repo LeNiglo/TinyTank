@@ -21,6 +21,7 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.Tank
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
+import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
@@ -30,13 +31,12 @@ import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -45,22 +45,29 @@ public class GameController extends Observable implements Observer {
     private List<Player> players;
     private List<Shot> shots;
     private List<Team> teams;
+
     private CollisionController collisionController;
     private MapController mapController;
     private RoundController roundController;
+
     private AnimatorGameData animatorGameData;
     private TankConfigData tankConfigData;
     private ObstacleConfigData obstacleConfigData;
-    public final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+    private StateBasedGame stateWindow;
 
     public GameController() throws SlickException {
         this.players = new ArrayList<>();
         this.shots = new ArrayList<>();
         this.teams = new ArrayList<>();
-        this.animatorGameData = null;
+
+        this.stateWindow = null;
+
         this.roundController = new RoundController(this.players, this.teams);
         this.collisionController = new CollisionController();
         this.mapController = new MapController(this.collisionController, MasterConfig.getMapConfigFile());
+
+        this.animatorGameData = null;
         this.tankConfigData = new TankConfigData();
         this.obstacleConfigData = new ObstacleConfigData();
     }
@@ -69,7 +76,6 @@ public class GameController extends Observable implements Observer {
         this.players.clear();
         this.shots.clear();
         this.teams.clear();
-        this.scheduler.shutdown();
         this.collisionController.clearCollisionObjects();
         this.mapController.clearObstacles();
     }
@@ -88,7 +94,14 @@ public class GameController extends Observable implements Observer {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
         if (received.getV2().equals(EnumTargetTask.GAME)) {
-            if (received.getV3() instanceof MessageModel) {
+            if (received.getV3() instanceof EnumWindow && this.stateWindow != null) {
+                MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+                CurrentUser.setInGame(false);
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
+
+                this.stateWindow.enterState(((EnumWindow) received.getV3()).getValue());
+            } else if (received.getV3() instanceof MessageModel) {
                 MessageModel message = (MessageModel) received.getV3();
                 if (message.getPlayerAction() == true) {
                     Player current = this.getPlayer(message.getId());
@@ -134,6 +147,7 @@ public class GameController extends Observable implements Observer {
                 }
             }
         }
+
     }
 
     // CHANGE FUNCTIONS
@@ -225,7 +239,7 @@ public class GameController extends Observable implements Observer {
         Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
         Obstacle obstacle;
 
-        if (task.getType() == EnumGameObject.SHIELD){
+        if (task.getType() == EnumGameObject.SHIELD) {
             return;
         }
         if (task.getType() == EnumGameObject.UNBREAKABLE) {
@@ -461,4 +475,10 @@ public class GameController extends Observable implements Observer {
     public void setAnimatorGameData(AnimatorGameData animatorGameData) {
         this.animatorGameData = animatorGameData;
     }
+
+    // SETTERS
+    public void setStateWindow(StateBasedGame stateWindow) {
+        this.stateWindow = stateWindow;
+    }
 }
+

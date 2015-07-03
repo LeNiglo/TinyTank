@@ -46,7 +46,7 @@ public class SelectionField {
     }
 
     public boolean isOnFocus(int x, int y){
-        if (this.stringElement.isOnFocus(x, y)){
+        if (this.stringElement.isOnFocus(x, y) != null){
             this.focused = true;
         } else {
             this.focused = false;

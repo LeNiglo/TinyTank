@@ -44,13 +44,7 @@ public class InputGame extends Observable {
         } else {
             keyName = Input.getKeyName(key);
         }
-        if (keyName.equals(this.inputData.getInputValue(EnumInput.ESCAPE)) && mode == EnumInput.RELEASED) {
-            request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
-            CurrentUser.setInGame(false);
-            this.setChanged();
-            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
-            return EnumInput.ESCAPE.getIndex();
-        } else if (keyName.equals(this.inputData.getInputValue(EnumInput.OVERLAY)) && mode == EnumInput.RELEASED) {
+        if (keyName.equals(this.inputData.getInputValue(EnumInput.OVERLAY)) && mode == EnumInput.RELEASED) {
             return EnumInput.OVERLAY.getIndex();
         } else {
             Player player = gameController.getPlayer(CurrentUser.getId());

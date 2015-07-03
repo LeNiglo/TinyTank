@@ -50,7 +50,7 @@ public class ChatElement extends InterfaceElement {
 
     // FUNCTIONS
     @Override
-    public void leave(){
+    public void leave() {
         this.activatedTimer.leave();
         this.stringListElement.leave();
     }
@@ -94,26 +94,25 @@ public class ChatElement extends InterfaceElement {
     }
 
     @Override
-    public Object eventReleased(int key, char c){
+    public Object eventReleased(int key, char c) {
         if (key == Input.KEY_ESCAPE && this.selectionField.isFocused()) {
             this.activatedTimer.startTimer();
             this.selectionField.setFocused(false);
-        } else {
-            return null;
+            return true;
         }
-        return true;
+        return null;
     }
 
     @Override
-    public Boolean isOnFocus(int x, int y) {
+    public boolean isOnFocus(int x, int y) {
         Object result = this.stringListElement.isOnFocus(x, y);
-        if (result instanceof Element){
+        if (result instanceof Element) {
             //todo catach l'element et l'envoyer au selectField pour envois de message by id
             Debug.debug("element CATCH");
             this.selectionField.addToCurrent(((Element) result).getId());
             return true;
         }
-        if (this.selectionField.isOnFocus(x, y)){
+        if (this.selectionField.isOnFocus(x, y)) {
             Debug.debug("selection CATCH");
             return true;
         }

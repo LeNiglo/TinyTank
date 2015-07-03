@@ -4,7 +4,6 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ImageListElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
@@ -29,13 +28,6 @@ public class TableElement extends InterfaceElement {
     }
 
     // INIT
-    @Override
-    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent) {
-        this.body = body;
-        this.activatedTimer = new ActivatedTimer(activated);
-        this.type = type;
-        this.needActivated = needActivatedParent;
-    }
 
     private void childInit() {
         this.table = new HashMap<>();
@@ -89,7 +81,7 @@ public class TableElement extends InterfaceElement {
     }
 
     @Override
-    public Boolean isOnFocus(int x, int y) {
+    public boolean isOnFocus(int x, int y) {
         return false;
     }
 

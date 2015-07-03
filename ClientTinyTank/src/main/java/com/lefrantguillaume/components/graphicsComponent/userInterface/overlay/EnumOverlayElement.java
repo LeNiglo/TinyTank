@@ -14,12 +14,17 @@ public enum EnumOverlayElement {
     CHAT(1),
     POP_ELEMENT(2),
     TABLE(3),
+    CUSTOM(4),
 
     // index
     POP_KILL(POP_ELEMENT.index),
     TABLE_NEW_ROUND(TABLE.index),
     TABLE_STAT(TABLE.index),
     TABLE_ICON(TABLE.index),
+    CUSTOM_MENU(CUSTOM.index),
+    CUSTOM_MENU_SETTINGS(CUSTOM.index),
+    CUSTOM_MENU_CONTROLS(CUSTOM.index),
+    CUSTOM_MENU_SCREEN(CUSTOM.index),
 
 
     // primitive
@@ -29,6 +34,8 @@ public enum EnumOverlayElement {
     // roundAnimator
     NEW_ROUND, STATE,
 
+    // menuAnimator
+    EXIT, SETTINGS, CONTROLS, SCREEN,
 
     // iconAnimator
     TIGER(4), SNIPER(5), RUSHER(6),

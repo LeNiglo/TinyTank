@@ -10,7 +10,6 @@ import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayD
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
-import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
@@ -80,8 +79,10 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
         this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
         this.animatorGameData.init();
+
         this.gameController.getMapController().setMapAnimator(this.animatorGameData.getMapAnimator());
         this.gameController.setAnimatorGameData(this.animatorGameData);
+        this.gameController.setStateWindow(this.stateWindow);
 
         this.animatorOverlayData.init();
         this.gameOverlay.init(this.animatorOverlayData);
@@ -179,8 +180,8 @@ public class WindowGame extends BasicGameState implements ScreenController {
     public void keyPressed(int key, char c) {
         boolean absorbed = this.gameOverlay.event(key, c, EnumInput.PRESSED);
         if (absorbed == false) {
-            if (input != null && this.gameController != null) {
-                input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+            if (this.input != null && this.gameController != null) {
+                this.input.checkInput(this.gameController, key, EnumInput.PRESSED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
             }
         }
     }
@@ -189,11 +190,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
     public void keyReleased(int key, char c) {
         boolean absorbed = this.gameOverlay.event(key, c, EnumInput.RELEASED);
         if (absorbed == false) {
-            if (input != null && this.gameController != null) {
-                int result = input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
-                if (result == EnumInput.ESCAPE.getIndex()) {
-                    this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
-                } else if (result == EnumInput.OVERLAY.getIndex()) {
+            if (this.input != null && this.gameController != null) {
+                int result = this.input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
+                if (result == EnumInput.OVERLAY.getIndex()) {
                     if (this.gameOverlay.isActivated()) {
                         this.gameOverlay.setActivated(false);
                     } else {
@@ -206,11 +205,11 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void mousePressed(int button, int x, int y) {
-        if (input != null && this.gameController != null) {
+        if (this.input != null && this.gameController != null) {
             if (button == 0) {
-                input.checkInput(this.gameController, -2, EnumInput.PRESSED, x, y);
+                this.input.checkInput(this.gameController, -2, EnumInput.PRESSED, x, y);
             } else if (button == 1) {
-                input.checkInput(this.gameController, -3, EnumInput.PRESSED, x, y);
+                this.input.checkInput(this.gameController, -3, EnumInput.PRESSED, x, y);
             }
         }
     }
@@ -218,10 +217,10 @@ public class WindowGame extends BasicGameState implements ScreenController {
     @Override
     public void mouseReleased(int button, int x, int y) {
         if (!this.gameOverlay.isOnFocus(x, y)) {
-            if (input != null && button == 0) {
-                input.checkInput(this.gameController, -2, EnumInput.RELEASED, x, y);
-            } else if (input != null && button == 1) {
-                input.checkInput(this.gameController, -3, EnumInput.RELEASED, x, y);
+            if (this.input != null && button == 0) {
+                this.input.checkInput(this.gameController, -2, EnumInput.RELEASED, x, y);
+            } else if (this.input != null && button == 1) {
+                this.input.checkInput(this.gameController, -3, EnumInput.RELEASED, x, y);
             }
         }
     }

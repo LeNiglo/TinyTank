@@ -12,6 +12,7 @@ public enum EnumSprites {
     WALL(4),
     AREA(5),
     ROUND(6),
+    MENU(7),
     //interface
     BACKGROUND(-1), NEXT(-1), PREV(-1),
     STAT_RANK(-1), STAT_TIGER(-1), STAT_SNIPER(-1), STAT_RUSHER(-1),
@@ -28,9 +29,11 @@ public enum EnumSprites {
     // area
     OBJECTIVE(AREA.getIndex()),
     BOMB(AREA.getIndex()),
-
     //roundOverlay
-    NEW_ROUND(ROUND.getIndex()), STATE(ROUND.getIndex());
+    NEW_ROUND(ROUND.getIndex()), STATE(ROUND.getIndex()),
+    //menuOverlay
+    EXIT(MENU.getIndex()), SETTINGS(MENU.getIndex()), CONTROLS(MENU.getIndex()), SCREEN(MENU.getIndex());
+
 
     private final int index;
 

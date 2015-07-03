@@ -39,11 +39,11 @@ public abstract class Element {
     public abstract Object doTask(Object task);
 
     // GETTERS
-    public boolean isOnFocus(float x, float y){
-        if (this.body == null){
-            return false;
+    public Object isOnFocus(float x, float y){
+        if (this.body != null && this.body.isOnFocus(x, y)){
+            return true;
         }
-        return this.body.isOnFocus(x, y);
+        return null;
     }
 
     public abstract boolean isActivated();
