@@ -49,6 +49,11 @@ public class TableElement extends InterfaceElement {
     public void doTask(Object task) {
         if (task instanceof Element) {
             this.addElement((Element) task);
+        } else if (task instanceof Pair){
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
         }
     }
 

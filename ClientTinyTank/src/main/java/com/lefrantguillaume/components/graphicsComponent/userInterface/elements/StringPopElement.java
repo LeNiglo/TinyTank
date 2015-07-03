@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -31,7 +32,7 @@ public class StringPopElement extends InterfaceElement {
     // FUNCTIONS
 
     @Override
-    public void leave(){
+    public void leave() {
         this.stringListElement.leave();
         this.activatedTimer.leave();
     }
@@ -79,14 +80,18 @@ public class StringPopElement extends InterfaceElement {
     public void doTask(Object task) {
         if (task instanceof MessageRoundKill) {
             this.stringListElement.addToPrint(this.getMessageToPrint((MessageRoundKill) task), 3000, Element.PositionInBody.MIDDLE_MID);
+        } else if (task instanceof Pair) {
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
         }
     }
 
     public Tuple<Color, String, String> getMessageToPrint(MessageRoundKill message) {
         Tuple<Color, String, String> result = new Tuple<>(null, null, "overlay");
 
-        if (CurrentUser.getIdTeam().equals(message.getKiller()))
-        {
+        if (CurrentUser.getIdTeam().equals(message.getKiller())) {
             result.setV1(Color.cyan);
         } else {
             result.setV1(Color.red);

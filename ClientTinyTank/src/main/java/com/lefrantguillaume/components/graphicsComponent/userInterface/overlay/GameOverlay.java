@@ -85,8 +85,8 @@ public class GameOverlay extends Observable implements Observer {
 
     private void initTableNewRound() {
         InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_NEW_ROUND);
-        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound", Element.PositionInBody.MIDDLE_UP));
-        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_MID));
     }
 
     private void initTableMenu() {
@@ -104,17 +104,16 @@ public class GameOverlay extends Observable implements Observer {
     private void initTableMenuScreen() {
         InterfaceElement tableMenuScreen = this.elements.get(EnumOverlayElement.CUSTOM_MENU_SCREEN);
 
-        tableMenuScreen.doTask(new ButtonElement(new StringElement(new StringTimer("Render Screen 1"), Color.black,
-                "screen1:screen1", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
-        tableMenuScreen.doTask(new ButtonElement(new StringElement(new StringTimer("Render Screen 2"), Color.black,
-                "screen2:screen2", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
-        for (int i = 0; i < 2; ++i){
+        for (int i = 0; i < 2; ++i) {
+            String screenId = EnumOverlayElement.SCREEN.getValue() + String.valueOf(i + 1);
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new StringTimer("Render Screen " + String.valueOf(i + 1)), Color.black,
+                    screenId + ":" + screenId, Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("chat"), Color.black,
-                    "screen" + String.valueOf(i + 1) + ":" + "chat", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
+                    screenId + ":" + EnumOverlayElement.CHAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("kill event"), Color.black,
-                    "screen" + String.valueOf(i + 1) + ":" + "killevent", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
+                    screenId + ":" + EnumOverlayElement.POP_KILL.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("action bar"), Color.black,
-                    "screen" + String.valueOf(i + 1) + ":" + "actionbar", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
+                    screenId + ":" + EnumOverlayElement.TABLE_ICON.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
         }
     }
 
@@ -122,13 +121,13 @@ public class GameOverlay extends Observable implements Observer {
         InterfaceElement tableMenuControls = this.elements.get(EnumOverlayElement.CUSTOM_MENU_CONTROLS);
 
         tableMenuControls.doTask(new ButtonElement(new StringElement(new StringTimer("Controls"), Color.black,
-                "controls:controls", Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
+                EnumOverlayElement.CONTROLS.getValue() + ":" + EnumOverlayElement.CONTROLS.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
 
         for (Map.Entry<EnumInput, String> entry : this.inputData.getAvailableInput().entrySet()) {
             tableMenuControls.doTask(new ButtonElement(new StringElement(new StringTimer(entry.getKey().getValue() + ":" +
                     StringTools.duplicateString(" ", 14 - entry.getKey().getValue().length()) + entry.getValue() +
                     StringTools.duplicateString(" ", 18 - entry.getValue().length())), Color.black,
-                    "controls:" + entry.getKey().getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CONTROLS));
+                    EnumOverlayElement.CONTROLS.getValue() + ":" + entry.getKey().getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CONTROLS));
         }
     }
 
@@ -162,16 +161,23 @@ public class GameOverlay extends Observable implements Observer {
                 }
             }
         } else if (arg instanceof Pair) {
-            Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
+            if (((Pair) arg).getV2() instanceof EnumOverlayElement) {
+                Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 
-            Debug.debug("RECEIVED : " + received);
-            if (received.getV2() == EnumOverlayElement.EXIT) {
-                this.elements.get(received.getV1()).stop();
-                this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.GAME, EnumWindow.INTERFACE));
-            } else {
-                this.elements.get(received.getV1()).stop();
-                this.elements.get(received.getV2()).start();
+                Debug.debug("RECEIVED : " + received);
+                if (received.getV2() == EnumOverlayElement.EXIT) {
+                    this.elements.get(received.getV1()).stop();
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.GAME, EnumWindow.INTERFACE));
+                } else {
+                    this.elements.get(received.getV1()).stop();
+                    this.elements.get(received.getV2()).start();
+                }
+            } else if (((Pair) arg).getV2() instanceof Pair) {
+                Pair<EnumOverlayElement, Pair> received = (Pair<EnumOverlayElement, Pair>) arg;
+                Debug.debug("received: " + received);
+                this.elements.get(received.getV1()).doTask(received.getV2());
+                //todo à envoyer à une classe qui gère les accès via un fichier
             }
         }
     }

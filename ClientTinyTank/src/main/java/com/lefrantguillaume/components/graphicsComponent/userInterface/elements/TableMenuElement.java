@@ -62,9 +62,10 @@ public class TableMenuElement extends TableElement {
     @Override
     public boolean isOnFocus(int x, int y) {
         if (this.isActivated()) {
+            int listIndex = 0;
+
             for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
                 Object result = entry.getValue().isOnFocus(x, y);
-
                 if (result != null) {
                     if (result instanceof Element) {
                         Element element = (Element) result;
@@ -73,11 +74,19 @@ public class TableMenuElement extends TableElement {
                             this.focusedElement = element;
                             this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
                         } else if (((Element) result).getType() == EnumOverlayElement.SCREEN) {
+                            boolean newValue;
                             if (ColorTools.compareColor(element.getBody().getColor(), ColorTools.Colors.TRANSPARENT_GREEN)) {
                                 element.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_RED));
+                                newValue = false;
                             } else {
                                 element.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN));
+                                newValue = true;
                             }
+                            EnumOverlayElement type = element.getType();
+                            if (element.getId().contains(":")){
+                                type = EnumOverlayElement.getTypeByValue(element.getId().substring(element.getId().indexOf(":") + 1));
+                            }
+                            this.genericSendTask.sendTask(new Pair<>(type, new Pair<>(listIndex, newValue)));
                             return true;
                         }
                         return true;
@@ -85,6 +94,7 @@ public class TableMenuElement extends TableElement {
                         return true;
                     }
                 }
+                ++listIndex;
             }
         }
         return false;

@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.ArrayList;
@@ -10,48 +11,51 @@ import java.util.List;
  */
 public enum EnumOverlayElement {
     // index
-    NOTHING(-1),
-    CHAT(1),
-    POP_ELEMENT(2),
-    TABLE(3),
-    CUSTOM(4),
+    NOTHING("nothing", -1),
+    CHAT("chat", 1),
+    POP_ELEMENT("popElement", 2),
+    TABLE("table", 3),
+    CUSTOM("custom", 4),
 
     // index
-    POP_KILL(POP_ELEMENT.index),
-    TABLE_NEW_ROUND(TABLE.index),
-    TABLE_STAT(TABLE.index),
-    TABLE_ICON(TABLE.index),
-    CUSTOM_MENU(CUSTOM.index),
-    CUSTOM_MENU_SETTINGS(CUSTOM.index),
-    CUSTOM_MENU_CONTROLS(CUSTOM.index),
-    CUSTOM_MENU_SCREEN(CUSTOM.index),
+    POP_KILL("popKill", POP_ELEMENT.index),
+    TABLE_NEW_ROUND("tableNewRound", TABLE.index),
+    TABLE_STAT("tableStat", TABLE.index),
+    TABLE_ICON("tableIcon", TABLE.index),
+    CUSTOM_MENU("customMenu", CUSTOM.index),
+    CUSTOM_MENU_SETTINGS("customMenuSettings", CUSTOM.index),
+    CUSTOM_MENU_CONTROLS("customMenuControls", CUSTOM.index),
+    CUSTOM_MENU_SCREEN("customMenuScreen", CUSTOM.index),
 
 
     // primitive
-    IMAGE,
-    STRING,
-    BUTTON,
+    IMAGE("image"),
+    STRING("string"),
+    BUTTON("button"),
 
     // roundAnimator
-    NEW_ROUND, STATE,
+    NEW_ROUND("newRound"), STATE("stat"),
 
     // menuAnimator
-    EXIT, SETTINGS, CONTROLS, SCREEN,
+    EXIT("exit"), SETTINGS("settings"), CONTROLS("controls"), SCREEN("screen"),
 
     // iconAnimator
-    TIGER(4), SNIPER(5), RUSHER(6),
-    TIGER_HIT(TIGER.index), TIGER_SPELL(TIGER.index), TIGER_BOX(TIGER.index),
-    SNIPER_HIT(SNIPER.index), SNIPER_SPELL(SNIPER.index), SNIPER_BOX(SNIPER.index),
-    RUSHER_HIT(RUSHER.index), RUSHER_SPELL(RUSHER.index), RUSHER_BOX(RUSHER.index);
+    TIGER("tiger", 4), SNIPER("sniper", 5), RUSHER("rusher", 6),
+    TIGER_HIT("tigerHit", TIGER.index), TIGER_SPELL("tigerSpell", TIGER.index), TIGER_BOX("tigerBox", TIGER.index),
+    SNIPER_HIT("sniperHit", SNIPER.index), SNIPER_SPELL("sniperSpell", SNIPER.index), SNIPER_BOX("sniperBox", SNIPER.index),
+    RUSHER_HIT("rusherHit", RUSHER.index), RUSHER_SPELL("rusherSpell", RUSHER.index), RUSHER_BOX("rusherBox", RUSHER.index);
 
 
     private int index;
+    private String value;
 
-    EnumOverlayElement() {
+    EnumOverlayElement(String value) {
         this.index = 0;
+        this.value = value;
     }
 
-    EnumOverlayElement(int index) {
+    EnumOverlayElement(String value, int index) {
+        this.value = value;
         this.index = index;
     }
 
@@ -62,9 +66,21 @@ public enum EnumOverlayElement {
     public EnumOverlayElement getTypeByIndex() {
         EnumOverlayElement[] enums = EnumOverlayElement.values();
         for (int i = 0; i < enums.length; ++i) {
-            EnumOverlayElement value = enums[i];
-            if (value.getIndex() == this.index) {
-                return value;
+            EnumOverlayElement item = enums[i];
+            if (item.getIndex() == this.index) {
+                return item;
+            }
+        }
+        return NOTHING;
+    }
+
+    public static EnumOverlayElement getTypeByValue(String value) {
+        Debug.debug("try to find '" + value + "'");
+        EnumOverlayElement[] enums = EnumOverlayElement.values();
+        for (int i = 0; i < enums.length; ++i) {
+            EnumOverlayElement item = enums[i];
+            if (item.getValue().equals(value)) {
+                return item;
             }
         }
         return NOTHING;
@@ -75,9 +91,9 @@ public enum EnumOverlayElement {
 
         EnumOverlayElement[] enums = EnumOverlayElement.values();
         for (int i = 0; i < enums.length; ++i) {
-            EnumOverlayElement value = enums[i];
-            if (value.getIndex() == this.index && value != this) {
-                result.add(value);
+            EnumOverlayElement item = enums[i];
+            if (item.getIndex() == this.index && item != this) {
+                result.add(item);
             }
         }
         return result;
@@ -92,5 +108,9 @@ public enum EnumOverlayElement {
             return EnumOverlayElement.RUSHER;
         }
         return NOTHING;
+    }
+
+    public String getValue(){
+        return this.value;
     }
 }

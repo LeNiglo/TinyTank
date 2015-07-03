@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
@@ -66,7 +67,7 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public void update() {
-        if (!this.isActivated() && this.selectionField.isFocused()){
+        if (!this.isActivated() && this.selectionField.isFocused()) {
             this.selectionField.setFocused(false);
         }
     }
@@ -133,6 +134,11 @@ public class ChatElement extends InterfaceElement {
             this.activatedTimer.setActivated(true);
             this.addMessage((MessageChat) task);
             this.activatedTimer.startTimer();
+        } else if (task instanceof Pair) {
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
         }
     }
 

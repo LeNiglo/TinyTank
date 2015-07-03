@@ -34,6 +34,11 @@ public class CustomElement extends InterfaceElement {
     public void doTask(Object task) {
         if (task instanceof Element) {
             this.elements.add((Element) task);
+        } else if (task instanceof Pair) {
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
         } else {
             for (Element element : this.elements) {
                 element.doTask(task);
@@ -73,7 +78,7 @@ public class CustomElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-         if (key == Input.KEY_ESCAPE) {
+        if (key == Input.KEY_ESCAPE) {
             if (this.isActivated()) {
                 this.activatedTimer.stopTimer();
                 return true;

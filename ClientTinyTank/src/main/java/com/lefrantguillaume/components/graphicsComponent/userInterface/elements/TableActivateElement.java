@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
@@ -21,12 +22,17 @@ public class TableActivateElement extends TableElement {
 
     // FUNCTION
     @Override
-    public void doTask(Object task){
+    public void doTask(Object task) {
         if (task instanceof Element) {
-            this.addElement((Element)task);
+            this.addElement((Element) task);
+        } else if (task instanceof Pair) {
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
         } else if (this.type == EnumOverlayElement.TABLE_STAT) {
             if (task instanceof MessageRoundScore) {
-                MessageRoundScore message = (MessageRoundScore)task;
+                MessageRoundScore message = (MessageRoundScore) task;
 
                 Element element = new StringElement(new StringTimer(message.getPseudo() + " : " + String.valueOf(message.getScore() + " pts.")), Color.black, message.getTeamId() + ":" + message.getId(), Element.PositionInBody.MIDDLE_MID);
                 this.addElement(element);
@@ -36,7 +42,7 @@ public class TableActivateElement extends TableElement {
 
     @Override
     public Object eventPressed(int key, char c) {
-        if (key == this.toActivate){
+        if (key == this.toActivate) {
             return true;
         }
         return null;
@@ -44,8 +50,8 @@ public class TableActivateElement extends TableElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == this.toActivate){
-            if (this.isActivated()){
+        if (key == this.toActivate) {
+            if (this.isActivated()) {
                 this.stop();
             } else {
                 this.start();
