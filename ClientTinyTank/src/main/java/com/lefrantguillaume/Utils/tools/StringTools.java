@@ -1,7 +1,6 @@
 package com.lefrantguillaume.Utils.tools;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
 
 /**
  * Created by andres_k on 24/03/2015.
@@ -9,11 +8,10 @@ import java.io.IOException;
 
 public class StringTools {
 
-    static public String readFile(String filename)
-    {
-        String content = null;
-        File file = new File(filename); //for ex foo.txt
-        Debug.debug("file: " +file.getAbsolutePath());
+    public static String readFile(String fileName) {
+        String content = "";
+        File file = new File(fileName); //for ex foo.txt
+        Debug.debug("file: " + file.getAbsolutePath());
         try {
             FileReader reader = new FileReader(file);
             char[] chars = new char[(int) file.length()];
@@ -24,5 +22,27 @@ public class StringTools {
             e.printStackTrace();
         }
         return content;
+    }
+
+    public static void writeInFile(String fileName, String value) {
+        File file = new File(fileName);
+
+        try {
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(value);
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String duplicateString(String value, int number){
+        String result = "";
+
+        for (int i = 0; i < number; ++i){
+            result += value;
+        }
+        return result;
     }
 }

@@ -30,6 +30,7 @@ public enum EnumOverlayElement {
     // primitive
     IMAGE,
     STRING,
+    BUTTON,
 
     // roundAnimator
     NEW_ROUND, STATE,

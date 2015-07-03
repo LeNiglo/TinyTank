@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.el
 
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 /**
@@ -69,6 +70,10 @@ public abstract class Element {
     // SETTERS
     public void setBody(BodyRect body){
         this.body = body;
+    }
+
+    public void setBodyColor(Color color){
+        this.body.setColor(color);
     }
 
     public abstract String toString();

@@ -13,12 +13,11 @@ import java.util.logging.Logger;
  * Created by andres_k on 10/03/2015.
  */
 public class Main {
-    private static WindowConfig windowConfig;
     private static CurrentUser user;
 
     public static void main(String args[]) {
 
-        windowConfig = new WindowConfig();
+        WindowConfig windowConfig = new WindowConfig();
         try {
             MasterGame game = new MasterGame();
             Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);

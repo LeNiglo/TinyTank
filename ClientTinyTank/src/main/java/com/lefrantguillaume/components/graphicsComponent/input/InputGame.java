@@ -21,10 +21,10 @@ public class InputGame extends Observable {
     private InputData inputData;
     private boolean valid;
 
-    public InputGame(String configsFile) throws JSONException {
+    public InputGame(InputData inputData) throws JSONException {
 
-        if (configsFile != null) {
-            this.inputData = new InputData(configsFile);
+        if (inputData != null) {
+            this.inputData = inputData;
             this.valid = true;
         } else {
             this.valid = false;

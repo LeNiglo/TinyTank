@@ -73,4 +73,8 @@ public class BodyRect {
         this.body.setX(position.getV1());
         this.body.setY(position.getV2());
     }
+
+    public void setColor(Color color){
+        this.color = color;
+    }
 }

@@ -45,7 +45,7 @@ public class StringElement extends Element {
     }
 
     public void draw(Graphics g) {
-        if (body != null) {
+        if (this.body != null) {
             int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);
             begin = (begin < 0 ? 0 : begin);
 
@@ -108,6 +108,12 @@ public class StringElement extends Element {
 
     @Override
     public Object doTask(Object task) {
+        if (this.stringTimer.getValue().contains(":")){
+            String v1 = this.stringTimer.getValue().substring(0, this.stringTimer.getValue().indexOf(":") + 1);
+            String v2 = (String) task;
+            this.stringTimer.setValue(v1 + v2);
+            return true;
+        }
         return null;
     }
 

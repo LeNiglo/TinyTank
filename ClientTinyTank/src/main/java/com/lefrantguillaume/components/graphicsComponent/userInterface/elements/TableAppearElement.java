@@ -8,9 +8,9 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg
 /**
  * Created by andres_k on 02/07/2015.
  */
-public class TableNewRoundElement extends TableElement {
+public class TableAppearElement extends TableElement {
 
-    public TableNewRoundElement(EnumOverlayElement type, BodyRect body) {
+    public TableAppearElement(EnumOverlayElement type, BodyRect body) {
         super(type, body, false, new boolean[]{true, true});
     }
 

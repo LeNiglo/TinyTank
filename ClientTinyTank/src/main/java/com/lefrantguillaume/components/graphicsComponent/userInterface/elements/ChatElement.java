@@ -65,6 +65,9 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public void update() {
+        if (!this.isActivated() && this.selectionField.isFocused()){
+            this.selectionField.setFocused(false);
+        }
     }
 
     @Override
@@ -72,7 +75,6 @@ public class ChatElement extends InterfaceElement {
         if (key == Input.KEY_ENTER) {
             if (this.selectionField.isFocused()) {
                 this.selectionField.setFocused(false);
-                this.activatedTimer.startTimer();
                 if (!this.selectionField.getCurrent().equals("")) {
                     MessageChat request = new MessageChat(CurrentUser.getPseudo(), CurrentUser.getId(), true, this.selectionField.getCurrent());
                     this.selectionField.setCurrent("");
@@ -82,10 +84,12 @@ public class ChatElement extends InterfaceElement {
                 this.selectionField.setFocused(true);
                 this.activatedTimer.setActivated(true);
             }
+            this.activatedTimer.startTimer();
         } else if (key == Input.KEY_ESCAPE && this.selectionField.isFocused()) {
             return true;
         } else if (this.selectionField.isFocused()) {
             this.selectionField.event(key, c);
+            this.activatedTimer.startTimer();
         } else {
             return null;
         }
@@ -94,9 +98,11 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == Input.KEY_ESCAPE && this.selectionField.isFocused()) {
-            this.activatedTimer.startTimer();
-            this.selectionField.setFocused(false);
+        if (this.selectionField.isFocused()) {
+            if (key == Input.KEY_ESCAPE) {
+                this.activatedTimer.startTimer();
+                this.selectionField.setFocused(false);
+            }
             return true;
         }
         return null;
@@ -104,16 +110,18 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public boolean isOnFocus(int x, int y) {
-        Object result = this.stringListElement.isOnFocus(x, y);
-        if (result instanceof Element) {
-            //todo catach l'element et l'envoyer au selectField pour envois de message by id
-            Debug.debug("element CATCH");
-            this.selectionField.addToCurrent(((Element) result).getId());
-            return true;
-        }
-        if (this.selectionField.isOnFocus(x, y)) {
-            Debug.debug("selection CATCH");
-            return true;
+        if (this.isActivated()) {
+            Object result = this.stringListElement.isOnFocus(x, y);
+            if (result instanceof Element) {
+                //todo catach l'element et l'envoyer au selectField pour envois de message by id
+                Debug.debug("element CATCH");
+                this.selectionField.addToCurrent(((Element) result).getId());
+                return true;
+            }
+            if (this.selectionField.isOnFocus(x, y)) {
+                Debug.debug("selection CATCH");
+                return true;
+            }
         }
         return false;
     }
@@ -123,6 +131,7 @@ public class ChatElement extends InterfaceElement {
         if (task instanceof MessageChat) {
             this.activatedTimer.setActivated(true);
             this.addMessage((MessageChat) task);
+            this.activatedTimer.startTimer();
         }
     }
 

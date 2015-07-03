@@ -11,6 +11,7 @@ import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
+import com.lefrantguillaume.components.graphicsComponent.input.InputData;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -52,14 +53,16 @@ public class WindowGame extends BasicGameState implements ScreenController {
     public WindowGame(int id, Nifty nifty, GenericSendTask inputTask, GenericSendTask gameTask) throws JSONException, SlickException {
         this.id = id;
         this.nifty = nifty;
+
+        InputData inputData = new InputData("configInput.json");
+        this.input = new InputGame(inputData);
+        this.input.addObserver(inputTask);
+
         this.gameController = new GameController();
         this.animatorGameData = new AnimatorGameData();
         this.animatorOverlayData = new AnimatorOverlayData();
-        this.gameOverlay = new GameOverlay();
+        this.gameOverlay = new GameOverlay(inputData);
 
-        String configs = StringTools.readFile("configInput.json");
-        this.input = new InputGame(configs);
-        this.input.addObserver(inputTask);
 
         gameTask.addObserver(this.gameController);
         this.gameController.addObserver(gameTask);

@@ -7,15 +7,16 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.ite
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundScore;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Input;
 
 /**
  * Created by andres_k on 02/07/2015.
  */
-public class TableStatElement extends TableElement {
+public class TableActivateElement extends TableElement {
+    private int toActivate;
 
-    public TableStatElement(EnumOverlayElement type, BodyRect body) {
+    public TableActivateElement(EnumOverlayElement type, BodyRect body, int toActivate) {
         super(type, body, false, new boolean[]{true, true});
+        this.toActivate = toActivate;
     }
 
     // FUNCTION
@@ -35,7 +36,7 @@ public class TableStatElement extends TableElement {
 
     @Override
     public Object eventPressed(int key, char c) {
-        if (key == Input.KEY_TAB){
+        if (key == this.toActivate){
             return true;
         }
         return null;
@@ -43,7 +44,7 @@ public class TableStatElement extends TableElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == Input.KEY_TAB){
+        if (key == this.toActivate){
             if (this.isActivated()){
                 this.stop();
             } else {

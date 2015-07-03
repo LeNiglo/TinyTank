@@ -66,9 +66,11 @@ public class StringPopElement extends InterfaceElement {
 
     @Override
     public boolean isOnFocus(int x, int y) {
-        if (this.stringListElement.isOnFocus(x, y) != null) {
-        }
-        if (this.body.isOnFocus(x, y)) {
+        if (this.isActivated()) {
+            if (this.stringListElement.isOnFocus(x, y) != null) {
+            }
+            if (this.body.isOnFocus(x, y)) {
+            }
         }
         return false;
     }

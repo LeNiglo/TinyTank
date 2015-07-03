@@ -73,7 +73,7 @@ public class CustomElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == Input.KEY_ESCAPE) {
+         if (key == Input.KEY_ESCAPE) {
             if (this.isActivated()) {
                 this.activatedTimer.stopTimer();
                 return true;
@@ -89,15 +89,17 @@ public class CustomElement extends InterfaceElement {
 
     @Override
     public boolean isOnFocus(int x, int y) {
-        for (Element element : this.elements) {
-            Object result = element.isOnFocus(x, y);
-            if (result != null && element.isEmpty() == false) {
-                if (result instanceof EnumOverlayElement) {
-                    this.genericSendTask.sendTask(new Pair<>(this.type, result));
-                    return true;
-                }
-                if (result instanceof Boolean && (Boolean) result == true) {
-                    return true;
+        if (this.isActivated()) {
+            for (Element element : this.elements) {
+                Object result = element.isOnFocus(x, y);
+                if (result != null && element.isEmpty() == false) {
+                    if (result instanceof EnumOverlayElement) {
+                        this.genericSendTask.sendTask(new Pair<>(this.type, result));
+                        return true;
+                    }
+                    if (result instanceof Boolean && (Boolean) result == true) {
+                        return true;
+                    }
                 }
             }
         }

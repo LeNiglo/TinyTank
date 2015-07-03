@@ -12,11 +12,13 @@ import java.util.List;
 public abstract class ListElement {
     protected List<Element> elements;
     protected BodyRect body;
+    protected float border;
 
     public void leave(){
         for (Element element : this.elements){
             element.leave();
         }
+        this.elements.clear();
     }
 
     public abstract void draw(Graphics g);

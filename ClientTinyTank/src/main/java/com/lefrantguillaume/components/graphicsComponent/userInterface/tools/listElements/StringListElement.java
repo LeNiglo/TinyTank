@@ -95,10 +95,8 @@ public class StringListElement extends ListElement {
             this.addMessage((Tuple<Color, String, String>) object, null, positionInBody, 0);
         } else if (object instanceof StringElement) {
             StringElement task = (StringElement) object;
-            Debug.debug("TOPRINT: " + task.getValue());
 
             int position = this.deleteElemIfExist(task.getId());
-            Debug.debug("position: " + position);
             this.addMessage(new Tuple<>(task.getColor(), task.getValue(), task.getId()), null, positionInBody, position);
         }
     }
@@ -149,15 +147,13 @@ public class StringListElement extends ListElement {
         int posInString = 0;
         int max;
 
-        Debug.debug("start ADD Message: " + message.getV2());
+        Debug.debug("ADD Message: " + message.getV2());
         while (posInString < message.getV2().length()) {
-            Debug.debug("pos: " + posInString + " <? " + message.getV2().length());
             max = this.maxLength + posInString;
             if (max >= message.getV2().length()) {
                 max = message.getV2().length();
             }
             String tmp = message.getV2().substring(posInString, max);
-            Debug.debug("tmp: " + tmp);
             if (time != null) {
                 messages.add(new StringElement(new StringTimer(tmp, time), message.getV1(), message.getV3(), positionInBody));
             } else {
@@ -165,7 +161,6 @@ public class StringListElement extends ListElement {
             }
             posInString += max;
         }
-        Debug.debug("end ADD");
         return messages;
     }
 
@@ -173,7 +168,6 @@ public class StringListElement extends ListElement {
         List<StringElement> messages = this.createMessage(message, time, positionInBody);
 
         this.clearEmpty();
-        Debug.debug("position: " + position);
         for (StringElement element : messages) {
             this.elements.add(position, element);
         }
