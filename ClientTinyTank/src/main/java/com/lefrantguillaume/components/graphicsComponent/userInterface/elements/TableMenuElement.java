@@ -67,15 +67,16 @@ public class TableMenuElement extends TableElement {
 
                 if (result != null) {
                     if (result instanceof Element) {
+                        Element element = (Element) result;
                         if (((Element) result).getType() == EnumOverlayElement.CONTROLS) {
                             this.initFocusElement();
-                            this.focusedElement = (Element) result;
+                            this.focusedElement = element;
                             this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
                         } else if (((Element) result).getType() == EnumOverlayElement.SCREEN) {
-                            if (ColorTools.compareColor(this.focusedElement.getBody().getColor(), ColorTools.Colors.TRANSPARENT_GREEN)) {
-                                this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_RED));
+                            if (ColorTools.compareColor(element.getBody().getColor(), ColorTools.Colors.TRANSPARENT_GREEN)) {
+                                element.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_RED));
                             } else {
-                                this.focusedElement.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN));
+                                element.setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN));
                             }
                             return true;
                         }

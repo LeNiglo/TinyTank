@@ -52,6 +52,7 @@ public class ChatElement extends InterfaceElement {
     public void leave() {
         this.activatedTimer.leave();
         this.stringListElement.leave();
+        this.stringListElement.clear();
     }
 
     @Override

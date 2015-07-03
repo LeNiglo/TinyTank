@@ -44,6 +44,9 @@ public class ImageElement extends Element {
     public void draw(Graphics g, BodyRect body) {
         if (body.getMinX() != -1) {
             Pair<Float, Float> position = this.getChoicePosition(body);
+            if (this.body != null && body.getColor() == null){
+                body.setColor(this.body.getColor());
+            }
             body.draw(g);
             g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
         }

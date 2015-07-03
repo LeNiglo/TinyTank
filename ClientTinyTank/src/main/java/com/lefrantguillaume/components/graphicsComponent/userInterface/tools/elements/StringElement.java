@@ -68,6 +68,9 @@ public class StringElement extends Element {
 
         Pair<Float, Float> position = this.getChoicePosition(body, value);
 
+        if (this.body != null && body.getColor() == null){
+            body.setColor(this.body.getColor());
+        }
         body.draw(g);
         g.setColor(this.color);
         g.drawString(value, position.getV1(), position.getV2());

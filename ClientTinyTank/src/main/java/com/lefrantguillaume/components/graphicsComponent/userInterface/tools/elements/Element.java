@@ -69,6 +69,11 @@ public abstract class Element {
 
     // SETTERS
     public void setBody(BodyRect body){
+        if (this.body != null) {
+            if (body.getColor() == null){
+                body.setColor(this.body.getColor());
+            }
+        }
         this.body = body;
     }
 

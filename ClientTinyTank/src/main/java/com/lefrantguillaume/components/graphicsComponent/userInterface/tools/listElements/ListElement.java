@@ -18,6 +18,9 @@ public abstract class ListElement {
         for (Element element : this.elements){
             element.leave();
         }
+    }
+
+    public void clear(){
         this.elements.clear();
     }
 

@@ -13,15 +13,15 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.lis
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Rectangle;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * Created by andres_k on 27/06/2015.
  */
 public class TableElement extends InterfaceElement {
-    protected HashMap<Element, ListElement> table;
-    protected HashMap<String, Pair<BodyRect, BodyRect>> positionBody;
+    protected Map<Element, ListElement> table;
+    protected Map<String, Pair<BodyRect, BodyRect>> positionBody;
 
     public TableElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivatedParent) {
         this.parentInit(body, type, activated, needActivatedParent);
@@ -31,8 +31,8 @@ public class TableElement extends InterfaceElement {
     // INIT
 
     private void childInit() {
-        this.table = new HashMap<>();
-        this.positionBody = new HashMap<>();
+        this.table = new LinkedHashMap<>();
+        this.positionBody = new LinkedHashMap<>();
     }
 
     // FUNCTIONS
