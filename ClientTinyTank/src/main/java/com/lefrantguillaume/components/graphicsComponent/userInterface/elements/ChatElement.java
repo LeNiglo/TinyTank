@@ -27,15 +27,15 @@ public class ChatElement extends InterfaceElement {
     private SelectionField selectionField;
 
     public ChatElement(EnumOverlayElement type, BodyRect body) {
-        this.parentInit(body, type, true, true);
+        this.parentInit(body, type, false, new boolean[]{true, true});
         this.childInit();
     }
 
     // INIT
     @Override
-    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent) {
+    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean[] needActivatedParent) {
         this.body = body;
-        this.needActivated = needActivatedParent;
+        this.reachable = needActivatedParent;
         this.activatedTimer = new ActivatedTimer(activated, false, 7000);
         this.type = type;
     }
@@ -45,7 +45,6 @@ public class ChatElement extends InterfaceElement {
                 new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID));
         float chatSizeY = 170;
         this.stringListElement = new StringListElement(new BodyRect(new Rectangle(this.body.getMinX(), this.body.getMinY(), this.body.getSizeX(), chatSizeY)));
-        this.stringListElement.addToPrint(new Tuple<>(Color.black, this.getMessageToPrint("Admin", "Welcome!"), "admin"), Element.PositionInBody.LEFT_MID);
     }
 
     // FUNCTIONS

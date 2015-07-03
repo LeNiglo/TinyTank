@@ -91,63 +91,64 @@ public class GameController extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
+        if (arg instanceof Tuple) {
+            Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        if (received.getV2().equals(EnumTargetTask.GAME)) {
-            if (received.getV3() instanceof EnumWindow && this.stateWindow != null) {
-                MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
-                CurrentUser.setInGame(false);
-                this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
+            if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().equals(EnumTargetTask.GAME)) {
+                if (received.getV3() instanceof EnumWindow && this.stateWindow != null) {
+                    MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+                    CurrentUser.setInGame(false);
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
 
-                this.stateWindow.enterState(((EnumWindow) received.getV3()).getValue());
-            } else if (received.getV3() instanceof MessageModel) {
-                MessageModel message = (MessageModel) received.getV3();
-                if (message.getPlayerAction() == true) {
-                    Player current = this.getPlayer(message.getId());
-                    if (current != null) {
-                        Object result = current.doAction(new PlayerAction(message), this.collisionController);
-                        if (result instanceof Obstacle) {
-                            this.mapController.addObstacle((Obstacle) result);
+                    this.stateWindow.enterState(((EnumWindow) received.getV3()).getValue());
+                } else if (received.getV3() instanceof MessageModel) {
+                    MessageModel message = (MessageModel) received.getV3();
+                    if (message.getPlayerAction() == true) {
+                        Player current = this.getPlayer(message.getId());
+                        if (current != null) {
+                            Object result = current.doAction(new PlayerAction(message), this.collisionController);
+                            if (result instanceof Obstacle) {
+                                this.mapController.addObstacle((Obstacle) result);
+                            }
                         }
-                    }
-                } else {
-                    if (message instanceof MessagePlayerNew) {
-                        Debug.debug("NEW PLAYER");
-                        this.newPlayer((MessagePlayerNew) message);
-                    }
-                    if (message instanceof MessagePlayerDelete) {
-                        Debug.debug("DELETE PLAYER");
-                        this.deletePlayer(message.getId());
-                    }
-                    if (message instanceof MessagePlayerUpdateState) {
-                        Debug.debug("UPDATE STATE PLAYER");
-                        this.changeStatePlayer((MessagePlayerUpdateState) message);
-                    }
-                    if (message instanceof MessagePlayerUpdatePosition) {
-                        Debug.debug("UPDATE POS PLAYER");
-                        this.changePositionPlayer((MessagePlayerUpdatePosition) message);
-                    }
-                    if (message instanceof MessagePlayerRevive) {
-                        Debug.debug("REVIVE PLAYER");
-                        this.revivePlayer((MessagePlayerRevive) message);
-                    }
-                    if (message instanceof MessagePutObstacle) {
-                        Debug.debug("PUT OBJECT");
-                        this.putObject((MessagePutObstacle) message);
-                    }
-                    if (message instanceof MessageObstacleUpdateState) {
-                        Debug.debug("UPDATE STATE OBSTACLE");
-                        this.changeStateObstacle((MessageObstacleUpdateState) message);
-                    }
-                    if (message instanceof MessageShotUpdateState) {
-                        Debug.debug("UPDATE STATE SHOT");
-                        this.changeStateShot((MessageShotUpdateState) message);
+                    } else {
+                        if (message instanceof MessagePlayerNew) {
+                            Debug.debug("NEW PLAYER");
+                            this.newPlayer((MessagePlayerNew) message);
+                        }
+                        if (message instanceof MessagePlayerDelete) {
+                            Debug.debug("DELETE PLAYER");
+                            this.deletePlayer(message.getId());
+                        }
+                        if (message instanceof MessagePlayerUpdateState) {
+                            Debug.debug("UPDATE STATE PLAYER");
+                            this.changeStatePlayer((MessagePlayerUpdateState) message);
+                        }
+                        if (message instanceof MessagePlayerUpdatePosition) {
+                            Debug.debug("UPDATE POS PLAYER");
+                            this.changePositionPlayer((MessagePlayerUpdatePosition) message);
+                        }
+                        if (message instanceof MessagePlayerRevive) {
+                            Debug.debug("REVIVE PLAYER");
+                            this.revivePlayer((MessagePlayerRevive) message);
+                        }
+                        if (message instanceof MessagePutObstacle) {
+                            Debug.debug("PUT OBJECT");
+                            this.putObject((MessagePutObstacle) message);
+                        }
+                        if (message instanceof MessageObstacleUpdateState) {
+                            Debug.debug("UPDATE STATE OBSTACLE");
+                            this.changeStateObstacle((MessageObstacleUpdateState) message);
+                        }
+                        if (message instanceof MessageShotUpdateState) {
+                            Debug.debug("UPDATE STATE SHOT");
+                            this.changeStateShot((MessageShotUpdateState) message);
+                        }
                     }
                 }
             }
         }
-
     }
 
     // CHANGE FUNCTIONS
@@ -161,6 +162,9 @@ public class GameController extends Observable implements Observer {
                     CurrentUser.setInGame(true);
                     CurrentUser.setIdTeam(task.getTeamId());
                     this.initGame();
+                    this.setChanged();
+                    Debug.debug("SEND WELCOME");
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new MessageChat("Admin", "admin", true, "Welcome!")));
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, this.getPlayer(CurrentUser.getId())));
                 }

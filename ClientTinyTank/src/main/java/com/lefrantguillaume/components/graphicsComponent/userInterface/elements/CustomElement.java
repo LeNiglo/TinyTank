@@ -18,7 +18,7 @@ public class CustomElement extends InterfaceElement {
     private List<Element> elements;
     private GenericSendTask genericSendTask;
 
-    public CustomElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean needActivated) {
+    public CustomElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
         this.childInit(genericSendTask);
     }

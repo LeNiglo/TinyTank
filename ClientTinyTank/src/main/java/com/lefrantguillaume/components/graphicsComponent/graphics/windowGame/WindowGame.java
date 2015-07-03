@@ -191,14 +191,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         boolean absorbed = this.gameOverlay.event(key, c, EnumInput.RELEASED);
         if (absorbed == false) {
             if (this.input != null && this.gameController != null) {
-                int result = this.input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
-                if (result == EnumInput.OVERLAY.getIndex()) {
-                    if (this.gameOverlay.isActivated()) {
-                        this.gameOverlay.setActivated(false);
-                    } else {
-                        this.gameOverlay.setActivated(true);
-                    }
-                }
+                this.input.checkInput(this.gameController, key, EnumInput.RELEASED, this.container.getInput().getMouseX(), this.container.getInput().getMouseY());
             }
         }
     }

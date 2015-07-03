@@ -11,7 +11,7 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg
 public class TableNewRoundElement extends TableElement {
 
     public TableNewRoundElement(EnumOverlayElement type, BodyRect body) {
-        super(type, body, false, false);
+        super(type, body, false, new boolean[]{true, true});
     }
 
     // FUNCTION

@@ -7,6 +7,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.ite
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundScore;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Input;
 
 /**
  * Created by andres_k on 02/07/2015.
@@ -14,7 +15,7 @@ import org.newdawn.slick.Color;
 public class TableStatElement extends TableElement {
 
     public TableStatElement(EnumOverlayElement type, BodyRect body) {
-        super(type, body, true, true);
+        super(type, body, false, new boolean[]{true, true});
     }
 
     // FUNCTION
@@ -31,4 +32,26 @@ public class TableStatElement extends TableElement {
             }
         }
     }
+
+    @Override
+    public Object eventPressed(int key, char c) {
+        if (key == Input.KEY_TAB){
+            return true;
+        }
+        return null;
+    }
+
+    @Override
+    public Object eventReleased(int key, char c) {
+        if (key == Input.KEY_TAB){
+            if (this.isActivated()){
+                this.stop();
+            } else {
+                this.start();
+            }
+            return true;
+        }
+        return null;
+    }
+
 }

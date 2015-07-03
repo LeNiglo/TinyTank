@@ -18,7 +18,7 @@ public class StringPopElement extends InterfaceElement {
     private StringListElement stringListElement;
 
     public StringPopElement(EnumOverlayElement type, BodyRect body) {
-        this.parentInit(body, type, true, false);
+        this.parentInit(body, type, true, new boolean[]{true, true});
         this.childInit();
     }
 

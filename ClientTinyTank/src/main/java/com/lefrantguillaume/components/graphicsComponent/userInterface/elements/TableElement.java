@@ -22,7 +22,7 @@ public class TableElement extends InterfaceElement {
     private HashMap<Element, ListElement> table;
     private HashMap<String, Pair<BodyRect, BodyRect>> positionBody;
 
-    public TableElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean needActivatedParent) {
+    public TableElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivatedParent) {
         this.parentInit(body, type, activated, needActivatedParent);
         this.childInit();
     }

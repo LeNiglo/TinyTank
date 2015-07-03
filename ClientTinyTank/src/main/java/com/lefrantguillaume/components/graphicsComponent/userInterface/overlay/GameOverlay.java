@@ -27,13 +27,14 @@ import java.util.*;
  * Created by andres_k on 20/06/2015.
  */
 public class GameOverlay extends Observable implements Observer {
-    private boolean activated;
+    private int current;
+
     private HashMap<EnumOverlayElement, InterfaceElement> elements;
     private AnimatorOverlayData animatorOverlayData;
     private GenericSendTask genericSendTask;
 
     public GameOverlay() {
-        this.activated = false;
+        this.current = 0;
 
         this.genericSendTask = new GenericSendTask();
         this.genericSendTask.addObserver(this);
@@ -48,15 +49,15 @@ public class GameOverlay extends Observable implements Observer {
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableStatElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), new Color(0.1f, 0.2f, 0.3f, 0.5f))));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2), WindowConfig.getSizeY() - 64, 192, 64), new Color(0.1f, 0.2f, 0.3f, 0.5f)), true, true));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2), WindowConfig.getSizeY() - 64, 192, 64), new Color(0.1f, 0.2f, 0.3f, 0.5f)), true, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_SCREEN, new CustomElement(EnumOverlayElement.CUSTOM_MENU_SCREEN, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, false));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_CONTROLS, new CustomElement(EnumOverlayElement.CUSTOM_MENU_CONTROLS, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, false));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU_SETTINGS, new CustomElement(EnumOverlayElement.CUSTOM_MENU_SETTINGS, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, false));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_MENU, new CustomElement(EnumOverlayElement.CUSTOM_MENU, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, false));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), new Color(0.1f, 0.2f, 0.3f, 0.5f)), false, new boolean[]{true, true}));
     }
 
     public void init(AnimatorOverlayData animatorOverlayData) {
@@ -69,13 +70,13 @@ public class GameOverlay extends Observable implements Observer {
         this.initTableMenuSettings();
     }
 
-    private void initTableNewRound(){
+    private void initTableNewRound() {
         InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_NEW_ROUND);
         tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), "newRound", Element.PositionInBody.MIDDLE_UP));
         tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), "newRound", Element.PositionInBody.MIDDLE_MID));
     }
 
-    private void initTableMenu(){
+    private void initTableMenu() {
         InterfaceElement tableMenu = this.elements.get(EnumOverlayElement.CUSTOM_MENU);
         tableMenu.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableMenu.getBody().getMinX() + 20, tableMenu.getBody().getMinY() + 20, tableMenu.getBody().getSizeX() - 40, 60), new Color(0.1f, 0.2f, 0.3f, 0.5f)),
                 this.animatorOverlayData.getMenuAnimator(EnumOverlayElement.SCREEN), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.CUSTOM_MENU_SCREEN));
@@ -106,7 +107,7 @@ public class GameOverlay extends Observable implements Observer {
             Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
             Debug.debug("RECEIVED : " + received);
-            if (received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
+            if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
                 if (received.getV3() instanceof Player) {
                     InterfaceElement tableIcon = this.elements.get(EnumOverlayElement.TABLE_ICON);
 
@@ -114,7 +115,6 @@ public class GameOverlay extends Observable implements Observer {
                     List<EnumOverlayElement> icons = EnumOverlayElement.getOverlayElementByGameObject(player.getTank().getTankState().getType()).getSameIndexList();
 
                     if (icons.size() >= 3) {
-                        Debug.debug("add animator: [" + icons.get(0) + ", " + icons.get(1) + ", " + icons.get(2) + "]");
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), "HitIcon", Element.PositionInBody.MIDDLE_MID));
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), "SpellIcon", Element.PositionInBody.MIDDLE_MID));
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(2)), "BoxIcon", Element.PositionInBody.MIDDLE_MID));
@@ -125,12 +125,11 @@ public class GameOverlay extends Observable implements Observer {
                     }
                 }
             }
-        } else if (arg instanceof Pair){
+        } else if (arg instanceof Pair) {
             Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 
             Debug.debug("RECEIVED : " + received);
-            if (received.getV2() == EnumOverlayElement.EXIT){
-                Debug.debug("send exit");
+            if (received.getV2() == EnumOverlayElement.EXIT) {
                 this.setChanged();
                 this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.GAME, EnumWindow.INTERFACE));
             } else {
@@ -143,7 +142,6 @@ public class GameOverlay extends Observable implements Observer {
     // FUNCTIONS
 
     public void leave() {
-        this.activated = false;
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             entry.getValue().leave();
         }
@@ -151,7 +149,8 @@ public class GameOverlay extends Observable implements Observer {
 
     public void draw(Graphics g) {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
-            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+            boolean[] reachable = entry.getValue().getReachable();
+            if (reachable[this.current]) {
                 entry.getValue().draw(g);
             }
         }
@@ -159,16 +158,15 @@ public class GameOverlay extends Observable implements Observer {
 
     public void updateOverlay() {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
-            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
-                entry.getValue().update();
-            }
+            entry.getValue().update();
         }
     }
 
 
     public boolean event(int key, char c, EnumInput type) {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
-            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+            boolean[] reachable = entry.getValue().getReachable();
+            if (reachable[this.current]) {
                 Object result = null;
                 if (type == EnumInput.PRESSED) {
                     result = entry.getValue().eventPressed(key, c);
@@ -189,7 +187,8 @@ public class GameOverlay extends Observable implements Observer {
 
     public boolean isOnFocus(int x, int y) {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
-            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+            boolean[] reachable = entry.getValue().getReachable();
+            if (reachable[this.current]) {
                 if (entry.getValue().isOnFocus(x, y)) {
                     return true;
                 }
@@ -200,22 +199,13 @@ public class GameOverlay extends Observable implements Observer {
 
     public boolean isFocused() {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
-            if (!(this.isActivated() == false && entry.getValue().isNeedActivated())) {
+            boolean[] reachable = entry.getValue().getReachable();
+            if (reachable[this.current]) {
                 if (entry.getValue().isActivated()) {
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    // GETTERS
-    public boolean isActivated() {
-        return this.activated;
-    }
-
-    // SETTERS
-    public void setActivated(boolean value) {
-        this.activated = value;
     }
 }

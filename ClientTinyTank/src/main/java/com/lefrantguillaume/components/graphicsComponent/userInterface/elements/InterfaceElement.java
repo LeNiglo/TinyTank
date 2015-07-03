@@ -11,15 +11,15 @@ import org.newdawn.slick.Graphics;
 public abstract class InterfaceElement {
     protected BodyRect body;
     protected ActivatedTimer activatedTimer;
-    protected boolean needActivated;
+    protected boolean reachable[];
     protected EnumOverlayElement type;
 
     // FUNCTION
-    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean needActivatedParent){
+    protected void parentInit(BodyRect body, EnumOverlayElement type, boolean activated, boolean reachable[]){
         this.body = body;
         this.activatedTimer = new ActivatedTimer(activated);
         this.type = type;
-        this.needActivated = needActivatedParent;
+        this.reachable = reachable;
     }
 
     public void start(){
@@ -49,8 +49,8 @@ public abstract class InterfaceElement {
         return this.activatedTimer.isActivated();
     }
 
-    public boolean isNeedActivated(){
-        return this.needActivated;
+    public boolean[] getReachable(){
+        return this.reachable;
     }
 
     public EnumOverlayElement getType(){

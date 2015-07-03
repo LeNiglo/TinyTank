@@ -44,9 +44,7 @@ public class InputGame extends Observable {
         } else {
             keyName = Input.getKeyName(key);
         }
-        if (keyName.equals(this.inputData.getInputValue(EnumInput.OVERLAY)) && mode == EnumInput.RELEASED) {
-            return EnumInput.OVERLAY.getIndex();
-        } else {
+        if (gameController != null) {
             Player player = gameController.getPlayer(CurrentUser.getId());
             if (player != null && player.isAlive() && player.isCanDoAction()) {
                 request = createMessageByInput(gameController, player, keyName, mode, posX, posY);
@@ -55,8 +53,8 @@ public class InputGame extends Observable {
                 this.setChanged();
                 this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
             }
-            return 0;
         }
+        return 0;
     }
 
     public MessageModel createMessageByInput(GameController gameController, Player player, String keyName, EnumInput mode, int posX, int posY) {
