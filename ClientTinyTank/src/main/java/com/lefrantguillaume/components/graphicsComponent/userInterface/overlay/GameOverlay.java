@@ -59,7 +59,7 @@ public class GameOverlay extends Observable implements Observer {
                 new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
 
         this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableAppearElement(EnumOverlayElement.TABLE_NEW_ROUND,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 368, (WindowConfig.getSizeY() / 2) - 72, 700, 300))));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 200, (WindowConfig.getSizeY() / 2) - 250, 400, 200))));
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
@@ -98,8 +98,8 @@ public class GameOverlay extends Observable implements Observer {
 
     private void initTableNewRound() {
         InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_NEW_ROUND);
-        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
-        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), EnumOverlayElement.NEW_ROUND.getValue() + ":" + EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), EnumOverlayElement.NEW_ROUND.getValue() + ":1", Element.PositionInBody.MIDDLE_MID));
     }
 
     private void initTableMenu() {
@@ -163,10 +163,6 @@ public class GameOverlay extends Observable implements Observer {
                     Player player = (Player) received.getV3();
                     List<EnumOverlayElement> icons = EnumOverlayElement.getOverlayElementByGameObject(player.getTank().getTankState().getType()).getSameIndexList();
 
-                    for (int i = 0; i < icons.size(); ++i){
-                        Debug.debug("icon: " + icons.get(i));
-                        Debug.debug("animator: " + this.animatorOverlayData.getIconAnimator(icons.get(i)));
-                    }
                     if (icons.size() >= 3) {
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), "HitIcon", Element.PositionInBody.MIDDLE_MID));
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), "SpellIcon", Element.PositionInBody.MIDDLE_MID));
