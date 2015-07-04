@@ -53,6 +53,11 @@ public class Animator implements Observer {
     }
 
     public void addAnimation(EnumAnimation type, Animation animation) {
+
+        if (animation.getFrameCount() == 1){
+            animation.setAutoUpdate(false);
+        }
+
         if (this.animations.containsKey(type)) {
             this.animations.get(type).add(animation.copy());
         } else {

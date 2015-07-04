@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 

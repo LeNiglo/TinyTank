@@ -103,7 +103,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container.setTargetFrameRate(this.frameRate);
-        this.container.setShowFPS(false);
+        this.container.setShowFPS(true);
         this.container.setAlwaysRender(true);
         this.container.setVSync(false);
 
