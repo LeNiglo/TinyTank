@@ -122,11 +122,13 @@ public class StringElement extends Element {
 
     @Override
     public Object doTask(Object task) {
-        if (this.stringTimer.getValue().contains(":")) {
-            String v1 = this.stringTimer.getValue().substring(0, this.stringTimer.getValue().indexOf(":") + 1);
-            String v2 = (String) task;
-            this.stringTimer.setValue(v1 + v2);
-            return true;
+        if (task instanceof String) {
+            if (this.stringTimer.getValue().contains(":")) {
+                String v1 = this.stringTimer.getValue().substring(0, this.stringTimer.getValue().indexOf(":") + 1);
+                String v2 = (String) task;
+                this.stringTimer.setValue(v1 + v2);
+                return true;
+            }
         }
         return null;
     }

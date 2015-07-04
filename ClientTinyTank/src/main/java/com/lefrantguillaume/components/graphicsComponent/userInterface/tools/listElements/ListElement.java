@@ -63,6 +63,15 @@ public abstract class ListElement {
         return -1;
     }
 
+    public Element getElement(String id){
+        for (Element element : this.elements) {
+            if (this.containsHeadId(element.getId(), id)) {
+                return element;
+            }
+        }
+        return null;
+    }
+
     protected boolean containsHeadId(String head, String id){
         if (head.contains(":")){
             return head.substring(0, head.indexOf(":")).equals(id.substring(0, id.indexOf(":")));

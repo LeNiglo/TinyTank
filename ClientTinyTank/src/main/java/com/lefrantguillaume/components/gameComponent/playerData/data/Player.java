@@ -43,10 +43,10 @@ public class Player {
 
     // FUNCTIONS
 
-    public Object doAction(PlayerAction playerAction, CollisionController collisionController) {
+    public List<Object> doAction(PlayerAction playerAction, CollisionController collisionController) {
         if (this.canDoAction == true)
             return this.playerActionController.doAction(playerAction, collisionController, this);
-        return false;
+        return null;
     }
 
     public void move(float delta) {

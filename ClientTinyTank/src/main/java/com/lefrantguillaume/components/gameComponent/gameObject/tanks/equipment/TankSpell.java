@@ -5,24 +5,36 @@ import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.spells.Spell;
 import com.lefrantguillaume.components.gameComponent.gameObject.spells.SpellFactory;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 
 /**
  * Created by andres_k on 24/03/2015.
  */
 public class TankSpell {
     private Spell spell;
+    private ActivatedTimer activatedTimer;
 
     public TankSpell(Spell spell) {
         this.spell = spell;
+        this.activatedTimer = new ActivatedTimer(true, false, 10000);
     }
 
     public TankSpell(TankSpell tankSpell) {
         this.spell = SpellFactory.copySpell(tankSpell.spell);
+        this.activatedTimer = new ActivatedTimer(tankSpell.activatedTimer);
     }
 
     // FUNCTIONS
     public Object activeCurrentSpell() {
-        return this.spell.activeSpell();
+        if (this.activatedTimer.isActivated()) {
+            Object result = this.spell.activeSpell();
+            if (result != null) {
+                this.activatedTimer.setActivated(false);
+                this.activatedTimer.startTimer();
+                return result;
+            }
+        }
+        return null;
     }
 
     public void stopCurrentSpell(){
@@ -49,5 +61,13 @@ public class TankSpell {
 
     public boolean isActivate(){
         return this.spell.isActive();
+    }
+
+    public long getCooldown(){
+        return this.activatedTimer.getDelay();
+    }
+
+    public boolean isActivated(){
+        return this.activatedTimer.isActivated();
     }
 }

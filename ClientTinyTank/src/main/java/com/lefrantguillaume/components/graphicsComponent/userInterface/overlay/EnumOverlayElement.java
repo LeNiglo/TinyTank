@@ -40,10 +40,11 @@ public enum EnumOverlayElement {
     EXIT("exit"), SETTINGS("settings"), CONTROLS("controls"), SCREEN("screen"),
 
     // iconAnimator
+    HIT("hit"), SPELL("spell"), BOX("box"),
     TIGER("tiger", 5), SNIPER("sniper", 6), RUSHER("rusher", 7),
-    TIGER_HIT("tigerHit", TIGER.index), TIGER_SPELL("tigerSpell", TIGER.index), TIGER_BOX("tigerBox", TIGER.index),
-    SNIPER_HIT("sniperHit", SNIPER.index), SNIPER_SPELL("sniperSpell", SNIPER.index), SNIPER_BOX("sniperBox", SNIPER.index),
-    RUSHER_HIT("rusherHit", RUSHER.index), RUSHER_SPELL("rusherSpell", RUSHER.index), RUSHER_BOX("rusherBox", RUSHER.index);
+    TIGER_HIT(TIGER.value + HIT.value, TIGER.index), TIGER_SPELL(TIGER.value + SPELL.value, TIGER.index), TIGER_BOX(TIGER.value + BOX.value, TIGER.index),
+    SNIPER_HIT(SNIPER.value + HIT.value, SNIPER.index), SNIPER_SPELL(SNIPER.value + SPELL.value, SNIPER.index), SNIPER_BOX(SNIPER.value + BOX.value, SNIPER.index),
+    RUSHER_HIT(RUSHER.value + HIT.value, RUSHER.index), RUSHER_SPELL(RUSHER.value + SPELL.value, RUSHER.index), RUSHER_BOX(RUSHER.value + BOX.value, RUSHER.index);
 
 
     private int index;

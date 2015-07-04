@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -33,7 +34,7 @@ public class ImageElement extends Element {
     }
 
     public void draw(Graphics g) {
-        if (this.body != null && this.body.getMinX() != -1) {
+        if (this.body != null && this.body.getMinX() != -1 && this.animator.isPrintable()) {
             Pair<Float, Float> position = this.getChoicePosition(this.body);
             this.body.draw(g);
             g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
@@ -42,7 +43,7 @@ public class ImageElement extends Element {
 
     @Override
     public void draw(Graphics g, BodyRect body) {
-        if (body.getMinX() != -1) {
+        if (body.getMinX() != -1 && this.animator.isPrintable()) {
             Pair<Float, Float> position = this.getChoicePosition(body);
             if (this.body != null && body.getColor() == null){
                 body.setColor(this.body.getColor());
@@ -110,6 +111,9 @@ public class ImageElement extends Element {
 
     @Override
     public void update() {
+        if (this.animator.needUpdate() && this.animator.isActivated()){
+            this.animator.updateAnimator(true, true);
+        }
     }
 
     @Override
@@ -128,6 +132,10 @@ public class ImageElement extends Element {
             if (value.equals("start")){
                 this.start();
             }
+        } else if (task instanceof Long){
+            Debug.debug("IMAGE: received cd");
+            this.animator.updateAnimator(false, false);
+            this.animator.startTimer((Long) task);
         }
         return null;
     }

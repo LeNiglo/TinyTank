@@ -77,9 +77,9 @@ public class GameOverlay extends Observable implements Observer {
         this.initPreference();
     }
 
-    public void initPreference(){
-        for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayData.getAvailableData().entrySet()){
-            if (this.elements.containsKey(entry.getKey())){
+    public void initPreference() {
+        for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayData.getAvailableData().entrySet()) {
+            if (this.elements.containsKey(entry.getKey())) {
                 this.elements.get(entry.getKey()).setReachable(entry.getValue());
             }
         }
@@ -155,7 +155,7 @@ public class GameOverlay extends Observable implements Observer {
         if (arg instanceof Tuple) {
             Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-            //Debug.debug("RECEIVED : " + received);
+            Debug.debug("RECEIVED : " + received);
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
                 if (received.getV3() instanceof Player) {
                     InterfaceElement tableIcon = this.elements.get(EnumOverlayElement.TABLE_ICON);
@@ -164,9 +164,16 @@ public class GameOverlay extends Observable implements Observer {
                     List<EnumOverlayElement> icons = EnumOverlayElement.getOverlayElementByGameObject(player.getTank().getTankState().getType()).getSameIndexList();
 
                     if (icons.size() >= 3) {
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), "HitIcon", Element.PositionInBody.MIDDLE_MID));
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), "SpellIcon", Element.PositionInBody.MIDDLE_MID));
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(2)), "BoxIcon", Element.PositionInBody.MIDDLE_MID));
+                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), EnumOverlayElement.HIT.getValue(), Element.PositionInBody.MIDDLE_MID));
+                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), EnumOverlayElement.SPELL.getValue(), Element.PositionInBody.MIDDLE_MID));
+                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(2)), EnumOverlayElement.BOX.getValue(), Element.PositionInBody.MIDDLE_MID));
+                    }
+                } else if (received.getV3() instanceof Pair && ((Pair) received.getV3()).getV1() instanceof EnumOverlayElement) {
+                    Pair<EnumOverlayElement, Object> task = (Pair<EnumOverlayElement, Object>) received.getV3();
+
+                    Debug.debug("OVERLAY received: " + task);
+                    if (this.elements.containsKey(task.getV1())){
+                        this.elements.get(task.getV1()).doTask(task.getV2());
                     }
                 } else {
                     for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
@@ -175,7 +182,7 @@ public class GameOverlay extends Observable implements Observer {
                 }
             }
         } else if (arg instanceof Pair) {
-            if (((Pair) arg).getV2() instanceof EnumOverlayElement) {
+            if (((Pair) arg).getV1() instanceof EnumOverlayElement && ((Pair) arg).getV2() instanceof EnumOverlayElement) {
                 Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 
                 Debug.debug("RECEIVED : " + received);
@@ -244,7 +251,7 @@ public class GameOverlay extends Observable implements Observer {
                 } else if (type == EnumInput.RELEASED) {
                     result = entry.getValue().eventReleased(key, c);
                 }
-          //      Debug.debug("target: " + entry.getKey() + " -> result=" + result);
+                //      Debug.debug("target: " + entry.getKey() + " -> result=" + result);
                 if (result instanceof MessageChat) {
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.MESSAGE_SERVER, result));
@@ -255,7 +262,7 @@ public class GameOverlay extends Observable implements Observer {
                     Pair<Object, Object> task = (Pair<Object, Object>) result;
 
                     if (task.getV1() instanceof EnumInput && task.getV2() instanceof String) {
-                        if (this.inputData.setAvailableInput((EnumInput) task.getV1(), (String) task.getV2())){
+                        if (this.inputData.setAvailableInput((EnumInput) task.getV1(), (String) task.getV2())) {
                             this.elements.get(EnumOverlayElement.TABLE_MENU_CONTROLS).doTask(task.getV2());
                         }
                     }

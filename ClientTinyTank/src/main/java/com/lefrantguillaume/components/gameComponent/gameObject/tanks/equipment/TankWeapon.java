@@ -6,6 +6,7 @@ import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class TankWeapon {
     private Animator shotAnimator;
+    private ActivatedTimer activatedTimer;
     private EnumGameObject shotType;
     private final float damageShot;
     private final float speedShot;
@@ -40,6 +42,7 @@ public class TankWeapon {
         this.current = 0;
         this.canons = new ArrayList<>();
         this.collisionObject = new ArrayList<>();
+        this.activatedTimer = new ActivatedTimer(true, false, 1000);
     }
 
     public TankWeapon(TankWeapon tankWeapon) {
@@ -61,27 +64,33 @@ public class TankWeapon {
         for (int i = 0; i < tankWeapon.collisionObject.size(); ++i) {
             this.collisionObject.add(tankWeapon.collisionObject.get(i));
         }
+        this.activatedTimer = new ActivatedTimer(tankWeapon.activatedTimer);
     }
 
     // FUNCTIONS
 
     public Shot generateShot(String userId, String id, float angle, Pair<Float, Float> coord) {
-        float x1 = this.canons.get(this.current).getShiftCanonHead().getV1();
-        float y1 = this.canons.get(this.current).getShiftCanonHead().getV2();
-        double radAngle = angle * Math.PI / 180;
+        if (this.activatedTimer.isActivated()) {
+            float x1 = this.canons.get(this.current).getShiftCanonHead().getV1();
+            float y1 = this.canons.get(this.current).getShiftCanonHead().getV2();
+            double radAngle = angle * Math.PI / 180;
 
-        float x = (float) (x1 * Math.cos(radAngle) - y1 * Math.sin(radAngle) + coord.getV1());
-        float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
+            float x = (float) (x1 * Math.cos(radAngle) - y1 * Math.sin(radAngle) + coord.getV1());
+            float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
 
-        Tuple<Float, Float, Float> newCoord = new Tuple<Float, Float, Float>(x, y, angle);
-        Shot shot = new Shot(userId, id, this.shotType, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<>(this.shiftHitOrigin),
-                new Pair<>(this.getShiftHitExplode()), new Pair<>(this.shiftHitHead));
+            Tuple<Float, Float, Float> newCoord = new Tuple<>(x, y, angle);
+            Shot shot = new Shot(userId, id, this.shotType, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<>(this.shiftHitOrigin),
+                    new Pair<>(this.getShiftHitExplode()), new Pair<>(this.shiftHitHead));
 
-        for (int i = 0; i < this.collisionObject.size(); ++i) {
-            shot.addCollisionObject(this.collisionObject.get(i));
+            for (int i = 0; i < this.collisionObject.size(); ++i) {
+                shot.addCollisionObject(this.collisionObject.get(i));
+            }
+            this.nextCanon();
+            this.activatedTimer.setActivated(false);
+            this.activatedTimer.startTimer();
+            return shot;
         }
-        this.nextCanon();
-        return shot;
+        return null;
     }
 
     public void addCollisionObject(Block block) {
@@ -143,5 +152,13 @@ public class TankWeapon {
 
     public float getGraphicalY(float value) {
         return value + this.shiftWeaponOrigin.getV2();
+    }
+
+    public long getCooldown(){
+        return this.activatedTimer.getDelay();
+    }
+
+    public boolean isActivated(){
+        return this.activatedTimer.isActivated();
     }
 }

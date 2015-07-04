@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.ColorTools;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -49,9 +50,20 @@ public class TableElement extends InterfaceElement {
         if (task instanceof Element) {
             this.addElement((Element) task);
         } else if (task instanceof Pair) {
-            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
-            if (received.getV1() < this.reachable.length) {
-                this.reachable[received.getV1()] = received.getV2();
+            Debug.debug("Table received: " + task);
+            if (((Pair) task).getV1() instanceof Integer) {
+                Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+                if (received.getV1() < this.reachable.length) {
+                    this.reachable[received.getV1()] = received.getV2();
+                }
+            } else if (((Pair) task).getV1() instanceof EnumOverlayElement) {
+                Pair<EnumOverlayElement, Object> received = (Pair<EnumOverlayElement, Object>) task;
+                Element element = this.containsId(received.getV1().getValue());
+
+                Debug.debug("find element: " + element + "\n");
+                if (element != null) {
+                    element.doTask(received.getV2());
+                }
             }
         } else if (task instanceof Integer) {
             int i = 0;
@@ -103,7 +115,7 @@ public class TableElement extends InterfaceElement {
     public void addElement(Element item) {
         Element key = this.containsKey(item);
         if (key != null) {
- //           Debug.debug("add elem: '" + item.toString() + "'");
+            //           Debug.debug("add elem: '" + item.toString() + "'");
             if (checkSameHeadId(item.getId())) {
                 key.replace(item);
             } else {
@@ -149,6 +161,19 @@ public class TableElement extends InterfaceElement {
         for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
             if (this.containsHeadId(entry.getKey().getId(), item.getId())) {
                 return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    private Element containsId(String id) {
+        for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
+            if (entry.getKey().getId().equals(id)) {
+                return entry.getKey();
+            }
+            Element element = entry.getValue().getElement(id);
+            if (element != null){
+                return element;
             }
         }
         return null;

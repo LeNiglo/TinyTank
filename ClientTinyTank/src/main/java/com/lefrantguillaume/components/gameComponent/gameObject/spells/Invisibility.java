@@ -18,7 +18,7 @@ public class Invisibility extends Spell {
         this.type = EnumGameObject.INVISIBILITY;
         this.tankState = null;
         this.animator = new Animator(animator);
-        this.duration = 20000;
+        this.duration = 10000;
         this.isActive = false;
     }
 

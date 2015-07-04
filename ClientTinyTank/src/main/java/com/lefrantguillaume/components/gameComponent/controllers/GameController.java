@@ -22,6 +22,7 @@ import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAct
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
@@ -112,9 +113,21 @@ public class GameController extends Observable implements Observer {
                     if (message.getPlayerAction() == true) {
                         Player current = this.getPlayer(message.getId());
                         if (current != null) {
-                            Object result = current.doAction(new PlayerAction(message), this.collisionController);
-                            if (result instanceof Obstacle) {
-                                this.mapController.addObstacle((Obstacle) result);
+                            List<Object> result = current.doAction(new PlayerAction(message), this.collisionController);
+                            if (result != null) {
+
+                                for (Object item : result) {
+                                    Debug.debug("\nGAME_CONTROLER: resultPlayerAction ->" + item);
+                                    if (item instanceof Obstacle) {
+                                        this.mapController.addObstacle((Obstacle) item);
+                                    } else if (item instanceof Pair){
+                                        if (((Pair) item).getV1() instanceof EnumOverlayElement){
+                                            this.setChanged();
+                                            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, item));
+                                        }
+                                    }
+                                }
+
                             }
                         }
                     } else {

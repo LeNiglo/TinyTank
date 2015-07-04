@@ -79,9 +79,9 @@ public class TankFactory {
         return tankSpell;
     }
 
-    public static EnumGameObject createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
+    public static TankBox createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         EnumGameObject boxType = EnumGameObject.getEnumByValue(config.getString("boxType"));
 
-        return boxType;
+        return new TankBox(boxType);
     }
 }

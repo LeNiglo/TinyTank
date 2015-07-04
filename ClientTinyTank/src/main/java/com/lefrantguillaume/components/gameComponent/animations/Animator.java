@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 
@@ -11,19 +12,24 @@ import java.util.*;
  */
 public class Animator implements Observer {
     private HashMap<EnumAnimation, List<Animation>> animations;
-    private Color filter;
+    private ActivatedTimer activatedTimer;
     private EnumAnimation current;
+    private Color filter;
+
     private int index;
     private boolean printable;
     private boolean deleted;
+    private boolean needUpdate;
 
     public Animator() {
         this.animations = new HashMap<>();
         this.current = EnumAnimation.BASIC;
         this.printable = true;
         this.deleted = false;
+        this.needUpdate = false;
         this.index = 0;
         this.filter = new Color(1f, 1f, 1f);
+        this.activatedTimer = new ActivatedTimer(true);
     }
 
     public Animator(Animator animator) {
@@ -41,7 +47,9 @@ public class Animator implements Observer {
         this.index = animator.index;
         this.printable = animator.printable;
         this.deleted = animator.deleted;
+        this.needUpdate = animator.needUpdate;
         this.filter = animator.filter;
+        this.activatedTimer = new ActivatedTimer(animator.activatedTimer);
     }
 
     // FUNCTIONS
@@ -89,6 +97,16 @@ public class Animator implements Observer {
         this.deleted = false;
     }
 
+    public void startTimer(long delay){
+        this.activatedTimer.startTimer(delay);
+        this.needUpdate = true;
+    }
+
+    public void updateAnimator(boolean setPrint, boolean setActivate){
+        this.setPrintable(setPrint);
+        this.activatedTimer.setActivated(setActivate);
+    }
+
     // GETTERS
     public Animation currentAnimation() {
         return this.animations.get(this.current).get(this.index);
@@ -125,6 +143,15 @@ public class Animator implements Observer {
         }
         return null;
     }
+
+    public boolean needUpdate(){
+        return this.needUpdate;
+    }
+
+    public boolean isActivated(){
+        return this.activatedTimer.isActivated();
+    }
+
     // SETTERS
 
     public void setPrintable(boolean printable) {
@@ -152,5 +179,9 @@ public class Animator implements Observer {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void setNeedUpdate(boolean value){
+        this.needUpdate = value;
     }
 }

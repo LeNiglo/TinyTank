@@ -7,6 +7,7 @@ import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
+import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankBox;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankSpell;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
@@ -21,7 +22,7 @@ public class Tank {
     private TankWeapon tankWeapon;
     private TankState tankState;
     private TankSpell tankSpell;
-    private EnumGameObject tankBox;
+    private TankBox tankBox;
 
     public Tank(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
         this.tankWeapon = TankFactory.createTankWeapon(config.getJSONObject("tankWeapon"), animatorGameData);
@@ -100,7 +101,7 @@ public class Tank {
     }
 
     public EnumGameObject getTankBox() {
-        return this.tankBox;
+        return this.tankBox.getBox();
     }
 
     public boolean isSpellActivated(){

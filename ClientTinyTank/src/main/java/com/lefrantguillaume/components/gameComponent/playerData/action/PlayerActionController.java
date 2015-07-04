@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.playerData.action;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
@@ -8,7 +9,9 @@ import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstac
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,7 +26,8 @@ public class PlayerActionController { //extends Observable {
         this.shots = shots;
     }
 
-    public Object doAction(PlayerAction playerAction, CollisionController collisionController, Player player) {
+    public List<Object> doAction(PlayerAction playerAction, CollisionController collisionController, Player player) {
+        List<Object> result = new ArrayList<>();
         if (playerAction.getAction() != EnumActions.NOTHING) {
             if (playerAction.getAction() == EnumActions.MOVE) {
                 player.getTank().getTankState().setMove(true);
@@ -49,6 +53,9 @@ public class PlayerActionController { //extends Observable {
                 }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
                 if (this.getShot((String) playerAction.getValue(0)) == null) {
+                    if (player.getTank().getTankWeapon().isActivated()){
+                        result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.HIT, player.getTank().getTankWeapon().getCooldown())));
+                    }
                     if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
                         player.setCanDoAction(false);
                         this.addShootTimer(playerAction, collisionController, player);
@@ -57,31 +64,36 @@ public class PlayerActionController { //extends Observable {
                     }
                 }
             } else if (playerAction.getAction() == EnumActions.SPELL) {
-                Object result = player.getTank().activeSpell();
-                if (result instanceof Obstacle) {
-                    TankState state = player.getTank().getTankState();
-                    ((Obstacle) result).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
+                if (player.getTank().getTankSpell().isActivated()){
+                    result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.SPELL, player.getTank().getTankSpell().getCooldown())));
                 }
-                return result;
+                Object tmp = player.getTank().activeSpell();
+                if (tmp instanceof Obstacle) {
+                    TankState state = player.getTank().getTankState();
+                    ((Obstacle) tmp).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
+                    result.add(tmp);
+                }
             }
         }
-        return true;
+        return result;
     }
 
     private void generateShot(PlayerAction playerAction, CollisionController collisionController, Player player) {
         Shot shot = player.getTank().generateShot(player.getUser().getIdUser(), (String) playerAction.getValue(0), (Float) playerAction.getValue(1));
 
-        for (int i = 0; i < shot.getCollisionObject().size(); ++i) {
-            Block current = shot.getCollisionObject().get(i);
+        if (shot != null) {
+            for (int i = 0; i < shot.getCollisionObject().size(); ++i) {
+                Block current = shot.getCollisionObject().get(i);
 
-            CollisionObject obj = new CollisionObject(shot.getIgnoredObjectList(), shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
-                    shot.getUserId(), shot.getId(), shot.getType(), shot.getAngle());
-            obj.addObserver(shot);
-            shot.addObserver(obj);
-            collisionController.addCollisionObject(obj);
+                CollisionObject obj = new CollisionObject(shot.getIgnoredObjectList(), shot.getPositions(), current.getSizes(), current.getShiftOrigin(),
+                        shot.getUserId(), shot.getId(), shot.getType(), shot.getAngle());
+                obj.addObserver(shot);
+                shot.addObserver(obj);
+                collisionController.addCollisionObject(obj);
+            }
+            this.shots.add(shot);
+            player.getTank().getTankState().setGunAngle((Float) playerAction.getValue(1));
         }
-        this.shots.add(shot);
-        player.getTank().getTankState().setGunAngle((Float) playerAction.getValue(1));
     }
 
     private void addShootTimer(PlayerAction playerAction, CollisionController collisionController, Player player) {

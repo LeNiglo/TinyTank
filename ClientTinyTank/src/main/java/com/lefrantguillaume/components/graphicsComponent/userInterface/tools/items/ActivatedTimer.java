@@ -29,8 +29,15 @@ public class ActivatedTimer {
         }
     }
 
-    public void leave(){
-        if (this.delay != 0){
+    public ActivatedTimer(ActivatedTimer activatedTimer) {
+        this.activated = activatedTimer.activated;
+        this.delay = activatedTimer.delay;
+        this.running = activatedTimer.running;
+        this.timer = null;
+    }
+
+    public void leave() {
+        if (this.delay != 0) {
             if (this.activatedTask != null) {
                 this.activatedTask.run();
                 this.activatedTask.cancel();
@@ -58,6 +65,18 @@ public class ActivatedTimer {
         }
     }
 
+    public void startTimer(long delay) {
+        if (this.running == true) {
+            this.stopTimer();
+            this.startTimer();
+        } else {
+            this.running = true;
+            this.timer = new Timer();
+            this.activatedTask = new ActivatedTask();
+            this.timer.schedule(this.activatedTask, delay);
+        }
+    }
+
     public void stopTimer() {
         if (this.timer != null) {
             this.running = false;
@@ -76,6 +95,10 @@ public class ActivatedTimer {
 
     public boolean isRunning() {
         return this.running;
+    }
+
+    public long getDelay() {
+        return this.delay;
     }
 
     // SETTERS
