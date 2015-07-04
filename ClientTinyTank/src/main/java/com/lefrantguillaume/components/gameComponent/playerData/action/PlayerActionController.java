@@ -49,6 +49,7 @@ public class PlayerActionController extends Observable {
                     object.setY(player.getTank().getTankState().getY());
                 }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
+                if (this.getShot((String) playerAction.getValue(0)) == null)
                 if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
                     player.setCanDoAction(false);
                     this.addShootTimer(playerAction, collisionController, player);
@@ -56,13 +57,16 @@ public class PlayerActionController extends Observable {
                     this.generateShot(playerAction, collisionController, player);
                 }
             } else if (playerAction.getAction() == EnumActions.SPELL) {
-                Object result = player.getTank().activeSpell();
-                if (result instanceof Obstacle) {
-                    TankState state = player.getTank().getTankState();
-                    ((Obstacle) result).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
+                if (player.getTank().isSpellActivated() == false) {
+                    Object result = player.getTank().activeSpell();
+                    if (result instanceof Obstacle) {
+                        TankState state = player.getTank().getTankState();
+                        ((Obstacle) result).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
+                    }
+                    return result;
                 }
-                return result;
             }
+
         }
         this.setChanged();
         this.notifyObservers(true);
@@ -94,6 +98,15 @@ public class PlayerActionController extends Observable {
                 generateShot(playerAction, collisionController, player);
             }
         }, 2000);
+    }
+
+    private Shot getShot(String id){
+        for (Shot shot : this.shots){
+            if (shot.getId().equals(id)){
+                return shot;
+            }
+        }
+        return null;
     }
 }
 

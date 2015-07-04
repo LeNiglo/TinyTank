@@ -250,17 +250,19 @@ public class GameController extends Observable implements Observer {
         Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
         Obstacle obstacle;
 
-        if (task.getType() == EnumGameObject.SHIELD) {
-            return;
-        }
-        if (task.getType() == EnumGameObject.UNBREAKABLE) {
-            obstacle = this.obstacleConfigData.getWorldWall(task.getObstacleId());
-        } else {
-            obstacle = this.obstacleConfigData.getObstacle(task.getType());
-        }
-        if (obstacle != null) {
-            obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
-            this.mapController.addObstacle(obstacle);
+        if (this.getObstacle(task.getObstacleId()) == null) {
+            if (task.getType() == EnumGameObject.SHIELD) {
+                return;
+            }
+            if (task.getType() == EnumGameObject.UNBREAKABLE) {
+                obstacle = this.obstacleConfigData.getWorldWall(task.getObstacleId());
+            } else {
+                obstacle = this.obstacleConfigData.getObstacle(task.getType());
+            }
+            if (obstacle != null) {
+                obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
+                this.mapController.addObstacle(obstacle);
+            }
         }
     }
 

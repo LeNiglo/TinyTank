@@ -101,4 +101,8 @@ public class Tank {
     public EnumGameObject getTankBox() {
         return this.tankBox;
     }
+
+    public boolean isSpellActivated(){
+        return this.tankSpell.isActivate();
+    }
 }
