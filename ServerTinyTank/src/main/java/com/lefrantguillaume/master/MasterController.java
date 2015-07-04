@@ -154,7 +154,6 @@ public class MasterController extends Observable implements Observer {
             this.userInterface.refreshPlayers();
         } else if (task.getKey().equals(EnumTargetTask.MASTER_CONTROLLER)) {
             this.doTask(o, task.getValue());
-            this.userInterface.refreshPlayers();
         }
     }
 

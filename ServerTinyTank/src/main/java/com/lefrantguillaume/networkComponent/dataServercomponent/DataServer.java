@@ -45,8 +45,8 @@ public class DataServer {
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        // String masterServer = "http://tinytank.lefrantguillaume.com/api/server/";
-        String masterServer = "http://tinytank.dev/api/server/";
+        String masterServer = "http://tinytank.lefrantguillaume.com/api/server/";
+        // String masterServer = "http://tinytank.dev/api/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -147,10 +147,12 @@ public class DataServer {
         try {
             SendStatsSnd st = new SendStatsSnd(this.id, ServerConfig.gameName, players);
             ClientResponse response = this.getClientResponse(st, "add_game_stats");
-            SendStatsRcv output = response.getEntity(SendStatsRcv.class);
-            if (!output.getRes()) {
-                Log.error("Master server error: " + output.getErr());
-            }
+            // SendStatsRcv output = response.getEntity(SendStatsRcv.class);
+            String output = response.getEntity(String.class);
+            WindowController.addConsoleMsg("END MATCH : " + output);
+            // if (!output.getRes()) {
+            //    Log.error("Master server error: " + output.getErr());
+            // }
         } catch (Exception e) {
             Log.error("Master: " + e.getMessage());
             e.printStackTrace();

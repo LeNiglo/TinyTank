@@ -403,16 +403,15 @@ public class GameController extends Observable {
     }
 
     public void newRound() {
-        MessageRoundState msg = new MessageRoundState("admin", "admin", false);
-        this.gameModeController.getCurrentMode().stop();
         WindowController.addConsoleMsg("NEW ROUND");
         this.setChanged();
         this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, this.getPlayers()));
+        this.gameModeController.getCurrentMode().stop();
         this.mapController.getCurrentMap().resetCurrentObject();
         this.clearTargets();
 
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(msg)));
+        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundState("admin", "admin", false))));
 
         this.targets.initGame(this.mapController, this.gameModeController.getCurrentMode().getObstacles());
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {

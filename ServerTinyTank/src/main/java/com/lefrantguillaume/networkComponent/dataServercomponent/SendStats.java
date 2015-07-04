@@ -76,5 +76,9 @@ class SendStatsSnd {
     public void setPlayers(List<PlayerStats> players) {
         this.players = players;
     }
+
+    public String getGameName() {
+        return gameName;
+    }
 }
 
