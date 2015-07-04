@@ -91,7 +91,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
             if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                 // TODO REMOVE THIS ON RELEASE
                 CurrentUser.setId(UUID.randomUUID().toString());
-                CurrentUser.setPseudo("CHEAT - " + this.loginField.getDisplayedText());
+                CurrentUser.setPseudo("CHEAT -" + this.loginField.getDisplayedText());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
             }
         }

@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
@@ -42,7 +43,7 @@ public class ChatElement extends InterfaceElement {
     }
 
     private void childInit() {
-        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, 20), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
+        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, StringTools.charSizeY()), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
                 new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID));
         float chatSizeY = 170;
         this.stringListElement = new StringListElement(new BodyRect(new Rectangle(this.body.getMinX(), this.body.getMinY(), this.body.getSizeX(), chatSizeY)));

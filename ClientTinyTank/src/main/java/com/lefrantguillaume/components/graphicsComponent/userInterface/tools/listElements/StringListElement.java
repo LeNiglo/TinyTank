@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.li
 
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -38,13 +39,14 @@ public class StringListElement extends ListElement {
     @Override
     protected void updatePosition() {
         if (this.body != null) {
-            this.toPrint = (int) (body.getSizeY() / 20);
-            this.maxLength = (int) (this.body.getSizeX() / 10) - 1;
+            this.toPrint = (int) (body.getSizeY() / StringTools.charSizeY());
+            this.maxLength = (int) (this.body.getSizeX() / StringTools.charSizeX()) - 1;
+            int border = 10;
 
-            int line = 10;
+            int line = border;
             for (int i = 0; i < this.toPrint; ++i) {
-                this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getMinX() + 10, this.body.getMinY() + line, this.body.getSizeX() - 10, 20)));
-                line += 20;
+                this.positionMessages.add(0, new BodyRect(new Rectangle(this.body.getMinX() + border, this.body.getMinY() + line, this.body.getSizeX() - StringTools.charSizeX(), StringTools.charSizeY())));
+                line += StringTools.charSizeY();
             }
         }
     }

@@ -78,6 +78,9 @@ public abstract class Element {
     }
 
     public void setBodyColor(Color color){
+        if (this.body == null){
+            this.body = new BodyRect(null);
+        }
         this.body.setColor(color);
     }
 

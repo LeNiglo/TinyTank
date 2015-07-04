@@ -23,9 +23,9 @@ public enum EnumOverlayElement {
     TABLE_STAT("tableStat", TABLE.index),
     TABLE_ICON("tableIcon", TABLE.index),
     CUSTOM_MENU("customMenu", CUSTOM.index),
-    CUSTOM_MENU_SETTINGS("customMenuSettings", CUSTOM.index),
-    CUSTOM_MENU_CONTROLS("customMenuControls", CUSTOM.index),
-    CUSTOM_MENU_SCREEN("customMenuScreen", CUSTOM.index),
+    TABLE_MENU_SETTINGS("tableMenuSettings", CUSTOM.index),
+    TABLE_MENU_CONTROLS("tableMenuControls", CUSTOM.index),
+    TABLE_MENU_SCREEN("tableMenuScreen", CUSTOM.index),
 
 
     // primitive

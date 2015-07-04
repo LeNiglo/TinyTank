@@ -45,4 +45,12 @@ public class StringTools {
         }
         return result;
     }
+
+    public static float charSizeX(){
+        return 9.2f;
+    }
+
+    public static float charSizeY(){
+        return 20f;
+    }
 }

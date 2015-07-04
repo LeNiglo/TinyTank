@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
@@ -40,13 +41,13 @@ public class StringElement extends Element {
 
 
     @Override
-    public void leave(){
+    public void leave() {
         this.stringTimer.leave();
     }
 
     public void draw(Graphics g) {
         if (this.body != null) {
-            int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / 10);
+            int begin = this.stringTimer.getValue().length() - (int) (this.body.getSizeX() / StringTools.charSizeX());
             begin = (begin < 0 ? 0 : begin);
 
             String value = this.stringTimer.getValue().substring(begin);
@@ -61,7 +62,7 @@ public class StringElement extends Element {
 
     @Override
     public void draw(Graphics g, BodyRect body) {
-        int begin = this.stringTimer.getValue().length() - (int) (body.getSizeX() / 10);
+        int begin = this.stringTimer.getValue().length() - (int) (body.getSizeX() / StringTools.charSizeX());
         begin = (begin < 0 ? 0 : begin);
 
         String value = this.stringTimer.getValue().substring(begin);
@@ -71,35 +72,45 @@ public class StringElement extends Element {
         if (this.body != null && body.getColor() == null){
             body.setColor(this.body.getColor());
         }
+
         body.draw(g);
+  /*
+        if (this.body != null && body.getColor() == null) {
+            this.body = new BodyRect(body.getBody(), this.body.getColor());
+        }
+        else {
+            body.draw(g);
+        }
+        */
         g.setColor(this.color);
         g.drawString(value, position.getV1(), position.getV2());
     }
 
-    private Pair<Float, Float> getChoicePosition(BodyRect body, String value){
+    private Pair<Float, Float> getChoicePosition(BodyRect body, String value) {
         float x = body.getMinX();
         float y = body.getMinY();
 
         if (this.position == PositionInBody.MIDDLE_MID || this.position == PositionInBody.MIDDLE_UP) {
-            float sizeX = (body.getSizeX() / 2) - ((value.length() * 10) / 2);
+            float sizeX = (body.getSizeX() / 2) - ((value.length() * StringTools.charSizeX()) / 2);
 
             sizeX = (sizeX < 0 ? 0 : sizeX);
             x += sizeX;
         } else if (this.position == PositionInBody.RIGHT_MID || this.position == PositionInBody.RIGHT_UP) {
-            float sizeX = (body.getSizeX() - (value.length() * 10));
+            float sizeX = (body.getSizeX() - (value.length() * StringTools.charSizeX()));
 
-            sizeX = (sizeX < 0 ? 0: sizeX);
+            sizeX = (sizeX < 0 ? 0 : sizeX);
             x += sizeX;
         }
         return new Pair<>(x, y);
     }
+
     @Override
     public void update() {
     }
 
     @Override
     public boolean replace(Element element) {
-        if (element.getType() == EnumOverlayElement.STRING){
+        if (element.getType() == EnumOverlayElement.STRING) {
             StringElement newElement = (StringElement) element;
 
             this.stringTimer.replace(newElement.stringTimer);
@@ -111,7 +122,7 @@ public class StringElement extends Element {
 
     @Override
     public Object doTask(Object task) {
-        if (this.stringTimer.getValue().contains(":")){
+        if (this.stringTimer.getValue().contains(":")) {
             String v1 = this.stringTimer.getValue().substring(0, this.stringTimer.getValue().indexOf(":") + 1);
             String v2 = (String) task;
             this.stringTimer.setValue(v1 + v2);
@@ -141,12 +152,12 @@ public class StringElement extends Element {
 
     @Override
     public float getAbsoluteWidth() {
-        return this.stringTimer.getValue().length() * 10;
+        return this.stringTimer.getValue().length() * StringTools.charSizeX();
     }
 
     @Override
     public float getAbsoluteHeight() {
-        return 20;
+        return StringTools.charSizeY();
     }
 
     public String getValue() {

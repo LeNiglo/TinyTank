@@ -8,6 +8,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.ite
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundScore;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.Input;
 
 /**
  * Created by andres_k on 02/07/2015.
@@ -57,6 +58,8 @@ public class TableActivateElement extends TableElement {
                 this.start();
             }
             return true;
+        } else if (key == Input.KEY_ESCAPE){
+            this.stop();
         }
         return null;
     }

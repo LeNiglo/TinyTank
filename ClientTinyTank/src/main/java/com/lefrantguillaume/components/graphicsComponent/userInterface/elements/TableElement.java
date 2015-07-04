@@ -49,10 +49,20 @@ public class TableElement extends InterfaceElement {
     public void doTask(Object task) {
         if (task instanceof Element) {
             this.addElement((Element) task);
-        } else if (task instanceof Pair){
+        } else if (task instanceof Pair) {
             Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
             if (received.getV1() < this.reachable.length) {
                 this.reachable[received.getV1()] = received.getV2();
+            }
+        } else if (task instanceof Integer) {
+            int i = 0;
+            for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
+                if ((Integer) task == i) {
+                    entry.getKey().setBodyColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
+                } else {
+                    entry.getKey().setBodyColor(null);
+                }
+                ++i;
             }
         }
     }
@@ -95,7 +105,7 @@ public class TableElement extends InterfaceElement {
         Element key = this.containsKey(item);
         if (key != null) {
             Debug.debug("add elem: '" + item.toString() + "'");
-            if (checkSameHeadId(item.getId())){
+            if (checkSameHeadId(item.getId())) {
                 key.replace(item);
             } else {
                 this.table.get(key).setBody(this.positionBody.get(key.getId()).getV2());
@@ -107,7 +117,7 @@ public class TableElement extends InterfaceElement {
                     this.table.put(item, new StringListElement());
                 } else if (item.getType() == EnumOverlayElement.IMAGE) {
                     this.table.put(item, new ImageListElement());
-                }else if (item.getType() == EnumOverlayElement.BUTTON) {
+                } else if (item.getType() == EnumOverlayElement.BUTTON) {
                     this.table.put(item, new ButtonListElement(5));
                 } else {
                     return;
@@ -128,8 +138,8 @@ public class TableElement extends InterfaceElement {
         return true;
     }
 
-    private boolean containsHeadId(String head, String id){
-        if (head.contains(":")){
+    private boolean containsHeadId(String head, String id) {
+        if (head.contains(":")) {
             return head.substring(0, head.indexOf(":")).equals(id.substring(0, id.indexOf(":")));
         } else {
             return head.equals(id);
@@ -145,8 +155,8 @@ public class TableElement extends InterfaceElement {
         return null;
     }
 
-    protected void sendTaskToAll(Object task){
-        for (Map.Entry<Element, ListElement> entry : this.table.entrySet()){
+    protected void sendTaskToAll(Object task) {
+        for (Map.Entry<Element, ListElement> entry : this.table.entrySet()) {
             entry.getKey().doTask(task);
             entry.getValue().sendTask(task);
         }
@@ -166,13 +176,13 @@ public class TableElement extends InterfaceElement {
             float widthWithBorder = width - (border * 2);
             widthWithBorder = (widthWithBorder < 0 ? 0 : widthWithBorder);
             if (entry.getKey().getType() == EnumOverlayElement.IMAGE) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, width, height)),
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
                         new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height))));
             } else if (entry.getKey().getType() == EnumOverlayElement.STRING) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
                         new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
             } else if (entry.getKey().getType() == EnumOverlayElement.BUTTON) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, width, height)),
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
                         new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
             }
             currentX += width;

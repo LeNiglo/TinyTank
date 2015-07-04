@@ -6,7 +6,10 @@ import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageMove;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessagePutObstacle;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageShoot;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageSpell;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.codehaus.jettison.json.JSONException;
@@ -44,7 +47,9 @@ public class InputGame extends Observable {
         } else {
             keyName = Input.getKeyName(key);
         }
-        if (gameController != null) {
+        if ((keyName.equals(this.inputData.getInputValue(EnumInput.OVERLAY_1)) || keyName.equals(this.inputData.getInputValue(EnumInput.OVERLAY_2)))&& mode == EnumInput.RELEASED) {
+            return EnumInput.getIndexByValue(this.inputData.getInputByValue(keyName));
+        } else if (gameController != null) {
             Player player = gameController.getPlayer(CurrentUser.getId());
             if (player != null && player.isAlive() && player.isCanDoAction()) {
                 request = createMessageByInput(gameController, player, keyName, mode, posX, posY);

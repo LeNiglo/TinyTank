@@ -49,8 +49,8 @@ public class InputData {
 
     // SETTERS
 
-    public void setAvailableInput(EnumInput type, String value){
-        if (this.availableInput.containsKey(type)){
+    public boolean setAvailableInput(EnumInput type, String value){
+        if (this.availableInput.containsKey(type) && !this.availableInput.containsValue(value)){
             this.availableInput.replace(type, value);
 //            this.configs.remove(type.getValue());
             try {
@@ -59,6 +59,8 @@ public class InputData {
                 e.printStackTrace();
             }
             StringTools.writeInFile(this.file, this.configs.toString());
+            return true;
         }
+        return false;
     }
 }

@@ -27,12 +27,46 @@ public class TableMenuElement extends TableElement {
     }
 
     // FUNCTION
+    @Override
+    public void doTask(Object task) {
+        if (task instanceof Element) {
+            this.addElement((Element) task);
+        } else if (task instanceof Pair) {
+            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+            if (received.getV1() < this.reachable.length) {
+                this.reachable[received.getV1()] = received.getV2();
+            }
+        } else if (task instanceof Integer) {
+            int i = 0;
+            for (Map.Entry<String, Pair<BodyRect, BodyRect>> entry : this.positionBody.entrySet()) {
+                if ((Integer) task == i) {
+                    entry.getValue().getV1().setColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
+                } else {
+                    entry.getValue().getV1().setColor(null);
+                }
+                ++i;
+            }
+        } else if (task instanceof String){
+            String value = this.focusedElement.toString();
+            String keyString = (String) task;
+            String newValue;
+            if (value.contains(":")) {
+                value = value.substring(0, value.indexOf(":"));
+                newValue = StringTools.duplicateString(" ", 14 - value.length()) + keyString + StringTools.duplicateString(" ", 18 - keyString.length());
+            } else {
+                newValue = keyString;
+            }
+            this.focusedElement.doTask(newValue);
+            this.initFocusElement();
+        }
+    }
 
     @Override
     public Object eventReleased(int key, char c) {
         if (key == Input.KEY_ESCAPE) {
             if (this.isActivated()) {
                 this.stop();
+                this.initFocusElement();
                 return true;
             } else {
                 if (this.type == EnumOverlayElement.CUSTOM_MENU) {
@@ -44,15 +78,9 @@ public class TableMenuElement extends TableElement {
             if (this.focusedElement != null) {
                 String keyString = Input.getKeyName(key);
                 String value = this.focusedElement.toString();
-                String newValue;
                 if (value.contains(":")) {
                     value = value.substring(0, value.indexOf(":"));
-                    newValue = StringTools.duplicateString(" ", 14 - value.length()) + keyString + StringTools.duplicateString(" ", 18 - keyString.length());
-                } else {
-                    newValue = keyString;
                 }
-                this.focusedElement.doTask(newValue);
-                this.initFocusElement();
                 return new Pair<>(EnumInput.getEnumByValue(value), keyString);
             }
         }
