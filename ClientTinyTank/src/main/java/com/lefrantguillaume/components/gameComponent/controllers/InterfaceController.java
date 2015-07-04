@@ -21,8 +21,8 @@ import java.util.*;
  * Created by andres_k on 13/03/2015.
  */
 public class InterfaceController extends Observable implements Observer {
-    private HashMap<EnumInterfaceElement, Animator> backgroundAnimator;
-    private HashMap<EnumInterfaceElement, Animator> buttonAnimator;
+    private Map<EnumInterfaceElement, Animator> backgroundAnimator;
+    private Map<EnumInterfaceElement, Animator> buttonAnimator;
     private AvailableTank availableTank;
     private StateBasedGame stateWindow;
 

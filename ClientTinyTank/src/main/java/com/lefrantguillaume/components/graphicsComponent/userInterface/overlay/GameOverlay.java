@@ -163,6 +163,10 @@ public class GameOverlay extends Observable implements Observer {
                     Player player = (Player) received.getV3();
                     List<EnumOverlayElement> icons = EnumOverlayElement.getOverlayElementByGameObject(player.getTank().getTankState().getType()).getSameIndexList();
 
+                    for (int i = 0; i < icons.size(); ++i){
+                        Debug.debug("icon: " + icons.get(i));
+                        Debug.debug("animator: " + this.animatorOverlayData.getIconAnimator(icons.get(i)));
+                    }
                     if (icons.size() >= 3) {
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), "HitIcon", Element.PositionInBody.MIDDLE_MID));
                         tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), "SpellIcon", Element.PositionInBody.MIDDLE_MID));

@@ -40,7 +40,7 @@ public enum EnumOverlayElement {
     EXIT("exit"), SETTINGS("settings"), CONTROLS("controls"), SCREEN("screen"),
 
     // iconAnimator
-    TIGER("tiger", 4), SNIPER("sniper", 5), RUSHER("rusher", 6),
+    TIGER("tiger", 5), SNIPER("sniper", 6), RUSHER("rusher", 7),
     TIGER_HIT("tigerHit", TIGER.index), TIGER_SPELL("tigerSpell", TIGER.index), TIGER_BOX("tigerBox", TIGER.index),
     SNIPER_HIT("sniperHit", SNIPER.index), SNIPER_SPELL("sniperSpell", SNIPER.index), SNIPER_BOX("sniperBox", SNIPER.index),
     RUSHER_HIT("rusherHit", RUSHER.index), RUSHER_SPELL("rusherSpell", RUSHER.index), RUSHER_BOX("rusherBox", RUSHER.index);

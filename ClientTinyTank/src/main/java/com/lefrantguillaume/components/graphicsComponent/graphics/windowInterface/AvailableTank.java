@@ -5,14 +5,15 @@ import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.Graphics;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by andres_k on 20/03/2015.
  */
 public class AvailableTank {
-    private HashMap<EnumInterfaceElement, Animator> tankStatAnimator;
-    private HashMap<EnumInterfaceElement, Animator> tankPreviewAnimator;
-    private HashMap<EnumInterfaceElement, Boolean> available;
+    private Map<EnumInterfaceElement, Animator> tankStatAnimator;
+    private Map<EnumInterfaceElement, Animator> tankPreviewAnimator;
+    private Map<EnumInterfaceElement, Boolean> available;
     private EnumInterfaceElement currentTankStat;
     private final float xStat;
     private final float yStat;
@@ -31,7 +32,7 @@ public class AvailableTank {
         this.available.put(EnumInterfaceElement.RUSHER, true);
         this.tankStatAnimator = new HashMap<>();
         this.tankPreviewAnimator = new HashMap<>();
-        this.currentTankStat = EnumInterfaceElement.SNIPER;
+        this.currentTankStat = EnumInterfaceElement.TIGER;
     }
 
     public void drawCurrentTankStat(Graphics g) {
