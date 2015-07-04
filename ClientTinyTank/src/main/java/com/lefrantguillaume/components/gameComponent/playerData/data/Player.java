@@ -106,7 +106,7 @@ public class Player {
         boxValues.setV1(newPoint.getV1());
         boxValues.setV2(newPoint.getV2());
         boxValues.setV3(boxAngle);
-        Obstacle obstacle = obstacleConfigData.getObstacle(this.getTank().getTankBox());
+        Obstacle obstacle = obstacleConfigData.getObstacle(this.getTank().getTankBox().getBox());
         for (int i = 0; i < obstacle.getCollisionObject().size(); ++i) {
             if (collisionController.checkCollision(newPoint, obstacle.getCollisionObject().get(i).getSizes(), boxAngle, obstacle.getIgnoredObjectList(), obstacle.getType())) {
                 return null;

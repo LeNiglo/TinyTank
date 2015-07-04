@@ -4,7 +4,6 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.RandomTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
-import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankBox;
@@ -100,8 +99,8 @@ public class Tank {
         return this.tankSpell;
     }
 
-    public EnumGameObject getTankBox() {
-        return this.tankBox.getBox();
+    public TankBox getTankBox() {
+        return this.tankBox;
     }
 
     public boolean isSpellActivated(){

@@ -35,10 +35,12 @@ public class InterfaceController extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
+        if (arg instanceof Tuple) {
+            Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        if (received.getV2().equals(EnumTargetTask.INTERFACE)){
+            if (received.getV2().equals(EnumTargetTask.INTERFACE)) {
 
+            }
         }
     }
 

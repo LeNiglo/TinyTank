@@ -277,6 +277,13 @@ public class GameController extends Observable implements Observer {
                 obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
                 this.mapController.addObstacle(obstacle);
             }
+            if (task.getId().equals(CurrentUser.getId())){
+                Player player = getPlayer(CurrentUser.getId());
+                if (player != null){
+                    this.setChanged();
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.BOX, player.getTank().getTankBox().getCooldown()))));
+                }
+            }
         }
     }
 

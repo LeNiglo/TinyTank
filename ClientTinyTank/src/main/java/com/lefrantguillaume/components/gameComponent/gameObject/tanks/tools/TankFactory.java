@@ -82,6 +82,6 @@ public class TankFactory {
     public static TankBox createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         EnumGameObject boxType = EnumGameObject.getEnumByValue(config.getString("boxType"));
 
-        return new TankBox(boxType);
+        return new TankBox(boxType, 2000);
     }
 }
