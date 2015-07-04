@@ -2,7 +2,6 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.ColorTools;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -104,7 +103,7 @@ public class TableElement extends InterfaceElement {
     public void addElement(Element item) {
         Element key = this.containsKey(item);
         if (key != null) {
-            Debug.debug("add elem: '" + item.toString() + "'");
+ //           Debug.debug("add elem: '" + item.toString() + "'");
             if (checkSameHeadId(item.getId())) {
                 key.replace(item);
             } else {
@@ -122,7 +121,7 @@ public class TableElement extends InterfaceElement {
                 } else {
                     return;
                 }
-                Debug.debug("add table: " + item.toString());
+//                Debug.debug("add table: " + item.toString());
                 this.initPositionBody();
                 this.initTableBody();
             }
