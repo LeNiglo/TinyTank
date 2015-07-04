@@ -30,23 +30,24 @@ public class DataServer {
     }
 
     public void doTask(Observable o, Object arg) {
-        if (arg instanceof MessageModel) {
-            if (arg instanceof MessagePlayerNew) {
-                this.addUser(((MessagePlayerNew) arg).getPseudo());
+        new Thread(() -> {
+            if (arg instanceof MessageModel) {
+                if (arg instanceof MessagePlayerNew) {
+                    DataServer.this.addUser(((MessagePlayerNew) arg).getPseudo());
+                }
+                if (arg instanceof MessagePlayerDelete || arg instanceof MessageDisconnect) {
+                    DataServer.this.delUser(((MessageModel) arg).getPseudo());
+                }
             }
-            if (arg instanceof MessagePlayerDelete || arg instanceof MessageDisconnect) {
-                this.delUser(((MessageModel) arg).getPseudo());
+            if (arg instanceof HashMap) {
+                WindowController.addConsoleMsg("DATA SERVER NEW ROUND");
+                DataServer.this.endMatch((HashMap<String, Player>) arg);
             }
-        }
-        if (arg instanceof HashMap) {
-            WindowController.addConsoleMsg("DATA SERVER NEW ROUND");
-            this.endMatch((HashMap<String, Player>) arg);
-        }
+        });
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
         String masterServer = "http://tinytank.lefrantguillaume.com/api/server/";
-        // String masterServer = "http://tinytank.dev/api/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
