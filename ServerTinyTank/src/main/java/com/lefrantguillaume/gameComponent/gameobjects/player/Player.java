@@ -15,19 +15,10 @@ import java.util.List;
  */
 
 public class Player {
-    private String id;
-    private String pseudo;
     private String teamId;
     private Connection connection;
     private Tank tank;
-
-    private int currentScore = 0;
-    private int nbDeaths = 0;
-    private int nbPeopleKilled = 0;
-
-    private int nbShots = 0;
-    private int nbHitSomebody = 0;
-    private int nbGameObjectsDestroyed = 0;
+    private PlayerStats stats;
 
     private int ammo = 1;
     private int timerAmmo = 2;
@@ -36,8 +27,7 @@ public class Player {
     private Obstacle transportObjective;
 
     public Player(String id, String pseudo, String teamId, Tank tank, Connection connection) {
-        this.id = id;
-        this.pseudo = pseudo;
+        this.stats = new PlayerStats(id, pseudo);
         this.tank = tank;
         this.connection = connection;
         this.teamId = teamId;
@@ -46,33 +36,32 @@ public class Player {
     }
 
     public void init(){
-        this.currentScore = 0;
         this.tank.revive();
     }
 
     public void addKill() {
-        this.nbPeopleKilled += 1;
+        this.stats.addKill();
     }
 
     public void addDeath() {
-        this.nbDeaths += 1;
+        this.stats.addDeath();
     }
 
     public MessageModel addScore(int score){
-        this.currentScore += score;
-        return new MessageRoundScore(this.pseudo, this.id, this.teamId, EnumGameObject.NULL, this.currentScore);
+        this.stats.addScore(score);
+        return new MessageRoundScore(this.stats.getPseudo(), this.stats.getId(), this.teamId, EnumGameObject.NULL, this.stats.getCurrentScore());
     }
 
     public void addShoot() {
-        this.nbShots += 1;
+        this.stats.addShoot();
     }
 
-    public void addhitSomebody() {
-        this.nbHitSomebody += 1;
+    public void addHitSomebody() {
+        this.stats.addHitSomebody();
     }
 
     public void addGameObjectDestroyed() {
-        this.nbGameObjectsDestroyed += 1;
+        this.stats.addGameObjectDestroyed();
     }
 
     public void revive() {
@@ -85,7 +74,7 @@ public class Player {
     }
 
     public void setCurrentScore(int score) {
-        this.currentScore = score;
+        this.stats.setCurrentScore(score);
     }
 
     public void setConnection(Connection connectionID) {
@@ -110,23 +99,23 @@ public class Player {
 
     // GETTERS
     public String getId() {
-        return id;
+        return this.stats.getId();
     }
 
     public String getPseudo() {
-        return pseudo;
+        return this.stats.getPseudo();
     }
 
     public int getCurrentScore() {
-        return this.currentScore;
+        return this.stats.getCurrentScore();
     }
 
     public int getKills() {
-        return nbPeopleKilled;
+        return this.stats.getKills();
     }
 
     public int getDeaths() {
-        return nbDeaths;
+        return this.stats.getDeaths();
     }
 
     public Obstacle getTransportObjective() {
@@ -150,15 +139,15 @@ public class Player {
     }
 
     public int getNbShots() {
-        return nbShots;
+        return this.stats.getNbShots();
     }
 
     public int getNbHitSomebody() {
-        return nbHitSomebody;
+        return this.stats.getNbHitSomebody();
     }
 
     public int getNbGameObjectsDestroyed() {
-        return nbGameObjectsDestroyed;
+        return this.stats.getNbGameObjectsDestroyed();
     }
 
     public boolean isCanShoot() {
@@ -185,5 +174,9 @@ public class Player {
         List<EnumGameObject> types = new ArrayList<>();
 
         return types;
+    }
+
+    public PlayerStats getStats() {
+        return this.stats;
     }
 }

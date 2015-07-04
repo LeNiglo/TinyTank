@@ -168,7 +168,7 @@ public class Targets {
         List<MessageModel> messages = new ArrayList<>();
         Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
 
-        killer.addhitSomebody();
+        killer.addHitSomebody();
         if (result instanceof List){
             messages.addAll((List<MessageModel>)result);
         }

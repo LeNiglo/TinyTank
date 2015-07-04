@@ -8,10 +8,17 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.Mes
 public class MessageRoundState extends MessageModel {
     private boolean started;
 
-    MessageRoundState(){
+    public MessageRoundState(){
+    }
+
+    public MessageRoundState(String pseudo, String id, boolean started) {
+        this.pseudo = pseudo;
+        this.id = id;
+        this.started = started;
     }
 
     public boolean isStarted(){
         return this.started;
     }
 }
+

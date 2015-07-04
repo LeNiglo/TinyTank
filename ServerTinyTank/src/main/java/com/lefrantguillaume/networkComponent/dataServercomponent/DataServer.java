@@ -3,10 +3,7 @@ package com.lefrantguillaume.networkComponent.dataServerComponent;
 import com.esotericsoftware.minlog.Log;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageDisconnect;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerDelete;
-import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessagePlayerNew;
+import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.*;
 import com.lefrantguillaume.utils.ServerConfig;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -17,9 +14,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.api.json.JSONConfiguration;
 
-import java.util.List;
-import java.util.Observable;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -43,10 +38,15 @@ public class DataServer {
                 this.delUser(((MessageModel) arg).getPseudo());
             }
         }
+        if (arg instanceof HashMap) {
+            WindowController.addConsoleMsg("DATA SERVER NEW ROUND");
+            this.endMatch((HashMap<String, Player>) arg);
+        }
     }
 
     private ClientResponse getClientResponse(Object st, String path) {
-        String masterServer = "http://tinytank.lefrantguillaume.com/api/server/";
+        // String masterServer = "http://tinytank.lefrantguillaume.com/api/server/";
+        String masterServer = "http://tinytank.dev/api/server/";
 
         ClientConfig clientConfig = new DefaultClientConfig();
         clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
@@ -67,8 +67,8 @@ public class DataServer {
             InitServerRcv output = response.getEntity(InitServerRcv.class);
             if (!output.getRes()) {
                 Log.error("Master server error: " + output.getErr());
-                //TODO no exit 0 but display error message then quit
-                System.exit(0);
+                //TODO don't exit but display error message then quit
+                System.exit(1);
             } else {
                 this.id = output.getId();
                 Log.info("Server id: " + this.id);
@@ -117,7 +117,6 @@ public class DataServer {
 
     public void addUser(String pseudo) {
         try {
-            updateThread.shutdown();
             AddUserSnd st = new AddUserSnd(this.id, pseudo);
             ClientResponse response = this.getClientResponse(st, "add_user");
             AddUserRcv output = response.getEntity(AddUserRcv.class);
@@ -132,7 +131,6 @@ public class DataServer {
 
     public void delUser(String pseudo) {
         try {
-            updateThread.shutdown();
             DelUserSnd st = new DelUserSnd(this.id, pseudo);
             ClientResponse response = this.getClientResponse(st, "remove_user");
             DelUserRcv output = response.getEntity(DelUserRcv.class);
@@ -145,26 +143,13 @@ public class DataServer {
         }
     }
 
-    public void endMatch(List<Player> player) {
+    public void endMatch(HashMap<String, Player> players) {
         try {
-            updateThread.shutdown();
-            SendStatsSnd st = new SendStatsSnd(this.id, player);
+            SendStatsSnd st = new SendStatsSnd(this.id, ServerConfig.gameName, players);
             ClientResponse response = this.getClientResponse(st, "add_game_stats");
             SendStatsRcv output = response.getEntity(SendStatsRcv.class);
             if (!output.getRes()) {
                 Log.error("Master server error: " + output.getErr());
-            } else {
-                String users = "";
-                boolean first = true;
-                for (Player entry : player) {
-                    if (first) {
-                        first = false;
-                    } else {
-                        users += ", ";
-                    }
-                    users += entry.getPseudo();
-                }
-                WindowController.addConsoleMsg("Sent player stats for " + users + ".");
             }
         } catch (Exception e) {
             Log.error("Master: " + e.getMessage());
@@ -172,8 +157,8 @@ public class DataServer {
         }
     }
 
-    public static String getId(){
-        if (id == null){
+    public static String getId() {
+        if (id == null) {
             id = UUID.randomUUID().toString();
         }
         return id;
