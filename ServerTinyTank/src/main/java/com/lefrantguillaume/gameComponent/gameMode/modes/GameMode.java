@@ -56,12 +56,12 @@ public abstract class GameMode {
     public abstract Object doTask(Pair<EnumAction, Object> task, Object data);
 
     public String attributeATeam() {
-        String idTeam = "";
+        String idTeam = null;
         int lastNumber = 0;
 
         if (this.countOpenSlot() != 0) {
             for (int i = 0; i < this.teams.size(); ++i) {
-                if (idTeam.equals("") || lastNumber > this.teams.get(i).getCurrentPlayers()) {
+                if (idTeam == null || lastNumber > this.teams.get(i).getCurrentPlayers()) {
                     idTeam = this.teams.get(i).getId();
                     lastNumber = this.teams.get(i).getCurrentPlayers();
                 }
@@ -88,11 +88,11 @@ public abstract class GameMode {
     }
 
     public int countOpenSlot() {
-        int currentPlayer = 0;
+        int openSlot = 0;
         for (int i = 0; i < this.teams.size(); ++i) {
-            currentPlayer += this.teams.get(i).getCurrentPlayers();
+            openSlot += (this.maxPlayerTeam - this.teams.get(i).getCurrentPlayers());
         }
-        return this.maxPlayerTeam - currentPlayer;
+        return openSlot;
     }
 
     // SETTERS
@@ -134,8 +134,7 @@ public abstract class GameMode {
     public String isWinnerTeam() {
         String teamId = null;
 
-        for (int i = 0; i < this.teams.size(); ++i) {
-            Team current = this.teams.get(i);
+        for (Team current : this.teams) {
             if (current.getCurrentScore() >= this.getObjectiveScore()) {
                 teamId = current.getId();
             }
@@ -146,7 +145,6 @@ public abstract class GameMode {
     public List<Obstacle> getObstacles(){
         return this.obstacles;
     }
-
 
     public boolean isPlayable() {
         return this.playable;
@@ -159,5 +157,12 @@ public abstract class GameMode {
             }
         }
         return 0;
+    }
+
+    public String getTeam(int index){
+        if (index < this.teams.size()) {
+            return this.teams.get(index).getId();
+        }
+        return "";
     }
 }

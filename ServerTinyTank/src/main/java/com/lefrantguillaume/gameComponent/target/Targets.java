@@ -1,5 +1,7 @@
 package com.lefrantguillaume.gameComponent.target;
 
+
+import com.esotericsoftware.kryonet.Connection;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
@@ -26,11 +28,15 @@ public class Targets {
     private HashMap<String, Player> players;
     private HashMap<String, Shot> shots;
     private HashMap<String, Obstacle> obstacles;
+    private List<Pair<MessagePlayerNew, Connection>> waitingPeople;
+    private List<Pair<MessagePlayerObserverNew, Connection>> observerPeople;
 
     public Targets() {
         this.players = new HashMap<>();
         this.shots = new HashMap<>();
         this.obstacles = new HashMap<>();
+        this.waitingPeople = new ArrayList<>();
+        this.observerPeople = new ArrayList<>();
     }
 
     // FUNCTIONS
@@ -158,6 +164,23 @@ public class Targets {
         return messages;
     }
 
+    private List<MessageModel> doAKill(Player killer, Player target, GameModeController gameModeController){
+        List<MessageModel> messages = new ArrayList<>();
+        Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
+
+        killer.addhitSomebody();
+        if (result instanceof List){
+            messages.addAll((List<MessageModel>)result);
+        }
+        if (target.isTransportObjective()){
+            messages.add(this.addObstacle(target.getTransportObjective()));
+            target.setTransportObjective(null);
+        }
+        messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), target.getPseudo(), killer.getTeamId(), target.getTeamId()));
+        return messages;
+    }
+
+    // ADD
     public void addPlayer(Player player) {
         this.players.put(player.getId(), player);
     }
@@ -177,8 +200,23 @@ public class Targets {
         }
     }
 
-    public void deletePlayer(String playerId) {
-        this.players.remove(playerId);
+    public void addWaitingPeople(Pair<MessagePlayerNew, Connection> people){
+        this.waitingPeople.add(people);
+    }
+
+    public void addObserverPeople(Pair<MessagePlayerObserverNew, Connection> people){
+        this.observerPeople.add(people);
+    }
+
+    // DELETE
+    public MessagePlayerDelete deletePlayer(String playerId) {
+        Player player = this.getPlayer(playerId);
+        if (player != null){
+            MessagePlayerDelete message = new MessagePlayerDelete(player.getPseudo(), playerId);
+            this.players.remove(playerId);
+            return message;
+        }
+        return null;
     }
 
     public MessageShotUpdateState deleteShot(String shotId) {
@@ -193,25 +231,38 @@ public class Targets {
 
     public MessageObstacleUpdateState deleteObstacle(String obstacleId) {
         Obstacle obstacle = this.getObstacle(obstacleId);
-        MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
-        this.obstacles.remove(obstacleId);
-        return message;
+        if (obstacle != null) {
+            MessageObstacleUpdateState message = new MessageObstacleUpdateState(obstacle.getPlayerPseudo(), obstacle.getPlayerId(), obstacleId, 0);
+            this.obstacles.remove(obstacleId);
+            return message;
+        }
+        return null;
     }
 
-    private List<MessageModel> doAKill(Player killer, Player target, GameModeController gameModeController){
-        List<MessageModel> messages = new ArrayList<>();
-        Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
+    public MessagePlayerObserverDelete deleteWaitingPlayer(String id){
+        MessagePlayerObserverDelete message;
+        for (int i = 0; i < this.waitingPeople.size(); ++i){
+            Pair<MessagePlayerNew, Connection> player = this.waitingPeople.get(i);
+            if (player.getKey().getId().equals(id)){
+                message = new MessagePlayerObserverDelete(player.getKey().getPseudo(), player.getKey().getId());
+                this.waitingPeople.remove(i);
+                return message;
+            }
+        }
+        return null;
+    }
 
-        killer.addhitSomebody();
-        if (result instanceof List){
-            messages.addAll((List<MessageModel>)result);
+    public MessagePlayerObserverDelete deleteObserverPlayer(String id){
+        MessagePlayerObserverDelete message;
+        for (int i = 0; i < this.observerPeople.size(); ++i){
+            Pair<MessagePlayerObserverNew, Connection> player = this.observerPeople.get(i);
+            if (player.getKey().getId().equals(id)){
+                message = new MessagePlayerObserverDelete(player.getKey().getPseudo(), player.getKey().getId());
+                this.waitingPeople.remove(i);
+                return message;
+            }
         }
-        if (target.isTransportObjective()){
-            messages.add(this.addObstacle(target.getTransportObjective()));
-            target.setTransportObjective(null);
-        }
-        messages.add(new MessageRoundKill("admin", "admin", killer.getPseudo(), target.getPseudo(), killer.getTeamId(), target.getTeamId()));
-        return messages;
+        return null;
     }
 
     // GETTERS
@@ -246,5 +297,22 @@ public class Targets {
             playersName.add(this.players.get(i).getPseudo());
         }
         return playersName;
+    }
+
+    public List<Pair<MessagePlayerNew, Connection>> getWaitingPeople(){
+        return this.waitingPeople;
+    }
+
+    public List<Pair<MessagePlayerObserverNew, Connection>> getObserverPeople(){
+        return this.observerPeople;
+    }
+
+    public Pair<MessagePlayerNew, Connection> getFirstWaitingPlayer() {
+        if (this.waitingPeople.size() > 0) {
+            Pair<MessagePlayerNew, Connection> player = this.waitingPeople.get(0);
+            this.waitingPeople.remove(0);
+            return player;
+        }
+        return null;
     }
 }

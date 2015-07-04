@@ -81,9 +81,8 @@ public class GameController extends Observable implements Observer {
     }
 
     public void initGame() {
-        Player current = this.getPlayer(CurrentUser.getId());
         for (Player other : this.players) {
-            if (!current.getIdTeam().equals(other.getIdTeam())) {
+            if (CurrentUser.getIdTeam().equals(other.getIdTeam()) == false) {
                 other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
             }
         }
@@ -96,7 +95,13 @@ public class GameController extends Observable implements Observer {
 
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().equals(EnumTargetTask.GAME)) {
                 if (received.getV3() instanceof EnumWindow && this.stateWindow != null) {
-                    MessageModel request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+                    Player player = this.getPlayer(CurrentUser.getId());
+                    MessageModel request;
+                    if (player != null) {
+                        request = new MessagePlayerDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+                    } else {
+                        request = new MessagePlayerObserverDelete(CurrentUser.getPseudo(), CurrentUser.getId());
+                    }
                     CurrentUser.setInGame(false);
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.INPUT, EnumTargetTask.MESSAGE_SERVER, request));
@@ -113,37 +118,34 @@ public class GameController extends Observable implements Observer {
                             }
                         }
                     } else {
+                        Debug.debug("RECEIVED: " + message);
                         if (message instanceof MessagePlayerNew) {
                             Debug.debug("NEW PLAYER");
-                            this.newPlayer((MessagePlayerNew) message);
-                        }
-                        if (message instanceof MessagePlayerDelete) {
+                            this.doPlayerNew((MessagePlayerNew) message);
+                        } else if (message instanceof MessagePlayerObserverNew) {
+                            Debug.debug("NEW OBSERVER");
+                            this.doPlayerObserver((MessagePlayerObserverNew) message);
+                        } else if (message instanceof MessagePlayerDelete) {
                             Debug.debug("DELETE PLAYER");
-                            this.deletePlayer(message.getId());
-                        }
-                        if (message instanceof MessagePlayerUpdateState) {
+                            this.doPlayerDelete(message.getId());
+                        } else if (message instanceof MessagePlayerUpdateState) {
                             Debug.debug("UPDATE STATE PLAYER");
-                            this.changeStatePlayer((MessagePlayerUpdateState) message);
-                        }
-                        if (message instanceof MessagePlayerUpdatePosition) {
+                            this.doPlayerUpdateState((MessagePlayerUpdateState) message);
+                        } else if (message instanceof MessagePlayerUpdatePosition) {
                             Debug.debug("UPDATE POS PLAYER");
-                            this.changePositionPlayer((MessagePlayerUpdatePosition) message);
-                        }
-                        if (message instanceof MessagePlayerRevive) {
+                            this.doPlayerUpdatePosition((MessagePlayerUpdatePosition) message);
+                        } else if (message instanceof MessagePlayerRevive) {
                             Debug.debug("REVIVE PLAYER");
-                            this.revivePlayer((MessagePlayerRevive) message);
-                        }
-                        if (message instanceof MessagePutObstacle) {
+                            this.doRevivePlayer((MessagePlayerRevive) message);
+                        } else if (message instanceof MessagePutObstacle) {
                             Debug.debug("PUT OBJECT");
-                            this.putObject((MessagePutObstacle) message);
-                        }
-                        if (message instanceof MessageObstacleUpdateState) {
+                            this.doPutObstacle((MessagePutObstacle) message);
+                        } else if (message instanceof MessageObstacleUpdateState) {
                             Debug.debug("UPDATE STATE OBSTACLE");
-                            this.changeStateObstacle((MessageObstacleUpdateState) message);
-                        }
-                        if (message instanceof MessageShotUpdateState) {
+                            this.doObstacleUpdateState((MessageObstacleUpdateState) message);
+                        } else if (message instanceof MessageShotUpdateState) {
                             Debug.debug("UPDATE STATE SHOT");
-                            this.changeStateShot((MessageShotUpdateState) message);
+                            this.doShotUpdateState((MessageShotUpdateState) message);
                         }
                     }
                 }
@@ -153,7 +155,7 @@ public class GameController extends Observable implements Observer {
 
     // CHANGE FUNCTIONS
 
-    public void newPlayer(MessagePlayerNew task) {
+    public void doPlayerNew(MessagePlayerNew task) {
         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
             if (this.getPlayer(task.getId()) == null) {
                 this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
@@ -163,15 +165,13 @@ public class GameController extends Observable implements Observer {
                     CurrentUser.setIdTeam(task.getTeamId());
                     this.initGame();
                     this.setChanged();
-                    Debug.debug("SEND WELCOME");
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new MessageChat("Admin", "admin", true, "Welcome!")));
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, this.getPlayer(CurrentUser.getId())));
                 }
                 if (CurrentUser.isInGame() == true) {
                     Player other = this.getPlayer(task.getId());
-                    Player current = this.getPlayer(CurrentUser.getId());
-                    if (!current.getIdTeam().equals(other.getIdTeam())) {
+                    if (CurrentUser.getIdTeam().equals(other.getIdTeam()) == false) {
                         other.getTank().getTankState().setCurrentTeam(EnumGameObject.getEnemyEnum(other.getTank().getTankState().getType()));
                     }
                     MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
@@ -184,24 +184,31 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void addPlayer(Player player) {
-        Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
-
-        for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i) {
-            Block current = player.getTank().getTankState().getCollisionObject().get(i);
-            CollisionObject obj = new CollisionObject(player.getIgnoredObjectList(), player.getTank().getTankState().getPositions(), current.getSizes(),
-                    current.getShiftOrigin(), player.getUser().getIdUser(),
-                    player.getUser().getId(), player.getTank().getTankState().getType(),
-                    player.getTank().getTankState().getDirection().getAngle());
-            obj.addObserver(player.getTank().getTankState());
-            player.getTank().getTankState().addObserver(obj);
-            this.collisionController.addCollisionObject(obj);
+    public void doPlayerObserver(MessagePlayerObserverNew task) {
+        if (task.getId().equals(CurrentUser.getId())) {
+            CurrentUser.setIdTeam(task.getTeamId());
         }
-        this.players.add(player);
+        if (CurrentUser.isInGame() == true) {
+            Player current = this.getPlayer(CurrentUser.getId());
+            MessageModel request = new MessagePlayerUpdatePosition(CurrentUser.getPseudo(), CurrentUser.getId(),
+                    current.getTank().getTankState().getX(),
+                    current.getTank().getTankState().getY());
+            this.setChanged();
+            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, request));
+        }
     }
 
+    public void doPlayerDelete(String id) {
+        for (int i = 0; i < this.players.size(); ++i) {
+            if (this.players.get(i).getUser().getIdUser().equals(id)) {
+                this.getCollisionController().deleteCollisionObject(this.players.get(i).getUser().getId());
+                this.players.remove(i);
+                break;
+            }
+        }
+    }
 
-    public void changeStatePlayer(MessagePlayerUpdateState task) {
+    public void doPlayerUpdateState(MessagePlayerUpdateState task) {
         Player player = this.getPlayer(task.getId());
         if (player != null) {
             player.getTank().getTankState().setCurrentLife(task.getCurrentLife());
@@ -213,7 +220,7 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void changePositionPlayer(MessagePlayerUpdatePosition task) {
+    public void doPlayerUpdatePosition(MessagePlayerUpdatePosition task) {
         Debug.debug("new pos [" + task.getX() + "," + task.getY() + "] : id=" + task.getId());
         Player player = this.getPlayer(task.getId());
         if (player != null) {
@@ -232,14 +239,14 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void revivePlayer(MessagePlayerRevive task) {
+    public void doRevivePlayer(MessagePlayerRevive task) {
         Player player = this.getPlayer(task.getId());
         if (player != null) {
             player.revive(new Pair<>(task.getPosX(), task.getPosY()));
         }
     }
 
-    public void putObject(MessagePutObstacle task) {
+    public void doPutObstacle(MessagePutObstacle task) {
         Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
         Obstacle obstacle;
 
@@ -257,14 +264,14 @@ public class GameController extends Observable implements Observer {
         }
     }
 
-    public void changeStateObstacle(MessageObstacleUpdateState task) {
+    public void doObstacleUpdateState(MessageObstacleUpdateState task) {
         Obstacle obstacle = this.getObstacle(task.getObstacleId());
         if (obstacle != null) {
             obstacle.setCurrentLife(task.getCurrentLife());
         }
     }
 
-    public void changeStateShot(MessageShotUpdateState task) {
+    public void doShotUpdateState(MessageShotUpdateState task) {
         Shot shot = this.getShot(task.getShotId());
         if (shot != null) {
             shot.setCurrentLife(task.getCurrentDamageShot());
@@ -296,14 +303,20 @@ public class GameController extends Observable implements Observer {
         this.obstacleConfigData.initObstacle(config, this.animatorGameData);
     }
 
-    public void deletePlayer(String id) {
-        for (int i = 0; i < this.players.size(); ++i) {
-            if (this.players.get(i).getUser().getIdUser().equals(id)) {
-                this.getCollisionController().deleteCollisionObject(this.players.get(i).getUser().getId());
-                this.players.remove(i);
-                break;
-            }
+    public void addPlayer(Player player) {
+        Debug.debug("add player: [" + player.getTank().getTankState().getX() + "," + player.getTank().getTankState().getY() + "]");
+
+        for (int i = 0; i < player.getTank().getTankState().getCollisionObject().size(); ++i) {
+            Block current = player.getTank().getTankState().getCollisionObject().get(i);
+            CollisionObject obj = new CollisionObject(player.getIgnoredObjectList(), player.getTank().getTankState().getPositions(), current.getSizes(),
+                    current.getShiftOrigin(), player.getUser().getIdUser(),
+                    player.getUser().getId(), player.getTank().getTankState().getType(),
+                    player.getTank().getTankState().getDirection().getAngle());
+            obj.addObserver(player.getTank().getTankState());
+            player.getTank().getTankState().addObserver(obj);
+            this.collisionController.addCollisionObject(obj);
         }
+        this.players.add(player);
     }
 
     // UPDATE GAME FUNCTIONS

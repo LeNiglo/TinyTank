@@ -27,6 +27,8 @@ public class NetworkRegister {
         kryo.register(MessageChangeTeam.class);
         kryo.register(MessagePlayerDelete.class);
         kryo.register(MessagePlayerNew.class);
+        kryo.register(MessagePlayerObserverDelete.class);
+        kryo.register(MessagePlayerObserverNew.class);
         kryo.register(MessagePlayerUpdateState.class);
         kryo.register(MessagePlayerUpdatePosition.class);
         kryo.register(MessagePlayerRevive.class);

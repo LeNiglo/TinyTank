@@ -34,11 +34,14 @@ import java.util.*;
 
 public class GameController extends Observable {
     private MapController mapController;
-    private ObstacleConfigData obstacleConfigData;
     private GameModeController gameModeController;
-    private Targets targets;
-    private boolean onNewRound;
+
+    private ObstacleConfigData obstacleConfigData;
     private TankConfigData tankConfigData;
+
+    private Targets targets;
+
+    private boolean onNewRound;
     private HashMap<String, HashMap<String, List<List<String>>>> collisions;
     /////////////// idShot /////// idTarget //////// idPlayer
 
@@ -65,8 +68,12 @@ public class GameController extends Observable {
                 this.doMessageDownload(connection);
             } else if (received instanceof MessagePlayerNew) {
                 this.doMessagePlayerNew((MessagePlayerNew) received, connection);
+            } else if (received instanceof MessagePlayerObserverNew) {
+                this.doMessagePlayerObserver((MessagePlayerObserverNew) received, connection, true);
             } else if (received instanceof MessagePlayerDelete) {
                 this.doMessagePlayerDelete((MessagePlayerDelete) received);
+            } else if (received instanceof MessagePlayerObserverDelete) {
+                this.doMessagePlayerObserverDelete((MessagePlayerObserverDelete) received);
             } else if (received instanceof MessageDisconnect) {
                 this.doMessageDisconnect(connection);
             } else if (received instanceof MessageCollision) {
@@ -131,25 +138,64 @@ public class GameController extends Observable {
     public void doMessagePlayerNew(MessagePlayerNew received, Connection connection) {
         WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
 
-        this.sendAllTargetsToSomeone(connection, true, true, false);
-        this.targets.addPlayer(new Player(received.getId(), received.getPseudo(), this.gameModeController.getCurrentMode().attributeATeam(),
-                this.tankConfigData.getTank(received.getEnumTanks()), connection));
-        Player player = this.targets.getPlayer(received.getId());
-        this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
-        Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
-                this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()), player.getTank().getTankState().getCollisionObject(), false);
-        WindowController.addConsoleMsg("joueur team: " + this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()) + " at position: " + newPositions);
+        String teamId = this.gameModeController.getCurrentMode().attributeATeam();
+        if (teamId != null) {
+            this.sendAllTargetsToSomeone(connection, true, true, false);
+            this.targets.addPlayer(new Player(received.getId(), received.getPseudo(), teamId,
+                    this.tankConfigData.getTank(received.getEnumTanks()), connection));
+            Player player = this.targets.getPlayer(received.getId());
+            this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), 1);
+            Pair<Float, Float> newPositions = this.mapController.getCurrentMap().calcRespawnPoint(this.gameModeController.getCurrentGameMode(),
+                    this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()), player.getTank().getTankState().getCollisionObject(), false);
+            WindowController.addConsoleMsg("joueur team: " + this.gameModeController.getCurrentMode().getIndexTeam(player.getTeamId()) + " at position: " + newPositions);
 
-        if (newPositions != null) {
-            received.setPosX(newPositions.getKey());
-            received.setPosY(newPositions.getValue());
-            received.setTeamId(player.getTeamId());
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
+            if (newPositions != null) {
+                received.setPosX(newPositions.getKey());
+                received.setPosY(newPositions.getValue());
+                received.setTeamId(player.getTeamId());
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+                this.setChanged();
+                this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
+            }
+            this.sendAllTargetsToSomeone(connection, false, false, true);
+        } else {
+            received.setTeamId(this.gameModeController.getCurrentMode().getTeam(0));
+            this.doMessagePlayerObserver(received, connection);
         }
-        this.sendAllTargetsToSomeone(connection, false, false, true);
+    }
+
+    public void doMessagePlayerObserver(MessagePlayerObserverNew received, Connection connection, boolean createObserver) {
+        WindowController.addConsoleMsg("ADD OBSERVER");
+
+        if (createObserver == true) {
+            this.targets.addObserverPeople(new Pair<>(received, connection));
+        }
+        this.setChanged();
+        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+        this.sendAllTargetsToSomeone(connection, true, true, true);
+    }
+
+    public void doMessagePlayerObserver(MessagePlayerNew received, Connection connection) {
+        this.targets.addWaitingPeople(new Pair<>(received, connection));
+        this.doMessagePlayerObserver(new MessagePlayerObserverNew(received.getPseudo(), received.getId(), this.gameModeController.getCurrentMode().getTeam(0)), connection, false);
+    }
+
+    public void doMessagePlayerObserverDelete(MessagePlayerObserverDelete received){
+
+        if (this.targets.deleteObserverPlayer(received.getId()) != null){
+            this.targets.deleteWaitingPlayer(received.getId());
+        }
+        this.setChanged();
+        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+    }
+
+    public void connectAWaitingPlayer(){
+        Pair<MessagePlayerNew, Connection> message = this.targets.getFirstWaitingPlayer();
+
+        if (message != null){
+            this.doMessagePlayerNew(message.getKey(), message.getValue());
+        }
     }
 
     public void doMessagePlayerDelete(MessagePlayerDelete received) {
@@ -157,7 +203,7 @@ public class GameController extends Observable {
         Player player = this.targets.getPlayer(received.getId());
         if (player != null) {
             this.gameModeController.getCurrentMode().changePlayerInTeam(player.getTeamId(), -1);
-            if (player.isTransportObjective()){
+            if (player.isTransportObjective()) {
                 MessagePutObstacle message = this.targets.addObstacle(player.getTransportObjective());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
@@ -166,6 +212,7 @@ public class GameController extends Observable {
             this.targets.deletePlayer(received.getId());
             this.setChanged();
             this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, received));
+            this.connectAWaitingPlayer();
         }
         this.setChanged();
         this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
@@ -234,15 +281,7 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable() || this.targets == null || this.targets.getPlayers() == null)
             return;
         System.out.println("Update: " + received.getX() + " / " + received.getY());
-        for (java.util.Map.Entry entry : this.targets.getPlayers().entrySet()) {
-            String id = (String) entry.getKey();
-            Player player = (Player) entry.getValue();
-
-            if (!id.equals(received.getId())){
-                setChanged();
-                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(player.getConnection(), received)));
-            }
-        }
+        this.sendToAllExceptMe(received);
     }
 
     public void doMessageMove(MessageMove received) {
@@ -328,15 +367,11 @@ public class GameController extends Observable {
 
     public void kickAll() {
         for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
-            String key = entry.getKey();
-            Player value = entry.getValue();
-            System.out.println("Plyer to be kicked: " + value.getPseudo());
-            MessagePlayerDelete md = new MessagePlayerDelete();
-            md.setId(key);
-            md.setPseudo(value.getPseudo());
-            this.setChanged();
-            this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, RequestFactory.createRequest(value.getConnection(), md)));
-            this.doTask(null, md);
+            System.out.println("Plyer to be kicked: " + entry.getValue().getPseudo());
+            MessagePlayerDelete message = this.targets.deletePlayer(entry.getKey());
+            if (message != null) {
+                this.sendToAllExceptMe(message);
+            }
         }
     }
 
@@ -425,18 +460,46 @@ public class GameController extends Observable {
             }
         }
 
-        if (teams == true){
-            for (Team team : this.gameModeController.getCurrentMode().getTeams()){
+        if (teams == true) {
+            for (Team team : this.gameModeController.getCurrentMode().getTeams()) {
                 MessageRoundScore tmpMessage = new MessageRoundScore(team.getName(), team.getId(), team.getId(), EnumGameObject.NULL, team.getCurrentScore());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
             }
-            for (java.util.Map.Entry<String, Player> entry : this.getPlayers().entrySet()){
+            for (java.util.Map.Entry<String, Player> entry : this.getPlayers().entrySet()) {
                 MessageRoundScore tmpMessage = new MessageRoundScore(entry.getValue().getPseudo(), entry.getValue().getId(), entry.getValue().getTeamId(), EnumGameObject.NULL, entry.getValue().getCurrentScore());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(connection, tmpMessage)));
             }
         }
+
+    }
+
+    public void sendToAllExceptMe(MessageModel message) {
+        for (java.util.Map.Entry entry : this.targets.getPlayers().entrySet()) {
+            String id = (String) entry.getKey();
+            Player player = (Player) entry.getValue();
+
+            if (!id.equals(message.getId())) {
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(player.getConnection(), message)));
+            }
+        }
+
+        for (Pair<MessagePlayerNew, Connection> player : this.targets.getWaitingPeople()) {
+            if (!player.getKey().getId().equals(message.getId())) {
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(player.getValue(), message)));
+            }
+        }
+
+        for (Pair<MessagePlayerObserverNew, Connection> player : this.targets.getObserverPeople()) {
+            if (!player.getKey().getId().equals(message.getId())) {
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(player.getValue(), message)));
+            }
+        }
+
     }
 
     // TODO : à refaire
