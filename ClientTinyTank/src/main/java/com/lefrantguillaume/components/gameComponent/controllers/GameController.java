@@ -201,6 +201,7 @@ public class GameController extends Observable implements Observer {
     public void doPlayerDelete(String id) {
         for (int i = 0; i < this.players.size(); ++i) {
             if (this.players.get(i).getUser().getIdUser().equals(id)) {
+                this.players.get(i).getTank().explode();
                 this.getCollisionController().deleteCollisionObject(this.players.get(i).getUser().getId());
                 this.players.remove(i);
                 break;

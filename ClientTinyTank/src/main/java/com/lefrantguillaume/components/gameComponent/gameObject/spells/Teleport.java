@@ -24,6 +24,7 @@ public class Teleport extends Spell {
         this.ignored.add(EnumGameObject.IRON_WALL);
         this.ignored.add(EnumGameObject.PLASMA_WALL);
         this.ignored.add(EnumGameObject.MINE);
+
         this.type = EnumGameObject.TELEPORT;
         this.tankState = null;
         this.animator = new Animator(animator);
@@ -31,11 +32,22 @@ public class Teleport extends Spell {
         this.isActive = false;
     }
 
+    public Teleport(Teleport teleport) {
+        this.ignored = new ArrayList<>();
+        this.ignored.addAll(teleport.ignored);
+
+        this.type = EnumGameObject.TELEPORT;
+        this.tankState = null;
+        this.animator = new Animator(teleport.animator);
+        this.duration = teleport.duration;
+        this.isActive = teleport.isActive;
+    }
+
     // FUNCTIONS
 
     @Override
     public Object activeSpell() {
-        if (tankState != null) {
+        if (tankState != null && this.isActive == false) {
             Debug.debug("ACTIVATED !");
             this.isActive = true;
             this.tankState.setBoostEffect(300);

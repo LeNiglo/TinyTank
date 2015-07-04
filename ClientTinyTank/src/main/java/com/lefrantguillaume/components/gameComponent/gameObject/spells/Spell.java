@@ -27,6 +27,7 @@ public class Spell {
         if (timer != null) {
             this.timer.cancel();
             this.deleteSpell();
+            this.timer = null;
         }
     }
 

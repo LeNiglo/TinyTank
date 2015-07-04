@@ -63,6 +63,7 @@ public class Tank {
 
     public void explode() {
         this.tankState.explode();
+        this.tankSpell.stopCurrentSpell();
     }
 
     public void revive(Pair<Float, Float> positions) {

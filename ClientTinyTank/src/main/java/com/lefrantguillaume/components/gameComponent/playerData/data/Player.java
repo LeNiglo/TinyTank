@@ -2,7 +2,6 @@ package com.lefrantguillaume.components.gameComponent.playerData.data;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.Utils.tools.MathTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -13,7 +12,8 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.Tank;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAction;
 import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerActionController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by andres_k on 13/03/2015.
@@ -134,7 +134,7 @@ public class Player {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public List<EnumGameObject> getIgnoredObjectList() {

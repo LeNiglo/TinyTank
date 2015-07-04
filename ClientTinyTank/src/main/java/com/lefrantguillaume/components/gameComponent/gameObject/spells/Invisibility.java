@@ -22,11 +22,19 @@ public class Invisibility extends Spell {
         this.isActive = false;
     }
 
+    public Invisibility(Invisibility invisibility) {
+        this.type = EnumGameObject.INVISIBILITY;
+        this.tankState = null;
+        this.animator = new Animator(invisibility.animator);
+        this.duration = invisibility.duration;
+        this.isActive = invisibility.isActive;
+    }
+
     // FUNCTIONS
 
     @Override
     public Object activeSpell(){
-        if (this.tankState != null) {
+        if (this.tankState != null && this.isActive == false) {
             this.isActive = true;
             Color filter;
             if (tankState.getCurrentTeam().getValue().contains("Enemy")) {

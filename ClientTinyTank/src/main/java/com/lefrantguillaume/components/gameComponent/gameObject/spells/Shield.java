@@ -22,15 +22,26 @@ public class Shield extends Spell {
         this.isActive = false;
     }
 
+    public Shield(Shield shield){
+        this.type = EnumGameObject.SHIELD;
+        this.obstacleConfigData = shield.obstacleConfigData;
+        this.animator = null;
+        this.duration = shield.duration;
+        this.isActive = shield.isActive;
+    }
+
     // FUNCTIONS
 
     @Override
     public Object activeSpell(){
-        this.isActive = true;
-        this.shield = this.obstacleConfigData.getObstacle(EnumGameObject.SHIELD);
-        this.timer = new Timer();
-        this.timer.schedule(new myTask(), this.duration);
-        return shield;
+        if (this.isActive == false) {
+            this.isActive = true;
+            this.shield = this.obstacleConfigData.getObstacle(EnumGameObject.SHIELD);
+            this.timer = new Timer();
+            this.timer.schedule(new myTask(), this.duration);
+            return shield;
+        }
+        return null;
     }
 
     @Override

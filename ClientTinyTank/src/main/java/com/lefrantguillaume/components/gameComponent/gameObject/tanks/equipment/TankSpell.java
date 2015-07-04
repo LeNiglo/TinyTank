@@ -4,6 +4,7 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.spells.Spell;
+import com.lefrantguillaume.components.gameComponent.gameObject.spells.SpellFactory;
 
 /**
  * Created by andres_k on 24/03/2015.
@@ -16,7 +17,7 @@ public class TankSpell {
     }
 
     public TankSpell(TankSpell tankSpell) {
-        this.spell = tankSpell.spell;
+        this.spell = SpellFactory.copySpell(tankSpell.spell);
     }
 
     // FUNCTIONS

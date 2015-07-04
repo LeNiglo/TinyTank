@@ -10,14 +10,13 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 
 import java.util.List;
-import java.util.Observable;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
  * Created by andres_k on 13/03/2015.
  */
-public class PlayerActionController extends Observable {
+public class PlayerActionController { //extends Observable {
     private List<Shot> shots;
 
     public PlayerActionController(List<Shot> shots) {
@@ -49,27 +48,23 @@ public class PlayerActionController extends Observable {
                     object.setY(player.getTank().getTankState().getY());
                 }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
-                if (this.getShot((String) playerAction.getValue(0)) == null)
-                if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
-                    player.setCanDoAction(false);
-                    this.addShootTimer(playerAction, collisionController, player);
-                } else {
-                    this.generateShot(playerAction, collisionController, player);
+                if (this.getShot((String) playerAction.getValue(0)) == null) {
+                    if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
+                        player.setCanDoAction(false);
+                        this.addShootTimer(playerAction, collisionController, player);
+                    } else {
+                        this.generateShot(playerAction, collisionController, player);
+                    }
                 }
             } else if (playerAction.getAction() == EnumActions.SPELL) {
-                if (player.getTank().isSpellActivated() == false) {
-                    Object result = player.getTank().activeSpell();
-                    if (result instanceof Obstacle) {
-                        TankState state = player.getTank().getTankState();
-                        ((Obstacle) result).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
-                    }
-                    return result;
+                Object result = player.getTank().activeSpell();
+                if (result instanceof Obstacle) {
+                    TankState state = player.getTank().getTankState();
+                    ((Obstacle) result).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
                 }
+                return result;
             }
-
         }
-        this.setChanged();
-        this.notifyObservers(true);
         return true;
     }
 
@@ -100,9 +95,9 @@ public class PlayerActionController extends Observable {
         }, 2000);
     }
 
-    private Shot getShot(String id){
-        for (Shot shot : this.shots){
-            if (shot.getId().equals(id)){
+    private Shot getShot(String id) {
+        for (Shot shot : this.shots) {
+            if (shot.getId().equals(id)) {
                 return shot;
             }
         }
