@@ -56,6 +56,7 @@ public class Animator implements Observer {
 
         if (animation.getFrameCount() == 1){
             animation.setAutoUpdate(false);
+            animation.setLooping(false);
         }
 
         if (this.animations.containsKey(type)) {
