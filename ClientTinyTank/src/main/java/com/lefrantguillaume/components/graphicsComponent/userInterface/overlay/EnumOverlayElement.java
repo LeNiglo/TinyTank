@@ -63,7 +63,7 @@ public enum EnumOverlayElement {
         return this.index;
     }
 
-    public EnumOverlayElement getTypeByIndex() {
+    public EnumOverlayElement getEnumByIndex() {
         EnumOverlayElement[] enums = EnumOverlayElement.values();
         for (int i = 0; i < enums.length; ++i) {
             EnumOverlayElement item = enums[i];
@@ -74,7 +74,7 @@ public enum EnumOverlayElement {
         return NOTHING;
     }
 
-    public static EnumOverlayElement getTypeByValue(String value) {
+    public static EnumOverlayElement getEnumByValue(String value) {
         Debug.debug("try to find '" + value + "'");
         EnumOverlayElement[] enums = EnumOverlayElement.values();
         for (int i = 0; i < enums.length; ++i) {

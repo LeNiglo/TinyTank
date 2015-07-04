@@ -39,9 +39,9 @@ public class InputData {
     }
 
     public String getInputByValue(String value){
-        for (Map.Entry entry : this.availableInput.entrySet()){
+        for (Map.Entry<EnumInput, String> entry : this.availableInput.entrySet()){
             if (entry.getValue().equals(value)){
-                return ((EnumInput)entry.getKey()).getValue();
+                return entry.getKey().getValue();
             }
         }
         return "";
@@ -52,7 +52,6 @@ public class InputData {
     public boolean setAvailableInput(EnumInput type, String value){
         if (this.availableInput.containsKey(type) && !this.availableInput.containsValue(value)){
             this.availableInput.replace(type, value);
-//            this.configs.remove(type.getValue());
             try {
                 this.configs.put(type.getValue(), value);
             } catch (JSONException e) {

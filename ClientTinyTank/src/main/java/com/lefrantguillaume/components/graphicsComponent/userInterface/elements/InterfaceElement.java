@@ -60,4 +60,9 @@ public abstract class InterfaceElement {
     public BodyRect getBody(){
         return this.body;
     }
+
+    // SETTERS
+    public void setReachable(boolean[] reachable){
+        this.reachable = reachable;
+    }
 }

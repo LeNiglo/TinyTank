@@ -112,7 +112,7 @@ public class TableMenuElement extends TableElement {
                             }
                             EnumOverlayElement type = element.getType();
                             if (element.getId().contains(":")){
-                                type = EnumOverlayElement.getTypeByValue(element.getId().substring(element.getId().indexOf(":") + 1));
+                                type = EnumOverlayElement.getEnumByValue(element.getId().substring(element.getId().indexOf(":") + 1));
                             }
                             this.genericSendTask.sendTask(new Pair<>(type, new Pair<>(listIndex, newValue)));
                             return true;

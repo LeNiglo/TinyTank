@@ -48,4 +48,12 @@ public class ColorTools {
         }
         return false;
     }
+
+    public static Color getGreenOrRed(boolean choice){
+        if (choice == true){
+            return colors.get(Colors.TRANSPARENT_GREEN);
+        } else {
+            return  colors.get(Colors.TRANSPARENT_RED);
+        }
+    }
 }

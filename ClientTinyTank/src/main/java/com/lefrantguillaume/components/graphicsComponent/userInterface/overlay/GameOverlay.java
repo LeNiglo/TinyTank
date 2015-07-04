@@ -22,6 +22,7 @@ import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
+import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -34,15 +35,17 @@ import java.util.*;
  */
 public class GameOverlay extends Observable implements Observer {
     private int current;
+    private OverlayData overlayData;
 
     private Map<EnumOverlayElement, InterfaceElement> elements;
     private AnimatorOverlayData animatorOverlayData;
     private GenericSendTask genericSendTask;
     private InputData inputData;
 
-    public GameOverlay(InputData inputData) {
+    public GameOverlay(InputData inputData) throws JSONException {
         this.current = 0;
         this.inputData = inputData;
+        this.overlayData = new OverlayData("configPreferenceOverlay.json");
 
         this.genericSendTask = new GenericSendTask();
         this.genericSendTask.addObserver(this);
@@ -71,6 +74,16 @@ public class GameOverlay extends Observable implements Observer {
 
         this.elements.put(EnumOverlayElement.CUSTOM_MENU, new CustomElement(EnumOverlayElement.CUSTOM_MENU, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
+        this.initPreference();
+    }
+
+    public void initPreference(){
+        for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayData.getAvailableData().entrySet()){
+            if (this.elements.containsKey(entry.getKey())){
+                this.elements.get(entry.getKey()).setReachable(entry.getValue());
+            }
+        }
+
     }
 
     public void init(AnimatorOverlayData animatorOverlayData) {
@@ -108,11 +121,11 @@ public class GameOverlay extends Observable implements Observer {
             String screenId = EnumOverlayElement.SCREEN.getValue() + String.valueOf(i + 1);
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new StringTimer("Render Screen " + String.valueOf(i + 1)), Color.black,
                     screenId + ":" + screenId, Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("chat"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayData.getValue(EnumOverlayElement.CHAT, i))), new StringTimer("chat"), Color.black,
                     screenId + ":" + EnumOverlayElement.CHAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("kill event"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayData.getValue(EnumOverlayElement.POP_KILL, i))), new StringTimer("kill event"), Color.black,
                     screenId + ":" + EnumOverlayElement.POP_KILL.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), new StringTimer("action bar"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayData.getValue(EnumOverlayElement.TABLE_ICON, i))), new StringTimer("action bar"), Color.black,
                     screenId + ":" + EnumOverlayElement.TABLE_ICON.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
         }
         this.elements.get(EnumOverlayElement.TABLE_MENU_SCREEN).doTask(this.current);
@@ -142,7 +155,7 @@ public class GameOverlay extends Observable implements Observer {
         if (arg instanceof Tuple) {
             Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-            Debug.debug("RECEIVED : " + received);
+            //Debug.debug("RECEIVED : " + received);
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
                 if (received.getV3() instanceof Player) {
                     InterfaceElement tableIcon = this.elements.get(EnumOverlayElement.TABLE_ICON);
@@ -178,6 +191,7 @@ public class GameOverlay extends Observable implements Observer {
                 Pair<EnumOverlayElement, Pair> received = (Pair<EnumOverlayElement, Pair>) arg;
                 Debug.debug("received: " + received);
                 this.elements.get(received.getV1()).doTask(received.getV2());
+                this.overlayData.setAvailableInput(received.getV1(), this.elements.get(received.getV1()).getReachable());
                 //todo à envoyer à une classe qui gère les accès via un fichier
             }
         }
@@ -220,7 +234,7 @@ public class GameOverlay extends Observable implements Observer {
     }
 
     public boolean event(int key, char c, EnumInput type) {
-        Debug.debug("\n NEW EVENT: " + Input.getKeyName(key) + " (" + type + ")");
+        //Debug.debug("\n NEW EVENT: " + Input.getKeyName(key) + " (" + type + ")");
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             boolean[] reachable = entry.getValue().getReachable();
             if (reachable[this.current]) {
@@ -230,7 +244,7 @@ public class GameOverlay extends Observable implements Observer {
                 } else if (type == EnumInput.RELEASED) {
                     result = entry.getValue().eventReleased(key, c);
                 }
-                Debug.debug("target: " + entry.getKey() + " -> result=" + result);
+          //      Debug.debug("target: " + entry.getKey() + " -> result=" + result);
                 if (result instanceof MessageChat) {
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.MESSAGE_SERVER, result));
