@@ -14,6 +14,7 @@ import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -36,7 +37,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private AnimatorGameData animatorGameData;
     private AnimatorOverlayData animatorOverlayData;
     private GameController gameController;
-    private GameOverlay gameOverlay;
+    private Overlay gameOverlay;
     private InputGame input;
 
     private GameContainer container;
@@ -88,7 +89,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.gameController.setStateWindow(this.stateWindow);
 
         this.animatorOverlayData.init();
-        this.gameOverlay.init(this.animatorOverlayData);
+        this.gameOverlay.initElementsComponent(this.animatorOverlayData);
 
         try {
             JSONObject tanksConfig = new JSONObject(StringTools.readFile("tanks.json"));

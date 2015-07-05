@@ -12,12 +12,12 @@ import java.util.Map;
 /**
  * Created by andres_k on 04/07/2015.
  */
-public class OverlayData {
+public class OverlayConfigs {
     private Map<EnumOverlayElement, boolean[]> availableData;
     private JSONObject configs;
     private String file;
 
-    public OverlayData(String file) throws JSONException {
+    public OverlayConfigs(String file) throws JSONException {
         this.availableData = new LinkedHashMap<>();
         this.configs = new JSONObject(StringTools.readFile(file));
         this.file = file;
