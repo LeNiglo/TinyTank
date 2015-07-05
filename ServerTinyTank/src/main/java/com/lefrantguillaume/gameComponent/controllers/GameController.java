@@ -14,6 +14,8 @@ import com.lefrantguillaume.gameComponent.gameobjects.shots.Shot;
 import com.lefrantguillaume.gameComponent.gameobjects.tanks.tools.TankConfigData;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.gameComponent.maps.MapController;
+import com.lefrantguillaume.gameComponent.target.CollisionVoteController;
+import com.lefrantguillaume.gameComponent.target.CollisionVoteElement;
 import com.lefrantguillaume.gameComponent.target.Targets;
 import com.lefrantguillaume.master.EnumTargetTask;
 import com.lefrantguillaume.networkComponent.gameServerComponent.Request;
@@ -35,26 +37,25 @@ import java.util.*;
 public class GameController extends Observable {
     private MapController mapController;
     private GameModeController gameModeController;
+    private CollisionVoteController collisionVoteController;
 
     private ObstacleConfigData obstacleConfigData;
     private TankConfigData tankConfigData;
 
     private Targets targets;
 
-    private boolean onNewRound;
-    private HashMap<String, HashMap<String, List<List<String>>>> collisions;
-    /////////////// idShot /////// idTarget //////// idPlayer
 
     public GameController(JSONObject configFile) throws JSONException {
         this.tankConfigData = new TankConfigData();
         this.tankConfigData.initTanks(configFile);
-        this.mapController = new MapController();
-        this.targets = new Targets();
         this.obstacleConfigData = new ObstacleConfigData(new JSONObject(StringTools.readFile("obstacles.json")));
+
+
+        this.mapController = new MapController();
         this.gameModeController = new GameModeController(this.obstacleConfigData);
-        this.collisions = new HashMap<>();
-        this.onNewRound = false;
-        // à mettre lorsqu'on charge une game via l'interface
+        this.collisionVoteController = new CollisionVoteController();
+
+        this.targets = new Targets();
     }
 
     // FUNCTIONS
@@ -62,6 +63,8 @@ public class GameController extends Observable {
         if (arg instanceof Request) {
             MessageModel received = ((Request) arg).getRequest();
             final Connection connection = ((Request) arg).getConnection();
+
+            WindowController.addConsoleMsg("\n Received: " + received);
             if (received instanceof MessageConnect) {
                 this.doMessageConnect((MessageConnect) received, connection);
             } else if (received instanceof MessageDownload) {
@@ -227,53 +230,12 @@ public class GameController extends Observable {
         }
     }
 
-    public void doMessageCollision(final MessageCollision mc) {
-        boolean added = false;
+    public void doMessageCollision(final MessageCollision received) {
+        CollisionVoteElement result = this.collisionVoteController.add(received);
 
-        String it1 = mc.getHitterId();
-        String it2 = mc.getTargetId();
-        EnumCollision type = mc.getType();
-
-        int it3 = -1;
-
-        if (this.collisions.containsKey(mc.getHitterId())) {
-            HashMap<String, List<List<String>>> shootVal = collisions.get(mc.getHitterId());
-            if (shootVal.containsKey(mc.getTargetId())) {
-                List<List<String>> targetVal = shootVal.get(mc.getTargetId());
-                for (int i = 0; i > targetVal.size(); ++i) {
-                    final List<String> listVal = targetVal.get(i);
-                    if (!listVal.contains(mc.getId())) {
-                        listVal.add(mc.getId());
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added) {
-                    List<String> listVal = new ArrayList<String>();
-                    listVal.add(mc.getId());
-                    targetVal.add(listVal);
-                    it3 = targetVal.size() - 1;
-                }
-            } else {
-                List<List<String>> targetVal = new ArrayList<List<String>>();
-                List<String> listVal = new ArrayList<String>();
-                listVal.add(mc.getId());
-                targetVal.add(listVal);
-                shootVal.put(mc.getTargetId(), targetVal);
-                it3 = 0;
-            }
-        } else {
-            HashMap<String, List<List<String>>> shootVal = new HashMap<String, List<List<String>>>();
-            List<List<String>> targetVal = new ArrayList<List<String>>();
-            List<String> listVal = new ArrayList<String>();
-            listVal.add(mc.getId());
-            targetVal.add(listVal);
-            shootVal.put(mc.getTargetId(), targetVal);
-            this.collisions.put(mc.getHitterId(), shootVal);
-            it3 = 0;
-        }
-        if (!added) {
-            this.addCollisionTimer(it1, it2, it3, type);
+        if (result != null){
+            WindowController.addConsoleMsg("\n ADD NEW COLLISION:");
+            this.addCollisionTimer(result);
         }
     }
 
@@ -281,7 +243,7 @@ public class GameController extends Observable {
         if (!this.gameModeController.isPlayable() || this.targets == null || this.targets.getPlayers() == null)
             return;
         System.out.println("Update: " + received.getX() + " / " + received.getY());
-        this.sendToAllExceptMe(received);
+        this.sendToAllPlayersExceptMe(received);
     }
 
     public void doMessageMove(MessageMove received) {
@@ -370,7 +332,7 @@ public class GameController extends Observable {
             System.out.println("Plyer to be kicked: " + entry.getValue().getPseudo());
             MessagePlayerDelete message = this.targets.deletePlayer(entry.getKey());
             if (message != null) {
-                this.sendToAllExceptMe(message);
+                this.sendToAllPlayersExceptMe(message);
             }
         }
     }
@@ -478,7 +440,7 @@ public class GameController extends Observable {
 
     }
 
-    public void sendToAllExceptMe(MessageModel message) {
+    public void sendToAllPlayersExceptMe(MessageModel message) {
         for (java.util.Map.Entry entry : this.targets.getPlayers().entrySet()) {
             String id = (String) entry.getKey();
             Player player = (Player) entry.getValue();
@@ -556,6 +518,7 @@ public class GameController extends Observable {
 
 
     //TIMERS
+    /*
     private void addCollisionTimer(final String it1, final String it2, final int it3, final EnumCollision type) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -569,6 +532,21 @@ public class GameController extends Observable {
             }
         }, 150);
     }
+*/
+    private void addCollisionTimer(final CollisionVoteElement collisionElement) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                int playerCount = targets.getPlayers().size();
+                WindowController.addConsoleMsg("TimerCollision OK: " + collisionElement);
+                if (collisionElement.getNumberPlayers() >= playerCount / 2) {
+                    resultForCollision(collisionElement.getHitterId(), collisionElement.getTargetId(), collisionElement.getType());
+                }
+            }
+        }, 200);
+    }
+
 
     private void addReviveTimer(final MessageModel values) {
         Timer timer = new Timer();

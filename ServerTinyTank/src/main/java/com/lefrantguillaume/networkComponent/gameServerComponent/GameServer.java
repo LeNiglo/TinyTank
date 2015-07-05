@@ -25,13 +25,10 @@ public class GameServer extends Observable {
     // FUNCTIONS
 
     public void doTask(Observable o, Object arg) {
-        WindowController.addConsoleMsg("NETWORK: " + arg);
         if (arg instanceof Request) {
             MessageModel message = ((Request) arg).getRequest();
             Connection connection = ((Request) arg).getConnection();
-            WindowController.addConsoleMsg("message: " + message);
             if (connection == null) {
-                WindowController.addConsoleMsg("SEND MESSAGE: " + message + " to " + this.server.getConnections().length + " peoples");
                 this.server.sendToAllTCP(message);
             } else {
                 this.server.sendToTCP(connection.getID(), message);
