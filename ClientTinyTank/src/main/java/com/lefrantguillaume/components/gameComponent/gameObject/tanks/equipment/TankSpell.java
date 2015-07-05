@@ -14,9 +14,9 @@ public class TankSpell {
     private Spell spell;
     private ActivatedTimer activatedTimer;
 
-    public TankSpell(Spell spell) {
+    public TankSpell(Spell spell, long cooldown) {
         this.spell = spell;
-        this.activatedTimer = new ActivatedTimer(true, false, 10000);
+        this.activatedTimer = new ActivatedTimer(true, false, cooldown);
     }
 
     public TankSpell(TankSpell tankSpell) {

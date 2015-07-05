@@ -29,7 +29,7 @@ public class TankWeapon {
     private int current;
 
     public TankWeapon(float speedShot, float damageShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitExplode, Pair<Float, Float> shiftHitOrigin,
-                      Pair<Float, Float> shiftHitHead, Animator shotAnimator, EnumGameObject shotType) {
+                      Pair<Float, Float> shiftHitHead, Animator shotAnimator, EnumGameObject shotType, long cooldown) {
         this.shiftWeaponOrigin = new Pair<>(shiftWeaponOrigin);
         this.shiftHitOrigin = new Pair<>(shiftHitOrigin);
         this.shiftHitExplode = new Pair<>(shiftHitExplode);
@@ -42,7 +42,7 @@ public class TankWeapon {
         this.current = 0;
         this.canons = new ArrayList<>();
         this.collisionObject = new ArrayList<>();
-        this.activatedTimer = new ActivatedTimer(true, false, 1000);
+        this.activatedTimer = new ActivatedTimer(true, false, cooldown);
     }
 
     public TankWeapon(TankWeapon tankWeapon) {

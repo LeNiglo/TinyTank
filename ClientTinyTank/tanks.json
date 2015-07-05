@@ -27,6 +27,7 @@
           "shotType": "rocket",
           "speed": "150.0",
           "damage": "10.0",
+          "cooldown" : "1000",
           "build": {
             "centerX": "-41.0", // centre arbitraire du hit, signe '-' pour le décalage x/y pour l'affichage
             "centerY": "-4.0",
@@ -58,10 +59,12 @@
         }
       },
       "tankSpell": {
-        "spellType": "shield"
+        "spellType": "shield",
+        "cooldown" : "15000"
       },
       "tankBox": {
-        "boxType": "iron_wall"
+        "boxType": "iron_wall",
+        "cooldown" : "2000"
       }
     },
     {
@@ -104,6 +107,7 @@
           "shotType": "laser",
           "speed": "200.0",
           "damage": "60.0",
+          "cooldown": "3000",
           "build": {
             "centerX": "-40.0",
             "centerY": "-24.0",
@@ -135,10 +139,12 @@
         }
       },
       "tankSpell": {
-        "spellType": "invisibility"
+        "spellType": "invisibility",
+        "cooldown" : "10000"
       },
       "tankBox": {
-        "boxType": "plasma_wall"
+        "boxType": "plasma_wall",
+        "cooldown" : "2000"
       }
     },
     {
@@ -181,6 +187,7 @@
           "shotType": "machine_gun",
           "speed": "250.0",
           "damage": "10.0",
+          "cooldown": "100",
           "build": {
             "centerX": "-16.0",
             "centerY": "-5.0",
@@ -218,10 +225,12 @@
         }
       },
       "tankSpell": {
-        "spellType": "teleport"
+        "spellType": "teleport",
+        "cooldown" : "5000"
       },
       "tankBox": {
-        "boxType": "mine"
+        "boxType": "mine",
+        "cooldown" : "1000"
       }
     }
   ]

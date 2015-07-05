@@ -26,14 +26,17 @@ public class TankFactory {
         JSONObject weapon = config.getJSONObject("weapon");
 
         EnumGameObject shotType = EnumGameObject.getEnumByValue(hit.getString("shotType"));
+
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
+        long cooldown = Long.valueOf(hit.getString("cooldown"));
+
         Pair<Float, Float> shiftHitExplode = new Pair<>(Float.valueOf(hit.getJSONObject("build").getString("shiftXExplode")), Float.valueOf(hit.getJSONObject("build").getString("shiftYExplode")));
         Pair<Float, Float> shiftHitOrigin = new Pair<>(Float.valueOf(hit.getJSONObject("build").getString("centerX")), Float.valueOf(hit.getJSONObject("build").getString("centerY")));
         Pair<Float, Float> shiftHitHead = new Pair<>(Float.valueOf(hit.getJSONObject("build").getString("headX")), Float.valueOf(hit.getJSONObject("build").getString("headY")));
 
         Pair<Float, Float> shiftWeaponOrigin = new Pair<>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shotType), shotType);
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shotType), shotType, cooldown);
         JSONArray canons = weapon.getJSONArray("canons");
         for (int i = 0; i < canons.length(); ++i){
             JSONObject current = canons.getJSONObject(i);
@@ -75,13 +78,16 @@ public class TankFactory {
 
     public static TankSpell createTankSpell(JSONObject config, AnimatorGameData animatorGameData, ObstacleConfigData obstacleConfigData) throws JSONException {
         EnumGameObject spellType = EnumGameObject.getEnumByValue(config.getString("spellType"));
-        TankSpell tankSpell = new TankSpell(SpellFactory.createSpell(spellType, obstacleConfigData, animatorGameData.getSpellAnimator(spellType)));
+        long cooldown = Long.valueOf(config.getString("cooldown"));
+
+        TankSpell tankSpell = new TankSpell(SpellFactory.createSpell(spellType, obstacleConfigData, animatorGameData.getSpellAnimator(spellType)), cooldown);
         return tankSpell;
     }
 
     public static TankBox createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         EnumGameObject boxType = EnumGameObject.getEnumByValue(config.getString("boxType"));
+        long cooldown = Long.valueOf(config.getString("cooldown"));
 
-        return new TankBox(boxType, 2000);
+        return new TankBox(boxType, cooldown);
     }
 }
