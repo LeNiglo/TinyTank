@@ -112,6 +112,10 @@ public class Targets {
                 } else {
                     hitterShot.getDamageByCollision(obstacle.getCurrentLife());
                     messages.add(obstacle.getHit(damage));
+                    Player player = this.getPlayer(hitterShot.getPlayerId());
+                    if (player != null) {
+                        player.addHit();
+                    }
                 }
                 WindowController.addConsoleMsg("obstacleLife: " + obstacle.getCurrentLife());
                 if (obstacle.getCurrentLife() == 0) {
@@ -185,7 +189,7 @@ public class Targets {
         List<MessageModel> messages = new ArrayList<>();
         Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
 
-        killer.addHitSomebody();
+        killer.addHit();
         if (result instanceof List) {
             messages.addAll((List<MessageModel>) result);
         }

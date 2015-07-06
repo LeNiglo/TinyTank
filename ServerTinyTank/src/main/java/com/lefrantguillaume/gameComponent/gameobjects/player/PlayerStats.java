@@ -13,7 +13,7 @@ public class PlayerStats {
     private int nbPeopleKilled = 0;
 
     private int nbShots = 0;
-    private int nbHitSomebody = 0;
+    private int nbHit = 0;
     private int nbGameObjectsDestroyed = 0;
 
     public PlayerStats(String id, String pseudo) {
@@ -49,8 +49,8 @@ public class PlayerStats {
         this.nbShots += 1;
     }
 
-    public void addHitSomebody() {
-        this.nbHitSomebody += 1;
+    public void addHit() {
+        this.nbHit += 1;
     }
 
     public void addGameObjectDestroyed() {
@@ -73,8 +73,8 @@ public class PlayerStats {
         return this.nbShots;
     }
 
-    public int getNbHitSomebody() {
-        return this.nbHitSomebody;
+    public int getNbHit() {
+        return this.nbHit;
     }
 
     public int getNbGameObjectsDestroyed() {

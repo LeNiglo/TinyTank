@@ -51,8 +51,8 @@ public class Player {
         this.stats.addShoot();
     }
 
-    public void addHitSomebody() {
-        this.stats.addHitSomebody();
+    public void addHit() {
+        this.stats.addHit();
     }
 
     public void addGameObjectDestroyed() {
@@ -130,7 +130,7 @@ public class Player {
     }
 
     public int getNbHitSomebody() {
-        return this.stats.getNbHitSomebody();
+        return this.stats.getNbHit();
     }
 
     public int getNbGameObjectsDestroyed() {

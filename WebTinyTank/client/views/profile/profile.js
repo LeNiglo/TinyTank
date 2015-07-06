@@ -36,7 +36,7 @@ Template.profile.created = function () {
 }
 
 Template.profileDetail.helpers({
-    getFromRegister: function (act) {
+    dateGetFrom: function (act) {
         return moment(act).fromNow();
     }
 })

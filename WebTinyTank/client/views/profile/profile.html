@@ -1,27 +1,45 @@
 <template name="profile">
-  <div class="container">
-    {{#with getUserProfile}}
+    <div class="container">
+        {{#with getUserProfile}}
 
-    {{#if loading}}
-    <h2 class="page-header text-center">Loading ...</h2>
+            {{#if loading}}
+                <h2 class="page-header text-center">Loading ...</h2>
 
-    {{else}}
-      {{> profileDetail }}
-    {{/if}}
+            {{else}}
+                {{> profileDetail }}
+            {{/if}}
 
-    {{else}}
+        {{else}}
 
-    <h2 class="page-header text-center">User Not Found.</h2>
+            <h2 class="page-header text-center">User Not Found.</h2>
 
-    {{> search }}
+            {{> search }}
 
-    {{/with}}
-  </div>
+        {{/with}}
+    </div>
 </template>
 
 <template name="profileDetail">
     <h2 class="page-header text-center">{{ username }}</h2>
 
-    <p>Registered {{ getFromRegister createdAt }} from {{ from }}</p>
-    <p>Last seen {{ getFromRegister updatedAt }}</p>
+    <p>Registered {{ dateGetFrom createdAt }} from {{ from }}</p>
+
+    <p>Last seen {{ dateGetFrom updatedAt }}</p>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Kills</th>
+            <td>{{ stats.kills }}</td>
+        </tr>
+        <tr>
+            <th>Deaths</th>
+            <td>{{ stats.deaths }}</td>
+        </tr>
+        <tr>
+            <th>Score</th>
+            <td>{{ stats.score }}</td>
+        </tr>
+        </tbody>
+    </table>
 </template>
