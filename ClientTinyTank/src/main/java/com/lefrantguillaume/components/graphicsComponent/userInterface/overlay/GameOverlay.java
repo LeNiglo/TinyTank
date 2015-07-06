@@ -53,6 +53,8 @@ public class GameOverlay extends Overlay {
 
         this.elements.put(EnumOverlayElement.TABLE_NEW_ROUND, new TableAppearElement(EnumOverlayElement.TABLE_NEW_ROUND,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 200, (WindowConfig.getSizeY() / 2) - 250, 400, 200))));
+        this.elements.put(EnumOverlayElement.TABLE_END_ROUND, new TableAppearElement(EnumOverlayElement.TABLE_END_ROUND,
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 200, (WindowConfig.getSizeY() / 2) - 250, 400, 200))));
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
@@ -74,6 +76,7 @@ public class GameOverlay extends Overlay {
         this.animatorOverlayData = animatorOverlayData;
 
         this.initTableNewRound();
+        this.initTableEndRound();
         this.initTableMenu();
         this.initTableMenuScreen();
         this.initTableMenuControls();
@@ -83,7 +86,12 @@ public class GameOverlay extends Overlay {
     private void initTableNewRound() {
         InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_NEW_ROUND);
         tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.NEW_ROUND), EnumOverlayElement.NEW_ROUND.getValue() + ":" + EnumOverlayElement.NEW_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
-        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.STATE), EnumOverlayElement.NEW_ROUND.getValue() + ":1", Element.PositionInBody.MIDDLE_MID));
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.TIMER), EnumOverlayElement.NEW_ROUND.getValue() + ":" + EnumOverlayElement.TIMER.getValue(), Element.PositionInBody.MIDDLE_MID));
+    }
+
+    private void initTableEndRound() {
+        InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_END_ROUND);
+        tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.END_ROUND), EnumOverlayElement.END_ROUND.getValue() + ":" + EnumOverlayElement.END_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
     }
 
     private void initTableMenu() {

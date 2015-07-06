@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -38,7 +39,7 @@ public class Animator implements Observer {
             EnumAnimation type = (EnumAnimation) entry.getKey();
             List<Animation> values = (ArrayList<Animation>) entry.getValue();
             List<Animation> newValues = new ArrayList<>();
-            for (Animation value : values){
+            for (Animation value : values) {
                 newValues.add(value.copy());
             }
             this.addElement(type, newValues);
@@ -61,8 +62,7 @@ public class Animator implements Observer {
     }
 
     public void addAnimation(EnumAnimation type, Animation animation) {
-
-        if (animation.getFrameCount() == 1){
+        if (animation.getFrameCount() == 1) {
             animation.setAutoUpdate(false);
             animation.setLooping(false);
         }
@@ -82,14 +82,14 @@ public class Animator implements Observer {
         }
     }
 
-    public void nextCurrentIndex(){
-        if ((this.index + 1) < this.animations.get(this.current).size()){
+    public void nextCurrentIndex() {
+        if ((this.index + 1) < this.animations.get(this.current).size()) {
             this.index += 1;
         }
     }
 
-    public void restart(){
-        for (Map.Entry<EnumAnimation, List<Animation>> entry : this.animations.entrySet()){
+    public void restart() {
+        for (Map.Entry<EnumAnimation, List<Animation>> entry : this.animations.entrySet()) {
             entry.getValue().forEach(org.newdawn.slick.Animation::restart);
         }
         this.setCurrent(EnumAnimation.BASIC);
@@ -97,12 +97,12 @@ public class Animator implements Observer {
         this.deleted = false;
     }
 
-    public void startTimer(long delay){
+    public void startTimer(long delay) {
         this.activatedTimer.startTimer(delay);
         this.needUpdate = true;
     }
 
-    public void updateAnimator(boolean setPrint, boolean setActivate){
+    public void updateAnimator(boolean setPrint, boolean setActivate) {
         this.setPrintable(setPrint);
         this.activatedTimer.setActivated(setActivate);
     }
@@ -120,18 +120,22 @@ public class Animator implements Observer {
         return this.printable;
     }
 
-    public boolean isDeleted(){
-        if (this.current == EnumAnimation.EXPLODE && this.currentAnimation().isStopped()){
+    public boolean isDeleted() {
+        if (this.current == EnumAnimation.EXPLODE && this.currentAnimation().isStopped()) {
             this.deleted = true;
         }
         return this.deleted;
     }
 
-    public EnumAnimation getCurrent(){
+    public EnumAnimation getCurrentAnimation() {
         return this.current;
     }
 
-    public Color getFilter(){
+    public int getIndex() {
+        return this.index;
+    }
+
+    public Color getFilter() {
         return this.filter;
     }
 
@@ -144,11 +148,11 @@ public class Animator implements Observer {
         return null;
     }
 
-    public boolean needUpdate(){
+    public boolean needUpdate() {
         return this.needUpdate;
     }
 
-    public boolean isActivated(){
+    public boolean isActivated() {
         return this.activatedTimer.isActivated();
     }
 
@@ -162,17 +166,17 @@ public class Animator implements Observer {
         if (this.animations.containsKey(current)) {
             this.current = current;
             this.index = 0;
-        } else if (current == EnumAnimation.EXPLODE){
+        } else if (current == EnumAnimation.EXPLODE) {
             this.setDeleted(true);
         }
     }
 
-    public void setFilter(Color filter){
+    public void setFilter(Color filter) {
         this.filter = filter;
     }
 
-    public void setIndex(int index){
-        if (index < this.animations.get(this.current).size()){
+    public void setIndex(int index) {
+        if (index < this.animations.get(this.current).size()) {
             this.index = index;
         }
     }
@@ -181,7 +185,7 @@ public class Animator implements Observer {
         this.deleted = deleted;
     }
 
-    public void setNeedUpdate(boolean value){
+    public void setNeedUpdate(boolean value) {
         this.needUpdate = value;
     }
 }

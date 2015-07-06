@@ -138,6 +138,8 @@ public class AnimatorGameFactory extends AnimatorFactory {
         } else if (index == EnumSprites.SNIPER_HIT) {
             SpriteSheet spriteSheet1 = new SpriteSheet("assets/old/img/game/effect/snipeHit0.png", 22, 22);
             animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet1, 0, 1, 0, 1, 200));
+            SpriteSheet spriteSheet2 = new SpriteSheet("assets/old/img/game/effect/snipeHit1.png", 2, 22);
+            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet2, 0, 1, 0, 1, 200));
             SpriteSheet spriteSheet3 = new SpriteSheet("assets/old/img/game/effect/explosionSniper.png", 47, 47);
             Animation animation2 = this.loadAnimation(spriteSheet3, 0, 4, 0, 1, 150);
             animation2.setLooping(false);

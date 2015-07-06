@@ -385,8 +385,9 @@ public class GameController extends Observable {
         // END DU ROUND
         this.gameModeController.getCurrentMode().endRound();
         this.clearTargets();
+
         this.setChanged();
-        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundState("admin", "admin", false))));
+        this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundEnd("admin", "admin", this.gameModeController.isWinnerTeam()))));
 
         this.addNewRoundTimer();
     }
@@ -398,7 +399,7 @@ public class GameController extends Observable {
         this.initPlayersPosition();
 
         setChanged();
-        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundState("admin", "admin", true))));
+        notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundStart("admin", "admin", true))));
         this.sendAllTargetsToEveryone(false, true, true);
 
         this.addStartRoundTimer();
@@ -419,6 +420,8 @@ public class GameController extends Observable {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                setChanged();
+                notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundStart("admin", "admin", false))));
                 gameModeController.getCurrentMode().startRound();
             }
         }, 7000);
@@ -442,7 +445,6 @@ public class GameController extends Observable {
             for (java.util.Map.Entry<String, Obstacle> entry : this.targets.getObstacles().entrySet()) {
                 Obstacle tmp = entry.getValue();
                 MessagePutObstacle tmpMessage = new MessagePutObstacle(tmp.getPlayerId(), tmp.getPlayerPseudo(), tmp.getId(), tmp.getType(), tmp.getX(), tmp.getY(), tmp.getAngle());
-                WindowController.addConsoleMsg("send Box: " + entry.getKey());
                 this.setChanged();
                 this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(tmpMessage)));
             }

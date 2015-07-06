@@ -136,6 +136,12 @@ public class ImageElement extends Element {
             Debug.debug("IMAGE: received cd");
             this.animator.updateAnimator(false, false);
             this.animator.startTimer((Long) task);
+        } else if (task instanceof Pair){
+            if (((Pair) task).getV1() instanceof String){
+                if (((Pair) task).getV1().equals("newCurrentIndex") && ((Pair) task).getV2() instanceof Integer){
+                    this.animator.setIndex((Integer) ((Pair) task).getV2());
+                }
+            }
         }
         return null;
     }
@@ -165,7 +171,7 @@ public class ImageElement extends Element {
 
     @Override
     public String toString() {
-        return "imageType: " + this.animator.getCurrent();
+        return "imageType: " + this.animator.getCurrentAnimation();
     }
 
     private void start(){

@@ -30,7 +30,8 @@ public class AnimatorOverlayData {
 
     public void initRound() throws SlickException {
         this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.NEW_ROUND), EnumOverlayElement.NEW_ROUND);
-        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.STATE), EnumOverlayElement.STATE);
+        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.END_ROUND), EnumOverlayElement.END_ROUND);
+        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.TIMER), EnumOverlayElement.TIMER);
     }
 
     public void initIcon() throws SlickException {

@@ -1,19 +1,15 @@
 package com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs;
 
-import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
-
-import java.util.*;
-
 /**
  * Created by andres_k on 29/06/2015.
  */
-public class MessageRoundState extends MessageModel {
+public class MessageRoundStart extends MessageModel {
     private boolean started;
 
-    public MessageRoundState(){
+    public MessageRoundStart(){
     }
 
-    public MessageRoundState(String pseudo, String id, boolean started) {
+    public MessageRoundStart(String pseudo, String id, boolean started) {
         this.pseudo = pseudo;
         this.id = id;
         this.started = started;

@@ -23,7 +23,7 @@ public class TouchDown extends GameMode {
 
     public TouchDown(int maxTeam, ObstacleConfigData obstacleConfigData) {
         this.obstacles = new ArrayList<>();
-        this.objectiveScore = 3;
+        this.objectiveScore = 1;
         this.maxPlayerTeam = 1;
         this.init(maxTeam, maxPlayerTeam);
         this.createObstacles(obstacleConfigData);

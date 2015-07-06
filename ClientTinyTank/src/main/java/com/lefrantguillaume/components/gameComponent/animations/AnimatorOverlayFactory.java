@@ -33,9 +33,18 @@ public class AnimatorOverlayFactory extends AnimatorFactory {
             Animation animation = new Animation();
             Image img = new Image("assets/old/img/overlay/newRound.png");
             animation.addFrame(img, 150);
-            animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);
-        } else if (index == EnumSprites.STATE) {
+        } else if (index == EnumSprites.END_ROUND) {
+            Animation animation = new Animation();
+            Image img = new Image("assets/old/img/overlay/victory.png");
+            animation.addFrame(img, 150);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+
+            Animation animation2 = new Animation();
+            Image img2 = new Image("assets/old/img/overlay/defeat.png");
+            animation2.addFrame(img2, 150);
+            animator.addAnimation(EnumAnimation.BASIC, animation2);
+        } else if (index == EnumSprites.TIMER) {
             Animation animation = new Animation();
             for (int i = 4; i > 0; --i) {
                 Image img = new Image("assets/old/img/overlay/roundCounter" + String.valueOf(i) + ".png");

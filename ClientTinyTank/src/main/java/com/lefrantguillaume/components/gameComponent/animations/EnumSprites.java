@@ -30,7 +30,7 @@ public enum EnumSprites {
     OBJECTIVE(AREA.getIndex()),
     BOMB(AREA.getIndex()),
     //roundOverlay
-    NEW_ROUND(ROUND.getIndex()), STATE(ROUND.getIndex()),
+    NEW_ROUND(ROUND.getIndex()), END_ROUND(ROUND.getIndex()), TIMER(ROUND.getIndex()),
     //menuOverlay
     EXIT(MENU.getIndex()), SETTINGS(MENU.getIndex()), CONTROLS(MENU.getIndex()), SCREEN(MENU.getIndex());
 

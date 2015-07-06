@@ -6,6 +6,5 @@ package com.lefrantguillaume.components.gameComponent.animations;
  */
 public enum EnumAnimation {
     BASIC,
-    BASIC2,
     EXPLODE
 }

@@ -20,6 +20,7 @@ public enum EnumOverlayElement {
     // index
     POP_KILL("popKill", POP_ELEMENT.index),
     TABLE_NEW_ROUND("tableNewRound", TABLE.index),
+    TABLE_END_ROUND("tableEndRound", TABLE.index),
     TABLE_STAT("tableStat", TABLE.index),
     TABLE_ICON("tableIcon", TABLE.index),
     CUSTOM_MENU("customMenu", CUSTOM.index),
@@ -34,7 +35,7 @@ public enum EnumOverlayElement {
     BUTTON("button"),
 
     // roundAnimator
-    NEW_ROUND("newRound"), STATE("stat"),
+    NEW_ROUND("newRound"), END_ROUND("endRound"), TIMER("stat"),
 
     // menuAnimator
     EXIT("exit"), SETTINGS("settings"), CONTROLS("controls"), SCREEN("screen"),

@@ -142,7 +142,7 @@ public class GameController extends Observable implements Observer {
                             Debug.debug("DELETE PLAYER");
                             this.doPlayerDelete(message.getId());
                         } else if (message instanceof MessagePlayerUpdateState) {
-                            Debug.debug("UPDATE STATE PLAYER");
+                            Debug.debug("UPDATE TIMER PLAYER");
                             this.doPlayerUpdateState((MessagePlayerUpdateState) message);
                         } else if (message instanceof MessagePlayerUpdatePosition) {
                             Debug.debug("UPDATE POS PLAYER");
@@ -154,10 +154,10 @@ public class GameController extends Observable implements Observer {
                             Debug.debug("PUT OBJECT");
                             this.doPutObstacle((MessagePutObstacle) message);
                         } else if (message instanceof MessageObstacleUpdateState) {
-                            Debug.debug("UPDATE STATE OBSTACLE");
+                            Debug.debug("UPDATE OBSTACLE");
                             this.doObstacleUpdateState((MessageObstacleUpdateState) message);
                         } else if (message instanceof MessageShotUpdateState) {
-                            Debug.debug("UPDATE STATE SHOT");
+                            Debug.debug("UPDATE SHOT");
                             this.doShotUpdateState((MessageShotUpdateState) message);
                         }
                     }

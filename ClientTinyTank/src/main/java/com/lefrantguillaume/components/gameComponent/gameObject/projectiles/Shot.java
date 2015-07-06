@@ -85,7 +85,7 @@ public class Shot extends Observable implements Observer {
         this.animator.currentAnimation().getCurrentFrame().setRotation(this.getAngle());
         for (int i = 0; i < this.savePosShot.size(); ++i) {
             if (this.type == EnumGameObject.LASER && i != this.savePosShot.size() - 1) {
-                Animation animation = this.animator.getAnimation(EnumAnimation.BASIC2, 0);
+                Animation animation = this.animator.getAnimation(EnumAnimation.BASIC, 0);
                 if (animation != null)
                     g.drawAnimation(
                             animation,

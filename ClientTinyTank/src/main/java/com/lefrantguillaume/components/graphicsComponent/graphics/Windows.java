@@ -5,10 +5,7 @@ import com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount.
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowGame.WindowGame;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.WindowInterface;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundKill;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundState;
-import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageRoundScore;
+import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
@@ -151,7 +148,7 @@ public class Windows extends NiftyStateBasedGame implements Observer {
 
     private void redirectGame(Tuple<EnumTargetTask, EnumTargetTask, Object> task){
         if (task.getV3() instanceof MessageChat || task.getV3() instanceof MessageRoundKill || task.getV3() instanceof MessageRoundScore
-                || task.getV3() instanceof MessageRoundState){
+                || task.getV3() instanceof MessageRoundStart || task.getV3() instanceof MessageRoundEnd){
             task.setV2(EnumTargetTask.GAME_OVERLAY);
         }
     }
