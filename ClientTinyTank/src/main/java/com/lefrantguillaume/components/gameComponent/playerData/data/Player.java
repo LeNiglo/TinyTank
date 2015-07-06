@@ -90,7 +90,7 @@ public class Player {
         if (this.alive == false) {
             this.alive = true;
             this.canDoAction = true;
-            this.explose = true;
+            this.explose = false;
             this.getTank().revive(positions);
             this.tank.myNotify(new Tuple<>(true, this.tank.getTankState().getPositions().getV1(), this.tank.getTankState().getPositions().getV2()));
         }
