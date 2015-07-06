@@ -184,23 +184,15 @@ WebApi = function (app, db) {
                 $or: [{_id: objId}, {username: regUn}]
             }, function (error, exists) {
 
+                exists.stats = {};
                 console.log("USER PROFILE :", exists);
                 //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
-                Matches.find({'users.id': exists._id}, function (error, results) {
+                Matches.find({'users.id': exists._id}).each(function(error, doc) {
                     if (!error) {
-                        results.forEach(function (e) {
-                            console.log(e);
-                        });
-                        res.status(200).json({name: "user_profile", res: exists, err: null});
-                    }
-                    else {
-                        res.status(200).json({
-                            name: "user_profile",
-                            res: null,
-                            err: "Error while getting match history."
-                        });
+                        console.log(doc);
                     }
                 });
+                res.status(200).json({name: "user_profile", res: exists, err: null});
             }
         );
     };
