@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
@@ -29,7 +29,7 @@ public class TableAppearElement extends TableElement {
             if (received.getV1() < this.reachable.length) {
                 this.reachable[received.getV1()] = received.getV2();
             }
-        } else if (this.type == EnumOverlayElement.TABLE_NEW_ROUND) {
+        } else if (this.type == EnumOverlayElement.TABLE_ROUND_NEW) {
             if (task instanceof MessageRoundStart) {
                 MessageRoundStart message = (MessageRoundStart) task;
 
@@ -40,7 +40,7 @@ public class TableAppearElement extends TableElement {
                     this.activatedTimer.stopTimer();
                 }
             }
-        } else if (this.type == EnumOverlayElement.TABLE_END_ROUND) {
+        } else if (this.type == EnumOverlayElement.TABLE_ROUND_END) {
             if (task instanceof MessageRoundEnd) {
                 MessageRoundEnd message = (MessageRoundEnd) task;
                 this.sendTaskToAll("start");

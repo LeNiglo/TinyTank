@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
 import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
@@ -37,7 +36,6 @@ public class NetworkController {
                 public void received(Connection connection, Object object) {
                     if (object instanceof MessageModel) {
                         MessageModel response = (MessageModel) object;
-                        Debug.debug("RECEIVED NETWORK: " + response);
                         masterTask.sendTask(TaskFactory.createTask(EnumTargetTask.MESSAGE_SERVER, EnumTargetTask.GAME, response));
                     }
                 }

@@ -131,7 +131,6 @@ public class GameController extends Observable implements Observer {
                             }
                         }
                     } else {
-                        Debug.debug("RECEIVED: " + message);
                         if (message instanceof MessagePlayerNew) {
                             Debug.debug("NEW PLAYER");
                             this.doPlayerNew((MessagePlayerNew) message);

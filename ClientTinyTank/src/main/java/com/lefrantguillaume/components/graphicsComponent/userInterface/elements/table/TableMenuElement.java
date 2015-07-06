@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.ColorTools;
@@ -69,7 +69,7 @@ public class TableMenuElement extends TableElement {
                 this.initFocusElement();
                 return true;
             } else {
-                if (this.type == EnumOverlayElement.CUSTOM_MENU) {
+                if (this.type == EnumOverlayElement.TABLE_MENU) {
                     this.start();
                     return true;
                 }

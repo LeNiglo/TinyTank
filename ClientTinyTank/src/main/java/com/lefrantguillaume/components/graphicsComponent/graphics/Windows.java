@@ -1,10 +1,12 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
+import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount.WindowAccount;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowGame.WindowGame;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.WindowInterface;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -146,10 +148,20 @@ public class Windows extends NiftyStateBasedGame implements Observer {
         }
     }
 
-    private void redirectGame(Tuple<EnumTargetTask, EnumTargetTask, Object> task){
-        if (task.getV3() instanceof MessageChat || task.getV3() instanceof MessageRoundKill || task.getV3() instanceof MessageRoundScore
-                || task.getV3() instanceof MessageRoundStart || task.getV3() instanceof MessageRoundEnd){
-            task.setV2(EnumTargetTask.GAME_OVERLAY);
+    private void redirectGame(Tuple<EnumTargetTask, EnumTargetTask, Object> task) {
+        if (task.getV3() instanceof MessageChat) {
+            task.setV3(new Pair<>(EnumOverlayElement.CHAT, task.getV3()));
+        } else if (task.getV3() instanceof MessageRoundKill) {
+            task.setV3(new Pair<>(EnumOverlayElement.POP_KILL, task.getV3()));
+        } else if (task.getV3() instanceof MessageRoundScore) {
+            task.setV3(new Pair<>(EnumOverlayElement.TABLE_STAT, task.getV3()));
+        } else if (task.getV3() instanceof MessageRoundStart) {
+            task.setV3(new Pair<>(EnumOverlayElement.TABLE_ROUND, task.getV3()));
+        } else if (task.getV3() instanceof MessageRoundEnd) {
+            task.setV3(new Pair<>(EnumOverlayElement.TABLE_ROUND, task.getV3()));
+        } else {
+            return;
         }
+        task.setV2(EnumTargetTask.GAME_OVERLAY);
     }
 }

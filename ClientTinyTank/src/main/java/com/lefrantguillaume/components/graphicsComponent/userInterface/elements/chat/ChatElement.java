@@ -1,10 +1,11 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.chat;
 
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.stockage.Tuple;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;

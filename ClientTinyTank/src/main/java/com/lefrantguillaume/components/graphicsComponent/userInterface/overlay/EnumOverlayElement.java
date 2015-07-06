@@ -18,15 +18,17 @@ public enum EnumOverlayElement {
     CUSTOM("custom", 4),
 
     // index
-    POP_KILL("popKill", POP_ELEMENT.index),
-    TABLE_NEW_ROUND("tableNewRound", TABLE.index),
-    TABLE_END_ROUND("tableEndRound", TABLE.index),
-    TABLE_STAT("tableStat", TABLE.index),
-    TABLE_ICON("tableIcon", TABLE.index),
-    CUSTOM_MENU("customMenu", CUSTOM.index),
-    TABLE_MENU_SETTINGS("tableMenuSettings", CUSTOM.index),
-    TABLE_MENU_CONTROLS("tableMenuControls", CUSTOM.index),
-    TABLE_MENU_SCREEN("tableMenuScreen", CUSTOM.index),
+    POP_KILL(POP_ELEMENT.value + "Kill", POP_ELEMENT.index),
+    TABLE_ROUND(TABLE.value + "Round", TABLE.index),
+    TABLE_ROUND_NEW(TABLE_ROUND.value + "New", TABLE_ROUND.index),
+    TABLE_ROUND_END(TABLE_ROUND.value + "END", TABLE_ROUND.index),
+    TABLE_STAT(TABLE.value + "Stat", TABLE.index),
+    TABLE_ICON(TABLE.value + "Icon", TABLE.index),
+    CUSTOM_USER_STAT(CUSTOM.value + "UserStat", CUSTOM.index),
+    TABLE_MENU(TABLE.value + "Menu", TABLE.index),
+    TABLE_MENU_SETTINGS(TABLE_MENU.value + "Settings", TABLE_MENU.index),
+    TABLE_MENU_CONTROLS(TABLE_MENU.value + "Controls", TABLE_MENU.index),
+    TABLE_MENU_SCREEN(TABLE_MENU.value + "Screen", TABLE_MENU.index),
 
 
     // primitive
@@ -45,8 +47,10 @@ public enum EnumOverlayElement {
     TIGER("tiger", 5), SNIPER("sniper", 6), RUSHER("rusher", 7),
     TIGER_HIT(TIGER.value + HIT.value, TIGER.index), TIGER_SPELL(TIGER.value + SPELL.value, TIGER.index), TIGER_BOX(TIGER.value + BOX.value, TIGER.index),
     SNIPER_HIT(SNIPER.value + HIT.value, SNIPER.index), SNIPER_SPELL(SNIPER.value + SPELL.value, SNIPER.index), SNIPER_BOX(SNIPER.value + BOX.value, SNIPER.index),
-    RUSHER_HIT(RUSHER.value + HIT.value, RUSHER.index), RUSHER_SPELL(RUSHER.value + SPELL.value, RUSHER.index), RUSHER_BOX(RUSHER.value + BOX.value, RUSHER.index);
+    RUSHER_HIT(RUSHER.value + HIT.value, RUSHER.index), RUSHER_SPELL(RUSHER.value + SPELL.value, RUSHER.index), RUSHER_BOX(RUSHER.value + BOX.value, RUSHER.index),
 
+    // item
+    USER_LIFE("life"), USER_SHIELD("shield");
 
     private int index;
     private String value;
@@ -110,6 +114,19 @@ public enum EnumOverlayElement {
             return EnumOverlayElement.RUSHER;
         }
         return NOTHING;
+    }
+
+    public static List<EnumOverlayElement> getChildren(EnumOverlayElement target){
+        List<EnumOverlayElement> targets = new ArrayList<>();
+
+        EnumOverlayElement[] enums = EnumOverlayElement.values();
+        for (int i = 0; i < enums.length; ++i) {
+            EnumOverlayElement item = enums[i];
+            if (item.getValue().contains(target.getValue())) {
+                targets.add(item);
+            }
+        }
+        return targets;
     }
 
     public String getValue(){

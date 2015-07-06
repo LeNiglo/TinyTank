@@ -1,6 +1,7 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.custom;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -17,16 +18,27 @@ import java.util.List;
 public class CustomElement extends InterfaceElement {
     private List<Element> elements;
     private GenericSendTask genericSendTask;
+    private boolean canBeActivate;
 
     public CustomElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
         this.childInit(genericSendTask);
     }
 
+    public CustomElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivated) {
+        this.parentInit(body, type, activated, needActivated);
+        this.childInit(null);
+    }
+
     // INIT
     public void childInit(GenericSendTask genericSendTask) {
         this.elements = new ArrayList<>();
         this.genericSendTask = genericSendTask;
+        if (!this.isActivated()){
+            this.canBeActivate = true;
+        } else {
+            this.canBeActivate = false;
+        }
     }
 
     // FUNCTIONS
@@ -35,9 +47,11 @@ public class CustomElement extends InterfaceElement {
         if (task instanceof Element) {
             this.elements.add((Element) task);
         } else if (task instanceof Pair) {
-            Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
-            if (received.getV1() < this.reachable.length) {
-                this.reachable[received.getV1()] = received.getV2();
+            if (((Pair) task).getV1() instanceof Integer) {
+                Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
+                if (received.getV1() < this.reachable.length) {
+                    this.reachable[received.getV1()] = received.getV2();
+                }
             }
         } else {
             for (Element element : this.elements) {
@@ -78,15 +92,13 @@ public class CustomElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == Input.KEY_ESCAPE) {
+        if (key == Input.KEY_ESCAPE && this.canBeActivate == true) {
             if (this.isActivated()) {
                 this.activatedTimer.stopTimer();
                 return true;
             } else {
-                if (this.type == EnumOverlayElement.CUSTOM_MENU) {
-                    this.activatedTimer.startTimer();
-                    return true;
-                }
+                this.activatedTimer.startTimer();
+                return true;
             }
         }
         return null;
@@ -94,7 +106,7 @@ public class CustomElement extends InterfaceElement {
 
     @Override
     public boolean isOnFocus(int x, int y) {
-        if (this.isActivated()) {
+        if (this.isActivated() && this.genericSendTask != null) {
             for (Element element : this.elements) {
                 Object result = element.isOnFocus(x, y);
                 if (result != null && element.isEmpty() == false) {

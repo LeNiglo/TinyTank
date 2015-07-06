@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;

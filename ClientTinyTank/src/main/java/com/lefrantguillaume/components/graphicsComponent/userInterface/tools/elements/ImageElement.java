@@ -12,48 +12,63 @@ import org.newdawn.slick.Graphics;
  */
 public class ImageElement extends Element {
     private Animator animator;
+    private float sizeXMAX;
 
     public ImageElement(BodyRect body, Animator animator, PositionInBody position) {
         this.init(body, "", position, EnumOverlayElement.IMAGE);
         this.animator = animator;
+        this.sizeXMAX = body.getSizeX();
     }
 
     public ImageElement(BodyRect body, Animator animator, String id, PositionInBody position) {
         this.init(body, id, position, EnumOverlayElement.IMAGE);
         this.animator = animator;
+        this.sizeXMAX = body.getSizeX();
+    }
+
+    public ImageElement(BodyRect body, String id, PositionInBody position) {
+        this.init(body, id, position, EnumOverlayElement.IMAGE);
+        this.animator = null;
+        this.sizeXMAX = body.getSizeX();
     }
 
     public ImageElement(Animator animator, String id, PositionInBody position) {
         this.init(null, id, position, EnumOverlayElement.IMAGE);
         this.animator = animator;
+        this.sizeXMAX = 0;
     }
 
 
     @Override
-    public void leave(){
+    public void leave() {
     }
 
     public void draw(Graphics g) {
-        if (this.body != null && this.body.getMinX() != -1 && this.animator.isPrintable()) {
-            Pair<Float, Float> position = this.getChoicePosition(this.body);
+        if (this.body != null && this.body.getMinX() != -1) {
             this.body.draw(g);
-            g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
+
+            if (this.animator != null && this.animator.isPrintable()) {
+                Pair<Float, Float> position = this.getChoicePosition(this.body);
+                g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
+            }
         }
     }
 
     @Override
     public void draw(Graphics g, BodyRect body) {
-        if (body.getMinX() != -1 && this.animator.isPrintable()) {
-            Pair<Float, Float> position = this.getChoicePosition(body);
-            if (this.body != null && body.getColor() == null){
+        if (body.getMinX() != -1) {
+            if (this.body != null && body.getColor() == null) {
                 body.setColor(this.body.getColor());
             }
             body.draw(g);
-            g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
+            if (this.animator != null && this.animator.isPrintable()) {
+                Pair<Float, Float> position = this.getChoicePosition(body);
+                g.drawAnimation(this.animator.currentAnimation(), position.getV1(), position.getV2());
+            }
         }
     }
 
-    private Pair<Float, Float> getChoicePosition(BodyRect body){
+    private Pair<Float, Float> getChoicePosition(BodyRect body) {
         float x = body.getMinX();
         float y = body.getMinY();
 
@@ -111,15 +126,17 @@ public class ImageElement extends Element {
 
     @Override
     public void update() {
-        if (this.animator.needUpdate() && this.animator.isActivated()){
-            this.animator.updateAnimator(true, true);
+        if (this.animator != null) {
+            if (this.animator.needUpdate() && this.animator.isActivated()) {
+                this.animator.updateAnimator(true, true);
+            }
         }
     }
 
     @Override
     public boolean replace(Element element) {
-        if (element.getType() == EnumOverlayElement.IMAGE){
-            this.animator = new Animator(((ImageElement)element).animator);
+        if (element.getType() == EnumOverlayElement.IMAGE) {
+            this.animator = new Animator(((ImageElement) element).animator);
             return true;
         }
         return false;
@@ -127,25 +144,42 @@ public class ImageElement extends Element {
 
     @Override
     public Object doTask(Object task) {
-        if (task instanceof String){
-            String value = (String)task;
-            if (value.equals("start")){
+        if (task instanceof String) {
+            String value = (String) task;
+            if (value.equals("start")) {
                 this.start();
             }
-        } else if (task instanceof Long){
+        } else if (task instanceof Long) {
             Debug.debug("IMAGE: received cd");
             this.animator.updateAnimator(false, false);
             this.animator.startTimer((Long) task);
-        } else if (task instanceof Pair){
-            if (((Pair) task).getV1() instanceof String){
-                if (((Pair) task).getV1().equals("newCurrentIndex") && ((Pair) task).getV2() instanceof Integer){
+        } else if (task instanceof Pair) {
+            if (((Pair) task).getV1() instanceof String) {
+                if (((Pair) task).getV1().equals("newCurrentIndex") && ((Pair) task).getV2() instanceof Integer && this.animator != null) {
                     this.animator.setIndex((Integer) ((Pair) task).getV2());
+                } else if (((Pair) task).getV1().equals("cutBody") && ((Pair) task).getV2() instanceof Float) {
+                    float percent = (Float) ((Pair) task).getV2();
+                    if (percent > 0){
+                        this.body.setSizes(this.sizeXMAX / percent, this.body.getSizeY());
+                    } else {
+                        this.body.setSizes(0, this.body.getSizeY());
+                    }
                 }
             }
         }
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "imageType: " + this.animator.getCurrentAnimation();
+    }
+
+    private void start(){
+        this.animator.restart();
+    }
+
+    //GETTERS
     @Override
     public boolean isActivated() {
         return true;
@@ -169,12 +203,14 @@ public class ImageElement extends Element {
         return this.animator.currentAnimation().getHeight();
     }
 
-    @Override
-    public String toString() {
-        return "imageType: " + this.animator.getCurrentAnimation();
-    }
-
-    private void start(){
-        this.animator.restart();
+    // SETTERS
+    public void setBody(BodyRect body) {
+        if (this.body != null) {
+            if (body.getColor() == null) {
+                body.setColor(this.body.getColor());
+            }
+        }
+        this.body = body;
+        this.sizeXMAX = this.body.getSizeX();
     }
 }
