@@ -30,20 +30,34 @@ public class DataServer {
     }
 
     public void doTask(Observable o, Object arg) {
-        new Thread(() -> {
-            if (arg instanceof MessageModel) {
-                if (arg instanceof MessagePlayerNew) {
-                    DataServer.this.addUser(((MessagePlayerNew) arg).getPseudo());
+
+        Thread me = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (arg instanceof MessageModel) {
+                    if (arg instanceof MessagePlayerNew) {
+                        DataServer.this.addUser(((MessagePlayerNew) arg).getPseudo());
+                    }
+                    if (arg instanceof MessagePlayerDelete || arg instanceof MessageDisconnect) {
+                        DataServer.this.delUser(((MessageModel) arg).getPseudo());
+                    }
                 }
-                if (arg instanceof MessagePlayerDelete || arg instanceof MessageDisconnect) {
-                    DataServer.this.delUser(((MessageModel) arg).getPseudo());
+                else if (arg instanceof HashMap) {
+                    WindowController.addConsoleMsg("DATA SERVER NEW ROUND");
+                    DataServer.this.endMatch((HashMap<String, Player>) arg);
+                } else {
+                    WindowController.addConsoleMsg("UNKNOW INSTANCE of " + arg.getClass());
                 }
-            }
-            if (arg instanceof HashMap) {
-                WindowController.addConsoleMsg("DATA SERVER NEW ROUND");
-                DataServer.this.endMatch((HashMap<String, Player>) arg);
+
             }
         });
+        me.start();
+        try {
+            me.join(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private ClientResponse getClientResponse(Object st, String path) {

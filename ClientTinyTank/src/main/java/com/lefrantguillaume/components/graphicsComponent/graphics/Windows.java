@@ -24,6 +24,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -117,7 +118,11 @@ public class Windows extends NiftyStateBasedGame implements Observer {
             this.nifty.addXml("assets/old/interface/gui-account.xml");
             this.nifty.addXml("assets/old/interface/gui-interface.xml");
             this.nifty.addXml("assets/old/interface/gui-game.xml");
-            this.nifty.registerMouseCursor("crosshair", "assets/old/img/game/cursor.png", 14, 15);
+            try {
+                this.nifty.getNiftyMouse().registerMouseCursor("crosshair", "assets/old/img/game/cursor.png", 15, 14);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             // this.nifty.setDebugOptionPanelColors(true);
             return true;
         }
