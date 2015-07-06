@@ -185,6 +185,7 @@ WebApi = function (app, db) {
         }, function (error, exists) {
 
             exists.stats = {
+                gamesPlayed: 0,
                 kills: 0,
                 deaths: 0,
                 score: 0,
@@ -199,25 +200,27 @@ WebApi = function (app, db) {
 
             Matches.find({'users.id': exists._id.toString()}).toArray(function (error, docs) {
 
-                for (var i = 0; i < docs.length; i++) {
-                    for (var j = 0; j < docs[i].users.length; j++) {
-                        if (docs[i].users[j].id == exists._id.toString()) {
-                            exists.stats.kills += docs[i].users[j].kills;
-                            exists.stats.deaths += docs[i].users[j].deaths;
-                            exists.stats.score += docs[i].users[j].currentScore;
-                            exists.stats.shotsFired += docs[i].users[j].nbShots;
-                            exists.stats.shotsHit += docs[i].users[j].nbHits;
-                            break;
+                if (docs.length > 0) {
+                    for (var i = 0; i < docs.length; i++) {
+                        for (var j = 0; j < docs[i].users.length; j++) {
+                            if (docs[i].users[j].id == exists._id.toString()) {
+                                exists.stats.kills += docs[i].users[j].kills;
+                                exists.stats.deaths += docs[i].users[j].deaths;
+                                exists.stats.score += docs[i].users[j].currentScore;
+                                exists.stats.shotsFired += docs[i].users[j].nbShots;
+                                exists.stats.shotsHit += docs[i].users[j].nbHits;
+                                break;
+                            }
                         }
                     }
+
+                    exists.stats.killsPG = exists.stats.kills / docs.length;
+                    exists.stats.deathsPG = exists.stats.deaths / docs.length;
+                    exists.stats.scorePG = exists.stats.score / docs.length;
+                    exists.stats.shotsFiredPG = exists.stats.shotsFired / docs.length;
+                    exists.stats.shotsHitPG = exists.stats.shotsHit / docs.length;
+                    exists.stats.gamesPlayed = docs.length;
                 }
-
-                exists.stats.killsPG = exists.stats.kills / docs.length;
-                exists.stats.deathsPG = exists.stats.deaths / docs.length;
-                exists.stats.scorePG = exists.stats.score / docs.length;
-                exists.stats.shotsFiredPG = exists.stats.shotsFired / docs.length;
-                exists.stats.shotsHitPG = exists.stats.shotsHit / docs.length;
-
                 res.status(200).json({name: "user_profile", res: exists, err: null});
 
             });
