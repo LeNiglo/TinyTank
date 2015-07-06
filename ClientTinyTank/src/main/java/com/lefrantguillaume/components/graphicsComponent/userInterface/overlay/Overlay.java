@@ -27,7 +27,7 @@ public abstract class Overlay extends Observable implements Observer {
     protected Overlay(InputData inputData) throws JSONException {
         this.current = 0;
         this.inputData = inputData;
-        this.overlayConfigs = new OverlayConfigs("configPreferenceOverlay.json");
+        this.overlayConfigs = new OverlayConfigs("configPreferenceOverlay.json", "configDataOverlay.json");
 
         this.genericSendTask = new GenericSendTask();
         this.genericSendTask.addObserver(this);
@@ -40,7 +40,7 @@ public abstract class Overlay extends Observable implements Observer {
     public abstract void initElementsComponent(AnimatorOverlayData animatorOverlayData);
 
     public void initPreference() {
-        for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayConfigs.getAvailableData().entrySet()) {
+        for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayConfigs.getAvailablePreference().entrySet()) {
             if (this.elements.containsKey(entry.getKey())) {
                 this.elements.get(entry.getKey()).setReachable(entry.getValue());
             }
@@ -69,6 +69,12 @@ public abstract class Overlay extends Observable implements Observer {
         }
     }
 
+    public void sliderMove(int x, int y) {
+        for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
+            entry.getValue().sliderMove(x, y);
+        }
+    }
+
     public abstract void doTask(Object task);
 
     public abstract boolean event(int key, char c, EnumInput type);
@@ -77,7 +83,7 @@ public abstract class Overlay extends Observable implements Observer {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             boolean[] reachable = entry.getValue().getReachable();
             if (reachable[this.current]) {
-                if (entry.getValue().isOnFocus(x, y)) {
+                if (entry.getValue().isOnFocus(x, y) != null) {
                     return true;
                 }
             }

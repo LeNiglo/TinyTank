@@ -88,7 +88,7 @@ public class TableMenuElement extends TableElement {
     }
 
     @Override
-    public boolean isOnFocus(int x, int y) {
+    public Object isOnFocus(int x, int y) {
         if (this.isActivated()) {
             int listIndex = 0;
 
@@ -115,9 +115,8 @@ public class TableMenuElement extends TableElement {
                                 type = EnumOverlayElement.getEnumByValue(element.getId().substring(element.getId().indexOf(":") + 1));
                             }
                             this.genericSendTask.sendTask(new Pair<>(type, new Pair<>(listIndex, newValue)));
-                            return true;
                         }
-                        return true;
+                        return result;
                     } else if (result instanceof Boolean && (Boolean) result == true) {
                         return true;
                     }
@@ -125,7 +124,7 @@ public class TableMenuElement extends TableElement {
                 ++listIndex;
             }
         }
-        return false;
+        return null;
     }
 
     private void initFocusElement() {

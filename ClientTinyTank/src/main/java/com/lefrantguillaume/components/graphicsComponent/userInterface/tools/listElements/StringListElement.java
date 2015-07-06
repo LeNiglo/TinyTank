@@ -144,18 +144,73 @@ public class StringListElement extends ListElement {
         }
     }
 
+    private String cleanAllFirst(String value, String suppr) {
+        int pos;
+
+        while (value.contains("\n")) {
+            pos = value.indexOf("\n");
+            if (pos == 0) {
+                value = value.replaceFirst(suppr, "");
+            } else {
+                return value;
+            }
+        }
+        return value;
+    }
+
     private List<StringElement> createMessage(Tuple<Color, String, String> message, Long time, Element.PositionInBody positionInBody) {
         List<StringElement> messages = new ArrayList<>();
         int posInString = 0;
         int max;
-
+        String value = message.getV2();
         Debug.debug("ADD Message: " + message.getV2());
+
+        while (value.length() != 0) {
+            int end;
+
+            value = this.cleanAllFirst(value, "\n");
+            if (value.contains("\n")) {
+                end = value.indexOf("\n");
+                if (end == 0) {
+                    Debug.debug("ERROR WARNING");
+                } else if (end > this.maxLength) {
+                    end = this.maxLength;
+                }
+
+            } else {
+                end = this.maxLength;
+            }
+            if (end > value.length()) {
+                end = value.length();
+            }
+
+            String tmp = value.substring(0, end);
+            value = value.substring(end, value.length());
+
+            Debug.debug("extract ->  '" + tmp + "'");
+            Debug.debug("new value: '" + value + "'");
+            if (time != null) {
+                messages.add(new StringElement(new StringTimer(tmp, time), message.getV1(), message.getV3(), positionInBody));
+            } else {
+                messages.add(new StringElement(new StringTimer(tmp), message.getV1(), message.getV3(), positionInBody));
+            }
+        }
+
+/*
         while (posInString < message.getV2().length()) {
-            max = this.maxLength + posInString;
+            int endLine = this.maxLength;
+            if (posInString == message.getV2().indexOf("\n")){
+                posInString += "\n".length();
+            }
+            else if (message.getV2().contains("\n")){
+                endLine = message.getV2().indexOf("\n");
+            }
+            max = endLine + posInString;
             if (max >= message.getV2().length()) {
                 max = message.getV2().length();
             }
             String tmp = message.getV2().substring(posInString, max);
+            Debug.debug("\t message: '" + tmp + "'");
             if (time != null) {
                 messages.add(new StringElement(new StringTimer(tmp, time), message.getV1(), message.getV3(), positionInBody));
             } else {
@@ -163,6 +218,7 @@ public class StringListElement extends ListElement {
             }
             posInString += max;
         }
+  */
         return messages;
     }
 

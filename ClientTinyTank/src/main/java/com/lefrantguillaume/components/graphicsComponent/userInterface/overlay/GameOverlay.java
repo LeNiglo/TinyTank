@@ -7,17 +7,18 @@ import com.lefrantguillaume.Utils.tools.ColorTools;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
+import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.*;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.chat.ChatElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.custom.CustomElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic.GenericElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.pop.StringPopElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.slider.SliderElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table.TableActivateElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table.TableAppearElement;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table.TableElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table.TableMenuElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.ButtonElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -25,6 +26,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.ele
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.MessageChat;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
@@ -52,7 +54,7 @@ public class GameOverlay extends Overlay {
     }
 
     @Override
-    public void initElements(){
+    public void initElements() {
         this.elements.put(EnumOverlayElement.CHAT, new ChatElement(EnumOverlayElement.CHAT,
                 new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 388, 200), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
 
@@ -65,8 +67,8 @@ public class GameOverlay extends Overlay {
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 200, (WindowConfig.getSizeY() / 2) - 250, 400, 200))));
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
-        this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) + 40, WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
+        this.elements.put(EnumOverlayElement.TABLE_ICON, new SliderElement(new GenericElement(EnumOverlayElement.TABLE_ICON,
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) + 40, WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true})));
 
         this.elements.put(EnumOverlayElement.TABLE_MENU_SCREEN, new TableMenuElement(EnumOverlayElement.TABLE_MENU_SCREEN, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 360, 210), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
@@ -75,9 +77,9 @@ public class GameOverlay extends Overlay {
         this.elements.put(EnumOverlayElement.TABLE_MENU_SETTINGS, new TableMenuElement(EnumOverlayElement.TABLE_MENU_SETTINGS, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
 
-        this.elements.put(EnumOverlayElement.TABLE_MENU, new CustomElement(EnumOverlayElement.TABLE_MENU, this.genericSendTask,
+        this.elements.put(EnumOverlayElement.TABLE_MENU, new GenericElement(EnumOverlayElement.TABLE_MENU, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
-        this.elements.put(EnumOverlayElement.CUSTOM_USER_STAT, new CustomElement(EnumOverlayElement.CUSTOM_USER_STAT,
+        this.elements.put(EnumOverlayElement.GENERIC_USER_STAT, new GenericElement(EnumOverlayElement.GENERIC_USER_STAT,
                 new BodyRect(new Rectangle(this.elements.get(EnumOverlayElement.TABLE_ICON).getBody().getMinX() - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
     }
 
@@ -106,8 +108,8 @@ public class GameOverlay extends Overlay {
         tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getRoundAnimator(EnumOverlayElement.END_ROUND), EnumOverlayElement.END_ROUND.getValue() + ":" + EnumOverlayElement.END_ROUND.getValue(), Element.PositionInBody.MIDDLE_UP));
     }
 
-    private void initUserStat(){
-        InterfaceElement customUserStat = this.elements.get(EnumOverlayElement.CUSTOM_USER_STAT);
+    private void initUserStat() {
+        InterfaceElement customUserStat = this.elements.get(EnumOverlayElement.GENERIC_USER_STAT);
 
         customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 7, customUserStat.getBody().getMinY() + 5, 156, 19), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), EnumOverlayElement.USER_SHIELD.getValue() + EnumOverlayElement.BORDER.getValue(), Element.PositionInBody.LEFT_MID));
         customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 10, customUserStat.getBody().getMinY() + 7, 150, 15), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLUE)), EnumOverlayElement.USER_SHIELD.getValue(), Element.PositionInBody.LEFT_MID));
@@ -136,14 +138,14 @@ public class GameOverlay extends Overlay {
             String screenId = EnumOverlayElement.SCREEN.getValue() + String.valueOf(i + 1);
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new StringTimer("Render Screen " + String.valueOf(i + 1)), Color.black,
                     screenId + ":" + screenId, Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.CHAT, i))), new StringTimer("chat"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getPreferenceValue(EnumOverlayElement.CHAT, i))), new StringTimer("chat"), Color.black,
                     screenId + ":" + EnumOverlayElement.CHAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.POP_KILL, i))), new StringTimer("kill event"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getPreferenceValue(EnumOverlayElement.POP_KILL, i))), new StringTimer("kill event"), Color.black,
                     screenId + ":" + EnumOverlayElement.POP_KILL.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.TABLE_ICON, i))), new StringTimer("action bar"), Color.black,
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getPreferenceValue(EnumOverlayElement.TABLE_ICON, i))), new StringTimer("action bar"), Color.black,
                     screenId + ":" + EnumOverlayElement.TABLE_ICON.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
-            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.CUSTOM_USER_STAT, i))), new StringTimer("user stats"), Color.black,
-                    screenId + ":" + EnumOverlayElement.CUSTOM_USER_STAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getPreferenceValue(EnumOverlayElement.GENERIC_USER_STAT, i))), new StringTimer("user stats"), Color.black,
+                    screenId + ":" + EnumOverlayElement.GENERIC_USER_STAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
         }
         this.elements.get(EnumOverlayElement.TABLE_MENU_SCREEN).doTask(this.current);
     }
@@ -166,6 +168,27 @@ public class GameOverlay extends Overlay {
         InterfaceElement tableMenuSettings = this.elements.get(EnumOverlayElement.TABLE_MENU_SETTINGS);
     }
 
+    private void initTankIcons(EnumGameObject tankType) {
+        InterfaceElement tableIcon = this.elements.get(EnumOverlayElement.TABLE_ICON);
+
+        tableIcon.clearData();
+        List<EnumOverlayElement> values = EnumOverlayElement.getOverlayElementByGameObject(tankType).getSameIndexList();
+
+        if (values.size() >= 6) {
+            tableIcon.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX(), tableIcon.getBody().getMinY(), 64, 64)), this.animatorOverlayData.getIconAnimator(values.get(0)), EnumOverlayElement.HIT.getValue(), Element.PositionInBody.MIDDLE_MID), values.get(3)));
+            tableIcon.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() + 64, tableIcon.getBody().getMinY(), 64, 64)), this.animatorOverlayData.getIconAnimator(values.get(1)), EnumOverlayElement.SPELL.getValue(), Element.PositionInBody.MIDDLE_MID), values.get(4)));
+            tableIcon.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() + 128, tableIcon.getBody().getMinY(), 64, 64)), this.animatorOverlayData.getIconAnimator(values.get(2)), EnumOverlayElement.BOX.getValue(), Element.PositionInBody.MIDDLE_MID), values.get(5)));
+
+            tableIcon.doTask(new Pair<>(values.get(3), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 280, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
+            tableIcon.doTask(new Pair<>(values.get(4), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 360, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
+            tableIcon.doTask(new Pair<>(values.get(5), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 300, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
+
+            tableIcon.doTask(new Pair<>(values.get(3), new StringElement(new StringTimer(this.overlayConfigs.getData(values.get(3))), Color.white, values.get(3).getValue(), Element.PositionInBody.MIDDLE_MID)));
+            tableIcon.doTask(new Pair<>(values.get(4), new StringElement(new StringTimer(this.overlayConfigs.getData(values.get(4))), Color.white, values.get(4).getValue(), Element.PositionInBody.MIDDLE_MID)));
+            tableIcon.doTask(new Pair<>(values.get(5), new StringElement(new StringTimer(this.overlayConfigs.getData(values.get(5))), Color.white, values.get(5).getValue(), Element.PositionInBody.MIDDLE_MID)));
+        }
+    }
+
     // TASK
     @Override
     public void update(Observable o, Object arg) {
@@ -175,16 +198,8 @@ public class GameOverlay extends Overlay {
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
                 Debug.debug("OVERLAY RECEIVED tuple: " + arg);
                 if (received.getV3() instanceof Player) {
-                    InterfaceElement tableIcon = this.elements.get(EnumOverlayElement.TABLE_ICON);
-
                     Player player = (Player) received.getV3();
-                    List<EnumOverlayElement> icons = EnumOverlayElement.getOverlayElementByGameObject(player.getTank().getTankState().getType()).getSameIndexList();
-
-                    if (icons.size() >= 3) {
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(0)), EnumOverlayElement.HIT.getValue(), Element.PositionInBody.MIDDLE_MID));
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(1)), EnumOverlayElement.SPELL.getValue(), Element.PositionInBody.MIDDLE_MID));
-                        tableIcon.doTask(new ImageElement(this.animatorOverlayData.getIconAnimator(icons.get(2)), EnumOverlayElement.BOX.getValue(), Element.PositionInBody.MIDDLE_MID));
-                    }
+                    this.initTankIcons(player.getTank().getTankState().getType());
                 } else if (received.getV3() instanceof Pair && ((Pair) received.getV3()).getV1() instanceof EnumOverlayElement) {
                     Pair<EnumOverlayElement, Object> task = (Pair<EnumOverlayElement, Object>) received.getV3();
 

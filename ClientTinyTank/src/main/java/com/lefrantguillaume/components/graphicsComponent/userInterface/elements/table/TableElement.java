@@ -52,6 +52,16 @@ public class TableElement extends InterfaceElement {
     }
 
     @Override
+    public void clearData(){
+        for (Map.Entry<Element, ListElement> item : this.table.entrySet()) {
+            item.getKey().leave();
+            item.getValue().clear();
+        }
+        this.table.clear();
+        this.initPositionBody();
+    }
+
+    @Override
     public void doTask(Object task) {
         if (task instanceof Element) {
             this.addElement((Element) task);
@@ -114,8 +124,8 @@ public class TableElement extends InterfaceElement {
     }
 
     @Override
-    public boolean isOnFocus(int x, int y) {
-        return false;
+    public Object isOnFocus(int x, int y) {
+        return null;
     }
 
     public void addElement(Element item) {

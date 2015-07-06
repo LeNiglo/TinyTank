@@ -1,0 +1,13 @@
+{
+  "tigerhitcomment": "Roquette de la mort\n   -inflige 20pt de dégat\n   -cooldown: 1s",
+  "tigerspellcomment": "Bouclier d'énergie\n   -possède 100hp pendant 5s\n   -cooldown: 20s\n   -impuissant face aux roquettes",
+  "tigerboxcomment": "Mur protecteur\n   -possède 20hp\n   -cooldown: 15s\n   -bloque tous les tirs",
+
+  "sniperhitcomment": "Rayon d'énergie\n   -charge le tir pendant 3s\n   -inflige 60pt de degat",
+  "sniperspellcomment": "Invisibilité\n   -devient invisible pendant 10s\n   -cooldown: 20s",
+  "sniperboxcomment": "Mur d'énergie\n   -posséde 20hp\n   -cooldown: 15s\n   -bloque les tirs d'énergie",
+
+  "rusherhitcomment": "Mitrailleuse\n   -inflige 10pt de degat\n   -cooldown: 0.1s",
+  "rusherspellcomment": "Rush\n   -augmentent grandement sa vitesse\n   -ignore les collisions pendant 0.1s\n   -cooldown: 3s",
+  "rusherboxcomment": "Mine\n   -inflige 10pt de degat\n   -cooldown: 20s"
+}

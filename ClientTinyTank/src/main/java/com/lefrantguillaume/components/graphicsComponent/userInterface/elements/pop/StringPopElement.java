@@ -50,6 +50,11 @@ public class StringPopElement extends InterfaceElement {
         this.stringListElement.update();
     }
 
+    @Override
+    public void clearData() {
+        this.stringListElement.clear();
+    }
+
     int i = 0;
 
     @Override
@@ -67,14 +72,14 @@ public class StringPopElement extends InterfaceElement {
     }
 
     @Override
-    public boolean isOnFocus(int x, int y) {
+    public Object isOnFocus(int x, int y) {
         if (this.isActivated()) {
             if (this.stringListElement.isOnFocus(x, y) != null) {
             }
             if (this.body.isOnFocus(x, y)) {
             }
         }
-        return false;
+        return null;
     }
 
     @Override

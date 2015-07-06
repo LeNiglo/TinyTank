@@ -75,6 +75,11 @@ public class ChatElement extends InterfaceElement {
     }
 
     @Override
+    public void clearData() {
+        this.stringListElement.clear();
+    }
+
+    @Override
     public Object eventPressed(int key, char c) {
         if (key == Input.KEY_ENTER) {
             if (this.selectionField.isFocused()) {
@@ -113,21 +118,21 @@ public class ChatElement extends InterfaceElement {
     }
 
     @Override
-    public boolean isOnFocus(int x, int y) {
+    public Object isOnFocus(int x, int y) {
         if (this.isActivated()) {
             Object result = this.stringListElement.isOnFocus(x, y);
             if (result instanceof Element) {
                 //todo catach l'element et l'envoyer au selectField pour envois de message by id
                 Debug.debug("element CATCH");
                 this.selectionField.addToCurrent(((Element) result).getId());
-                return true;
+                return result;
             }
             if (this.selectionField.isOnFocus(x, y)) {
                 Debug.debug("selection CATCH");
                 return true;
             }
         }
-        return false;
+        return null;
     }
 
     @Override

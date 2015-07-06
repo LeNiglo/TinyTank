@@ -1,7 +1,6 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.custom;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -16,18 +15,18 @@ import java.util.List;
 /**
  * Created by andres_k on 03/07/2015.
  */
-public class CustomElement extends InterfaceElement {
+public class GenericElement extends InterfaceElement {
     private List<Element> elements;
     private GenericSendTask genericSendTask;
     private boolean canBeActivate;
     private Pair<Float, Float> saves;
 
-    public CustomElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
+    public GenericElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
         this.childInit(genericSendTask);
     }
 
-    public CustomElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivated) {
+    public GenericElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
         this.childInit(null);
     }
@@ -66,7 +65,7 @@ public class CustomElement extends InterfaceElement {
                             element.doTask(received.getV2());
                         }
                     }
-                    if (this.type == EnumOverlayElement.CUSTOM_USER_STAT) {
+                    if (this.type == EnumOverlayElement.GENERIC_USER_STAT) {
                         this.body.setSizes(this.body.getSizeX(), 10 + this.sizeYOfBorders() + (this.elementsPrintable() - 1));
                         this.body.setPosition(this.saves.getV1() - this.body.getSizeX(), this.saves.getV2() - this.body.getSizeY());
                     }
@@ -101,6 +100,11 @@ public class CustomElement extends InterfaceElement {
     }
 
     @Override
+    public void clearData() {
+        this.elements.clear();
+    }
+
+    @Override
     public Object eventPressed(int key, char c) {
         return null;
     }
@@ -120,14 +124,16 @@ public class CustomElement extends InterfaceElement {
     }
 
     @Override
-    public boolean isOnFocus(int x, int y) {
-        if (this.isActivated() && this.genericSendTask != null) {
+    public Object isOnFocus(int x, int y) {
+        if (this.isActivated()) {
             for (Element element : this.elements) {
                 Object result = element.isOnFocus(x, y);
                 if (result != null && element.isEmpty() == false) {
                     if (result instanceof EnumOverlayElement) {
-                        this.genericSendTask.sendTask(new Pair<>(this.type, result));
-                        return true;
+                        if (this.genericSendTask != null) {
+                            this.genericSendTask.sendTask(new Pair<>(this.type, result));
+                        }
+                        return result;
                     }
                     if (result instanceof Boolean && (Boolean) result == true) {
                         return true;
@@ -135,7 +141,7 @@ public class CustomElement extends InterfaceElement {
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public int containId(String id) {

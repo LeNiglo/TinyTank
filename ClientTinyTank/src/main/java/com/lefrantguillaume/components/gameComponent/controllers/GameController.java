@@ -234,7 +234,7 @@ public class GameController extends Observable implements Observer {
             if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
                 Pair order = new Pair<>(EnumOverlayElement.USER_LIFE, new Pair<>("cutBody", player.getTank().getTankState().getPercentageLife()));
                 this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.GENERIC_USER_STAT, order)));
             }
         }
     }
@@ -265,7 +265,7 @@ public class GameController extends Observable implements Observer {
             if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
                 Pair order = new Pair<>(EnumOverlayElement.USER_LIFE, new Pair<>("cutBody", player.getTank().getTankState().getPercentageLife()));
                 this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.GENERIC_USER_STAT, order)));
             }
         }
     }
@@ -307,7 +307,7 @@ public class GameController extends Observable implements Observer {
             if (obstacle.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(obstacle.getPlayerId())) {
                 Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", obstacle.getPercentageLife()));
                 this.setChanged();
-                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.GENERIC_USER_STAT, order)));
             }
         }
     }
@@ -471,7 +471,7 @@ public class GameController extends Observable implements Observer {
                         if (current.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(current.getPlayerId())) {
                             Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", current.getPercentageLife()));
                             this.setChanged();
-                            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+                            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.GENERIC_USER_STAT, order)));
                         }
                         this.mapController.deleteObstacle(current.getId());
                     } else {

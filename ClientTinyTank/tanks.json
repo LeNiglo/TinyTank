@@ -26,7 +26,7 @@
         "hit": {
           "shotType": "rocket",
           "speed": "150.0",
-          "damage": "10.0",
+          "damage": "20.0",
           "cooldown" : "1000",
           "build": {
             "centerX": "-41.0", // centre arbitraire du hit, signe '-' pour le décalage x/y pour l'affichage
@@ -142,7 +142,7 @@
       },
       "tankSpell": {
         "spellType": "invisibility",
-        "cooldown" : "10000"
+        "cooldown" : "20000"
       },
       "tankBox": {
         "boxType": "plasma_wall",
@@ -230,7 +230,7 @@
       },
       "tankSpell": {
         "spellType": "teleport",
-        "cooldown" : "5000"
+        "cooldown" : "3000"
       },
       "tankBox": {
         "boxType": "mine",

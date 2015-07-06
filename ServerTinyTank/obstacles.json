@@ -39,7 +39,7 @@
     },
     "mine": {
       "life": "1",
-      "damage": "50",
+      "damage": "10",
       "build": {
         "centerX": "-7.0",
         "centerY": "-7.0",
@@ -133,8 +133,7 @@
           "rusher",
           "sniper",
           "iron_wall",
-          "plasma_wall",
-          "mine"
+          "plasma_wall"
         ]
       }
     }

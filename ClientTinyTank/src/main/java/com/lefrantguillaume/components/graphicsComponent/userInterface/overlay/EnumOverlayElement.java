@@ -1,6 +1,5 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public enum EnumOverlayElement {
     CHAT("chat", 1),
     POP_ELEMENT("popElement", 2),
     TABLE("table", 3),
-    CUSTOM("custom", 4),
+    GENERIC("generic", 4),
 
     // index
     POP_KILL(POP_ELEMENT.value + "Kill", POP_ELEMENT.index),
@@ -24,7 +23,7 @@ public enum EnumOverlayElement {
     TABLE_ROUND_END(TABLE_ROUND.value + "END", TABLE_ROUND.index),
     TABLE_STAT(TABLE.value + "Stat", TABLE.index),
     TABLE_ICON(TABLE.value + "Icon", TABLE.index),
-    CUSTOM_USER_STAT(CUSTOM.value + "UserStat", CUSTOM.index),
+    GENERIC_USER_STAT(GENERIC.value + "UserStat", GENERIC.index),
     TABLE_MENU(TABLE.value + "Menu", TABLE.index),
     TABLE_MENU_SETTINGS(TABLE_MENU.value + "Settings", TABLE_MENU.index),
     TABLE_MENU_CONTROLS(TABLE_MENU.value + "Controls", TABLE_MENU.index),
@@ -44,11 +43,15 @@ public enum EnumOverlayElement {
     EXIT("exit"), SETTINGS("settings"), CONTROLS("controls"), SCREEN("screen"),
 
     // iconAnimator
-    HIT("hit"), SPELL("spell"), BOX("box"),
+    HIT("hit"), SPELL("spell"), BOX("box"), COMMENT("comment"),
     TIGER("tiger", 5), SNIPER("sniper", 6), RUSHER("rusher", 7),
     TIGER_HIT(TIGER.value + HIT.value, TIGER.index), TIGER_SPELL(TIGER.value + SPELL.value, TIGER.index), TIGER_BOX(TIGER.value + BOX.value, TIGER.index),
     SNIPER_HIT(SNIPER.value + HIT.value, SNIPER.index), SNIPER_SPELL(SNIPER.value + SPELL.value, SNIPER.index), SNIPER_BOX(SNIPER.value + BOX.value, SNIPER.index),
     RUSHER_HIT(RUSHER.value + HIT.value, RUSHER.index), RUSHER_SPELL(RUSHER.value + SPELL.value, RUSHER.index), RUSHER_BOX(RUSHER.value + BOX.value, RUSHER.index),
+
+    TIGER_HIT_COMMENT(TIGER.value + HIT.value + COMMENT.value, TIGER.index), TIGER_SPELL_COMMENT(TIGER.value + SPELL.value + COMMENT.value, TIGER.index), TIGER_BOX_COMMENT(TIGER.value + BOX.value + COMMENT.value, TIGER.index),
+    SNIPER_HIT_COMMENT(SNIPER.value + HIT.value + COMMENT.value, SNIPER.index), SNIPER_SPELL_COMMENT(SNIPER.value + SPELL.value + COMMENT.value, SNIPER.index), SNIPER_BOX_COMMENT(SNIPER.value + BOX.value + COMMENT.value, SNIPER.index),
+    RUSHER_HIT_COMMENT(RUSHER.value + HIT.value + COMMENT.value, RUSHER.index), RUSHER_SPELL_COMMENT(RUSHER.value + SPELL.value + COMMENT.value, RUSHER.index), RUSHER_BOX_COMMENT(RUSHER.value + BOX.value + COMMENT.value, RUSHER.index),
 
     // item
     USER_LIFE("life"), USER_SHIELD("shield");
@@ -82,7 +85,6 @@ public enum EnumOverlayElement {
     }
 
     public static EnumOverlayElement getEnumByValue(String value) {
-        Debug.debug("try to find '" + value + "'");
         EnumOverlayElement[] enums = EnumOverlayElement.values();
         for (int i = 0; i < enums.length; ++i) {
             EnumOverlayElement item = enums[i];

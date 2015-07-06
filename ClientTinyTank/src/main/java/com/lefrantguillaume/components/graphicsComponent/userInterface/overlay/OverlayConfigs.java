@@ -13,59 +13,88 @@ import java.util.Map;
  * Created by andres_k on 04/07/2015.
  */
 public class OverlayConfigs {
-    private Map<EnumOverlayElement, boolean[]> availableData;
-    private JSONObject configs;
-    private String file;
+    private Map<EnumOverlayElement, boolean[]> availablePreference;
+    private JSONObject configPreference;
+    private String filePreference;
 
-    public OverlayConfigs(String file) throws JSONException {
-        this.availableData = new LinkedHashMap<>();
-        this.configs = new JSONObject(StringTools.readFile(file));
-        this.file = file;
+    private Map<EnumOverlayElement, String> datas;
+    private JSONObject configData;
+    private String fileData;
 
-        Iterator iterator = this.configs.keys();
+    public OverlayConfigs(String filePreference, String fileData) throws JSONException {
+        this.availablePreference = new LinkedHashMap<>();
+        this.filePreference = filePreference;
+
+        this.datas = new LinkedHashMap<>();
+        this.fileData = fileData;
+
+        this.initPreference();
+        this.initData();
+    }
+
+    private void initPreference() throws JSONException {
+        this.configPreference = new JSONObject(StringTools.readFile(this.filePreference));
+        Iterator iterator = this.configPreference.keys();
         while (iterator.hasNext()) {
-            String input = (String) iterator.next();
-            JSONArray array = this.configs.getJSONArray(input);
+            String key = (String) iterator.next();
+            JSONArray array = this.configPreference.getJSONArray(key);
             boolean[] values = new boolean[array.length()];
             for (int i = 0; i < array.length(); ++i) {
                 values[i] = array.getBoolean(i);
             }
-            this.availableData.put(EnumOverlayElement.getEnumByValue(input), values);
+            this.availablePreference.put(EnumOverlayElement.getEnumByValue(key), values);
+        }
+    }
+
+    private void initData() throws JSONException {
+        this.configData = new JSONObject(StringTools.readFile(this.fileData));
+        Iterator iterator = this.configData.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            String value = this.configData.getString(key);
+            this.datas.put(EnumOverlayElement.getEnumByValue(key), value);
         }
     }
 
     // GETTERS
-    public Map<EnumOverlayElement, boolean[]> getAvailableData() {
-        return this.availableData;
+    public Map<EnumOverlayElement, boolean[]> getAvailablePreference() {
+        return this.availablePreference;
     }
 
-    public boolean[] getValues(EnumOverlayElement type) {
-        return this.availableData.get(type);
+    public boolean[] getPreferenceValues(EnumOverlayElement type) {
+        return this.availablePreference.get(type);
     }
 
-    public boolean getValue(EnumOverlayElement type, int position){
-        if (this.availableData.containsKey(type)){
-            if (position < this.availableData.get(type).length){
-                return this.availableData.get(type)[position];
+    public boolean getPreferenceValue(EnumOverlayElement type, int position){
+        if (this.availablePreference.containsKey(type)){
+            if (position < this.availablePreference.get(type).length){
+                return this.availablePreference.get(type)[position];
             }
         }
         return true;
     }
 
+    public String getData(EnumOverlayElement type){
+        if (this.datas.containsKey(type)){
+            return this.datas.get(type);
+        }
+        return "";
+    }
+
     // SETTERS
     public boolean setAvailableInput(EnumOverlayElement type, boolean[] value) {
-        if (this.availableData.containsKey(type)) {
-            this.availableData.replace(type, value);
+        if (this.availablePreference.containsKey(type)) {
+            this.availablePreference.replace(type, value);
             JSONArray array = new JSONArray();
             for (int i = 0; i < value.length; ++i) {
                 array.put(value[i]);
             }
             try {
-                this.configs.put(type.getValue(), array);
+                this.configPreference.put(type.getValue(), array);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            StringTools.writeInFile(this.file, this.configs.toString());
+            StringTools.writeInFile(this.filePreference, this.configPreference.toString());
             return true;
         }
         return false;

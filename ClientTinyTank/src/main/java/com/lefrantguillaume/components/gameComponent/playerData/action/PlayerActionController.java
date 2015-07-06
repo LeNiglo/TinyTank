@@ -77,7 +77,7 @@ public class PlayerActionController { //extends Observable {
 
                     if (obstacle.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(obstacle.getPlayerId())) {
                         Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", obstacle.getPercentageLife()));
-                        result.add(new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order));
+                        result.add(new Pair<>(EnumOverlayElement.GENERIC_USER_STAT, order));
                     }
                 }
             }

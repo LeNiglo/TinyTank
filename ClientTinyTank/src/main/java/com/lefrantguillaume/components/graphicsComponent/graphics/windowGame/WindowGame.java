@@ -168,7 +168,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
         }
         if (runningTime > 30) {
             this.gameOverlay.updateOverlay();
-
+            this.gameOverlay.sliderMove(xpos, ypos);
             this.myMouseMoved(xpos, ypos);
             this.gameController.updateGame(1);//(((float) delta / 15) < 1 ? 1 : ((float) delta / 15)));
 

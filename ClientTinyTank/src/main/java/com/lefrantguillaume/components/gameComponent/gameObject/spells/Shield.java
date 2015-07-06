@@ -55,7 +55,7 @@ public class Shield extends Spell {
 
     @Override
     public void move(Pair<Float, Float> coords) {
-        if (this.isActive == true) {
+        if (this.isActive == true && this.shield != null) {
             this.shield.move(coords);
         }
     }

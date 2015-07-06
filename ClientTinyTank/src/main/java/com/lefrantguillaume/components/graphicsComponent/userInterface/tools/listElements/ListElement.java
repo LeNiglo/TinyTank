@@ -21,6 +21,9 @@ public abstract class ListElement {
     }
 
     public void clear(){
+        for (Element element : this.elements){
+            element.leave();
+        }
         this.elements.clear();
     }
 
@@ -47,9 +50,6 @@ public abstract class ListElement {
             if (element.isOnFocus(x, y) != null && element.isEmpty() == false){
                 return element;
             }
-        }
-        if (body.isOnFocus(x, y)){
-            return null;
         }
         return null;
     }
@@ -80,8 +80,12 @@ public abstract class ListElement {
         }
     }
 
-    // SETTERS
+    // GETTERS
+    public BodyRect getBody(){
+        return this.body;
+    }
 
+    // SETTERS
     public void setBody(BodyRect body){
         this.body = body;
         this.updatePosition();

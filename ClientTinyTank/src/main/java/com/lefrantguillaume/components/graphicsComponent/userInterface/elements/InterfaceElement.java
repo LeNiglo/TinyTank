@@ -38,11 +38,17 @@ public abstract class InterfaceElement {
 
     public abstract void update();
 
+    public abstract void clearData();
+
     public abstract Object eventPressed(int key, char c);
 
     public abstract Object eventReleased(int key, char c);
 
-    public abstract boolean isOnFocus(int x, int y);
+    public abstract Object isOnFocus(int x, int y);
+
+    public boolean sliderMove(int x, int y){
+        return false;
+    }
 
     // GETTERS
     public boolean isActivated(){
