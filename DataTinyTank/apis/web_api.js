@@ -189,7 +189,12 @@ WebApi = function (app, db) {
                 deaths: 0,
                 score: 0,
                 shotsFired: 0,
-                shotsHit: 0
+                shotsHit: 0,
+                killsPG: 0,
+                deathsPG: 0,
+                scorePG: 0,
+                shotsFiredPG: 0,
+                shotsHitPG: 0
             };
 
             //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
@@ -211,11 +216,11 @@ WebApi = function (app, db) {
 
                 }
 
-                exists.stats.kills /= docs.length;
-                exists.stats.deaths /= docs.length;
-                exists.stats.score /= docs.length;
-                exists.stats.shotsFired /= docs.length;
-                exists.stats.shotsHit /= docs.length;
+                exists.stats.killsPG = exists.stats.kills / docs.length;
+                exists.stats.deathsPG = exists.stats.deaths / docs.length;
+                exists.stats.scorePG = exists.stats.score / docs.length;
+                exists.stats.shotsFiredPG = exists.stats.shotsFired / docs.length;
+                exists.stats.shotsHitPG = exists.stats.shotsHit / docs.length;
 
                 res.status(200).json({name: "user_profile", res: exists, err: null});
 
