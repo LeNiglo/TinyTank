@@ -189,13 +189,17 @@ WebApi = function (app, db) {
                 Matches.find({'users.id': exists._id}, function (error, results) {
                     if (!error) {
                         console.log(error, results);
-                        for (var i = 0; i < results.length; i++) {
+                        results.forEach(function (e, i) {
                             console.log(i, results[i]);
-                        }
+                        });
                         res.status(200).json({name: "user_profile", res: exists, err: null});
                     }
                     else {
-                        res.status(200).json({name: "user_profile", res: null, err: "Error while getting match history."});
+                        res.status(200).json({
+                            name: "user_profile",
+                            res: null,
+                            err: "Error while getting match history."
+                        });
                     }
                 });
             }
