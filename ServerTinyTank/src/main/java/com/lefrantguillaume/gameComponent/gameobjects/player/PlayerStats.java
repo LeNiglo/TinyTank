@@ -9,8 +9,8 @@ public class PlayerStats {
     private String pseudo;
 
     private int currentScore = 0;
-    private int nbDeaths = 0;
-    private int nbPeopleKilled = 0;
+    private int deaths = 0;
+    private int kills = 0;
 
     private int nbShots = 0;
     private int nbHits = 0;
@@ -22,11 +22,11 @@ public class PlayerStats {
     }
 
     public void addKill() {
-        this.nbPeopleKilled += 1;
+        this.kills += 1;
     }
 
     public void addDeath() {
-        this.nbDeaths += 1;
+        this.deaths += 1;
     }
 
     public void addScore(int score) {
@@ -62,11 +62,11 @@ public class PlayerStats {
     }
 
     public int getKills() {
-        return this.nbPeopleKilled;
+        return this.kills;
     }
 
     public int getDeaths() {
-        return this.nbDeaths;
+        return this.deaths;
     }
 
     public int getNbShots() {
