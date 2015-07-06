@@ -201,7 +201,7 @@ WebApi = function (app, db) {
                     for (var j = 0; j < docs[i].users.length; j++) {
                         if (docs[i].users[j].id == exists._id.toString()) {
                             exists.stats.kills += docs[i].users[j].kills;
-                            exists.stats.death += docs[i].users[j].deaths;
+                            exists.stats.deaths += docs[i].users[j].deaths;
                             exists.stats.score += docs[i].users[j].currentScore;
                             exists.stats.shotsFired += docs[i].users[j].nbShots;
                             exists.stats.shotsHit += (docs[i].users[j].nbGameObjectsDestroyed + docs[i].users[j].nbHitSomebody);
@@ -212,7 +212,7 @@ WebApi = function (app, db) {
                 }
 
                 exists.stats.kills /= docs.length;
-                exists.stats.death /= docs.length;
+                exists.stats.deaths /= docs.length;
                 exists.stats.score /= docs.length;
                 exists.stats.shotsFired /= docs.length;
                 exists.stats.shotsHit /= docs.length;
