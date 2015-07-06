@@ -13,7 +13,7 @@ public class PlayerStats {
     private int nbPeopleKilled = 0;
 
     private int nbShots = 0;
-    private int nbHit = 0;
+    private int nbHits = 0;
     private int nbGameObjectsDestroyed = 0;
 
     public PlayerStats(String id, String pseudo) {
@@ -50,7 +50,7 @@ public class PlayerStats {
     }
 
     public void addHit() {
-        this.nbHit += 1;
+        this.nbHits += 1;
     }
 
     public void addGameObjectDestroyed() {
@@ -74,7 +74,7 @@ public class PlayerStats {
     }
 
     public int getNbHit() {
-        return this.nbHit;
+        return this.nbHits;
     }
 
     public int getNbGameObjectsDestroyed() {

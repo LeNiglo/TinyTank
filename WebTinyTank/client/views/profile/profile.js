@@ -38,5 +38,8 @@ Template.profile.created = function () {
 Template.profileDetail.helpers({
     dateGetFrom: function (act) {
         return moment(act).fromNow();
+    },
+    getAccuracy: function (stats) {
+        return stats.shotsHit * 100 / stats.shotsFired;
     }
 })

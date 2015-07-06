@@ -204,7 +204,7 @@ WebApi = function (app, db) {
                             exists.stats.deaths += docs[i].users[j].deaths;
                             exists.stats.score += docs[i].users[j].currentScore;
                             exists.stats.shotsFired += docs[i].users[j].nbShots;
-                            exists.stats.shotsHit += docs[i].users[j].nbHitSomebody;
+                            exists.stats.shotsHit += docs[i].users[j].nbHits;
                             break;
                         }
                     }
