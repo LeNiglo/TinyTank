@@ -29,6 +29,11 @@ public class TableElement extends InterfaceElement {
         this.childInit();
     }
 
+    public TableElement(EnumOverlayElement type, BodyRect body) {
+        this.parentInit(body, type, true, new boolean[]{true, true});
+        this.childInit();
+    }
+
     // INIT
 
     private void childInit() {

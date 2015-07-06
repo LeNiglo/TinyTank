@@ -54,7 +54,7 @@ public class GameOverlay extends Overlay {
     @Override
     public void initElements(){
         this.elements.put(EnumOverlayElement.CHAT, new ChatElement(EnumOverlayElement.CHAT,
-                new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 408, 200), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
+                new BodyRect(new Rectangle(0, WindowConfig.getSizeY() - 200, 388, 200), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
 
         this.elements.put(EnumOverlayElement.POP_KILL, new StringPopElement(EnumOverlayElement.POP_KILL,
                 new BodyRect(new Rectangle(WindowConfig.getSizeX() - 250, 0, 250, 400))));
@@ -66,7 +66,7 @@ public class GameOverlay extends Overlay {
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new TableElement(EnumOverlayElement.TABLE_ICON,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2), WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) + 40, WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
 
         this.elements.put(EnumOverlayElement.TABLE_MENU_SCREEN, new TableMenuElement(EnumOverlayElement.TABLE_MENU_SCREEN, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 360, 210), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
@@ -78,7 +78,7 @@ public class GameOverlay extends Overlay {
         this.elements.put(EnumOverlayElement.TABLE_MENU, new CustomElement(EnumOverlayElement.TABLE_MENU, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_USER_STAT, new CustomElement(EnumOverlayElement.CUSTOM_USER_STAT,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
+                new BodyRect(new Rectangle(this.elements.get(EnumOverlayElement.TABLE_ICON).getBody().getMinX() - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
     }
 
     @Override
@@ -142,6 +142,8 @@ public class GameOverlay extends Overlay {
                     screenId + ":" + EnumOverlayElement.POP_KILL.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
             tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.TABLE_ICON, i))), new StringTimer("action bar"), Color.black,
                     screenId + ":" + EnumOverlayElement.TABLE_ICON.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
+            tableMenuScreen.doTask(new ButtonElement(new StringElement(new BodyRect(null, ColorTools.getGreenOrRed(this.overlayConfigs.getValue(EnumOverlayElement.CUSTOM_USER_STAT, i))), new StringTimer("user stats"), Color.black,
+                    screenId + ":" + EnumOverlayElement.CUSTOM_USER_STAT.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.SCREEN));
         }
         this.elements.get(EnumOverlayElement.TABLE_MENU_SCREEN).doTask(this.current);
     }
