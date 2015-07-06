@@ -78,7 +78,7 @@ public class GameOverlay extends Overlay {
         this.elements.put(EnumOverlayElement.TABLE_MENU, new CustomElement(EnumOverlayElement.TABLE_MENU, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
         this.elements.put(EnumOverlayElement.CUSTOM_USER_STAT, new CustomElement(EnumOverlayElement.CUSTOM_USER_STAT,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) - 120, WindowConfig.getSizeY() - 60, 120, 60), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
     }
 
     @Override
@@ -109,9 +109,12 @@ public class GameOverlay extends Overlay {
     private void initUserStat(){
         InterfaceElement customUserStat = this.elements.get(EnumOverlayElement.CUSTOM_USER_STAT);
 
-        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 10, customUserStat.getBody().getMinY() + 10, 100, 20)), EnumOverlayElement.USER_SHIELD.getValue(), Element.PositionInBody.LEFT_MID));
-        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 7, customUserStat.getBody().getMinY() + 34, 106, 26), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), "lifeBorder", Element.PositionInBody.LEFT_MID));
-        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 10, customUserStat.getBody().getMinY() + 37, 100, 20), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), EnumOverlayElement.USER_LIFE.getValue(), Element.PositionInBody.LEFT_MID));
+        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 7, customUserStat.getBody().getMinY() + 5, 156, 19), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), EnumOverlayElement.USER_SHIELD.getValue() + EnumOverlayElement.BORDER.getValue(), Element.PositionInBody.LEFT_MID));
+        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 10, customUserStat.getBody().getMinY() + 7, 150, 15), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLUE)), EnumOverlayElement.USER_SHIELD.getValue(), Element.PositionInBody.LEFT_MID));
+        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 7, customUserStat.getBody().getMinY() + 25, 156, 26), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), EnumOverlayElement.USER_LIFE.getValue() + EnumOverlayElement.BORDER.getValue(), Element.PositionInBody.LEFT_MID));
+        customUserStat.doTask(new ImageElement(new BodyRect(new Rectangle(customUserStat.getBody().getMinX() + 10, customUserStat.getBody().getMinY() + 28, 150, 20), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREEN)), EnumOverlayElement.USER_LIFE.getValue(), Element.PositionInBody.LEFT_MID));
+
+        customUserStat.doTask(new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", 0f)));
     }
 
     private void initTableMenu() {

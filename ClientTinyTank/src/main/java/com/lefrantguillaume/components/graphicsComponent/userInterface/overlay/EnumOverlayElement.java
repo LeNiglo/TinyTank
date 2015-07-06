@@ -35,6 +35,7 @@ public enum EnumOverlayElement {
     IMAGE("image"),
     STRING("string"),
     BUTTON("button"),
+    BORDER("border"),
 
     // roundAnimator
     NEW_ROUND("newRound"), END_ROUND("endRound"), TIMER("stat"),

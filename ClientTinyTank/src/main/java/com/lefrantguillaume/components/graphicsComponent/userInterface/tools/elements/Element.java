@@ -67,6 +67,13 @@ public abstract class Element {
 
     public abstract float getAbsoluteHeight();
 
+    public boolean isBodyPrintable(){
+        if (this.body != null){
+            return this.body.isPrintable();
+        }
+        return false;
+    }
+
     // SETTERS
     public void setBody(BodyRect body){
         if (this.body != null) {

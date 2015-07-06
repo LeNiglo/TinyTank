@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.playerData.action;
 
+import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
@@ -67,11 +68,17 @@ public class PlayerActionController { //extends Observable {
                 if (player.getTank().getTankSpell().isActivated()){
                     result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.SPELL, player.getTank().getTankSpell().getCooldown())));
                 }
-                Object tmp = player.getTank().activeSpell();
-                if (tmp instanceof Obstacle) {
+                Object item = player.getTank().activeSpell();
+                if (item instanceof Obstacle) {
+                    Obstacle obstacle = (Obstacle)item;
                     TankState state = player.getTank().getTankState();
-                    ((Obstacle) tmp).createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
-                    result.add(tmp);
+                    obstacle.createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
+                    result.add(item);
+
+                    if (obstacle.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(obstacle.getPlayerId())) {
+                        Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", obstacle.getPercentageLife()));
+                        result.add(new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order));
+                    }
                 }
             }
         }

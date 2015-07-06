@@ -10,21 +10,23 @@ import org.newdawn.slick.geom.Rectangle;
 public class BodyRect {
     private Rectangle body;
     private Color color;
-
+    private boolean printable;
 
     public BodyRect(Rectangle body) {
         this.body = body;
         this.color = null;
+        this.printable = true;
     }
 
     public BodyRect(Rectangle body, Color color) {
         this.body = body;
         this.color = color;
+        this.printable = true;
     }
 
     // FUNCTIONS
     public void draw(Graphics g) {
-        if (this.color != null) {
+        if (this.color != null&& this.isPrintable()) {
             g.setColor(this.color);
             g.fill(this.body);
         }
@@ -67,6 +69,10 @@ public class BodyRect {
         return this.body;
     }
 
+    public boolean isPrintable() {
+        return this.printable;
+    }
+
     // SETTERS
     public void setPosition(float x, float y) {
         this.body.setX(x);
@@ -79,5 +85,9 @@ public class BodyRect {
 
     public void setSizes(float sizeX, float sizeY){
         this.body.setSize(sizeX, sizeY);
+    }
+
+    public void setPrintable(boolean printable) {
+        this.printable = printable;
     }
 }

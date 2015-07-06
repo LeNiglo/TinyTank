@@ -28,7 +28,7 @@ public class ColorTools {
         colors.put(Colors.TRANSPARENT_BLACK, new Color(0f, 0f, 0f, 0.7f));
         colors.put(Colors.TRANSPARENT_RED, new Color(1f, 0f, 0f, 0.5f));
         colors.put(Colors.TRANSPARENT_GREEN, new Color(0f, 1f, 0f, 0.5f));
-        colors.put(Colors.TRANSPARENT_BLUE, new Color(0f, 0f, 1f, 0.5f));
+        colors.put(Colors.TRANSPARENT_BLUE, new Color(0f, 0.8f, 1f, 0.5f));
         colors.put(Colors.TRANSPARENT_YELLOW, new Color(1f, 1f, 0f, 0.5f));
     }
 

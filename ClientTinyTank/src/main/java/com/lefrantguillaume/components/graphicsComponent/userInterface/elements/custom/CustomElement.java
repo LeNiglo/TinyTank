@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.custom;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -19,6 +20,7 @@ public class CustomElement extends InterfaceElement {
     private List<Element> elements;
     private GenericSendTask genericSendTask;
     private boolean canBeActivate;
+    private Pair<Float, Float> saves;
 
     public CustomElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
@@ -34,10 +36,13 @@ public class CustomElement extends InterfaceElement {
     public void childInit(GenericSendTask genericSendTask) {
         this.elements = new ArrayList<>();
         this.genericSendTask = genericSendTask;
-        if (!this.isActivated()){
+        if (!this.isActivated()) {
             this.canBeActivate = true;
         } else {
             this.canBeActivate = false;
+        }
+        if (this.body != null){
+            this.saves = new Pair<>(this.body.getMaxX(), this.body.getMaxY());
         }
     }
 
@@ -52,10 +57,20 @@ public class CustomElement extends InterfaceElement {
                 if (received.getV1() < this.reachable.length) {
                     this.reachable[received.getV1()] = received.getV2();
                 }
-            }
-        } else {
-            for (Element element : this.elements) {
-                element.doTask(task);
+            } else if (((Pair) task).getV1() instanceof EnumOverlayElement) {
+                Pair<EnumOverlayElement, Object> received = (Pair<EnumOverlayElement, Object>) task;
+
+                if (!received.getV1().getValue().equals("")) {
+                    for (Element element : this.elements) {
+                        if (element.getId().contains(received.getV1().getValue())) {
+                            element.doTask(received.getV2());
+                        }
+                    }
+                    if (this.type == EnumOverlayElement.CUSTOM_USER_STAT) {
+                        this.body.setSizes(this.body.getSizeX(), 10 + this.sizeYOfBorders() + (this.elementsPrintable() - 1));
+                        this.body.setPosition(this.saves.getV1() - this.body.getSizeX(), this.saves.getV2() - this.body.getSizeY());
+                    }
+                }
             }
         }
     }
@@ -121,5 +136,35 @@ public class CustomElement extends InterfaceElement {
             }
         }
         return false;
+    }
+
+    public int containId(String id) {
+        for (int i = 0; i < this.elements.size(); ++i) {
+            if (!id.equals("") && this.elements.get(i).getId().contains(id)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int elementsPrintable(){
+        int result = 0;
+
+        for (Element element : this.elements){
+            if (element.isBodyPrintable() && !element.getId().contains(EnumOverlayElement.BORDER.getValue())){
+                result += 1;
+            }
+        }
+        return result;
+    }
+
+    public int sizeYOfBorders() {
+        int result = 0;
+        for (Element element : this.elements) {
+            if (element.isBodyPrintable() && element.getId().contains(EnumOverlayElement.BORDER.getValue())) {
+                result += element.getBody().getSizeY();
+            }
+        }
+        return result;
     }
 }

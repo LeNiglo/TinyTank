@@ -141,7 +141,7 @@ public class GameController extends Observable implements Observer {
                             Debug.debug("DELETE PLAYER");
                             this.doPlayerDelete(message.getId());
                         } else if (message instanceof MessagePlayerUpdateState) {
-                            Debug.debug("UPDATE TIMER PLAYER");
+                            Debug.debug("UPDATE STATE PLAYER");
                             this.doPlayerUpdateState((MessagePlayerUpdateState) message);
                         } else if (message instanceof MessagePlayerUpdatePosition) {
                             Debug.debug("UPDATE POS PLAYER");
@@ -153,10 +153,10 @@ public class GameController extends Observable implements Observer {
                             Debug.debug("PUT OBJECT");
                             this.doPutObstacle((MessagePutObstacle) message);
                         } else if (message instanceof MessageObstacleUpdateState) {
-                            Debug.debug("UPDATE OBSTACLE");
+                            Debug.debug("UPDATE STATE OBSTACLE");
                             this.doObstacleUpdateState((MessageObstacleUpdateState) message);
                         } else if (message instanceof MessageShotUpdateState) {
-                            Debug.debug("UPDATE SHOT");
+                            Debug.debug("UPDATE STATE SHOT");
                             this.doShotUpdateState((MessageShotUpdateState) message);
                         }
                     }
@@ -230,6 +230,12 @@ public class GameController extends Observable implements Observer {
             player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
             player.getTank().getTankState().setCurrentArmor(task.getArmor());
             player.kill();
+            Debug.debug("isCurrent ? " + CurrentUser.getId() + " =? " + player.getUser().getIdUser());
+            if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
+                Pair order = new Pair<>(EnumOverlayElement.USER_LIFE, new Pair<>("cutBody", player.getTank().getTankState().getPercentageLife()));
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+            }
         }
     }
 
@@ -256,6 +262,11 @@ public class GameController extends Observable implements Observer {
         Player player = this.getPlayer(task.getId());
         if (player != null) {
             player.revive(new Pair<>(task.getPosX(), task.getPosY()));
+            if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
+                Pair order = new Pair<>(EnumOverlayElement.USER_LIFE, new Pair<>("cutBody", player.getTank().getTankState().getPercentageLife()));
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+            }
         }
     }
 
@@ -292,6 +303,12 @@ public class GameController extends Observable implements Observer {
         Obstacle obstacle = this.getObstacle(task.getObstacleId());
         if (obstacle != null) {
             obstacle.setCurrentLife(task.getCurrentLife());
+
+            if (obstacle.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(obstacle.getPlayerId())) {
+                Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", obstacle.getPercentageLife()));
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+            }
         }
     }
 
@@ -451,6 +468,11 @@ public class GameController extends Observable implements Observer {
 
                 if (current.getAnimator() != null) {
                     if (current.getAnimator().isDeleted()) {
+                        if (current.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(current.getPlayerId())) {
+                            Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", current.getPercentageLife()));
+                            this.setChanged();
+                            this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.CUSTOM_USER_STAT, order)));
+                        }
                         this.mapController.deleteObstacle(current.getId());
                     } else {
                         current.getAnimator().currentAnimation().getCurrentFrame().setCenterOfRotation(current.getShiftOrigin().getV1() * -1, current.getShiftOrigin().getV2() * -1);

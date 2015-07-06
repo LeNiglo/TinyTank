@@ -87,7 +87,7 @@ public class Obstacle extends Observable {
                 this.animator.nextCurrentIndex();
             }
         }
-        if (this.currentLife <= 0){
+        if (this.currentLife <= 0) {
             this.setChanged();
             this.notifyObservers(null);
         }
@@ -155,6 +155,10 @@ public class Obstacle extends Observable {
 
     public float getCurrentLife() {
         return this.currentLife;
+    }
+
+    public float getPercentageLife() {
+        return this.currentLife / this.maxLife;
     }
 
     public float getDamage() {

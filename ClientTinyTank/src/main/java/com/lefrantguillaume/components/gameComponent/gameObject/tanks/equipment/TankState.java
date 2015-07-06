@@ -2,6 +2,7 @@ package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment
 
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -156,6 +157,11 @@ public class TankState extends Observable implements Observer {
 
     public float getMaxLife() {
         return this.maxLife;
+    }
+
+    public float getPercentageLife(){
+        Debug.debug("\nPercentLife = " + this.maxLife + "/" + this.currentLife);
+        return this.currentLife / this.maxLife;
     }
 
     public float getMaxArmor() {

@@ -159,9 +159,17 @@ public class ImageElement extends Element {
                     this.animator.setIndex((Integer) ((Pair) task).getV2());
                 } else if (((Pair) task).getV1().equals("cutBody") && ((Pair) task).getV2() instanceof Float) {
                     float percent = (Float) ((Pair) task).getV2();
-                    if (percent > 0){
-                        this.body.setSizes(this.sizeXMAX / percent, this.body.getSizeY());
+                    if (percent >= 1){
+                        this.body.setPrintable(true);
+                        this.body.setSizes(this.sizeXMAX, this.body.getSizeY());
+                    }
+                    else if (percent > 0){
+                        if (!this.id.contains(EnumOverlayElement.BORDER.getValue())){
+                            this.body.setPrintable(true);
+                            this.body.setSizes(this.sizeXMAX * percent, this.body.getSizeY());
+                        }
                     } else {
+                        this.body.setPrintable(false);
                         this.body.setSizes(0, this.body.getSizeY());
                     }
                 }
