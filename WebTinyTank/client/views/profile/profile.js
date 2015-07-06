@@ -40,6 +40,7 @@ Template.profileDetail.helpers({
         return moment(act).fromNow();
     },
     getAccuracy: function (stats) {
-        return stats.shotsHit * 100 / stats.shotsFired;
+        console.log(stats);
+        return (stats.shotsHit * 100 / stats.shotsFired).toFixed(2);
     }
 })
