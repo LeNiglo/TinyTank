@@ -184,14 +184,38 @@ WebApi = function (app, db) {
             $or: [{_id: objId}, {username: regUn}]
         }, function (error, exists) {
 
-            exists.stats = {};
+            exists.stats = {
+                kills: 0,
+                deaths: 0,
+                score: 0,
+                shotsFired: 0,
+                shotsHit: 0
+            };
 
             //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
             Matches.find({'users.id': exists._id.toString()}).toArray(function (error, docs) {
 
                 for (var i = 0; i < docs.length; i++) {
                     console.log("match : ", docs[i]);
+
+                    for (var j = 0; j < docs[i].users.length; j++) {
+                        if (docs[i].users[j].id == exists._id.toString()) {
+                            exists.stats.kills += docs[i].users[j].kills;
+                            exists.stats.death += docs[i].users[j].deaths;
+                            exists.stats.score += docs[i].users[j].currentScore;
+                            exists.stats.shotsFired += docs[i].users[j].nbShots;
+                            exists.stats.shotsHit += (docs[i].users[j].nbGameObjectsDestroyed + docs[i].users[j].nbHitSomebody);
+                            break;
+                        }
+                    }
+
                 }
+
+                exists.stats.kills /= docs.length;
+                exists.stats.death /= docs.length;
+                exists.stats.score /= docs.length;
+                exists.stats.shotsFired /= docs.length;
+                exists.stats.shotsHit /= docs.length;
 
                 res.status(200).json({name: "user_profile", res: exists, err: null});
 
