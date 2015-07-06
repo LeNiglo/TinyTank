@@ -188,9 +188,8 @@ WebApi = function (app, db) {
                 //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
                 Matches.find({'users.id': exists._id}, function (error, results) {
                     if (!error) {
-                        console.log(error, results);
-                        results.forEach(function (e, i) {
-                            console.log(i, results[i]);
+                        results.forEach(function (e) {
+                            console.log(e);
                         });
                         res.status(200).json({name: "user_profile", res: exists, err: null});
                     }
