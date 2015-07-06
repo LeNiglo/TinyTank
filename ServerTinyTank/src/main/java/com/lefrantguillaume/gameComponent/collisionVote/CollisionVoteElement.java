@@ -1,5 +1,6 @@
-package com.lefrantguillaume.gameComponent.target;
+package com.lefrantguillaume.gameComponent.collisionVote;
 
+import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageCollision;
 import javafx.util.Pair;
@@ -14,28 +15,35 @@ public class CollisionVoteElement {
     private final String hitterId;
     private final String targetId;
     private final EnumCollision type;
-    private List<Pair<String, String>> players;
-    private int time;
+    private List<Pair<String, String>> users;
 
     public CollisionVoteElement(MessageCollision message){
         this.hitterId = message.getHitterId();
         this.targetId = message.getTargetId();
         this.type = message.getType();
-        this.players = new ArrayList<>();
-        this.players.add(new Pair<>(message.getId(), message.getPseudo()));
-        this.time = 0;
+        this.users = new ArrayList<>();
+        this.users.add(new Pair<>(message.getId(), message.getPseudo()));
     }
 
     // FUNCTIONS
 
-    public void add(MessageCollision message){
-        if (this.equals(message)){
-            this.players.add(new Pair<>(message.getId(), message.getPseudo()));
+    public boolean containUser(MessageCollision message){
+        for (Pair<String, String> values : this.users){
+            if (values.getKey().equals(message.getId()) && values.getValue().equals(message.getPseudo())){
+                return true;
+            }
         }
+        return false;
     }
 
-    public void addTime(){
-        this.time += 1;
+    public void add(MessageCollision message){
+        if (this.equals(message)) {
+            if (this.containUser(message) == false) {
+                this.users.add(new Pair<>(message.getId(), message.getPseudo()));
+            } else {
+                WindowController.addConsoleMsg("USER ALREADY IN");
+            }
+        }
     }
 
     public boolean equals(MessageCollision message) {
@@ -62,12 +70,8 @@ public class CollisionVoteElement {
         return this.type;
     }
 
-    public int getNumberPlayers(){
-        return this.players.size();
-    }
-
-    public int getTime(){
-        return this.time;
+    public float getNumberUsers(){
+        return this.users.size();
     }
 
     @Override
@@ -75,9 +79,12 @@ public class CollisionVoteElement {
         String result = "";
 
         result += "Collision: " + this.hitterId + " -> " + this.targetId;
-        result += "\n voted by " + this.getNumberPlayers() + ": ";
-        for (Pair<String, String> values : this.players){
-            result += " - " + values.getValue();
+        result += "\n voted by " + this.getNumberUsers() + "-> ";
+        for (Pair<String, String> values : this.users){
+            if (!result.equals("")){
+                result += " , ";
+            }
+            result += values.getValue();
         }
         return result;
     }

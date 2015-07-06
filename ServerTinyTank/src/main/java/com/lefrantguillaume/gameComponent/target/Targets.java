@@ -51,7 +51,7 @@ public class Targets {
         if (moreObstacles != null) {
             this.addObstacles(moreObstacles);
         }
-        for (Map.Entry<String, Player> entry : this.players.entrySet()){
+        for (Map.Entry<String, Player> entry : this.players.entrySet()) {
             entry.getValue().init();
         }
     }
@@ -69,110 +69,127 @@ public class Targets {
     public List<MessageModel> doCollision(String hitterId, String targetId, EnumCollision type, GameModeController gameModeController) {
         List<MessageModel> messages = new ArrayList<>();
 
+        WindowController.addConsoleMsg("DoCollision->\n shot?" + (this.getShot(hitterId) != null) + "\nplayer?" + (this.getPlayer(hitterId) != null));
         if (this.getShot(hitterId) != null && type == EnumCollision.IN) {
-            Shot hitterShot = this.getShot(hitterId);
-            float damage = hitterShot.getCurrentDamageShot();
-
-            if (this.getPlayer(targetId) != null) {
-                Player player = this.getPlayer(targetId);
-                Player killer = this.getPlayer(hitterShot.getPlayerId());
-                if (this.isIgnored(player.getIgnoredObjectList(), hitterShot.getType()) == false) {
-                    hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
-                    if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
-                        messages.add(player.getTank().getTankState().getHit(player, damage));
-
-                        if (player.getTank().getTankState().getCurrentLife() == 0) {
-                            messages.addAll(this.doAKill(killer, player, gameModeController));
-                        }
-                    }
-                    if (hitterShot.getCurrentDamageShot() == 0) {
-                        messages.add(this.deleteShot(hitterShot.getId()));
-                    }
-                }
-            }
-            if (this.getObstacle(targetId) != null) {
-                Obstacle obstacle = this.getObstacle(targetId);
-
-                if (this.isIgnored(obstacle.getIgnoredObjectList(), hitterShot.getType()) == false) {
-                    if (obstacle.getType() == EnumGameObject.UNBREAKABLE) {
-                        hitterShot.getDamageByCollision(hitterShot.getCurrentDamageShot());
-                    } else {
-                        hitterShot.getDamageByCollision(obstacle.getCurrentLife());
-                        messages.add(obstacle.getHit(damage));
-                    }
-                    if (obstacle.getCurrentLife() == 0) {
-                        this.obstacles.remove(obstacle.getId());
-                        Player player = this.getPlayer(hitterShot.getPlayerId());
-                        if (player != null){
-                            player.addGameObjectDestroyed();
-                        }
-                    }
-                    if (hitterShot.getCurrentDamageShot() == 0) {
-                        messages.add(this.deleteShot(hitterShot.getId()));
-                    }
-                }
-            }
-            if (this.getShot(targetId) != null) {
-                Shot shot = this.getShot(targetId);
-                Player player = this.getPlayer(shot.getPlayerId());
-
-                if (this.isIgnored(shot.getIgnoredObjectList(), hitterShot.getType()) == false) {
-                    hitterShot.getDamageByCollision(shot.getCurrentDamageShot());
-                    messages.add(shot.getHit(player, damage));
-                    if (shot.getCurrentDamageShot() == 0) {
-                        this.shots.remove(shot.getId());
-                    }
-                    if (hitterShot.getCurrentDamageShot() == 0) {
-                        messages.add(this.deleteShot(hitterShot.getId()));
-                    }
-                }
-            }
+            messages.addAll(this.collisionInWithShotHitter(this.getShot(hitterId), targetId, gameModeController));
         } else if (this.getPlayer(hitterId) != null) {
-            Player player = this.getPlayer(hitterId);
+            messages.addAll(this.collisionWithPlayerHitter(this.getPlayer(hitterId), targetId, type, gameModeController));
+        }
+        return messages;
+    }
 
-            if (this.getObstacle(targetId) != null) {
-                Obstacle obstacle = this.getObstacle(targetId);
+    private List<MessageModel> collisionInWithShotHitter(Shot hitterShot, String targetId, GameModeController gameModeController) {
+        List<MessageModel> messages = new ArrayList<>();
+        float damage = hitterShot.getCurrentDamageShot();
 
-                if (obstacle.getType().equals(EnumGameObject.MINE)) {
-                    Player killer = this.getPlayer(obstacle.getPlayerId());
-                    if (killer != null) {
-                        if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
-                            messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
-                            if (player.getTank().getTankState().getCurrentLife() == 0) {
-                                messages.addAll(this.doAKill(killer, player, gameModeController));
-                            }
-                            messages.add(this.deleteObstacle(targetId));
-                        }
-                    } else {
-                        messages.add(this.deleteObstacle(targetId));
+        WindowController.addConsoleMsg("\nSHOT COLLISION WITH: ");
+        if (this.getPlayer(targetId) != null) {
+            Player player = this.getPlayer(targetId);
+            Player killer = this.getPlayer(hitterShot.getPlayerId());
+            if (this.isIgnored(player.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                hitterShot.getDamageByCollision(player.getTank().getTankState().getCurrentLife());
+                if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
+                    messages.add(player.getTank().getTankState().getHit(player, damage));
+
+                    if (player.getTank().getTankState().getCurrentLife() == 0) {
+                        messages.addAll(this.doAKill(killer, player, gameModeController));
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.BOMB_AREA)) {
-                    WindowController.addConsoleMsg("PLAYER VS BOMB");
-                    Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
-                    if (result instanceof List){
-                        messages.addAll((List<MessageModel>)result);
+                }
+                if (hitterShot.getCurrentDamageShot() == 0) {
+                    messages.add(this.deleteShot(hitterShot.getId()));
+                }
+            }
+        }
+        if (this.getObstacle(targetId) != null) {
+            Obstacle obstacle = this.getObstacle(targetId);
+
+            WindowController.addConsoleMsg("Obstacle: " + obstacle);
+            if (this.isIgnored(obstacle.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                WindowController.addConsoleMsg("a");
+                if (obstacle.getType() == EnumGameObject.UNBREAKABLE) {
+                    WindowController.addConsoleMsg("unbreak");
+                    hitterShot.getDamageByCollision(hitterShot.getCurrentDamageShot());
+                } else {
+                    hitterShot.getDamageByCollision(obstacle.getCurrentLife());
+                    messages.add(obstacle.getHit(damage));
+                }
+                WindowController.addConsoleMsg("obstacleLife: " + obstacle.getCurrentLife());
+                if (obstacle.getCurrentLife() == 0) {
+                    this.obstacles.remove(obstacle.getId());
+                    Player player = this.getPlayer(hitterShot.getPlayerId());
+                    if (player != null) {
+                        player.addGameObjectDestroyed();
                     }
-                } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)) {
-                    WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
-                    Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
-                    if (result instanceof List){
-                        messages.addAll((List<MessageModel>)result);
-                    }
+                }
+                WindowController.addConsoleMsg("hitterLife: " + hitterShot.getCurrentDamageShot());
+                if (hitterShot.getCurrentDamageShot() == 0) {
+                    messages.add(this.deleteShot(hitterShot.getId()));
+                }
+            }
+        }
+        if (this.getShot(targetId) != null) {
+            Shot shot = this.getShot(targetId);
+            Player player = this.getPlayer(shot.getPlayerId());
+
+            if (this.isIgnored(shot.getIgnoredObjectList(), hitterShot.getType()) == false) {
+                hitterShot.getDamageByCollision(shot.getCurrentDamageShot());
+                messages.add(shot.getHit(player, damage));
+                if (shot.getCurrentDamageShot() == 0) {
+                    this.shots.remove(shot.getId());
+                }
+                if (hitterShot.getCurrentDamageShot() == 0) {
+                    messages.add(this.deleteShot(hitterShot.getId()));
                 }
             }
         }
         return messages;
     }
 
-    private List<MessageModel> doAKill(Player killer, Player target, GameModeController gameModeController){
+    private List<MessageModel> collisionWithPlayerHitter(Player player, String targetId, EnumCollision type, GameModeController gameModeController) {
+        List<MessageModel> messages = new ArrayList<>();
+
+        if (this.getObstacle(targetId) != null) {
+            Obstacle obstacle = this.getObstacle(targetId);
+
+            if (obstacle.getType().equals(EnumGameObject.MINE) && type == EnumCollision.IN) {
+                Player killer = this.getPlayer(obstacle.getPlayerId());
+                if (killer != null) {
+                    if (!(ServerConfig.friendlyFire == false && player.getTeamId().equals(killer.getTeamId()))) {
+                        messages.add(player.getTank().getTankState().getHit(player, obstacle.getDamage()));
+                        if (player.getTank().getTankState().getCurrentLife() == 0) {
+                            messages.addAll(this.doAKill(killer, player, gameModeController));
+                        }
+                        messages.add(this.deleteObstacle(targetId));
+                    }
+                } else {
+                    messages.add(this.deleteObstacle(targetId));
+                }
+            } else if (obstacle.getType().equals(EnumGameObject.BOMB_AREA)) {
+                WindowController.addConsoleMsg("PLAYER VS BOMB");
+                Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                if (result instanceof List) {
+                    messages.addAll((List<MessageModel>) result);
+                }
+            } else if (obstacle.getType().equals(EnumGameObject.OBJECTIVE_AREA)) {
+                WindowController.addConsoleMsg("PLAYER VS OBJECTIVE");
+                Object result = gameModeController.doTask(new Pair<>(EnumAction.getEnumByOther(type), new Pair<>(player, obstacle)), this);
+                if (result instanceof List) {
+                    messages.addAll((List<MessageModel>) result);
+                }
+            }
+        }
+        return messages;
+    }
+
+    private List<MessageModel> doAKill(Player killer, Player target, GameModeController gameModeController) {
         List<MessageModel> messages = new ArrayList<>();
         Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
 
         killer.addHitSomebody();
-        if (result instanceof List){
-            messages.addAll((List<MessageModel>)result);
+        if (result instanceof List) {
+            messages.addAll((List<MessageModel>) result);
         }
-        if (target.isTransportObjective()){
+        if (target.isTransportObjective()) {
             messages.add(this.addObstacle(target.getTransportObjective()));
             target.setTransportObjective(null);
         }
@@ -200,18 +217,18 @@ public class Targets {
         }
     }
 
-    public void addWaitingPeople(Pair<MessagePlayerNew, Connection> people){
+    public void addWaitingPeople(Pair<MessagePlayerNew, Connection> people) {
         this.waitingPeople.add(people);
     }
 
-    public void addObserverPeople(Pair<MessagePlayerObserverNew, Connection> people){
+    public void addObserverPeople(Pair<MessagePlayerObserverNew, Connection> people) {
         this.observerPeople.add(people);
     }
 
     // DELETE
     public MessagePlayerDelete deletePlayer(String playerId) {
         Player player = this.getPlayer(playerId);
-        if (player != null){
+        if (player != null) {
             MessagePlayerDelete message = new MessagePlayerDelete(player.getPseudo(), playerId);
             this.players.remove(playerId);
             return message;
@@ -239,11 +256,11 @@ public class Targets {
         return null;
     }
 
-    public MessagePlayerObserverDelete deleteWaitingPlayer(String id){
+    public MessagePlayerObserverDelete deleteWaitingPlayer(String id) {
         MessagePlayerObserverDelete message;
-        for (int i = 0; i < this.waitingPeople.size(); ++i){
+        for (int i = 0; i < this.waitingPeople.size(); ++i) {
             Pair<MessagePlayerNew, Connection> player = this.waitingPeople.get(i);
-            if (player.getKey().getId().equals(id)){
+            if (player.getKey().getId().equals(id)) {
                 message = new MessagePlayerObserverDelete(player.getKey().getPseudo(), player.getKey().getId());
                 this.waitingPeople.remove(i);
                 return message;
@@ -252,11 +269,11 @@ public class Targets {
         return null;
     }
 
-    public MessagePlayerObserverDelete deleteObserverPlayer(String id){
+    public MessagePlayerObserverDelete deleteObserverPlayer(String id) {
         MessagePlayerObserverDelete message;
-        for (int i = 0; i < this.observerPeople.size(); ++i){
+        for (int i = 0; i < this.observerPeople.size(); ++i) {
             Pair<MessagePlayerObserverNew, Connection> player = this.observerPeople.get(i);
-            if (player.getKey().getId().equals(id)){
+            if (player.getKey().getId().equals(id)) {
                 message = new MessagePlayerObserverDelete(player.getKey().getPseudo(), player.getKey().getId());
                 this.waitingPeople.remove(i);
                 return message;
@@ -299,11 +316,11 @@ public class Targets {
         return playersName;
     }
 
-    public List<Pair<MessagePlayerNew, Connection>> getWaitingPeople(){
+    public List<Pair<MessagePlayerNew, Connection>> getWaitingPeople() {
         return this.waitingPeople;
     }
 
-    public List<Pair<MessagePlayerObserverNew, Connection>> getObserverPeople(){
+    public List<Pair<MessagePlayerObserverNew, Connection>> getObserverPeople() {
         return this.observerPeople;
     }
 

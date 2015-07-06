@@ -164,4 +164,13 @@ public class Obstacle {
     public void setCurrentLife(int currentLife) {
         this.currentLife = currentLife;
     }
+
+    public void setId(String id){
+        this.id = id;
+    }
+
+    @Override
+    public String toString(){
+        return "Obstacle: " + this.id + " (" + this.type + ") from " + this.playerPseudo;
+    }
 }

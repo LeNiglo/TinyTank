@@ -1,6 +1,7 @@
 package com.lefrantguillaume.gameComponent.gameMode.modes;
 
 import com.lefrantguillaume.gameComponent.gameMode.EnumAction;
+import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.networkComponent.gameServerComponent.clientmsgs.MessageModel;
 import javafx.util.Pair;
@@ -21,6 +22,10 @@ public class FreeForAll extends GameMode {
     }
 
     // FUNCTIONS
+
+    @Override
+    public void createObstacles(ObstacleConfigData obstacleConfigData) {
+    }
 
     @Override
     public Object doTask(Pair<EnumAction, Object> task, Object data) {

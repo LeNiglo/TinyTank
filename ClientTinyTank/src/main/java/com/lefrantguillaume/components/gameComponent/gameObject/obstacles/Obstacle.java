@@ -45,7 +45,11 @@ public class Obstacle extends Observable {
     }
 
     public Obstacle(Obstacle obstacle, boolean isCreated) {
-        this.animator = new Animator(obstacle.animator);
+        if (obstacle.animator == null) {
+            this.animator = null;
+        } else {
+            this.animator = new Animator(obstacle.animator);
+        }
         this.type = obstacle.type;
         this.ignored = obstacle.ignored;
         this.maxLife = obstacle.maxLife;

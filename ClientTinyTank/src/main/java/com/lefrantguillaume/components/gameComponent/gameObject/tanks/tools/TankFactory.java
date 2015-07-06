@@ -86,8 +86,10 @@ public class TankFactory {
 
     public static TankBox createTankBox(JSONObject config, AnimatorGameData animatorGameData) throws JSONException {
         EnumGameObject boxType = EnumGameObject.getEnumByValue(config.getString("boxType"));
-        long cooldown = Long.valueOf(config.getString("cooldown"));
+        int boxes = Integer.valueOf(config.getString("boxes"));
+        long cooldownPut = Long.valueOf(config.getString("cooldownPut"));
+        long cooldownGenerate = Long.valueOf(config.getString("cooldownGenerate"));
 
-        return new TankBox(boxType, cooldown);
+        return new TankBox(boxType, boxes, cooldownPut, cooldownGenerate);
     }
 }

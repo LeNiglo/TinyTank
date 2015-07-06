@@ -89,10 +89,11 @@ public class ObstacleConfigData {
     }
 
     public Obstacle getWorldWall(String id){
+        Debug.debug("Nb WorldWall: " + this.worldWall.size());
         for (int i = 0; i < this.worldWall.size(); ++i){
             Debug.debug(id + " =?" + this.worldWall.get(i).getId());
             if (id.equals(this.worldWall.get(i).getId())){
-                return this.worldWall.get(i);
+                return new Obstacle(this.worldWall.get(i), false);
             }
         }
         return null;

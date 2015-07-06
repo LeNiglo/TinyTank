@@ -20,10 +20,6 @@ public class Player {
     private Tank tank;
     private PlayerStats stats;
 
-    private int ammo = 1;
-    private int timerAmmo = 2;
-    private int ammoCooldown = 100;
-    private boolean canShoot;
     private Obstacle transportObjective;
 
     public Player(String id, String pseudo, String teamId, Tank tank, Connection connection) {
@@ -31,7 +27,6 @@ public class Player {
         this.tank = tank;
         this.connection = connection;
         this.teamId = teamId;
-        this.canShoot = true;
         this.transportObjective = null;
     }
 
@@ -79,14 +74,6 @@ public class Player {
 
     public void setConnection(Connection connectionID) {
         this.connection = connectionID;
-    }
-
-    public void setCanShoot(boolean canShoot) {
-        this.canShoot = canShoot;
-    }
-
-    public void setAmmo(int ammo) {
-        this.ammo = ammo;
     }
 
     public void setTeamId(String teamId) {
@@ -148,22 +135,6 @@ public class Player {
 
     public int getNbGameObjectsDestroyed() {
         return this.stats.getNbGameObjectsDestroyed();
-    }
-
-    public boolean isCanShoot() {
-        return canShoot;
-    }
-
-    public int getTimerAmmo() {
-        return timerAmmo;
-    }
-
-    public int getAmmo() {
-        return ammo;
-    }
-
-    public int getAmmoCooldown() {
-        return ammoCooldown;
     }
 
     public String getTeamId() {

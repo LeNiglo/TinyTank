@@ -35,22 +35,31 @@ public abstract class GameMode {
         }
     }
 
-    public void initObstacles(ObstacleConfigData obstacleConfigData){
+    public abstract void createObstacles(ObstacleConfigData obstacleConfigData);
+
+    public void startRound() {
+        this.playable = true;
     }
 
-    public void restart() {
+    public void endRound(){
+        this.playable = false;
+    }
+
+    public void initRound(){
+        this.restartTeams();
+        this.restartObstacles();
+    }
+
+    public void restartTeams() {
         for (int i = 0; i < this.teams.size(); ++i) {
             this.teams.get(i).init();
         }
     }
 
-    public void start() {
-        this.restart();
-        this.playable = true;
-    }
-
-    public void stop() {
-        this.playable = false;
+    public void restartObstacles(){
+        for (Obstacle obstacle : this.obstacles){
+            obstacle.setId(UUID.randomUUID().toString());
+        }
     }
 
     public abstract Object doTask(Pair<EnumAction, Object> task, Object data);

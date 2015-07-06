@@ -29,7 +29,7 @@ public class Kingdom extends GameMode {
         this.objectiveScore = 100;
         this.maxPlayerTeam = 4;
         this.init(maxTeam, maxPlayerTeam);
-        this.initObstacles(obstacleConfigData);
+        this.createObstacles(obstacleConfigData);
         this.initPlayersInObjective();
         this.timerRunning = false;
         this.timer = new Timer(true);
@@ -63,9 +63,7 @@ public class Kingdom extends GameMode {
                     }
                 }
             } else if (task.getKey().equals(EnumAction.OUT)) {
-                WindowController.addConsoleMsg("a");
                 if (this.playersInObjective.containsKey(values.getKey().getTeamId())) {
-                    WindowController.addConsoleMsg("b");
                     int value = this.playersInObjective.get(values.getKey().getTeamId()) - 1;
                     WindowController.addConsoleMsg("value: " + value);
                     if (value < 0)
@@ -74,7 +72,6 @@ public class Kingdom extends GameMode {
                 }
                 WindowController.addConsoleMsg("playerInObj: " + this.getPlayersInObjective());
                 if (this.getPlayersInObjective() == 0) {
-                    WindowController.addConsoleMsg("c");
                     this.resumeTimer();
                 }
             }
@@ -83,9 +80,9 @@ public class Kingdom extends GameMode {
     }
 
     @Override
-    public void initObstacles(ObstacleConfigData obstacleConfigData) {
+    public void createObstacles(ObstacleConfigData obstacleConfigData) {
         Obstacle obstacle = obstacleConfigData.getObstacle(EnumGameObject.OBJECTIVE_AREA);
-        obstacle.createObstacle(DataServer.getId(), "admin", EnumGameObject.OBJECTIVE_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
+        obstacle.createObstacle(DataServer.getId(), "admin", UUID.randomUUID().toString(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
         this.obstacles.add(obstacle);
     }
 
@@ -96,7 +93,7 @@ public class Kingdom extends GameMode {
     }
 
     @Override
-    public void restart() {
+    public void restartTeams() {
         for (int i = 0; i < this.teams.size(); ++i) {
             this.teams.get(i).init();
         }

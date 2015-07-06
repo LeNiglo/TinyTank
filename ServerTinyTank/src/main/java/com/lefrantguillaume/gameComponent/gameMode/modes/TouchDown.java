@@ -14,6 +14,7 @@ import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by andres_k on 13/05/2015.
@@ -25,7 +26,7 @@ public class TouchDown extends GameMode {
         this.objectiveScore = 3;
         this.maxPlayerTeam = 1;
         this.init(maxTeam, maxPlayerTeam);
-        this.initObstacles(obstacleConfigData);
+        this.createObstacles(obstacleConfigData);
     }
 
     // FUNCTIONS
@@ -38,7 +39,7 @@ public class TouchDown extends GameMode {
             List<MessageModel> messages = new ArrayList<>();
             Targets targets = (Targets) data;
 
-            WindowController.addConsoleMsg("IN AREA");
+            WindowController.addConsoleMsg("IN AREA " + values.getValue());
             if (values.getValue().getType() == EnumGameObject.BOMB_AREA) {
                 WindowController.addConsoleMsg("GET OBJECTIVE");
 
@@ -52,6 +53,7 @@ public class TouchDown extends GameMode {
                     WindowController.addConsoleMsg("GET POINTS");
                     messages.add(this.incrementScore(values.getKey().getTeamId(), 1));
                     messages.add(values.getKey().addScore(1));
+                    this.obstacles.get(0).setId(UUID.randomUUID().toString());
                     messages.add(targets.addObstacle(this.obstacles.get(0)));
                 }
             }
@@ -61,15 +63,15 @@ public class TouchDown extends GameMode {
     }
 
     @Override
-    public void initObstacles(ObstacleConfigData obstacleConfigData) {
+    public void createObstacles(ObstacleConfigData obstacleConfigData) {
         Obstacle obstacle1 = obstacleConfigData.getObstacle(EnumGameObject.BOMB_AREA);
-        obstacle1.createObstacle(DataServer.getId(), "admin", EnumGameObject.BOMB_AREA.getValue(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
+        obstacle1.createObstacle(DataServer.getId(), "admin", UUID.randomUUID().toString(), 0, WindowConfig.getSizeX() / 2, WindowConfig.getSizeY() / 2);
         this.obstacles.add(obstacle1);
         Obstacle obstacle2 = obstacleConfigData.getObstacle(EnumGameObject.OBJECTIVE_AREA);
-        obstacle2.createObstacle(this.teams.get(0).getId(), "admin", EnumGameObject.OBJECTIVE_AREA.getValue() + "1", 0, 50, 50);
+        obstacle2.createObstacle(this.teams.get(0).getId(), "admin", UUID.randomUUID().toString(), 0, 50, 50);
         this.obstacles.add(obstacle2);
         Obstacle obstacle3 = obstacleConfigData.getObstacle(EnumGameObject.OBJECTIVE_AREA);
-        obstacle3.createObstacle(this.teams.get(1).getId(), "admin", EnumGameObject.OBJECTIVE_AREA.getValue() + "2", 0, WindowConfig.getSizeX() - 50, WindowConfig.getSizeY() - 50);
+        obstacle3.createObstacle(this.teams.get(1).getId(), "admin", UUID.randomUUID().toString()/*EnumGameObject.OBJECTIVE_AREA.getValue() + "2"*/, 0, WindowConfig.getSizeX() - 50, WindowConfig.getSizeY() - 50);
         this.obstacles.add(obstacle3);
 
     }

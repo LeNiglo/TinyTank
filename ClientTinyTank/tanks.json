@@ -64,7 +64,9 @@
       },
       "tankBox": {
         "boxType": "iron_wall",
-        "cooldown" : "2000"
+        "boxes" : "3",
+        "cooldownPut" : "2000",
+        "cooldownGenerate" : "20000"
       }
     },
     {
@@ -144,7 +146,9 @@
       },
       "tankBox": {
         "boxType": "plasma_wall",
-        "cooldown" : "2000"
+        "boxes" : "3",
+        "cooldownPut" : "2000",
+        "cooldownGenerate" : "20000"
       }
     },
     {
@@ -230,7 +234,9 @@
       },
       "tankBox": {
         "boxType": "mine",
-        "cooldown" : "1000"
+        "boxes" : "5",
+        "cooldownPut" : "1000",
+        "cooldownGenerate" : "20000"
       }
     }
   ]

@@ -117,6 +117,7 @@ public class Map {
     }
 
     public List<Obstacle> getMapObstacles(){
+        WindowController.addConsoleMsg("\n\nMAP OBSTACLES : " + this.mapObstacles.size()+"\n");
         return this.mapObstacles;
     }
 

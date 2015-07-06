@@ -78,14 +78,18 @@ public class InputGame extends Observable {
                         player.getTank().getTankState().getX(), player.getTank().getTankState().getY());
             }
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SHOOT)) && mode == EnumInput.RELEASED) {
-            message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
+            if (player.getTank().getTankWeapon().isActivated()) {
+                message = new MessageShoot(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().predictAngleHit());
+            }
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.PUT_OBJECT)) && mode == EnumInput.RELEASED) {
             Tuple<Float, Float, Float> boxValues = player.predictCreateBox(gameController.getCollisionController(), gameController.getObstacleConfigData());
-            if (boxValues != null) {
-                message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankBox().getBox(), boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
+            if (boxValues != null && player.getTank().getTankBox().isActivated()) {
+                message = new MessagePutObstacle(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankBox().getType(), boxValues.getV1(), boxValues.getV2(), boxValues.getV3());
             }
         } else if (keyName.equals(this.inputData.getInputValue(EnumInput.SPELL)) && mode == EnumInput.RELEASED) {
-            message = new MessageSpell(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankSpell().getType(), player.getTank().getTankState().getGunAngle(), posX, posY);
+            if (player.getTank().getTankSpell().isActivated()) {
+                message = new MessageSpell(CurrentUser.getPseudo(), CurrentUser.getId(), player.getTank().getTankSpell().getType(), player.getTank().getTankState().getGunAngle(), posX, posY);
+            }
         }
         return message;
     }

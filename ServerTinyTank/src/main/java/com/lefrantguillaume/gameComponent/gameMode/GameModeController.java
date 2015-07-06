@@ -53,7 +53,7 @@ public class GameModeController{
     // SETTERS
     public void setCurrentGameMode(EnumGameMode index){
         if (this.gameModes.containsKey(index)) {
-            this.getCurrentMode().restart();
+            this.getCurrentMode().restartTeams();
             this.currentGameMode = index;
         }
     }

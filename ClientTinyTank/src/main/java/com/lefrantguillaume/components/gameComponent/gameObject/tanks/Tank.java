@@ -34,7 +34,7 @@ public class Tank {
         this.tankWeapon = new TankWeapon(tank.tankWeapon);
         this.tankState = new TankState(tank.tankState);
         this.tankSpell = new TankSpell(tank.tankSpell);
-        this.tankBox = tank.tankBox;
+        this.tankBox = new TankBox(tank.tankBox);
         this.tankSpell.init(this.tankState);
     }
 
@@ -101,9 +101,5 @@ public class Tank {
 
     public TankBox getTankBox() {
         return this.tankBox;
-    }
-
-    public boolean isSpellActivated(){
-        return this.tankSpell.isActivate();
     }
 }

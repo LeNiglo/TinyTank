@@ -261,10 +261,10 @@ public class GameController extends Observable implements Observer {
     }
 
     public void doPutObstacle(MessagePutObstacle task) {
-        Debug.debug("player for obstacle = " + task.getPseudo() + "  type: " + task.getType());
-        Obstacle obstacle;
+        Debug.debug("player for obstacle = " + task.getPseudo() + "  obstacle: " + task.getObstacleId() + "(" + task.getType() + ")");
 
         if (this.getObstacle(task.getObstacleId()) == null) {
+            Obstacle obstacle;
             if (task.getType() == EnumGameObject.SHIELD) {
                 return;
             }
@@ -281,9 +281,11 @@ public class GameController extends Observable implements Observer {
                 Player player = getPlayer(CurrentUser.getId());
                 if (player != null){
                     this.setChanged();
-                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.BOX, player.getTank().getTankBox().getCooldown()))));
+                    this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.BOX, player.getTank().getTankBox().getCooldownPut()))));
                 }
             }
+        } else {
+            Debug.debug("Obstacle already exist");
         }
     }
 
@@ -456,6 +458,8 @@ public class GameController extends Observable implements Observer {
                         current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
                         g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
                     }
+                } else if (current.getCurrentLife() == 0){
+                    this.mapController.deleteObstacle(current.getId());
                 }
             }
         }
