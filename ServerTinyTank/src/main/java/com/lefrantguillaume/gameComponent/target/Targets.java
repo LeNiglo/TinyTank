@@ -190,6 +190,8 @@ public class Targets {
         Object result = gameModeController.doTask(new Pair<>(EnumAction.KILL, killer), target);
 
         killer.addHit();
+        killer.addKill();
+        target.addDeath();
         if (result instanceof List) {
             messages.addAll((List<MessageModel>) result);
         }

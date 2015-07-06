@@ -1,5 +1,9 @@
 package com.lefrantguillaume.gameComponent.gameobjects.player;
 
+import com.lefrantguillaume.WindowController;
+
+import java.awt.*;
+
 /**
  * Created by leniglo on 04/07/15.
  */
@@ -73,7 +77,7 @@ public class PlayerStats {
         return this.nbShots;
     }
 
-    public int getNbHit() {
+    public int getNbHits() {
         return this.nbHits;
     }
 

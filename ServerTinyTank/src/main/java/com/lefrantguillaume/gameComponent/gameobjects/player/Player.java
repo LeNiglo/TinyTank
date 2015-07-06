@@ -130,7 +130,7 @@ public class Player {
     }
 
     public int getNbHitSomebody() {
-        return this.stats.getNbHit();
+        return this.stats.getNbHits();
     }
 
     public int getNbGameObjectsDestroyed() {
