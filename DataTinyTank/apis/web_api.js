@@ -184,8 +184,9 @@ WebApi = function (app, db) {
                 $or: [{_id: objId}, {username: regUn}]
             }, function (error, exists) {
 
+                console.log("USER PROFILE :", exists);
                 //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
-                Matches.find({'users.id': exists._id.toString()}, function (error, results) {
+                Matches.find({'users.id': exists._id}, function (error, results) {
                     if (!error) {
                         for (var i = 0; i < results.length; i++) {
                             console.log(i, results[i]);
