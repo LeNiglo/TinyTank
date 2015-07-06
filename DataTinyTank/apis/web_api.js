@@ -70,7 +70,7 @@ WebApi = function (app, db) {
             }
         ];
         res.status(200).json({name: 'ladder', res: ladder, err: null});
-    }
+    };
 
     this.register = function (req, res) {
         Users.findOne({
@@ -121,7 +121,7 @@ WebApi = function (app, db) {
                 });
             }
         });
-    }
+    };
 
     this.login = function (req, res) {
         Users.findOne({
@@ -164,13 +164,13 @@ WebApi = function (app, db) {
                 });
             }
         });
-    }
+    };
 
     this.active_account = function (req, res) {
         Users.update({_id: new ObjectID(req.body._idUser)}, {$set: {active: true}}, function (error, exists) {
             res.status(200).json({name: "active_account", res: exists, err: null});
         });
-    }
+    };
 
     this.user_profile = function (req, res) {
         var objId = null;
@@ -178,23 +178,57 @@ WebApi = function (app, db) {
         try {
             objId = new ObjectID(req.query._idUser);
         } catch (e) {
-
+            console.log(e);
         }
         Users.findOne({
             $or: [{_id: objId}, {username: regUn}]
         }, function (error, exists) {
 
-            //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
+            exists.stats = {
+                kills: 0,
+                deaths: 0,
+                score: 0,
+                shotsFired: 0,
+                shotsHit: 0
+            };
 
-            res.status(200).json({name: "user_profile", res: exists, err: null});
+            //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
+            Matches.find({'users.id': exists._id.toString()}).toArray(function (error, docs) {
+
+                for (var i = 0; i < docs.length; i++) {
+                    console.log("match : ", docs[i]);
+
+                    for (var j = 0; j < docs[i].users.length; j++) {
+                        if (docs[i].users[j].id == exists._id.toString()) {
+                            exists.stats.kills += docs[i].users[j].kills;
+                            exists.stats.death += docs[i].users[j].deaths;
+                            exists.stats.score += docs[i].users[j].currentScore;
+                            exists.stats.shotsFired += docs[i].users[j].nbShots;
+                            exists.stats.shotsHit += (docs[i].users[j].nbGameObjectsDestroyed + docs[i].users[j].nbHitSomebody);
+                            break;
+                        }
+                    }
+
+                }
+
+                exists.stats.kills /= docs.length;
+                exists.stats.death /= docs.length;
+                exists.stats.score /= docs.length;
+                exists.stats.shotsFired /= docs.length;
+                exists.stats.shotsHit /= docs.length;
+
+                res.status(200).json({name: "user_profile", res: exists, err: null});
+
+            });
         });
-    }
+    };
 
     this.get_tank_list = function (req, res) {
         Tanks.find().toArray(function (err, result) {
             res.status(200).json({name: 'get_tank_list', res: result, err: err});
         });
-    }
-};
+    };
+}
+;
 
 module.exports = WebApi;

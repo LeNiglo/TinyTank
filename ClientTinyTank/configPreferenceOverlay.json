@@ -1,1 +1,18 @@
-{"chat":[false,true],"popKill":[true,true],"tableIcon":[false,true],"genericUserStat":[false,true]}
+{
+  "chat": [
+    false,
+    true
+  ],
+  "popKill": [
+    true,
+    true
+  ],
+  "tableIcon": [
+    false,
+    true
+  ],
+  "genericUserStat": [
+    false,
+    true
+  ]
+}
