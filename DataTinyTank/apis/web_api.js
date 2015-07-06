@@ -181,23 +181,22 @@ WebApi = function (app, db) {
             console.log(e);
         }
         Users.findOne({
-                $or: [{_id: objId}, {username: regUn}]
-            }, function (error, exists) {
+            $or: [{_id: objId}, {username: regUn}]
+        }, function (error, exists) {
 
-                exists.stats = {};
-                console.log("USER PROFILE :", exists);
-                //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
-                Matches.find({'users.id': exists._id.toString()}).toArray(function(error, docs) {
-                    console.log("matchs : ", error, docs);
+            exists.stats = {};
 
-                        docs.forEach(function(e, i) {
-                            console.log("match : ", e, i);
-                        });
+            //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
+            Matches.find({'users.id': exists._id.toString()}).toArray(function (error, docs) {
 
-                });
+                for (var i = 0; i < docs.length; i++) {
+                    console.log("match : ", docs[i]);
+                }
+
                 res.status(200).json({name: "user_profile", res: exists, err: null});
-            }
-        );
+
+            });
+        });
     };
 
     this.get_tank_list = function (req, res) {
