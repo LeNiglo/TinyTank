@@ -197,12 +197,9 @@ WebApi = function (app, db) {
                 shotsHitPG: 0
             };
 
-            //TODO  Do the maths here. Like number of games, accuracy, etc ... Lot of stats if possible.
             Matches.find({'users.id': exists._id.toString()}).toArray(function (error, docs) {
 
                 for (var i = 0; i < docs.length; i++) {
-                    console.log("match : ", docs[i]);
-
                     for (var j = 0; j < docs[i].users.length; j++) {
                         if (docs[i].users[j].id == exists._id.toString()) {
                             exists.stats.kills += docs[i].users[j].kills;
@@ -213,7 +210,6 @@ WebApi = function (app, db) {
                             break;
                         }
                     }
-
                 }
 
                 exists.stats.killsPG = exists.stats.kills / docs.length;
