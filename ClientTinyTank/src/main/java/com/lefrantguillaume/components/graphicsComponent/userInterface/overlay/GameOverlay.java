@@ -196,7 +196,7 @@ public class GameOverlay extends Overlay {
             Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
-                Debug.debug("OVERLAY RECEIVED tuple: " + arg);
+                //Debug.debug("OVERLAY RECEIVED tuple: " + arg);
                 if (received.getV3() instanceof Player) {
                     Player player = (Player) received.getV3();
                     this.initTankIcons(player.getTank().getTankState().getType());
@@ -206,7 +206,7 @@ public class GameOverlay extends Overlay {
                     List<EnumOverlayElement> targets = new ArrayList<>();
                     targets.addAll(EnumOverlayElement.getChildren(task.getV1()));
                     for (EnumOverlayElement target : targets) {
-                        Debug.debug("CHIDL: " + targets.size() + " -> send to " + target);
+                        //Debug.debug("CHIDL: " + targets.size() + " -> send to " + target);
                         if (this.elements.containsKey(target)) {
                             this.elements.get(target).doTask(task.getV2());
                         }
@@ -219,7 +219,7 @@ public class GameOverlay extends Overlay {
                 }
             }
         } else if (arg instanceof Pair) {
-            Debug.debug("OVERLAY RECEIVED pair: " + arg);
+            //Debug.debug("OVERLAY RECEIVED pair: " + arg);
             if (((Pair) arg).getV1() instanceof EnumOverlayElement && ((Pair) arg).getV2() instanceof EnumOverlayElement) {
                 Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 

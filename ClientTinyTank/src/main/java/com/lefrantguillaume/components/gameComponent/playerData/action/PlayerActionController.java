@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.gameComponent.playerData.action;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -42,19 +43,22 @@ public class PlayerActionController { //extends Observable {
                     object.setX(player.getTank().getTankState().getX());
                     object.setY(player.getTank().getTankState().getY());
                 }
-            } else if (playerAction.getAction() == EnumActions.UNMOVED && (Integer) playerAction.getValue(0) == player.getTank().getTankState().getDirection().getValue()) {
-                player.getTank().getTankState().setMove(false);
-                player.getTank().getTankState().setX((float) (playerAction.getValue(1)));
-                player.getTank().getTankState().setY((float) (playerAction.getValue(2)));
-
-                List<CollisionObject> objects = collisionController.getCollisionObject(player.getUser().getId());
-                for (CollisionObject object : objects) {
-                    object.setX(player.getTank().getTankState().getX());
-                    object.setY(player.getTank().getTankState().getY());
+            } else if (playerAction.getAction() == EnumActions.UNMOVED) {
+                if ((Integer) playerAction.getValue(0) == player.getTank().getTankState().getDirection().getValue()) {
+                    player.getTank().getTankState().setMove(false);
+                    player.getTank().getTankState().setX((float) (playerAction.getValue(1)));
+                    player.getTank().getTankState().setY((float) (playerAction.getValue(2)));
+                    List<CollisionObject> objects = collisionController.getCollisionObject(player.getUser().getId());
+                    for (CollisionObject object : objects) {
+                        object.setX(player.getTank().getTankState().getX());
+                        object.setY(player.getTank().getTankState().getY());
+                    }
+                } else if ((float) playerAction.getValue(1) == -100){
+                    player.getTank().getTankState().setMove(false);
                 }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
                 if (this.getShot((String) playerAction.getValue(0)) == null) {
-                    if (player.getTank().getTankWeapon().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())){
+                    if (player.getTank().getTankWeapon().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())) {
                         result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.HIT, player.getTank().getTankWeapon().getCooldown())));
                     }
                     if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
@@ -65,12 +69,12 @@ public class PlayerActionController { //extends Observable {
                     }
                 }
             } else if (playerAction.getAction() == EnumActions.SPELL) {
-                if (player.getTank().getTankSpell().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())){
+                if (player.getTank().getTankSpell().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())) {
                     result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.SPELL, player.getTank().getTankSpell().getCooldown())));
                 }
                 Object item = player.getTank().activeSpell();
                 if (item instanceof Obstacle) {
-                    Obstacle obstacle = (Obstacle)item;
+                    Obstacle obstacle = (Obstacle) item;
                     TankState state = player.getTank().getTankState();
                     obstacle.createObstacle(player.getUser().getId(), player.getUser().getPseudo(), (String) playerAction.getValue(0), 0, state.getX(), state.getY());
                     result.add(item);

@@ -115,7 +115,6 @@ public class GameController extends Observable implements Observer {
                         if (current != null) {
                             List<Object> result = current.doAction(new PlayerAction(message), this.collisionController);
                             if (result != null) {
-
                                 for (Object item : result) {
                                     Debug.debug("\nGAME_CONTROLER: resultPlayerAction ->" + item);
                                     if (item instanceof Obstacle) {
@@ -170,6 +169,7 @@ public class GameController extends Observable implements Observer {
     public void doPlayerNew(MessagePlayerNew task) {
         if (this.animatorGameData != null && this.tankConfigData.isValid()) {
             if (this.getPlayer(task.getId()) == null) {
+                Debug.debug("\n NEW PLAYER with id: " + task.getId());
                 this.addPlayer(new Player(new User(task.getPseudo(), task.getId()), task.getTeamId(), this.tankConfigData.getTank(task.getEnumGameObject()),
                         this.getShots(), task.getPosX(), task.getPosY()));
                 if (task.getId().equals(CurrentUser.getId())) {

@@ -249,6 +249,8 @@ public class GameController extends Observable {
     public void doMessageMove(MessageMove received) {
         if (!this.gameModeController.isPlayable())
             return;
+
+        WindowController.addConsoleMsg("\n RECEIVED MESSAGE MOVE: " + received.getId() + " move?" + received.isMove());
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
     }
@@ -383,6 +385,7 @@ public class GameController extends Observable {
         this.notifyObservers(new Pair<>(EnumTargetTask.MASTER_SERVER, this.getPlayers()));
 
         // END DU ROUND
+        this.stopPlayersPosition();
         this.gameModeController.getCurrentMode().endRound();
         this.clearTargets();
 
@@ -424,7 +427,7 @@ public class GameController extends Observable {
                 notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(new MessageRoundStart("admin", "admin", false))));
                 gameModeController.getCurrentMode().startRound();
             }
-        }, 7000);
+        }, 6000);
     }
 
     public void sendAllTargetsToEveryone(boolean players, boolean obstacles, boolean teams) {
@@ -613,6 +616,16 @@ public class GameController extends Observable {
         }, 3000);
     }
 
+    public void stopPlayersPosition(){
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()){
+            Player player = entry.getValue();
+
+            MessageMove message = new MessageMove(player.getPseudo(), player.getId(), -100, false, -100, -100);
+
+            this.setChanged();
+            this.notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
+        }
+    }
 
     public void initPlayersPosition() {
         this.mapController.getCurrentMap().resetCurrentObject();
