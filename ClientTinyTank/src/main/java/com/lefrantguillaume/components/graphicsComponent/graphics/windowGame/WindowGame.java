@@ -13,6 +13,8 @@ import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirec
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -80,6 +82,9 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.container = gameContainer;
         this.stateWindow = stateBasedGame;
         this.container.setForceExit(false);
+
+        MusicController.init();
+        SoundController.init();
 
         this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
         this.animatorGameData.init();

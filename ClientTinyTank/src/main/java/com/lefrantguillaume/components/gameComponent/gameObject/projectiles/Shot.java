@@ -22,9 +22,10 @@ public class Shot extends Observable implements Observer {
     private final String id;
     private final String userId;
     private final Animator animator;
+    private final EnumGameObject type;
+
     private final Pair<Float, Float> shiftHead;
     private final Pair<Float, Float> shiftToExplode;
-    private final EnumGameObject type;
     private Pair<Float, Float> shiftOrigin;
     private Pair<Float, Float> positions;
     private float currentDamageShot;

@@ -3,12 +3,17 @@ package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterfa
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.components.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -21,8 +26,8 @@ public class WindowInterface extends BasicGameState implements ScreenController 
 
     private AnimatorInterfaceData animatorData;
     private InterfaceController interfaceController;
-    private Music theme;
     private Nifty nifty;
+
     private int id;
 
     public WindowInterface(int id, Nifty nifty, GenericSendTask interfaceTask) throws JSONException {
@@ -44,7 +49,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.animatorData.init();
         this.interfaceController.initAnimator(this.animatorData.getBackgroundAnimators(), this.animatorData.getButtonAnimators(),
                 this.animatorData.getTankStatAnimators(), this.animatorData.getTankPreviewAnimators());
-        this.theme = new Music("assets/old/music/select.ogg");
+        MusicController.init();
     }
 
     public void enter(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
@@ -55,11 +60,11 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.container.setVSync(false);
 
         this.nifty.gotoScreen("screen-interface");
-        this.theme.loop();
+        MusicController.loop(EnumSound.SELECT);
     }
 
     public void leave(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
-        this.theme.stop();
+        MusicController.stop(EnumSound.SELECT);
     }
 
     public void render(GameContainer gameContainer, StateBasedGame sbg, Graphics g) throws SlickException {
@@ -93,6 +98,8 @@ public class WindowInterface extends BasicGameState implements ScreenController 
             this.interfaceController.changeCurrentTank(key);
         } else if (key == Input.KEY_ESCAPE) {
             this.stateWindow.enterState(EnumWindow.ACCOUNT.getValue());
+        } else if (key == Input.KEY_E){
+            MusicController.loop(EnumSound.SELECT);
         }
     }
 

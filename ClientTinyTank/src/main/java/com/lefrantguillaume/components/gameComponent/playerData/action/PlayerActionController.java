@@ -3,7 +3,6 @@ package com.lefrantguillaume.components.gameComponent.playerData.action;
 import com.lefrantguillaume.Utils.configs.CurrentUser;
 import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -11,6 +10,8 @@ import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.Obstac
 import com.lefrantguillaume.components.gameComponent.gameObject.projectiles.Shot;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class PlayerActionController { //extends Observable {
                     if (player.getTank().getTankWeapon().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())) {
                         result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.HIT, player.getTank().getTankWeapon().getCooldown())));
                     }
+                    SoundController.play(EnumSound.getSound(player.getTank().getTankWeapon().getShotType()));
                     if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
                         player.setCanDoAction(false);
                         this.addShootTimer(playerAction, collisionController, player);

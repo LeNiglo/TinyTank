@@ -5,6 +5,8 @@ import com.lefrantguillaume.Utils.stockage.Pair;
 import com.lefrantguillaume.Utils.tools.Browser;
 import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
@@ -32,7 +34,6 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     private TextField loginField = null;
     private TextField passField = null;
     private Image background;
-    private Music theme;
     private int id;
 
     private Nifty nifty;
@@ -48,7 +49,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
         this.background = new Image("assets/old/img/interface/back.png");
-        this.theme = new Music("assets/old/music/intro.ogg");
+        MusicController.init();
     }
 
     @Override
@@ -77,12 +78,12 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container.setVSync(false);
 
         this.nifty.gotoScreen("screen-login");
-        this.theme.loop();
+        MusicController.loop(EnumSound.BACKGROUND);
     }
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        this.theme.stop();
+        MusicController.stop(EnumSound.BACKGROUND);
     }
 
     @Override
