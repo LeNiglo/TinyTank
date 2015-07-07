@@ -82,8 +82,8 @@ public class Animator implements Observer {
     }
 
     public void nextCurrentIndex() {
-        if ((this.index + 1) < this.animations.get(this.current).size()) {
-            this.index += 1;
+        if (this.canSetIndex(this.index + 1)){
+            this.setIndex(this.index + 1);
         }
     }
 

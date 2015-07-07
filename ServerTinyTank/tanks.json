@@ -108,7 +108,7 @@
         "hit": {
           "shotType": "laser",
           "speed": "500.0",
-          "damage": "100.0",
+          "damage": "200.0",
           "cooldown": "2000",
           "build": {
             "centerX": "-40.0",
@@ -146,7 +146,7 @@
       },
       "tankBox": {
         "boxType": "plasma_wall",
-        "boxes" : "3",
+        "boxes" : "4",
         "cooldownPut" : "2000",
         "cooldownGenerate" : "20000"
       }

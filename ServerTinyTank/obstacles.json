@@ -1,7 +1,7 @@
 {
   "boxes": {
     "iron_wall": {
-      "life": "20",
+      "life": "70",
       "damage": "0",
       "build": {
         "centerX": "-22.5",
@@ -19,7 +19,7 @@
       }
     },
     "plasma_wall": {
-      "life": "20",
+      "life": "70",
       "damage": "0",
       "build": {
         "centerX": "-22.5",
@@ -114,7 +114,7 @@
   },
   "spell": {
     "shield": {
-      "life": "100",
+      "life": "250",
       "damage": "0",
       "build": {
         "centerX": "-45.0",
