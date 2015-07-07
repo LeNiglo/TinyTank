@@ -54,7 +54,7 @@ public class PlayerActionController { //extends Observable {
                 }
             } else if (playerAction.getAction() == EnumActions.SHOOT) {
                 if (this.getShot((String) playerAction.getValue(0)) == null) {
-                    if (player.getTank().getTankWeapon().isActivated()){
+                    if (player.getTank().getTankWeapon().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())){
                         result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.HIT, player.getTank().getTankWeapon().getCooldown())));
                     }
                     if (player.getTank().getTankWeapon().getShotType() == EnumGameObject.LASER) {
@@ -65,7 +65,7 @@ public class PlayerActionController { //extends Observable {
                     }
                 }
             } else if (playerAction.getAction() == EnumActions.SPELL) {
-                if (player.getTank().getTankSpell().isActivated()){
+                if (player.getTank().getTankSpell().isActivated() && CurrentUser.getId().equals(player.getUser().getIdUser())){
                     result.add(new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.SPELL, player.getTank().getTankSpell().getCooldown())));
                 }
                 Object item = player.getTank().activeSpell();
