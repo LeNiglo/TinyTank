@@ -12,7 +12,8 @@ public enum EnumSound {
 
     ROCKET(EnumGameObject.ROCKET, "assets/old/sound/tigerHit.wav"),
     LASER(EnumGameObject.LASER, "assets/old/sound/sniperHit.wav"),
-    MACHINE_GUN(EnumGameObject.MACHINE_GUN, "assets/old/sound/rusherHit.wav");
+    MACHINE_GUN(EnumGameObject.MACHINE_GUN, "assets/old/sound/machineGun.wav"),
+    EXPLOSION("assets/old/sound/explosion.wav");
 
     private String path;
     private EnumGameObject object;

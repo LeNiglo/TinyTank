@@ -22,6 +22,8 @@ import com.lefrantguillaume.components.gameComponent.playerData.action.PlayerAct
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.gameComponent.playerData.data.User;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.MessageModel;
 import com.lefrantguillaume.components.networkComponent.networkGame.messages.msg.*;
@@ -230,6 +232,9 @@ public class GameController extends Observable implements Observer {
             player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
             player.getTank().getTankState().setCurrentArmor(task.getArmor());
             player.kill();
+            if (player.getTank().getTankState().getCurrentLife() == 0){
+                SoundController.play(EnumSound.EXPLOSION);
+            }
             Debug.debug("isCurrent ? " + CurrentUser.getId() + " =? " + player.getUser().getIdUser());
             if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
                 Pair order = new Pair<>(EnumOverlayElement.USER_LIFE, new Pair<>("cutBody", player.getTank().getTankState().getPercentageLife()));

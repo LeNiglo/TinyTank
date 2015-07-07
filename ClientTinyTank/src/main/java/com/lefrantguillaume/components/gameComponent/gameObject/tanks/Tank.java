@@ -11,6 +11,8 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankFactory;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
