@@ -8,10 +8,7 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -24,7 +21,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
 
     private AnimatorInterfaceData animatorData;
     private InterfaceController interfaceController;
-
+    private Music theme;
     private Nifty nifty;
     private int id;
 
@@ -47,6 +44,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.animatorData.init();
         this.interfaceController.initAnimator(this.animatorData.getBackgroundAnimators(), this.animatorData.getButtonAnimators(),
                 this.animatorData.getTankStatAnimators(), this.animatorData.getTankPreviewAnimators());
+        this.theme = new Music("assets/old/music/select.ogg");
     }
 
     public void enter(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
@@ -57,11 +55,11 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.container.setVSync(false);
 
         this.nifty.gotoScreen("screen-interface");
-
+        this.theme.loop();
     }
 
     public void leave(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
-
+        this.theme.stop();
     }
 
     public void render(GameContainer gameContainer, StateBasedGame sbg, Graphics g) throws SlickException {

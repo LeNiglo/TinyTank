@@ -2,13 +2,14 @@
 <nifty xmlns="http://nifty-gui.sourceforge.net/nifty-1.3.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty-1.3.xsd http://nifty-gui.sourceforge.net/nifty-1.3.xsd
 http://nifty-gui.sourceforge.net/nifty-1.3.xsd ">
-    <screen id="screen-login" controller="com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin">
+    <screen id="screen-login"
+            controller="com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin.WindowLogin">
         <layer id="background" childLayout="center">
             <panel valign="top" height="100%" align="center" childLayout="vertical">
                 <panel height="5%" width="100%" childLayout="vertical">
                 </panel>
                 <panel height="35%" valign="top" childLayout="center">
-                    <image filename="assets/logo.png" width="75%" height="100%" align="center"
+                    <image filename="assets/logo.png" width="65%" height="80%" align="center"
                            childLayout="center">
                         <effect>
                             <onStartScreen name="fade" start="#0" end="#f" startDelay="500" length="1000"/>
@@ -21,20 +22,22 @@ http://nifty-gui.sourceforge.net/nifty-1.3.xsd ">
             <panel id="panel_top" height="50%" width="75%" align="center" childLayout="center">
             </panel>
             <panel id="panel_mid" height="30%" width="75%" align="center" childLayout="center">
-                <control name="textfield" width="100%" height="50" align="center" valign="top" id="login"
+                <control name="textfield" width="40%" height="50" align="left" valign="top" id="login"
                          maxLength="30"/>
-                <control name="textfield" width="100%" height="50" align="center" valign="center" id="pass"
+                <control name="textfield" width="40%" height="50" align="left" valign="center" id="pass"
                          maxLength="20" passwordChar="*"/>
             </panel>
             <panel id="panel_mid_bottom" height="" width="75%" align="center" childLayout="horizontal">
-                <panel id="panel_bottom_left" height="50%" width="50%" valign="center" childLayout="center">
-                    <control name="button" label="Connect" id="ConnectButton" height="50" width="200" align="center"
+                <panel id="panel_bottom_left" height="50%" width="50%" valign="left" childLayout="center">
+                    <control name="button" label="Connect" id="ConnectButton" height="50" width="150" align="left"
                              valign="bottom" visibleToMouse="true">
                         <interact onClick="connect()"/>
                     </control>
                 </panel>
+            </panel>
+            <panel id="panel_right_bottom" height="" width="75%" align="right" childLayout="horizontal">
                 <panel id="panel_bottom_right" height="50%" width="50%" valign="center" childLayout="center">
-                    <control name="button" label="Register" id="RegisterButton" height="50" width="200" align="center"
+                    <control name="button" label="Register" id="RegisterButton" height="50" width="150" align="left"
                              valign="bottom" visibleToMouse="true">
                         <interact onClick="register()"/>
                     </control>

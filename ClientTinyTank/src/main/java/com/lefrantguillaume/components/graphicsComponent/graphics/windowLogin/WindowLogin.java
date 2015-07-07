@@ -12,10 +12,7 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -34,6 +31,8 @@ public class WindowLogin extends BasicGameState implements ScreenController {
     private StateBasedGame stateGame;
     private TextField loginField = null;
     private TextField passField = null;
+    private Image background;
+    private Music theme;
     private int id;
 
     private Nifty nifty;
@@ -48,6 +47,8 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container = gameContainer;
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
+        this.background = new Image("assets/old/img/interface/back.png");
+        this.theme = new Music("assets/old/music/intro.ogg");
     }
 
     @Override
@@ -57,6 +58,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        g.drawImage(this.background, 0, 0);
         SlickCallable.enterSafeBlock();
         this.nifty.render(false);
         SlickCallable.leaveSafeBlock();
@@ -75,11 +77,12 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.container.setVSync(false);
 
         this.nifty.gotoScreen("screen-login");
+        this.theme.loop();
     }
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-
+        this.theme.stop();
     }
 
     @Override
