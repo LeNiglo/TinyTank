@@ -184,8 +184,8 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Image img3 = new Image("assets/old/img/game/effect/bullet2.png");
             animation.addFrame(img3, 300);
             animator.addAnimation(EnumAnimation.BASIC, animation);
-            SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/effect/explosionRusher.png", 25, 29);
-            Animation animation2 = this.loadAnimation(spriteSheet, 0, 3, 0, 1, 150);
+            SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/effect/explosionRusher.png", 28, 26);
+            Animation animation2 = this.loadAnimation(spriteSheet, 0, 3, 0, 1, 170);
             animation2.setLooping(false);
             animator.addAnimation(EnumAnimation.EXPLODE, animation2);
         } else if (index == EnumSprites.RUSHER_SPELL) {
