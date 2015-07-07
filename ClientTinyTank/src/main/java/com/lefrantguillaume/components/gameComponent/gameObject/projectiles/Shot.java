@@ -85,16 +85,15 @@ public class Shot extends Observable implements Observer {
         this.animator.currentAnimation().getCurrentFrame().setCenterOfRotation(this.getShiftOrigin().getV1() * -1, this.getShiftOrigin().getV2() * -1);
         this.animator.currentAnimation().getCurrentFrame().setRotation(this.getAngle());
         for (int i = 0; i < this.savePosShot.size(); ++i) {
-            if (this.type == EnumGameObject.LASER && i != this.savePosShot.size() - 1) {
-                Animation animation = this.animator.getAnimation(EnumAnimation.BASIC, 0);
-                if (animation != null)
-                    g.drawAnimation(
-                            animation,
-                            this.savePosShot.get(i).getV1(),
-                            this.savePosShot.get(i).getV2());
-            } else {
-                g.drawAnimation(this.animator.currentAnimation(), this.savePosShot.get(i).getV1(), this.savePosShot.get(i).getV2());
+            Animation animation = this.animator.currentAnimation();
+            if (this.type == EnumGameObject.LASER && i == this.savePosShot.size() - 1) {
+                if (this.animator.getCurrentAnimation() == EnumAnimation.BASIC && this.animator.canSetIndex(1)) {
+                    animation = this.animator.getAnimation(EnumAnimation.BASIC, 1);
+                    animation.getCurrentFrame().setCenterOfRotation(this.getShiftOrigin().getV1() * -1, this.getShiftOrigin().getV2() * -1);
+                    animation.getCurrentFrame().setRotation(this.getAngle());
+                }
             }
+            g.drawAnimation(animation, this.savePosShot.get(i).getV1(), this.savePosShot.get(i).getV2());
         }
     }
 

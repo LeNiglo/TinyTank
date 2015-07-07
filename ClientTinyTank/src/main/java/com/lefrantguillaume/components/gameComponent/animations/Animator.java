@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -146,6 +145,13 @@ public class Animator implements Observer {
             }
         }
         return null;
+    }
+
+    public boolean canSetIndex(int index){
+        if (index < this.animations.get(this.current).size()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean needUpdate() {

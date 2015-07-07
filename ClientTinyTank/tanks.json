@@ -107,7 +107,7 @@
       "tankWeapon": {
         "hit": {
           "shotType": "laser",
-          "speed": "400.0",
+          "speed": "500.0",
           "damage": "100.0",
           "cooldown": "2000",
           "build": {

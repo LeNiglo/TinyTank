@@ -56,11 +56,13 @@ public class ObstacleConfigData {
         Float sizeX = WindowConfig.getSizeX();
         Float sizeY = WindowConfig.getSizeY();
 
-        Pair<Float, Float> size1 = new Pair<>(sizeX, 10f);
-        Pair<Float, Float> size2 = new Pair<>(10f, sizeY);
-        Pair<Float, Float> origin1 = new Pair<>(-sizeX / 2, -10f);
+        Float sizeWall = 40f;
+
+        Pair<Float, Float> size1 = new Pair<>(sizeX, sizeWall);
+        Pair<Float, Float> size2 = new Pair<>(sizeWall, sizeY);
+        Pair<Float, Float> origin1 = new Pair<>(-sizeX / 2, -sizeWall);
         Pair<Float, Float> origin2 = new Pair<>(-sizeX / 2, 0f);
-        Pair<Float, Float> origin3 = new Pair<>(-10f, -sizeY / 2);
+        Pair<Float, Float> origin3 = new Pair<>(-sizeWall, -sizeY / 2);
         Pair<Float, Float> origin4 = new Pair<>(0f, -sizeY / 2);
 
         List<Block> block1 = new ArrayList<>();
