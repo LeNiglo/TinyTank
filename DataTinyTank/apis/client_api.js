@@ -4,6 +4,12 @@ var url = require('url');
 
 ClientApi = function (app, db) {
 
+    this.list_servers = function (req, res) {
+        Servers.find().toArray(function (err, result) {
+            res.status(200).json({name: 'list_servers', res: JSON.stringify(result), err: err});
+        });
+    };
+
     this.login = function (req, res) {
         Users.findOne({
             $or: [{email: req.body.login.toString().toLowerCase()}, {username: new RegExp('^' + req.body.login.toString() + '$', 'i')}]

@@ -29,7 +29,7 @@ var Router = function(app, db) {
   */
 
   app.post('/client/login', clientApi.login);
-  app.post('/client/list_servers', webApi.list_servers);
+  app.post('/client/list_servers', clientApi.list_servers);
   app.get('/client/user_profile', webApi.user_profile);
   app.get('/client/get_tank_list', serverApi.get_tank_list);
 
