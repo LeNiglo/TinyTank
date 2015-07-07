@@ -11,10 +11,7 @@ import de.lessvoid.nifty.controls.ListBoxSelectionChangedEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.SlickCallable;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -34,6 +31,9 @@ public class WindowAccount extends BasicGameState implements ScreenController {
     private StateBasedGame stateGame;
     private AccountController accountController;
     private final ScheduledExecutorService scheduler;
+
+    private Image background;
+
     private Nifty nifty;
     private int id;
     private ListBox listBox = null;
@@ -59,6 +59,8 @@ public class WindowAccount extends BasicGameState implements ScreenController {
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
         this.accountController.setStateGame(stateBasedGame);
+
+        this.background = new Image("assets/old/img/interface/log_back.png");
     }
 
     @Override
@@ -87,6 +89,7 @@ public class WindowAccount extends BasicGameState implements ScreenController {
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
+        g.drawImage(this.background, 0, 0);
         SlickCallable.enterSafeBlock();
         this.nifty.render(false);
         SlickCallable.leaveSafeBlock();

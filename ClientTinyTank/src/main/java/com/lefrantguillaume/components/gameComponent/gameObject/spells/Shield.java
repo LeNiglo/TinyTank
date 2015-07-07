@@ -18,7 +18,7 @@ public class Shield extends Spell {
         this.type = EnumGameObject.SHIELD;
         this.obstacleConfigData = obstacleConfigData;
         this.animator = null;
-        this.duration = 5000;
+        this.duration = 10000;
         this.isActive = false;
     }
 

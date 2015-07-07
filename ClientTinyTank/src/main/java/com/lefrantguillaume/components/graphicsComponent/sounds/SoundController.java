@@ -46,11 +46,13 @@ public class SoundController {
         if (needInit == false){
             try {
                 Sound sound = new Sound(value.getPath());
-                SoundElement soundElement = new SoundElement(sound, value);
-                sounds.add(soundElement);
+                if (sound != null) {
+                    SoundElement soundElement = new SoundElement(sound, value);
+                    sounds.add(soundElement);
 
-                soundElement.getSound().play(pitch, volume);
-                return soundElement.getId();
+                    soundElement.getSound().play(pitch, volume);
+                    return soundElement.getId();
+                }
             } catch (SlickException e) {
                 e.printStackTrace();
             }

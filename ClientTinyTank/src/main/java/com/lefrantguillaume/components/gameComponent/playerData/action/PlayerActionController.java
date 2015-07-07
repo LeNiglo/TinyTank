@@ -117,7 +117,7 @@ public class PlayerActionController { //extends Observable {
             public void run() {
                 generateShot(playerAction, collisionController, player);
             }
-        }, 2000);
+        }, 500);
     }
 
     private Shot getShot(String id) {

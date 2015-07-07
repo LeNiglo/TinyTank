@@ -233,7 +233,7 @@ public class GameController extends Observable implements Observer {
             player.getTank().getTankState().setCurrentArmor(task.getArmor());
             player.kill();
             if (player.getTank().getTankState().getCurrentLife() == 0){
-                SoundController.play(EnumSound.EXPLOSION);
+                SoundController.play(EnumSound.EXPLOSION_TANK);
             }
             Debug.debug("isCurrent ? " + CurrentUser.getId() + " =? " + player.getUser().getIdUser());
             if (CurrentUser.getId().equals(player.getUser().getIdUser())) {
@@ -309,6 +309,9 @@ public class GameController extends Observable implements Observer {
         if (obstacle != null) {
             obstacle.setCurrentLife(task.getCurrentLife());
 
+            if (obstacle.getCurrentLife() == 0 && obstacle.getType() == EnumGameObject.MINE) {
+                SoundController.play(EnumSound.EXPLOSION_MINE);
+            }
             if (obstacle.getType() == EnumGameObject.SHIELD && CurrentUser.getId().equals(obstacle.getPlayerId())) {
                 Pair order = new Pair<>(EnumOverlayElement.USER_SHIELD, new Pair<>("cutBody", obstacle.getPercentageLife()));
                 this.setChanged();

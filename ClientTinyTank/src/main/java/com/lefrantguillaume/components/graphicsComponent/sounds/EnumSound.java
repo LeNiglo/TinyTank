@@ -10,10 +10,11 @@ public enum EnumSound {
     BACKGROUND("assets/old/music/intro.ogg"),
     SELECT("assets/old/music/select.ogg"),
 
-    ROCKET(EnumGameObject.ROCKET, "assets/old/sound/tigerHit.wav"),
-    LASER(EnumGameObject.LASER, "assets/old/sound/sniperHit.wav"),
+    ROCKET(EnumGameObject.ROCKET, "assets/old/sound/rocketHit.wav"),
+    LASER(EnumGameObject.LASER, "assets/old/sound/laserHit.wav"),
     MACHINE_GUN(EnumGameObject.MACHINE_GUN, "assets/old/sound/machineGun.wav"),
-    EXPLOSION("assets/old/sound/explosion.wav");
+    EXPLOSION_MINE(EnumGameObject.MINE, "assets/old/sound/explosionMine.wav"),
+    EXPLOSION_TANK("assets/old/sound/explosionTank.wav");
 
     private String path;
     private EnumGameObject object;

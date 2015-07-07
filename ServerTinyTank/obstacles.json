@@ -133,7 +133,8 @@
           "rusher",
           "sniper",
           "iron_wall",
-          "plasma_wall"
+          "plasma_wall",
+          "mine"
         ]
       }
     }
