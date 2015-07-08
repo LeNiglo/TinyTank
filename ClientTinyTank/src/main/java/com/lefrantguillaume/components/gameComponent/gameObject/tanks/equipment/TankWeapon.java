@@ -125,6 +125,10 @@ public class TankWeapon {
         return this.speedShot;
     }
 
+    public float getMaxRangeShot() {
+        return this.maxRangeShot;
+    }
+
     public Animator getShotAnimator() {
         return this.shotAnimator;
     }
@@ -157,11 +161,11 @@ public class TankWeapon {
         return value + this.shiftWeaponOrigin.getV2();
     }
 
-    public long getCooldown(){
+    public long getCooldown() {
         return this.activatedTimer.getDelay();
     }
 
-    public boolean isActivated(){
+    public boolean isActivated() {
         return this.activatedTimer.isActivated();
     }
 }

@@ -1,14 +1,15 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
-import com.lefrantguillaume.utils.configs.NetworkServerConfig;
-import com.lefrantguillaume.utils.stockage.Pair;
-import com.lefrantguillaume.utils.stockage.Tuple;
-import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
+import com.lefrantguillaume.utils.configs.NetworkServerConfig;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Debug;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -23,11 +24,14 @@ import java.util.Observer;
  * Created by andres_k on 03/06/2015.
  */
 public class AccountController extends Observable implements Observer {
-    private StateBasedGame stateGame;
+    private StateBasedGame stateWindow;
+    private WindowBasedGame window;
+
     private List<ServerEntry> servers = new ArrayList<>();
 
     public AccountController() {
-        this.stateGame = null;
+        this.window = null;
+        this.stateWindow = null;
     }
 
     // FUNCTIONS
@@ -35,10 +39,14 @@ public class AccountController extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
-        if (received.getV2().equals(EnumTargetTask.ACCOUNT)) {
+        if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().equals(EnumTargetTask.ACCOUNT)) {
             Debug.debug("accountTask: " + received);
-            if (received.getV3() instanceof EnumWindow && this.stateGame != null) {
-                this.stateGame.enterState(((EnumWindow) received.getV3()).getValue());
+            if (received.getV3() instanceof EnumWindow) {
+                if (received.getV3() == EnumWindow.EXIT && this.window != null) {
+                    this.window.quit();
+                } else if (this.stateWindow != null) {
+                    this.stateWindow.enterState(((EnumWindow) received.getV3()).getValue());
+                }
             }
         }
     }
@@ -80,12 +88,21 @@ public class AccountController extends Observable implements Observer {
 
     // SETTERS
 
-    public void setStateGame(StateBasedGame stateGame) {
-        this.stateGame = stateGame;
+    public void setStateWindow(StateBasedGame stateWindow) {
+        this.stateWindow = stateWindow;
     }
-    public void clearServers() { this.servers.clear(); }
+
+    public void setWindow(WindowBasedGame window) {
+        this.window = window;
+    }
+
+    public void clearServers() {
+        this.servers.clear();
+    }
 
     // GETTERS
 
-    public List<ServerEntry> getServers() { return this.servers; }
+    public List<ServerEntry> getServers() {
+        return this.servers;
+    }
 }

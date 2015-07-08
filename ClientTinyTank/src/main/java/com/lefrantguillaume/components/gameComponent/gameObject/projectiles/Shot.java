@@ -103,12 +103,12 @@ public class Shot extends Observable implements Observer {
     }
 
     public Pair<Float, Float> move(float delta) {
-        if (this.explode == false) {
+        if (this.explode == false && this.currentRange < this.maxRange) {
             Pair<Float, Float> coords = this.movePredict(delta);
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
             Debug.debug("\n newDistance: [" + coords.getV1() + ", " + coords.getV2() + "]");
-            Debug.debug("distance: " + this.currentRange + " + " + "/(" + (coords.getV1() * coords.getV1()) + " + " + (coords.getV2() * coords.getV2()) + ") = " + Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() + coords.getV2())));
+            Debug.debug("distance: " + this.currentRange + " + " + "/(" + (coords.getV1() * coords.getV1()) + " + " + (coords.getV2() * coords.getV2()) + ") = " + Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2())));
             this.currentRange += Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2()));
             this.addNewPosition();
             return coords;

@@ -24,13 +24,11 @@ public class InterfaceController extends Observable implements Observer {
     private Map<EnumInterfaceElement, Animator> backgroundAnimator;
     private Map<EnumInterfaceElement, Animator> buttonAnimator;
     private AvailableTank availableTank;
-    private StateBasedGame stateWindow;
 
     public InterfaceController(){
         this.backgroundAnimator = new HashMap<>();
         this.buttonAnimator = new HashMap<>();
         this.availableTank = new AvailableTank();
-        this.stateWindow = null;
     }
 
     @Override
@@ -103,10 +101,5 @@ public class InterfaceController extends Observable implements Observer {
 
     public void addButtonAnimator(Animator buttonAnimator, EnumInterfaceElement type) {
         this.buttonAnimator.put(type, buttonAnimator);
-    }
-
-    //SETTERS
-    public void setStateWindow(StateBasedGame stateWindow){
-        this.stateWindow = stateWindow;
     }
 }

@@ -3,6 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.graphics.windowInterfa
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorInterfaceData;
 import com.lefrantguillaume.components.gameComponent.controllers.InterfaceController;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
 import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
 import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
@@ -14,13 +15,12 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by andres_k on 10/03/2015.
  */
-public class WindowInterface extends BasicGameState implements ScreenController {
+public class WindowInterface extends WindowBasedGame implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateWindow;
 
@@ -43,7 +43,6 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException
     {
         this.stateWindow = sbg;
-        this.interfaceController.setStateWindow(this.stateWindow);
         this.container = gc;
         this.container.setForceExit(false);
         this.animatorData.init();
@@ -63,7 +62,7 @@ public class WindowInterface extends BasicGameState implements ScreenController 
     }
 
     public void leave(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {
-        MusicController.stop(EnumSound.SELECT);
+        this.clean();
     }
 
     public void render(GameContainer gameContainer, StateBasedGame sbg, Graphics g) throws SlickException {
@@ -112,4 +111,15 @@ public class WindowInterface extends BasicGameState implements ScreenController 
 
     @Override
     public void onEndScreen() {}
+
+    @Override
+    public void clean() {
+        MusicController.stop(EnumSound.SELECT);
+    }
+
+    @Override
+    public void quit() {
+        this.clean();
+        this.stateWindow.enterState(EnumWindow.ACCOUNT.getValue());
+    }
 }

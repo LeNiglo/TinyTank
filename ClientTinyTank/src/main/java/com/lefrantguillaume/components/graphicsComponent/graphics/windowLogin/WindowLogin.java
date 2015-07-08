@@ -1,13 +1,14 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin;
 
+import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
+import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
+import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import com.lefrantguillaume.utils.configs.CurrentUser;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.tools.Browser;
 import com.lefrantguillaume.utils.tools.Debug;
-import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
-import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
-import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
-import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.screen.Screen;
@@ -16,7 +17,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
 import org.newdawn.slick.opengl.SlickCallable;
-import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.net.URI;
@@ -28,7 +28,7 @@ import java.util.UUID;
  * Created by andres_k on 10/03/2015.
  */
 
-public class WindowLogin extends BasicGameState implements ScreenController {
+public class WindowLogin extends WindowBasedGame implements ScreenController {
     private GameContainer container;
     private StateBasedGame stateGame;
     private TextField loginField = null;
@@ -82,7 +82,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        MusicController.stop(EnumSound.BACKGROUND);
+        this.clean();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         if (key == Input.KEY_RETURN) {
             this.connect();
         } else if (key == Input.KEY_ESCAPE) {
-            this.container.exit();
+            this.quit();
         }
     }
 
@@ -145,4 +145,14 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         }
     }
 
+    @Override
+    public void clean() {
+        MusicController.stop(EnumSound.BACKGROUND);
+    }
+
+    @Override
+    public void quit() {
+        this.clean();
+        this.container.exit();
+    }
 }

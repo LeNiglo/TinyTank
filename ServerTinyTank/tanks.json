@@ -193,7 +193,7 @@
           "shotType": "machine_gun",
           "speed": "235.0",
           "damage": "10.0",
-          "maxRange": "400",
+          "maxRange": "300",
           "cooldown": "100",
           "build": {
             "centerX": "-16.0",
@@ -233,7 +233,7 @@
       },
       "tankSpell": {
         "spellType": "teleport",
-        "cooldown" : "3000"
+        "cooldown" : "1000"
       },
       "tankBox": {
         "boxType": "mine",
