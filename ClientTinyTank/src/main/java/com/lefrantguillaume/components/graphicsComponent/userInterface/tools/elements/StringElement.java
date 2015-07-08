@@ -74,14 +74,6 @@ public class StringElement extends Element {
         }
 
         body.draw(g);
-  /*
-        if (this.body != null && body.getColor() == null) {
-            this.body = new BodyRect(body.getBody(), this.body.getColor());
-        }
-        else {
-            body.draw(g);
-        }
-        */
         g.setColor(this.color);
         g.drawString(value, position.getV1(), position.getV2());
     }
@@ -128,6 +120,8 @@ public class StringElement extends Element {
                 String v2 = (String) task;
                 this.stringTimer.setValue(v1 + v2);
                 return true;
+            } else {
+                this.stringTimer.setValue((String) task);
             }
         }
         return null;

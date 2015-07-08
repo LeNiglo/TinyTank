@@ -1,6 +1,9 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic;
 
 import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -18,29 +21,25 @@ import java.util.List;
 public class GenericElement extends InterfaceElement {
     private List<Element> elements;
     private GenericSendTask genericSendTask;
-    private boolean canBeActivate;
+    private Pair<Boolean, Boolean> canBeActivate;
     private Pair<Float, Float> saves;
 
-    public GenericElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, boolean activated, boolean[] needActivated) {
+    public GenericElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body, Pair<Boolean, Boolean> canBeActivate, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
-        this.childInit(genericSendTask);
+        this.childInit(genericSendTask, canBeActivate);
     }
 
-    public GenericElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivated) {
+    public GenericElement(EnumOverlayElement type, BodyRect body, Pair<Boolean, Boolean> canBeActivate, boolean activated, boolean[] needActivated) {
         this.parentInit(body, type, activated, needActivated);
-        this.childInit(null);
+        this.childInit(null, canBeActivate);
     }
 
     // INIT
-    public void childInit(GenericSendTask genericSendTask) {
+    public void childInit(GenericSendTask genericSendTask, Pair<Boolean, Boolean> canBeActivate) {
         this.elements = new ArrayList<>();
         this.genericSendTask = genericSendTask;
-        if (!this.isActivated()) {
-            this.canBeActivate = true;
-        } else {
-            this.canBeActivate = false;
-        }
-        if (this.body != null){
+        this.canBeActivate = canBeActivate;
+        if (this.body != null) {
             this.saves = new Pair<>(this.body.getMaxX(), this.body.getMaxY());
         }
     }
@@ -111,13 +110,12 @@ public class GenericElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (key == Input.KEY_ESCAPE && this.canBeActivate == true) {
-            if (this.isActivated()) {
-                this.activatedTimer.stopTimer();
-                return true;
-            } else {
+        if (key == Input.KEY_ESCAPE) {
+            if (!this.isActivated() && this.canBeActivate.getV1() == true) {
                 this.activatedTimer.startTimer();
                 return true;
+            } else if (this.canBeActivate.getV2() == true) {
+                this.activatedTimer.stopTimer();
             }
         }
         return null;
@@ -125,10 +123,16 @@ public class GenericElement extends InterfaceElement {
 
     @Override
     public Object isOnFocus(int x, int y) {
+        boolean onFocus = false;
+
+        if (this.type == EnumOverlayElement.TABLE_MENU_SETTINGS)
+            Debug.debug("GENERIC IS ON FOCUS");
         if (this.isActivated()) {
             for (Element element : this.elements) {
                 Object result = element.isOnFocus(x, y);
-                if (result != null && element.isEmpty() == false) {
+                if (this.type == EnumOverlayElement.TABLE_MENU_SETTINGS)
+                    Debug.debug("for element: '" + element.getId() + "' -> " + result);
+                if (result != null) {
                     if (result instanceof EnumOverlayElement) {
                         if (this.genericSendTask != null) {
                             this.genericSendTask.sendTask(new Pair<>(this.type, result));
@@ -136,28 +140,63 @@ public class GenericElement extends InterfaceElement {
                         return result;
                     }
                     if (result instanceof Boolean && (Boolean) result == true) {
-                        return true;
+
+                        if (element.getId().equals(EnumOverlayElement.MUSICS_GRAPH.getValue() + EnumOverlayElement.BORDER.getValue())) {
+                            int graph = this.containId(EnumOverlayElement.MUSICS_GRAPH.getValue());
+                            int value = this.containId(EnumOverlayElement.MUSICS_VALUE.getValue());
+
+                            if (graph != -1 && value != -1) {
+                                Element itemGraph = this.elements.get(graph);
+                                Element itemValue = this.elements.get(value);
+                                float border = itemGraph.getBody().getMinX() - element.getBody().getMinX();
+                                float percent = (x - itemGraph.getBody().getMinX()) / (element.getBody().getSizeX() - (border * 2));
+
+                                MusicController.changeVolume(percent * MusicController.getMaxVolume());
+
+                                itemValue.doTask(String.valueOf((int)(MusicController.getVolume() * 100)));
+                                itemGraph.doTask(new Pair<>("cutBody", MusicController.getVolume() / MusicController.getMaxVolume()));
+                            }
+                        } else if (element.getId().equals(EnumOverlayElement.SOUNDS_GRAPH.getValue() + EnumOverlayElement.BORDER.getValue())) {
+                            int graph = this.containId(EnumOverlayElement.SOUNDS_GRAPH.getValue());
+                            int value = this.containId(EnumOverlayElement.SOUNDS_VALUE.getValue());
+
+                            if (graph != -1 && value != -1) {
+                                Element itemGraph = this.elements.get(graph);
+                                Element itemValue = this.elements.get(value);
+                                float border = itemGraph.getBody().getMinX() - element.getBody().getMinX();
+                                float percent = (x - itemGraph.getBody().getMinX()) / (element.getBody().getSizeX() - (border * 2));
+
+                                SoundController.changeVolume(percent * SoundController.getMaxVolume());
+
+                                itemValue.doTask(String.valueOf((int)(SoundController.getVolume() * 100)));
+                                itemGraph.doTask(new Pair<>("cutBody", SoundController.getVolume() / SoundController.getMaxVolume()));
+                            }
+                        }
+                        onFocus = true;
                     }
                 }
             }
+        }
+        if (onFocus == true){
+            return onFocus;
         }
         return null;
     }
 
     public int containId(String id) {
         for (int i = 0; i < this.elements.size(); ++i) {
-            if (!id.equals("") && this.elements.get(i).getId().contains(id)) {
+            if (!id.equals("") && this.elements.get(i).getId().equals(id)) {
                 return i;
             }
         }
         return -1;
     }
 
-    public int elementsPrintable(){
+    public int elementsPrintable() {
         int result = 0;
 
-        for (Element element : this.elements){
-            if (element.isBodyPrintable() && !element.getId().contains(EnumOverlayElement.BORDER.getValue())){
+        for (Element element : this.elements) {
+            if (element.isBodyPrintable() && !element.getId().contains(EnumOverlayElement.BORDER.getValue())) {
                 result += 1;
             }
         }

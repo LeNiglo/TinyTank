@@ -67,7 +67,6 @@ public class TableMenuElement extends TableElement {
             if (this.isActivated()) {
                 this.stop();
                 this.initFocusElement();
-                return true;
             } else {
                 if (this.type == EnumOverlayElement.TABLE_MENU) {
                     this.start();
