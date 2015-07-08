@@ -20,6 +20,7 @@ public class TankWeapon {
     private EnumGameObject shotType;
     private final float damageShot;
     private final float speedShot;
+    private final float maxRangeShot;
     private List<Canon> canons;
     private Pair<Float, Float> shiftHitExplode;
     private Pair<Float, Float> shiftHitOrigin;
@@ -28,7 +29,7 @@ public class TankWeapon {
     private List<Block> collisionObject;
     private int current;
 
-    public TankWeapon(float speedShot, float damageShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitExplode, Pair<Float, Float> shiftHitOrigin,
+    public TankWeapon(float speedShot, float damageShot, float maxRangeShot, Pair<Float, Float> shiftWeaponOrigin, Pair<Float, Float> shiftHitExplode, Pair<Float, Float> shiftHitOrigin,
                       Pair<Float, Float> shiftHitHead, Animator shotAnimator, EnumGameObject shotType, long cooldown) {
         this.shiftWeaponOrigin = new Pair<>(shiftWeaponOrigin);
         this.shiftHitOrigin = new Pair<>(shiftHitOrigin);
@@ -39,6 +40,7 @@ public class TankWeapon {
         this.shotType = shotType;
         this.damageShot = damageShot;
         this.speedShot = speedShot;
+        this.maxRangeShot = maxRangeShot;
         this.current = 0;
         this.canons = new ArrayList<>();
         this.collisionObject = new ArrayList<>();
@@ -55,6 +57,7 @@ public class TankWeapon {
         this.shotType = tankWeapon.shotType;
         this.damageShot = tankWeapon.damageShot;
         this.speedShot = tankWeapon.speedShot;
+        this.maxRangeShot = tankWeapon.maxRangeShot;
         this.current = 0;
         this.canons = new ArrayList<>();
         this.collisionObject = new ArrayList<>();
@@ -79,7 +82,7 @@ public class TankWeapon {
             float y = (float) (x1 * Math.sin(radAngle) + y1 * Math.cos(radAngle) + coord.getV2());
 
             Tuple<Float, Float, Float> newCoord = new Tuple<>(x, y, angle);
-            Shot shot = new Shot(userId, id, this.shotType, this.getDamageShot(), this.getSpeedShot(), new Animator(this.getShotAnimator()), newCoord, new Pair<>(this.shiftHitOrigin),
+            Shot shot = new Shot(userId, id, this.shotType, this.getDamageShot(), this.getSpeedShot(), this.maxRangeShot, new Animator(this.getShotAnimator()), newCoord, new Pair<>(this.shiftHitOrigin),
                     new Pair<>(this.getShiftHitExplode()), new Pair<>(this.shiftHitHead));
 
             for (int i = 0; i < this.collisionObject.size(); ++i) {

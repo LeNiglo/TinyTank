@@ -97,6 +97,8 @@ public class GameController extends Observable {
                 this.doMessageShoot((MessageShoot) received);
             } else if (received instanceof MessageChat) {
                 this.doMessageChat((MessageChat) received);
+            } else if (received instanceof MessageDeleteObject) {
+                this.doMessageDeleteObject((MessageDeleteObject) received);
             }
         }
     }
@@ -325,6 +327,17 @@ public class GameController extends Observable {
     public void doMessageChat(MessageChat received) {
         setChanged();
         notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(received)));
+    }
+
+    public void doMessageDeleteObject(MessageDeleteObject received) {
+        if (this.targets.getPlayer(received.getIdObject()) != null) {
+            this.targets.deletePlayer(received.getIdObject());
+        } else if (this.targets.getShot(received.getIdObject()) != null) {
+            WindowController.addConsoleMsg("Delete shot");
+            this.targets.deleteShot(received.getIdObject());
+        } else if (this.targets.getObstacle(received.getIdObject()) != null) {
+            this.targets.deleteObstacle(received.getIdObject());
+        }
     }
 
     // FUNCTIONS
@@ -616,8 +629,8 @@ public class GameController extends Observable {
         }, 3000);
     }
 
-    public void stopPlayersPosition(){
-        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()){
+    public void stopPlayersPosition() {
+        for (java.util.Map.Entry<String, Player> entry : this.targets.getPlayers().entrySet()) {
             Player player = entry.getValue();
 
             MessageMove message = new MessageMove(player.getPseudo(), player.getId(), -100, false, -100, -100);

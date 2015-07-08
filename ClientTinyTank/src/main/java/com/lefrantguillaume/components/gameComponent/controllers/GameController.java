@@ -121,8 +121,8 @@ public class GameController extends Observable implements Observer {
                                     Debug.debug("\nGAME_CONTROLER: resultPlayerAction ->" + item);
                                     if (item instanceof Obstacle) {
                                         this.mapController.addObstacle((Obstacle) item);
-                                    } else if (item instanceof Pair){
-                                        if (((Pair) item).getV1() instanceof EnumOverlayElement){
+                                    } else if (item instanceof Pair) {
+                                        if (((Pair) item).getV1() instanceof EnumOverlayElement) {
                                             this.setChanged();
                                             this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, item));
                                         }
@@ -232,7 +232,7 @@ public class GameController extends Observable implements Observer {
             player.getTank().getTankState().setSlowEffect(task.getSlowEffect());
             player.getTank().getTankState().setCurrentArmor(task.getArmor());
             player.kill();
-            if (player.getTank().getTankState().getCurrentLife() == 0){
+            if (player.getTank().getTankState().getCurrentLife() == 0) {
                 SoundController.play(EnumSound.EXPLOSION_TANK);
             }
             Debug.debug("isCurrent ? " + CurrentUser.getId() + " =? " + player.getUser().getIdUser());
@@ -292,9 +292,9 @@ public class GameController extends Observable implements Observer {
                 obstacle.createObstacle(task.getId(), task.getPseudo(), task.getObstacleId(), task.getAngle(), task.getPosX(), task.getPosY());
                 this.mapController.addObstacle(obstacle);
             }
-            if (task.getId().equals(CurrentUser.getId())){
+            if (task.getId().equals(CurrentUser.getId())) {
                 Player player = getPlayer(CurrentUser.getId());
-                if (player != null){
+                if (player != null) {
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.GAME_OVERLAY, new Pair<>(EnumOverlayElement.TABLE_ICON, new Pair<>(EnumOverlayElement.BOX, player.getTank().getTankBox().getCooldownPut()))));
                 }
@@ -455,6 +455,10 @@ public class GameController extends Observable implements Observer {
             if (current.getAnimator().isDeleted()) {
                 this.collisionController.deleteCollisionObject(this.shots.get(i).getId());
                 this.shots.remove(i);
+            } else if (current.isInMaxRange()) {
+                current.setCurrentLife(0);
+                this.setChanged();
+                this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME, EnumTargetTask.MESSAGE_SERVER, new MessageDeleteObject(CurrentUser.getPseudo(), CurrentUser.getId(), current.getId())));
             } else {
                 current.draw(g);
 
@@ -467,6 +471,7 @@ public class GameController extends Observable implements Observer {
             }
         }
     }
+
 
     public void drawGameMap(Graphics g) {
         if (this.mapController != null) {
@@ -487,7 +492,7 @@ public class GameController extends Observable implements Observer {
                         current.getAnimator().currentAnimation().getCurrentFrame().setRotation(current.getAngle());
                         g.drawAnimation(current.getAnimator().currentAnimation(), current.getGraphicalX(), current.getGraphicalY());
                     }
-                } else if (current.getCurrentLife() == 0){
+                } else if (current.getCurrentLife() == 0) {
                     this.mapController.deleteObstacle(current.getId());
                 }
             }
