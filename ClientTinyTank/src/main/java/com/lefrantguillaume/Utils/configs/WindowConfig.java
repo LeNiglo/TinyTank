@@ -8,7 +8,7 @@ import java.awt.*;
 public class WindowConfig {
     private static float sizeX;
     private static float sizeY;
-    private static boolean needInit;
+    private static boolean needInit = true;
 
     public static void init(){
         if (needInit == true) {
