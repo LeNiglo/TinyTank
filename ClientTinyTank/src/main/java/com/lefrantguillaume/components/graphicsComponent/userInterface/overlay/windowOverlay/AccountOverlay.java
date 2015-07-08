@@ -1,4 +1,4 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay;
 
 
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
@@ -10,6 +10,8 @@ import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic.GenericElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table.TableMenuElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.ButtonElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.ImageElement;
@@ -27,7 +29,6 @@ import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.utils.tools.StringTools;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.ArrayList;
@@ -188,7 +189,7 @@ public class AccountOverlay extends Overlay {
     }
 
     public boolean event(int key, char c, EnumInput type) {
-        Debug.debug("\n NEW EVENT: " + Input.getKeyName(key) + " (" + type + ")");
+        //Debug.debug("\n NEW EVENT: " + Input.getKeyName(key) + " (" + type + ")");
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             boolean[] reachable = entry.getValue().getReachable();
             if (reachable[this.current]) {

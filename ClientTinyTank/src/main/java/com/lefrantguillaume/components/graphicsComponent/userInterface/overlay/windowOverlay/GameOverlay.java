@@ -1,5 +1,7 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.utils.configs.WindowConfig;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;

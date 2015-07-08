@@ -5,7 +5,7 @@ import com.lefrantguillaume.components.gameComponent.controllers.AccountControll
 import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.AccountOverlay;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay.AccountOverlay;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;

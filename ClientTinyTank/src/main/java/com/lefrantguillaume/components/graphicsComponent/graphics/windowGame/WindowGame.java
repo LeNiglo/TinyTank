@@ -11,7 +11,7 @@ import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGam
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay.GameOverlay;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.utils.configs.CurrentUser;
