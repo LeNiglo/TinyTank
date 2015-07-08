@@ -49,7 +49,6 @@ public class WindowInterface extends BasicGameState implements ScreenController 
         this.animatorData.init();
         this.interfaceController.initAnimator(this.animatorData.getBackgroundAnimators(), this.animatorData.getButtonAnimators(),
                 this.animatorData.getTankStatAnimators(), this.animatorData.getTankPreviewAnimators());
-        MusicController.init();
     }
 
     public void enter(GameContainer gameContainer, StateBasedGame sbg) throws SlickException {

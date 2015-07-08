@@ -49,7 +49,6 @@ public class WindowLogin extends BasicGameState implements ScreenController {
         this.stateGame = stateBasedGame;
         this.container.setForceExit(false);
         this.background = new Image("assets/old/img/interface/back.png");
-        MusicController.init();
     }
 
     @Override

@@ -1,11 +1,13 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.utils.configs.WindowConfig;
-import com.lefrantguillaume.utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.graphics.Windows;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.networkComponent.networkGame.NetworkController;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
+import com.lefrantguillaume.utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.stockage.Tuple;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
@@ -22,6 +24,10 @@ public class MasterGame implements Observer {
     private Windows windows;
 
     public MasterGame() throws SlickException, JSONException {
+        WindowConfig.init();
+        SoundController.init();
+        MusicController.init();
+
         this.masterTask = new GenericSendTask();
         this.masterTask.addObserver(this);
         this.windows = new Windows("TinyTank Game", this.masterTask);
