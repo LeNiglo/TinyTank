@@ -8,17 +8,18 @@ import java.awt.*;
 public class WindowConfig {
     private static float sizeX;
     private static float sizeY;
+    private static boolean needInit;
 
-    public WindowConfig() {
+    public static void init(){
+        if (needInit == true) {
+            Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+            float height = (float) dimension.getHeight();
+            float width = (float) dimension.getWidth();
 
-        //TODO: Résolution à régler
-        Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        float height = (float)dimension.getHeight();
-        float width  = (float)dimension.getWidth();
-
-
-        this.sizeX = 1280;
-        this.sizeY = 768;
+            sizeX = 1280;
+            sizeY = 768;
+            needInit = false;
+        }
     }
 
     public static float getSizeX() {

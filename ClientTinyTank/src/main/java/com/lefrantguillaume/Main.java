@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String args[]) {
 
-        WindowConfig windowConfig = new WindowConfig();
+        WindowConfig.init();
         try {
             MasterGame game = new MasterGame();
             Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
