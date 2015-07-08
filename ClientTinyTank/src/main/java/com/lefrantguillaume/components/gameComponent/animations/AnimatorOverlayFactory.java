@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.Debug;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;

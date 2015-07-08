@@ -1,8 +1,7 @@
 package com.lefrantguillaume.master;
 
-import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.graphics.Windows;
 import com.lefrantguillaume.components.networkComponent.networkGame.NetworkController;
 import com.lefrantguillaume.components.taskComponent.EnumTargetTask;

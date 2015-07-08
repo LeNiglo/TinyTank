@@ -1,7 +1,7 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.configs.WindowConfig;
 import com.lefrantguillaume.master.MasterGame;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.SlickException;

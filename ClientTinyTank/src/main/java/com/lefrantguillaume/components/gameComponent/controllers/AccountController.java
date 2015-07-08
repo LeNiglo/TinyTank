@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
-import com.lefrantguillaume.Utils.configs.NetworkServerConfig;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.NetworkServerConfig;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.networkComponent.networkData.DataServer;

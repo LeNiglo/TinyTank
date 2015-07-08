@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics.windowLogin;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Browser;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Browser;
+import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
 import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;

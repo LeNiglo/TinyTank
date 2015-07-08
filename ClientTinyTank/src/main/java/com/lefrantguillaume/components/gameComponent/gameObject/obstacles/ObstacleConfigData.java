@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
-import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Block;
+import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.codehaus.jettison.json.JSONException;

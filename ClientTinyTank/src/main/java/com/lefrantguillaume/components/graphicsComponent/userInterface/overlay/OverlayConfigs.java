@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
 
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.utils.tools.StringTools;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.configs;
+package com.lefrantguillaume.utils.configs;
 
 /**
  * Created by andres_k on 13/03/2015.

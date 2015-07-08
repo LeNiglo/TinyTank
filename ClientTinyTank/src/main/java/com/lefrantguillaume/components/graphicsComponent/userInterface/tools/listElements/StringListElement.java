@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;

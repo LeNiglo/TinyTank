@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;

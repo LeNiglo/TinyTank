@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount;
 
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.Debug;
 import com.lefrantguillaume.components.gameComponent.controllers.AccountController;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;

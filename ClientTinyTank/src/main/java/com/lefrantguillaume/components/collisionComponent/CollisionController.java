@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.collisionComponent;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.newdawn.slick.geom.Rectangle;
 

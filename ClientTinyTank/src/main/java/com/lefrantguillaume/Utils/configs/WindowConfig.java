@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.configs;
+package com.lefrantguillaume.utils.configs;
 
 import java.awt.*;
 

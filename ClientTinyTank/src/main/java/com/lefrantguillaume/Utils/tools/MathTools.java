@@ -1,7 +1,7 @@
-package com.lefrantguillaume.Utils.tools;
+package com.lefrantguillaume.utils.tools;
 
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 
 import java.awt.geom.AffineTransform;
 

@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.tools;
+package com.lefrantguillaume.utils.tools;
 
 import java.io.*;
 

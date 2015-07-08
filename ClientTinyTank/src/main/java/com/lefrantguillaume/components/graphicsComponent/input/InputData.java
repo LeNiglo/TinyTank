@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.input;
 
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.utils.tools.StringTools;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 

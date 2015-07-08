@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.taskComponent;
 
-import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.utils.stockage.Tuple;
 
 /**
  * Created by andres_k on 30/05/2015.

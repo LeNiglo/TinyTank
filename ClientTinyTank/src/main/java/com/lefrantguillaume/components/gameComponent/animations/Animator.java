@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;

@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics.windowGame;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.MathTools;
+import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
