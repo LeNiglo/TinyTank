@@ -123,6 +123,7 @@ public class TableMenuElement extends TableElement {
                 ++listIndex;
             }
         }
+        this.initFocusElement();
         return null;
     }
 
