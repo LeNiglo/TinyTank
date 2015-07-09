@@ -87,7 +87,7 @@ public class SelectionField extends Element {
                 }
             }
         } else if (task instanceof Tuple && ((Tuple) task).getV1() instanceof String) {
-            if (((Tuple) task).getV1().equals("event")) {
+            if (((Tuple) task).getV1().equals("event") && this.focused) {
                 int key = (int) ((Tuple) task).getV2();
                 char c = (char) ((Tuple) task).getV3();
                 if (key == Input.KEY_BACK) {
