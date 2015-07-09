@@ -13,14 +13,17 @@ import org.newdawn.slick.Input;
 public class SelectionField extends Element {
     private StringElement stringElement;
     private boolean focused;
+    private boolean visible;
     private String target;
 
-    public SelectionField(StringElement stringElement, String id) {
+    public SelectionField(BodyRect body, StringElement stringElement, String id, boolean visible) {
         this.stringElement = stringElement;
+        this.body = body;
         this.focused = false;
         this.type = EnumOverlayElement.SELECT_SHIELD;
         this.id = id;
         this.target = "";
+        this.visible = visible;
     }
 
     @Override
@@ -29,15 +32,29 @@ public class SelectionField extends Element {
     }
 
     public void draw(Graphics g) {
-        if (this.focused) {
-            this.stringElement.draw(g);
+        if (this.focused){
+            this.body.draw(g);
+            this.drawValue(g, new BodyRect(this.body.getBody()));
+        } else if (this.visible){
+            this.drawValue(g, new BodyRect(this.body.getBody()));
+        }
+    }
+
+    private void drawValue(Graphics g, BodyRect body){
+        if (!this.stringElement.getValue().equals("")){
+            this.stringElement.addToValue(0, ": ");
+            this.stringElement.draw(g, body);
+            this.stringElement.deleteValue(0, 2);
         }
     }
 
     @Override
     public void draw(Graphics g, BodyRect body) {
         if (focused) {
-            this.stringElement.draw(g, body);
+            this.body.draw(g);
+            this.drawValue(g, body);
+        } else if (this.visible){
+            this.drawValue(g, body);
         }
     }
 
@@ -107,11 +124,6 @@ public class SelectionField extends Element {
     }
 
     @Override
-    public BodyRect getBody() {
-        return this.stringElement.getBody();
-    }
-
-    @Override
     public float getAbsoluteWidth() {
         return this.stringElement.getAbsoluteWidth();
     }
@@ -123,6 +135,9 @@ public class SelectionField extends Element {
 
     @Override
     public String toString() {
-        return this.target + ":" + this.stringElement.toString();
+        if (!this.target.equals("")) {
+            return this.target + ":" + this.stringElement.toString();
+        }
+        return this.stringElement.toString();
     }
 }

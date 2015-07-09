@@ -44,8 +44,8 @@ public class ChatElement extends InterfaceElement {
     }
 
     private void childInit() {
-        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, StringTools.charSizeY()), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
-                new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID), EnumOverlayElement.SELECT_SHIELD.getValue() + "chat");
+        this.selectionField = new SelectionField(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, StringTools.charSizeY()), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
+                new StringElement(new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID), EnumOverlayElement.SELECT_SHIELD.getValue() + "chat", true);
         float chatSizeY = 170;
         this.stringListElement = new StringListElement(new BodyRect(new Rectangle(this.body.getMinX(), this.body.getMinY(), this.body.getSizeX(), chatSizeY)));
     }
