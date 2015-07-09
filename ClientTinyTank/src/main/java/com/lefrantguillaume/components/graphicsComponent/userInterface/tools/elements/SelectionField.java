@@ -53,15 +53,7 @@ public class SelectionField extends Element {
 
     @Override
     public Object doTask(Object task) {
-        if (task instanceof String) {
-            if (task.equals("isFocused")) {
-                if (this.focused == true) {
-                    return true;
-                } else {
-                    return null;
-                }
-            }
-        } else if (task instanceof Pair && ((Pair) task).getV1() instanceof String) {
+        if (task instanceof Pair && ((Pair) task).getV1() instanceof String) {
             String order = (String) ((Pair) task).getV1();
 
             if (order.equals("sendTo")) {
@@ -70,8 +62,13 @@ public class SelectionField extends Element {
                 this.focused = (boolean) ((Pair) task).getV2();
             } else if (order.equals("setCurrent")) {
                 this.stringElement.setValue((String) ((Pair) task).getV2());
+            } else if (order.equals("check") && ((Pair) task).getV2().equals("focus")) {
+                if (this.focused) {
+                    return true;
+                } else {
+                    return null;
+                }
             }
-
         } else if (task instanceof Tuple && ((Tuple) task).getV1() instanceof String) {
             if (((Tuple) task).getV1().equals("event")) {
                 int key = (int) ((Tuple) task).getV2();

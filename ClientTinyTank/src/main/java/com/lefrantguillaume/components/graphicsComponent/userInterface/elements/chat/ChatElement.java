@@ -80,7 +80,7 @@ public class ChatElement extends InterfaceElement {
     }
 
     private boolean selectionFocused(){
-        if (this.selectionField.doTask("isFocused") != null) {
+        if (this.selectionField.doTask(new Pair<>("check", "focus")) != null) {
             return true;
         } else {
             return false;
