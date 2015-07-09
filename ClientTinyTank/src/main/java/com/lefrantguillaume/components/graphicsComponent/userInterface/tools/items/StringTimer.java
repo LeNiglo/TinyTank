@@ -31,7 +31,7 @@ public class StringTimer {
     }
 
     public void delete(int start, int number) {
-        if (start >= 0 && number < this.value.length()) {
+        if (start >= 0 && (start + number) <= this.value.length()) {
             this.value.delete(start, start + number);
         }
     }
