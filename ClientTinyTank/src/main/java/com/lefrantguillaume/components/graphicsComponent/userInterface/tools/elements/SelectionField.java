@@ -20,7 +20,7 @@ public class SelectionField extends Element {
         this.stringElement = stringElement;
         this.body = body;
         this.focused = false;
-        this.type = EnumOverlayElement.SELECT_SHIELD;
+        this.type = EnumOverlayElement.SELECT_FIELD;
         this.id = id;
         this.target = "";
         this.visible = visible;
