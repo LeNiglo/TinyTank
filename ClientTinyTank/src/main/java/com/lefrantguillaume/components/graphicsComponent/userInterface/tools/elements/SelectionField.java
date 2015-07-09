@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
@@ -14,9 +15,11 @@ public class SelectionField extends Element {
     private boolean focused;
     private String target;
 
-    public SelectionField(StringElement stringElement) {
+    public SelectionField(StringElement stringElement, String id) {
         this.stringElement = stringElement;
         this.focused = false;
+        this.type = EnumOverlayElement.SELECT_SHIELD;
+        this.id = id;
         this.target = "";
     }
 

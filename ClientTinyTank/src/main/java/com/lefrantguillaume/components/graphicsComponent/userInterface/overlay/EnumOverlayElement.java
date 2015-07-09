@@ -35,6 +35,7 @@ public enum EnumOverlayElement {
     STRING("string"),
     BUTTON("button"),
     BORDER("border"),
+    SELECT_SHIELD("selectShield"),
 
     // roundAnimator
     NEW_ROUND("newRound"), END_ROUND("endRound"), TIMER("stat"),
