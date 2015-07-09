@@ -114,7 +114,7 @@ public class SelectionField extends Element {
 
     @Override
     public Object isOnFocus(float x, float y) {
-        if (this.stringElement.isOnFocus(x, y) != null) {
+        if (this.body.isOnFocus(x, y)) {
             this.focused = true;
         } else {
             this.focused = false;
