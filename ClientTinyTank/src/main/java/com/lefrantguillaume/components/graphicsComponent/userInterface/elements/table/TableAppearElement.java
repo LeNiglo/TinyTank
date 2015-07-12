@@ -2,7 +2,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 
 import com.lefrantguillaume.utils.configs.CurrentUser;
 import com.lefrantguillaume.utils.stockage.Pair;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -21,7 +21,7 @@ public class TableAppearElement extends TableElement {
     // FUNCTION
     @Override
     public void doTask(Object task) {
-        Debug.debug("\nReceived in " + this.type + " -> " + task);
+        ConsoleWriter.debug("\nReceived in " + this.type + " -> " + task);
         if (task instanceof Element) {
             this.addElement((Element) task);
         } else if (task instanceof Pair) {

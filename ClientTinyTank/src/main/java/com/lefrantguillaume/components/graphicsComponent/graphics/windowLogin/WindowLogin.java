@@ -8,7 +8,7 @@ import com.lefrantguillaume.components.networkComponent.networkData.DataServer;
 import com.lefrantguillaume.utils.configs.CurrentUser;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.tools.Browser;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.TextField;
 import de.lessvoid.nifty.screen.Screen;
@@ -124,13 +124,13 @@ public class WindowLogin extends WindowBasedGame implements ScreenController {
             Pair<Boolean, String> authentication = DataServer.authentification(this.loginField.getRealText(), this.passField.getRealText());
             if (authentication.getV1()) {
                 JSONObject object = new JSONObject(authentication.getV2());
-                Debug.debug("my id = " + object.get("_id"));
+                ConsoleWriter.debug("my id = " + object.get("_id"));
                 CurrentUser.setId(object.get("_id").toString());
                 CurrentUser.setPseudo(object.get("username").toString());
                 this.stateGame.enterState(EnumWindow.ACCOUNT.getValue());
             } else {
                 // TODO Display message on client.
-                Debug.debug("Error Login : " + authentication.getV2());
+                ConsoleWriter.debug("Error Login : " + authentication.getV2());
             }
         } catch (JSONException e) {
             e.printStackTrace();

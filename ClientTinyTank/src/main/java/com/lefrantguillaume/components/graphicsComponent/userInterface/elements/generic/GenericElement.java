@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic;
 
 import com.lefrantguillaume.utils.stockage.Pair;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
 import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
@@ -126,12 +126,12 @@ public class GenericElement extends InterfaceElement {
         boolean onFocus = false;
 
         if (this.type == EnumOverlayElement.TABLE_MENU_SETTINGS)
-            Debug.debug("GENERIC IS ON FOCUS");
+            ConsoleWriter.debug("GENERIC IS ON FOCUS");
         if (this.isActivated()) {
             for (Element element : this.elements) {
                 Object result = element.isOnFocus(x, y);
                 if (this.type == EnumOverlayElement.TABLE_MENU_SETTINGS)
-                    Debug.debug("for element: '" + element.getId() + "' -> " + result);
+                    ConsoleWriter.debug("for element: '" + element.getId() + "' -> " + result);
                 if (result != null) {
                     if (result instanceof EnumOverlayElement) {
                         if (this.genericSendTask != null) {

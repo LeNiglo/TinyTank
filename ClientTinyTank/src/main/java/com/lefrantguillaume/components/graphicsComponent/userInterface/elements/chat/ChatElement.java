@@ -3,7 +3,7 @@ package com.lefrantguillaume.components.graphicsComponent.userInterface.elements
 import com.lefrantguillaume.utils.configs.CurrentUser;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
@@ -99,6 +99,7 @@ public class ChatElement extends InterfaceElement {
                 if (!this.selectionField.toString().equals("")) {
                     MessageChat request = new MessageChat(CurrentUser.getPseudo(), CurrentUser.getId(), true, this.selectionField.toString());
                     this.selectionField.doTask(new Pair<>("setCurrent", ""));
+                    this.selectionField.doTask(new Pair<>("sendTo", ""));
                     return request;
                 }
             } else {
@@ -135,12 +136,12 @@ public class ChatElement extends InterfaceElement {
             Object result = this.stringListElement.isOnFocus(x, y);
             if (result instanceof Element) {
                 //todo catach l'element et l'envoyer au selectField pour envois de message by id
-                Debug.debug("element CATCH");
-                this.selectionField.doTask(new Pair<>("sendTo", ((Element) result).getId()));
+                ConsoleWriter.debug("element CATCH");
+                this.selectionField.doTask(new Pair<>("sendTo", ((Element) result).toString()));
                 return result;
             }
             if (this.selectionField.isOnFocus(x, y) != null) {
-                Debug.debug("selection CATCH");
+                ConsoleWriter.debug("selection CATCH");
                 return true;
             }
         }

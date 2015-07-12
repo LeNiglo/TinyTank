@@ -2,7 +2,7 @@ package com.lefrantguillaume.components.gameComponent.controllers;
 
 import com.lefrantguillaume.utils.configs.CurrentUser;
 import com.lefrantguillaume.utils.stockage.Tuple;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.AvailableTank;
@@ -13,7 +13,6 @@ import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.*;
 
@@ -45,7 +44,7 @@ public class InterfaceController extends Observable implements Observer {
     public boolean loadGame() {
         EnumGameObject tankChoice = this.availableTank.getCurrentTank();
         if (tankChoice != EnumGameObject.NULL) {
-            Debug.debug("tank:" + tankChoice);
+            ConsoleWriter.debug("tank:" + tankChoice);
             MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), tankChoice);
 
             this.setChanged();

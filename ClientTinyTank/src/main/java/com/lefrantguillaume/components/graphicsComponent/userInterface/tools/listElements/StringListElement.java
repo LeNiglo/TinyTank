@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements;
 
 import com.lefrantguillaume.utils.stockage.Tuple;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
@@ -169,7 +169,7 @@ public class StringListElement extends ListElement {
             if (value.contains("\n")) {
                 end = value.indexOf("\n");
                 if (end == 0) {
-                    Debug.debug("ERROR WARNING");
+                    ConsoleWriter.debug("ERROR WARNING");
                 } else if (end > this.maxLength) {
                     end = this.maxLength;
                 }

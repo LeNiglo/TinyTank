@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.slider;
 
 import com.lefrantguillaume.utils.stockage.Pair;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -59,11 +59,11 @@ public class SliderElement extends InterfaceElement {
         if (task instanceof Pair && ((Pair) task).getV1() instanceof EnumOverlayElement && ((Pair) task).getV2() instanceof Element) {
 
             if (this.elements.containsKey(((Pair) task).getV1())) {
-                Debug.debug("Add new String: " + ((Element) ((Pair) task).getV2()).getType());
+                ConsoleWriter.debug("Add new String: " + ((Element) ((Pair) task).getV2()).getType());
                 this.elements.get(((Pair) task).getV1()).addToPrint(((Pair) task).getV2(), Element.PositionInBody.LEFT_MID);
             }
         } else if (task instanceof Pair && ((Pair) task).getV1() instanceof EnumOverlayElement && ((Pair) task).getV2() instanceof ListElement) {
-            Debug.debug("Add new List: " + ((Pair) task).getV2());
+            ConsoleWriter.debug("Add new List: " + ((Pair) task).getV2());
             ((ListElement) ((Pair) task).getV2()).getBody().setPrintable(false);
             this.elements.put((EnumOverlayElement) ((Pair) task).getV1(), (ListElement) ((Pair) task).getV2());
         } else {

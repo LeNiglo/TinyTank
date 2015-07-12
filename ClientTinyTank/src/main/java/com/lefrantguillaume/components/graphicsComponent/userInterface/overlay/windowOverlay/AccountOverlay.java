@@ -25,7 +25,7 @@ import com.lefrantguillaume.utils.configs.WindowConfig;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
 import com.lefrantguillaume.utils.tools.ColorTools;
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.utils.tools.StringTools;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Color;
@@ -132,27 +132,27 @@ public class AccountOverlay extends Overlay {
 
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.ACCOUNT_OVERLAY)) {
 
-                Debug.debug("OVERLAY RECEIVED tuple: " + arg);
+                ConsoleWriter.debug("OVERLAY RECEIVED tuple: " + arg);
                 if (received.getV3() instanceof Pair && ((Pair) received.getV3()).getV1() instanceof EnumOverlayElement) {
                     Pair<EnumOverlayElement, Object> task = (Pair<EnumOverlayElement, Object>) received.getV3();
 
                     List<EnumOverlayElement> targets = new ArrayList<>();
                     targets.addAll(EnumOverlayElement.getChildren(task.getV1()));
                     for (EnumOverlayElement target : targets) {
-                        Debug.debug("CHIDL: " + targets.size() + " -> send to " + target);
+                        ConsoleWriter.debug("CHIDL: " + targets.size() + " -> send to " + target);
                         if (this.elements.containsKey(target)) {
                             this.elements.get(target).doTask(task.getV2());
                         }
                     }
                 } else {
-                    Debug.debug("\n*************\nWARNING!\nyou shouldn't call this method like this : " + received.getV3());
+                    ConsoleWriter.debug("\n*************\nWARNING!\nyou shouldn't call this method like this : " + received.getV3());
                     for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
                         entry.getValue().doTask(received.getV3());
                     }
                 }
             }
         } else if (arg instanceof Pair) {
-            Debug.debug("OVERLAY RECEIVED pair: " + arg);
+            ConsoleWriter.debug("OVERLAY RECEIVED pair: " + arg);
             if (((Pair) arg).getV1() instanceof EnumOverlayElement && ((Pair) arg).getV2() instanceof EnumOverlayElement) {
                 Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 

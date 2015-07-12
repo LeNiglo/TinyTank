@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.spells;
 
-import com.lefrantguillaume.utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
@@ -28,7 +28,7 @@ public class Teleport extends Spell {
         this.type = EnumGameObject.TELEPORT;
         this.tankState = null;
         this.animator = new Animator(animator);
-        this.duration = 100;
+        this.duration = 250;
         this.isActive = false;
     }
 
@@ -48,7 +48,7 @@ public class Teleport extends Spell {
     @Override
     public Object activeSpell() {
         if (tankState != null && this.isActive == false) {
-            Debug.debug("ACTIVATED !");
+            ConsoleWriter.debug("ACTIVATED !");
             this.isActive = true;
             this.tankState.setBoostEffect(300);
             this.tankState.myNotify(this.ignored);
@@ -63,7 +63,7 @@ public class Teleport extends Spell {
     @Override
     protected int deleteSpell() {
         if (tankState != null) {
-            Debug.debug("DESACTIVATE");
+            ConsoleWriter.debug("DESACTIVATE");
             this.isActive = false;
             this.tankState.setBoostEffect(0);
             this.tankState.myNotify(new ArrayList<EnumGameObject>());

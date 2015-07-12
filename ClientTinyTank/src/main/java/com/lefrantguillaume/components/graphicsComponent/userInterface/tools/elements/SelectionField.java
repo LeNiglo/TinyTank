@@ -4,6 +4,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.E
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
@@ -32,16 +33,16 @@ public class SelectionField extends Element {
     }
 
     public void draw(Graphics g) {
-        if (this.focused){
+        if (this.focused) {
             this.body.draw(g);
             this.drawValue(g, new BodyRect(this.body.getBody()));
-        } else if (this.visible){
+        } else if (this.visible) {
             this.drawValue(g, new BodyRect(this.body.getBody()));
         }
     }
 
-    private void drawValue(Graphics g, BodyRect body){
-        if (!this.stringElement.getValue().equals("")){
+    private void drawValue(Graphics g, BodyRect body) {
+        if (!this.stringElement.getValue().equals("")) {
             this.stringElement.addToValue(0, ": ");
             this.stringElement.draw(g, body);
             this.stringElement.deleteValue(0, 2);
@@ -53,7 +54,7 @@ public class SelectionField extends Element {
         if (focused) {
             this.body.draw(g);
             this.drawValue(g, body);
-        } else if (this.visible){
+        } else if (this.visible) {
             this.drawValue(g, body);
         }
     }
@@ -74,7 +75,13 @@ public class SelectionField extends Element {
             String order = (String) ((Pair) task).getV1();
 
             if (order.equals("sendTo")) {
-                this.target = (String) ((Pair) task).getV2();
+                String value = (String) ((Pair) task).getV2();
+                if (value.contains(":")) {
+                    this.target = value.substring(0, value.indexOf(":"));
+                    ConsoleWriter.debug("target: " + this.target);
+                } else {
+                    this.target = value;
+                }
             } else if (order.equals("setFocus")) {
                 this.focused = (boolean) ((Pair) task).getV2();
             } else if (order.equals("setCurrent")) {
@@ -135,9 +142,10 @@ public class SelectionField extends Element {
 
     @Override
     public String toString() {
+        String result = this.stringElement.toString();
         if (!this.target.equals("")) {
-            return this.target + ":" + this.stringElement.toString();
+            result = "/" + this.target.substring(0, this.target.length()) + ":" + this.stringElement.toString();
         }
-        return this.stringElement.toString();
+        return result;
     }
 }

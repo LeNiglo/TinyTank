@@ -233,7 +233,7 @@
       },
       "tankSpell": {
         "spellType": "teleport",
-        "cooldown" : "1000"
+        "cooldown" : "1500"
       },
       "tankBox": {
         "boxType": "mine",

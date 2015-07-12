@@ -15,20 +15,15 @@ public class AnimatorGameFactory extends AnimatorFactory {
 
         if (index == EnumSprites.MAP) {
             this.mapLoad(animator);
-        }
-        if (index.getIndex() == EnumSprites.TIGER.getIndex()) {
+        } else if (index.getIndex() == EnumSprites.TIGER.getIndex()) {
             this.tigerAnimator(animator, index);
-        }
-        if (index.getIndex() == EnumSprites.SNIPER.getIndex()) {
+        } else if (index.getIndex() == EnumSprites.SNIPER.getIndex()) {
             this.sniperAnimator(animator, index);
-        }
-        if (index.getIndex() == EnumSprites.RUSHER.getIndex()) {
+        } else if (index.getIndex() == EnumSprites.RUSHER.getIndex()) {
             this.rusherAnimator(animator, index);
-        }
-        if (index.getIndex() == EnumSprites.WALL.getIndex()) {
+        } else if (index.getIndex() == EnumSprites.WALL.getIndex()) {
             this.wallAnimator(animator, index);
-        }
-        if (index.getIndex() == EnumSprites.AREA.getIndex()) {
+        } else if (index.getIndex() == EnumSprites.AREA.getIndex()) {
             this.areaLoad(animator, index);
         }
         return animator;
@@ -150,8 +145,7 @@ public class AnimatorGameFactory extends AnimatorFactory {
             Animation animation = loadAnimation(spriteSheet, 0, 4, 0, 1, 200);
             animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);
-        }
-        else if (index == EnumSprites.SNIPER_BODY_ENEMY) {
+        } else if (index == EnumSprites.SNIPER_BODY_ENEMY) {
             SpriteSheet spriteSheet = new SpriteSheet("assets/old/img/game/tank/sniperE_1.png", 80, 48);
             animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
             SpriteSheet spriteSheet2 = new SpriteSheet("assets/old/img/game/effect/explosionTank.png", 147, 145);
@@ -213,11 +207,19 @@ public class AnimatorGameFactory extends AnimatorFactory {
 
     private void areaLoad(Animator animator, EnumSprites index) throws SlickException {
         if (index == EnumSprites.OBJECTIVE) {
-            SpriteSheet spriteSheet = new SpriteSheet("assets/img/objective.png", 100, 98);
-            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+            Animation animation = new Animation();
+            for (int i = 1; i < 12; ++i){
+                Image img = new Image("assets/img/roundObject/objective" + String.valueOf(i) + ".png");
+                animation.addFrame(img, 200);
+            }
+            animator.addAnimation(EnumAnimation.BASIC, animation);
         } else if (index == EnumSprites.BOMB) {
-            SpriteSheet spriteSheet = new SpriteSheet("assets/img/bomb.png", 30, 30);
-            animator.addAnimation(EnumAnimation.BASIC, loadAnimation(spriteSheet, 0, 1, 0, 1, 200));
+            Animation animation = new Animation();
+            Image img1 = new Image("assets/img/roundObject/bomb.png");
+            animation.addFrame(img1, 400);
+            Image img2 = new Image("assets/img/roundObject/bomb2.png");
+            animation.addFrame(img2, 300);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
         }
     }
 }
