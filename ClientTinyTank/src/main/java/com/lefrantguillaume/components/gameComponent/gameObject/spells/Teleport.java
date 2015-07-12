@@ -28,7 +28,7 @@ public class Teleport extends Spell {
         this.type = EnumGameObject.TELEPORT;
         this.tankState = null;
         this.animator = new Animator(animator);
-        this.duration = 250;
+        this.duration = 230;
         this.isActive = false;
     }
 
