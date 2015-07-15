@@ -1,6 +1,8 @@
 package com.lefrantguillaume.userInterface;
 
 
+import com.lefrantguillaume.utils.GameConfig;
+
 /**
  * Created by Styve on 08/05/2015.
  */
@@ -20,4 +22,6 @@ public interface UserInterface {
     public abstract void refreshPlayers();
 
     public abstract void refreshMaps();
+
+    public abstract GameConfig getGameConfig();
 }

@@ -1,5 +1,6 @@
 package com.lefrantguillaume.gameComponent.gameMode;
 
+import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.gameComponent.gameMode.modes.*;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.ObstacleConfigData;
 import com.lefrantguillaume.utils.GameConfig;
