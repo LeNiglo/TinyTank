@@ -1,9 +1,9 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.obstacles;
 
-import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Block;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import org.codehaus.jettison.json.JSONException;
@@ -91,9 +91,9 @@ public class ObstacleConfigData {
     }
 
     public Obstacle getWorldWall(String id){
-        Debug.debug("Nb WorldWall: " + this.worldWall.size());
+        ConsoleWriter.debug("Nb WorldWall: " + this.worldWall.size());
         for (int i = 0; i < this.worldWall.size(); ++i){
-            Debug.debug(id + " =?" + this.worldWall.get(i).getId());
+            ConsoleWriter.debug(id + " =?" + this.worldWall.get(i).getId());
             if (id.equals(this.worldWall.get(i).getId())){
                 return new Obstacle(this.worldWall.get(i), false);
             }

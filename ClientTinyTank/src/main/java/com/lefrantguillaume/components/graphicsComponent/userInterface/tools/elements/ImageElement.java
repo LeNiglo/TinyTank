@@ -1,7 +1,6 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
@@ -150,7 +149,6 @@ public class ImageElement extends Element {
                 this.start();
             }
         } else if (task instanceof Long) {
-            Debug.debug("IMAGE: received cd");
             this.animator.updateAnimator(false, false);
             this.animator.startTimer((Long) task);
         } else if (task instanceof Pair) {
@@ -180,7 +178,7 @@ public class ImageElement extends Element {
 
     @Override
     public String toString() {
-        return "imageType: " + this.animator.getCurrentAnimation();
+        return "imageType: " + (this.animator != null ? this.animator.getCurrentAnimation() : "");
     }
 
     private void start(){

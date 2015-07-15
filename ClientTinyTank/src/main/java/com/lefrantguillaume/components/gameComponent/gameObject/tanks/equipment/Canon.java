@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 
 /**
  * Created by andres_k on 24/03/2015.

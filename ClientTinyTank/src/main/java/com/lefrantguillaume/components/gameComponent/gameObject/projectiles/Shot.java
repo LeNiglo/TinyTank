@@ -1,9 +1,10 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.projectiles;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.MathTools;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Block;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
+import com.lefrantguillaume.utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -31,11 +32,13 @@ public class Shot extends Observable implements Observer {
     private float currentDamageShot;
     private float speed;
     private float angle;
+    private float maxRange;
+    private float currentRange;
     private boolean explode;
     private List<Block> collisionObject;
     private List<Pair<Float, Float>> savePosShot;
 
-    public Shot(String userId, String id, EnumGameObject type, float currentDamageShot, float speed, Animator animator, Tuple<Float, Float, Float> positioning,
+    public Shot(String userId, String id, EnumGameObject type, float currentDamageShot, float speed, float maxRange, Animator animator, Tuple<Float, Float, Float> positioning,
                 Pair<Float, Float> shiftOrigin, Pair<Float, Float> shiftToExplode, Pair<Float, Float> shiftHead) {
         this.positions = new Pair<>(positioning.getV1(), positioning.getV2());
         this.angle = positioning.getV3();
@@ -49,6 +52,8 @@ public class Shot extends Observable implements Observer {
         this.id = id;
         this.currentDamageShot = currentDamageShot;
         this.speed = speed;
+        this.maxRange = maxRange;
+        this.currentRange = 0;
         this.animator = animator;
         this.collisionObject = new ArrayList<>();
     }
@@ -98,10 +103,13 @@ public class Shot extends Observable implements Observer {
     }
 
     public Pair<Float, Float> move(float delta) {
-        if (this.explode == false) {
+        if (this.explode == false && this.currentRange < this.maxRange) {
             Pair<Float, Float> coords = this.movePredict(delta);
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
+            ConsoleWriter.debug("\n newDistance: [" + coords.getV1() + ", " + coords.getV2() + "]");
+            ConsoleWriter.debug("distance: " + this.currentRange + " + " + "/(" + (coords.getV1() * coords.getV1()) + " + " + (coords.getV2() * coords.getV2()) + ") = " + Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2())));
+            this.currentRange += Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2()));
             this.addNewPosition();
             return coords;
         }
@@ -203,6 +211,12 @@ public class Shot extends Observable implements Observer {
         return types;
     }
 
+    public boolean isInMaxRange() {
+        if (this.currentRange >= this.maxRange && this.explode == false){
+            return true;
+        }
+        return false;
+    }
 
     // SETTERS
     public void setCurrentLife(float currentLife) {

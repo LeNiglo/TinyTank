@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Block;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
@@ -29,6 +29,7 @@ public class TankFactory {
 
         float speed = Float.valueOf(hit.getString("speed"));
         float damage = Float.valueOf(hit.getString("damage"));
+        float maxRange = Float.valueOf(hit.getString("maxRange"));
         long cooldown = Long.valueOf(hit.getString("cooldown"));
 
         Pair<Float, Float> shiftHitExplode = new Pair<>(Float.valueOf(hit.getJSONObject("build").getString("shiftXExplode")), Float.valueOf(hit.getJSONObject("build").getString("shiftYExplode")));
@@ -36,7 +37,7 @@ public class TankFactory {
         Pair<Float, Float> shiftHitHead = new Pair<>(Float.valueOf(hit.getJSONObject("build").getString("headX")), Float.valueOf(hit.getJSONObject("build").getString("headY")));
 
         Pair<Float, Float> shiftWeaponOrigin = new Pair<>(Float.valueOf(weapon.getString("centerX")), Float.valueOf(weapon.getString("centerY")));
-        TankWeapon tankWeapon = new TankWeapon(speed, damage, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shotType), shotType, cooldown);
+        TankWeapon tankWeapon = new TankWeapon(speed, damage, maxRange, shiftWeaponOrigin, shiftHitExplode, shiftHitOrigin, shiftHitHead, animatorGameData.getShotAnimator(shotType), shotType, cooldown);
         JSONArray canons = weapon.getJSONArray("canons");
         for (int i = 0; i < canons.length(); ++i){
             JSONObject current = canons.getJSONObject(i);

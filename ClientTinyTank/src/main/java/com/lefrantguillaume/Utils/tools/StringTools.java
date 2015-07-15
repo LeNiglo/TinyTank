@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.tools;
+package com.lefrantguillaume.utils.tools;
 
 import java.io.*;
 
@@ -11,7 +11,7 @@ public class StringTools {
     public static String readFile(String fileName) {
         String content = "";
         File file = new File(fileName); //for ex foo.txt
-        Debug.debug("file: " + file.getAbsolutePath());
+        ConsoleWriter.debug("file: " + file.getAbsolutePath());
         try {
             FileReader reader = new FileReader(file);
             char[] chars = new char[(int) file.length()];

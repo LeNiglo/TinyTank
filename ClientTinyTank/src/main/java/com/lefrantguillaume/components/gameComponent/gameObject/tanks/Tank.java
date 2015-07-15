@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.tanks;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.RandomTools;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.RandomTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.gameObject.obstacles.ObstacleConfigData;
@@ -11,8 +11,6 @@ import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankWeapon;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.tools.TankFactory;
-import com.lefrantguillaume.components.graphicsComponent.sounds.EnumSound;
-import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 

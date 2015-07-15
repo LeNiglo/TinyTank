@@ -1,6 +1,6 @@
-package com.lefrantguillaume.Utils.tools;
+package com.lefrantguillaume.utils.tools;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 
 /**
  * Created by andres_k on 25/03/2015.

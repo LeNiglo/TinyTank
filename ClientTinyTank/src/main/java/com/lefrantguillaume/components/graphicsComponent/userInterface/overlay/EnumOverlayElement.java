@@ -35,6 +35,7 @@ public enum EnumOverlayElement {
     STRING("string"),
     BUTTON("button"),
     BORDER("border"),
+    SELECT_FIELD("selectField"),
 
     // roundAnimator
     NEW_ROUND("newRound"), END_ROUND("endRound"), TIMER("stat"),
@@ -54,7 +55,9 @@ public enum EnumOverlayElement {
     RUSHER_HIT_COMMENT(RUSHER.value + HIT.value + COMMENT.value, RUSHER.index), RUSHER_SPELL_COMMENT(RUSHER.value + SPELL.value + COMMENT.value, RUSHER.index), RUSHER_BOX_COMMENT(RUSHER.value + BOX.value + COMMENT.value, RUSHER.index),
 
     // item
-    USER_LIFE("life"), USER_SHIELD("shield");
+    USER_LIFE("life"), USER_SHIELD("shield"),
+    SOUNDS_VALUE("soundsValue"), MUSICS_VALUE("musicsValue"),
+    SOUNDS_GRAPH("soundsVolume"), MUSICS_GRAPH("musicsVolume");
 
     private int index;
     private String value;

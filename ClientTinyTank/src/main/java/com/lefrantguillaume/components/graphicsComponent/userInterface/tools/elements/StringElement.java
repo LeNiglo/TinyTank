@@ -1,10 +1,10 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.StringTools;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -69,19 +69,12 @@ public class StringElement extends Element {
 
         Pair<Float, Float> position = this.getChoicePosition(body, value);
 
-        if (this.body != null && body.getColor() == null){
-            body.setColor(this.body.getColor());
+        BodyRect tmpBody = new BodyRect(body.getBody(), body.getColor());
+        if (this.body != null && tmpBody.getColor() == null){
+            tmpBody.setColor(this.body.getColor());
         }
 
-        body.draw(g);
-  /*
-        if (this.body != null && body.getColor() == null) {
-            this.body = new BodyRect(body.getBody(), this.body.getColor());
-        }
-        else {
-            body.draw(g);
-        }
-        */
+        tmpBody.draw(g);
         g.setColor(this.color);
         g.drawString(value, position.getV1(), position.getV2());
     }
@@ -128,6 +121,8 @@ public class StringElement extends Element {
                 String v2 = (String) task;
                 this.stringTimer.setValue(v1 + v2);
                 return true;
+            } else {
+                this.stringTimer.setValue((String) task);
             }
         }
         return null;

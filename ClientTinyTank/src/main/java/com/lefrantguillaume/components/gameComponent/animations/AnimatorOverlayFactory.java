@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.animations;
 
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -103,7 +103,7 @@ public class AnimatorOverlayFactory extends AnimatorFactory {
 
     public Animator getSniperAnimator(EnumSprites index) throws SlickException {
         Animator animator = new Animator();
-        Debug.debug("add SNIPER ICON ANIMATOR: " + index);
+        ConsoleWriter.debug("add SNIPER ICON ANIMATOR: " + index);
         if (index == EnumSprites.SNIPER_HIT) {
             Animation animation = new Animation();
             Image img = new Image("assets/old/img/game/icon/sniperHit.png");

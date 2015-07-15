@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.AvailableTank;
@@ -13,7 +13,6 @@ import com.lefrantguillaume.components.taskComponent.EnumTargetTask;
 import com.lefrantguillaume.components.taskComponent.TaskFactory;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.*;
 
@@ -24,13 +23,11 @@ public class InterfaceController extends Observable implements Observer {
     private Map<EnumInterfaceElement, Animator> backgroundAnimator;
     private Map<EnumInterfaceElement, Animator> buttonAnimator;
     private AvailableTank availableTank;
-    private StateBasedGame stateWindow;
 
     public InterfaceController(){
         this.backgroundAnimator = new HashMap<>();
         this.buttonAnimator = new HashMap<>();
         this.availableTank = new AvailableTank();
-        this.stateWindow = null;
     }
 
     @Override
@@ -47,7 +44,7 @@ public class InterfaceController extends Observable implements Observer {
     public boolean loadGame() {
         EnumGameObject tankChoice = this.availableTank.getCurrentTank();
         if (tankChoice != EnumGameObject.NULL) {
-            Debug.debug("tank:" + tankChoice);
+            ConsoleWriter.debug("tank:" + tankChoice);
             MessageModel request = new MessagePlayerNew(CurrentUser.getPseudo(), CurrentUser.getId(), tankChoice);
 
             this.setChanged();
@@ -103,10 +100,5 @@ public class InterfaceController extends Observable implements Observer {
 
     public void addButtonAnimator(Animator buttonAnimator, EnumInterfaceElement type) {
         this.buttonAnimator.put(type, buttonAnimator);
-    }
-
-    //SETTERS
-    public void setStateWindow(StateBasedGame stateWindow){
-        this.stateWindow = stateWindow;
     }
 }

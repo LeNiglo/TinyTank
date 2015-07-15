@@ -27,12 +27,13 @@
           "shotType": "rocket",
           "speed": "250.0",
           "damage": "30.0",
+          "maxRange": "100000",
           "cooldown" : "700",
           "build": {
             "centerX": "-41.0", // centre arbitraire du hit, signe '-' pour le décalage x/y pour l'affichage
             "centerY": "-4.0",
-            "shiftXExplode": "-26.0", // décallage x/y pour afficher l'animation d'explosion
-            "shiftYExplode": "-26.0",
+            "shiftXExplode": "-33.7", // décallage x/y pour afficher l'animation d'explosion
+            "shiftYExplode": "-27.0",
             "headX": "10.0", // point représentant la tête du hit / futur centre de l'explosion
             "headY": "0.0",
             "collisions": [
@@ -109,20 +110,21 @@
           "shotType": "laser",
           "speed": "500.0",
           "damage": "200.0",
+          "maxRange": "100000",
           "cooldown": "2000",
           "build": {
-            "centerX": "-40.0",
-            "centerY": "-24.0",
-            "shiftXExplode": "-23.0",
-            "shiftYExplode": "-23.0",
-            "headX": "10.0",
-            "headY": "10.0",
+            "centerX": "-11.0",
+            "centerY": "-11.0",
+            "shiftXExplode": "-23.5",
+            "shiftYExplode": "-23.5",
+            "headX": "11.0",
+            "headY": "0.0",
             "collisions": [
               {
-                "shiftOriginX": "-14.0",
-                "shiftOriginY": "-2.0",
-                "sizeX": "23.0",
-                "sizeY": "5.0"
+                "shiftOriginX": "-11.0",
+                "shiftOriginY": "-11.0",
+                "sizeX": "22.0",
+                "sizeY": "22.0"
               }
             ]
           }
@@ -134,7 +136,7 @@
             {
               "centerX": "0.0",
               "centerY": "0.0",
-              "shiftXHead": "40.0",
+              "shiftXHead": "0.0",
               "shiftYHead": "0.0"
             }
           ]
@@ -191,13 +193,14 @@
           "shotType": "machine_gun",
           "speed": "235.0",
           "damage": "10.0",
+          "maxRange": "300",
           "cooldown": "100",
           "build": {
             "centerX": "-16.0",
-            "centerY": "-5.0",
-            "shiftXExplode": "-12.0",
-            "shiftYExplode": "-14.0",
-            "headX": "8.0",
+            "centerY": "-5.5",
+            "shiftXExplode": "-14.0",
+            "shiftYExplode": "-13.0",
+            "headX": "16.0",
             "headY": "0.0",
             "collisions": [
               {
@@ -230,7 +233,7 @@
       },
       "tankSpell": {
         "spellType": "teleport",
-        "cooldown" : "3000"
+        "cooldown" : "1000"
       },
       "tankBox": {
         "boxType": "mine",

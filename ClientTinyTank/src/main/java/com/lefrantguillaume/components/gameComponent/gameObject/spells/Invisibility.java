@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.spells;
 
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
@@ -42,7 +42,7 @@ public class Invisibility extends Spell {
             } else {
                 filter = new Color(0.5f, 1f, 1f, 0.7f);
             }
-            Debug.debug("filtre: " + filter);
+            ConsoleWriter.debug("filtre: " + filter);
             this.tankState.setFilter(filter);
             this.timer = new Timer();
             this.timer.schedule(new myTask(), this.duration);

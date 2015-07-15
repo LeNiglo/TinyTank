@@ -1,8 +1,7 @@
 package com.lefrantguillaume;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.configs.WindowConfig;
 import com.lefrantguillaume.master.MasterGame;
+import com.lefrantguillaume.utils.configs.CurrentUser;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.SlickException;
 
@@ -17,7 +16,6 @@ public class Main {
 
     public static void main(String args[]) {
 
-        WindowConfig windowConfig = new WindowConfig();
         try {
             MasterGame game = new MasterGame();
             Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);

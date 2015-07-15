@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.table;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.ColorTools;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.ColorTools;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
@@ -66,7 +66,7 @@ public class TableElement extends InterfaceElement {
         if (task instanceof Element) {
             this.addElement((Element) task);
         } else if (task instanceof Pair) {
-            Debug.debug("Table received: " + task);
+            ConsoleWriter.debug("Table received: " + task);
             if (((Pair) task).getV1() instanceof Integer) {
                 Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
                 if (received.getV1() < this.reachable.length) {
@@ -76,7 +76,7 @@ public class TableElement extends InterfaceElement {
                 Pair<EnumOverlayElement, Object> received = (Pair<EnumOverlayElement, Object>) task;
                 Element element = this.containsId(received.getV1().getValue());
 
-                Debug.debug("find element: " + element + "\n");
+                ConsoleWriter.debug("find element: " + element + "\n");
                 if (element != null) {
                     element.doTask(received.getV2());
                 }

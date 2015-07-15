@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
-import com.lefrantguillaume.Utils.tools.Debug;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Block;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
@@ -45,8 +45,8 @@ public class MapController {
         for (int i = 0; i < block.size(); ++i) {
             CollisionObject collisionObject = new CollisionObject(obstacle.getIgnoredObjectList(), obstacle.getPositions(), block.get(i).getSizes(),
                     block.get(i).getShiftOrigin(), obstacle.getId(), obstacle.getId(), obstacle.getType(), obstacle.getAngle());
-            Debug.debug("addCollision obstacle: pos["  + collisionObject.getX() + "," + collisionObject.getY() + "] ; origin["
-                    + collisionObject.getOriginX() + ","  + collisionObject.getOriginY() + "] size[" + collisionObject.getSizeX() + "," + collisionObject.getSizeY()+"]");
+            ConsoleWriter.debug("addCollision obstacle: pos[" + collisionObject.getX() + "," + collisionObject.getY() + "] ; origin["
+                    + collisionObject.getOriginX() + "," + collisionObject.getOriginY() + "] size[" + collisionObject.getSizeX() + "," + collisionObject.getSizeY() + "]");
             obstacle.addObserver(collisionObject);
             this.collisionController.addCollisionObject(collisionObject);
         }

@@ -31,7 +31,9 @@ public class StringTimer {
     }
 
     public void delete(int start, int number) {
-        this.value.delete(start, start + number);
+        if (start >= 0 && (start + number) <= this.value.length()) {
+            this.value.delete(start, start + number);
+        }
     }
 
     public void add(int position, String value) {

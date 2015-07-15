@@ -1,7 +1,7 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowAccount.WindowAccount;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowGame.WindowGame;
 import com.lefrantguillaume.components.graphicsComponent.graphics.windowInterface.WindowInterface;

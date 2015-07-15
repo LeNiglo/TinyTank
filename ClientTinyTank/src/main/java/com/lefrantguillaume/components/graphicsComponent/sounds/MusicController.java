@@ -14,6 +14,7 @@ public class MusicController {
     private static boolean needInit = true;
     private static float pitch;
     private static float volume;
+    private static float maxVolume;
 
 
     public static void init() throws SlickException {
@@ -23,6 +24,7 @@ public class MusicController {
             musics.put(EnumSound.SELECT, new Music(EnumSound.SELECT.getPath()));
             pitch = 1.0f;
             volume = 1.0f;
+            maxVolume = 2.0f;
             needInit = false;
         }
     }
@@ -69,5 +71,13 @@ public class MusicController {
         for (Map.Entry<EnumSound, Music> entry : musics.entrySet()){
             entry.getValue().setVolume(volume);
         }
+    }
+
+    public static float getVolume(){
+        return volume;
+    }
+
+    public static float getMaxVolume(){
+        return maxVolume;
     }
 }

@@ -1,17 +1,21 @@
-package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay;
+package com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay;
 
-import com.lefrantguillaume.Utils.configs.WindowConfig;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.ColorTools;
-import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
+import com.lefrantguillaume.utils.configs.WindowConfig;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.ColorTools;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
+import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
 import com.lefrantguillaume.components.gameComponent.playerData.data.Player;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
+import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
+import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.chat.ChatElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.generic.GenericElement;
@@ -68,19 +72,20 @@ public class GameOverlay extends Overlay {
         this.elements.put(EnumOverlayElement.TABLE_STAT, new TableActivateElement(EnumOverlayElement.TABLE_STAT,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 400, (WindowConfig.getSizeY() / 2) - 300, 700, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), Input.KEY_TAB));
         this.elements.put(EnumOverlayElement.TABLE_ICON, new SliderElement(new GenericElement(EnumOverlayElement.TABLE_ICON,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) + 40, WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true})));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - (192 / 2) + 40, WindowConfig.getSizeY() - 64, 192, 64), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), new Pair<>(false, false), true, new boolean[]{true, true})));
+
+        this.elements.put(EnumOverlayElement.GENERIC_USER_STAT, new GenericElement(EnumOverlayElement.GENERIC_USER_STAT,
+                new BodyRect(new Rectangle(this.elements.get(EnumOverlayElement.TABLE_ICON).getBody().getMinX() - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), new Pair<>(false, false), true, new boolean[]{true, true}));
 
         this.elements.put(EnumOverlayElement.TABLE_MENU_SCREEN, new TableMenuElement(EnumOverlayElement.TABLE_MENU_SCREEN, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 360, 210), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
         this.elements.put(EnumOverlayElement.TABLE_MENU_CONTROLS, new TableMenuElement(EnumOverlayElement.TABLE_MENU_CONTROLS, this.genericSendTask,
                 new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 400, 300), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
-        this.elements.put(EnumOverlayElement.TABLE_MENU_SETTINGS, new TableMenuElement(EnumOverlayElement.TABLE_MENU_SETTINGS, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
+        this.elements.put(EnumOverlayElement.TABLE_MENU_SETTINGS, new GenericElement(EnumOverlayElement.TABLE_MENU_SETTINGS,
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), new Pair<>(false, true), false, new boolean[]{true, true}));
 
         this.elements.put(EnumOverlayElement.TABLE_MENU, new GenericElement(EnumOverlayElement.TABLE_MENU, this.genericSendTask,
-                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), false, new boolean[]{true, true}));
-        this.elements.put(EnumOverlayElement.GENERIC_USER_STAT, new GenericElement(EnumOverlayElement.GENERIC_USER_STAT,
-                new BodyRect(new Rectangle(this.elements.get(EnumOverlayElement.TABLE_ICON).getBody().getMinX() - 170, WindowConfig.getSizeY() - 56, 170, 56), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), true, new boolean[]{true, true}));
+                new BodyRect(new Rectangle((WindowConfig.getSizeX() / 2) - 150, (WindowConfig.getSizeY() / 2) - 300, 300, 310), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE)), new Pair<>(true, true), false, new boolean[]{true, true}));
     }
 
     @Override
@@ -166,6 +171,28 @@ public class GameOverlay extends Overlay {
 
     private void initTableMenuSettings() {
         InterfaceElement tableMenuSettings = this.elements.get(EnumOverlayElement.TABLE_MENU_SETTINGS);
+        float posX = tableMenuSettings.getBody().getMinX();
+        float posY = tableMenuSettings.getBody().getMinY();
+        float sizeX = tableMenuSettings.getBody().getSizeX();
+
+        tableMenuSettings.doTask(new StringElement(new BodyRect(new Rectangle(posX, posY, sizeX, StringTools.charSizeY())), new StringTimer("Settings"), Color.black, Element.PositionInBody.MIDDLE_MID));
+
+        posY += (StringTools.charSizeY() * 2);
+        tableMenuSettings.doTask(new StringElement(new BodyRect(new Rectangle(posX, posY, tableMenuSettings.getBody().getSizeX() / 2, StringTools.charSizeY())), new StringTimer("Sounds"), Color.black, Element.PositionInBody.MIDDLE_MID));
+        posY += (StringTools.charSizeY() * 2);
+        tableMenuSettings.doTask(new StringElement(new BodyRect(new Rectangle(posX, posY, (int) (tableMenuSettings.getBody().getSizeX() / 1.1), StringTools.charSizeY())), new StringTimer(String.valueOf((int) (SoundController.getVolume() * 100))), Color.black, EnumOverlayElement.SOUNDS_VALUE.getValue(), Element.PositionInBody.RIGHT_MID));
+        tableMenuSettings.doTask(new ImageElement(new BodyRect(new Rectangle(posX + 10, posY + 4, 202, 12), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), EnumOverlayElement.SOUNDS_GRAPH.getValue() + EnumOverlayElement.BORDER.getValue(), Element.PositionInBody.LEFT_MID));
+        tableMenuSettings.doTask(new ImageElement(new BodyRect(new Rectangle(posX + 11, posY + 5, 200, 10), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLUE)), EnumOverlayElement.SOUNDS_GRAPH.getValue(), Element.PositionInBody.LEFT_MID));
+
+        posY += 50;
+        tableMenuSettings.doTask(new StringElement(new BodyRect(new Rectangle(posX, posY, tableMenuSettings.getBody().getSizeX() / 2, StringTools.charSizeY())), new StringTimer("Musics"), Color.black, Element.PositionInBody.MIDDLE_MID));
+        posY += (StringTools.charSizeY() * 2);
+        tableMenuSettings.doTask(new StringElement(new BodyRect(new Rectangle(posX, posY, (int) (tableMenuSettings.getBody().getSizeX() / 1.1), StringTools.charSizeY())), new StringTimer(String.valueOf((int) (MusicController.getVolume() * 100))), Color.black, EnumOverlayElement.MUSICS_VALUE.getValue(), Element.PositionInBody.RIGHT_MID));
+        tableMenuSettings.doTask(new ImageElement(new BodyRect(new Rectangle(posX + 10, posY + 4, 202, 12), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)), EnumOverlayElement.MUSICS_GRAPH.getValue() + EnumOverlayElement.BORDER.getValue(), Element.PositionInBody.LEFT_MID));
+        tableMenuSettings.doTask(new ImageElement(new BodyRect(new Rectangle(posX + 11, posY + 5, 200, 10), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLUE)), EnumOverlayElement.MUSICS_GRAPH.getValue(), Element.PositionInBody.LEFT_MID));
+
+        tableMenuSettings.doTask(new Pair<>(EnumOverlayElement.SOUNDS_GRAPH, new Pair<>("cutBody", SoundController.getVolume() / SoundController.getMaxVolume())));
+        tableMenuSettings.doTask(new Pair<>(EnumOverlayElement.MUSICS_GRAPH, new Pair<>("cutBody", MusicController.getVolume() / MusicController.getMaxVolume())));
     }
 
     private void initTankIcons(EnumGameObject tankType) {
@@ -180,7 +207,7 @@ public class GameOverlay extends Overlay {
             tableIcon.doTask(new ButtonElement(new ImageElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() + 128, tableIcon.getBody().getMinY(), 64, 64)), this.animatorOverlayData.getIconAnimator(values.get(2)), EnumOverlayElement.BOX.getValue(), Element.PositionInBody.MIDDLE_MID), values.get(5)));
 
             tableIcon.doTask(new Pair<>(values.get(3), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 280, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
-            tableIcon.doTask(new Pair<>(values.get(4), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 360, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
+            tableIcon.doTask(new Pair<>(values.get(4), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 320, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
             tableIcon.doTask(new Pair<>(values.get(5), new StringListElement(new BodyRect(new Rectangle(tableIcon.getBody().getMinX() - 100, tableIcon.getBody().getMinY() - 100, 300, 100), ColorTools.get(ColorTools.Colors.TRANSPARENT_BLACK)))));
 
             tableIcon.doTask(new Pair<>(values.get(3), new StringElement(new StringTimer(this.overlayConfigs.getData(values.get(3))), Color.white, values.get(3).getValue(), Element.PositionInBody.MIDDLE_MID)));
@@ -196,7 +223,7 @@ public class GameOverlay extends Overlay {
             Tuple<EnumTargetTask, EnumTargetTask, Object> received = (Tuple<EnumTargetTask, EnumTargetTask, Object>) arg;
 
             if (received.getV1().equals(EnumTargetTask.WINDOWS) && received.getV2().isIn(EnumTargetTask.GAME_OVERLAY)) {
-                //Debug.debug("OVERLAY RECEIVED tuple: " + arg);
+                ConsoleWriter.debug("OVERLAY RECEIVED tuple: " + arg);
                 if (received.getV3() instanceof Player) {
                     Player player = (Player) received.getV3();
                     this.initTankIcons(player.getTank().getTankState().getType());
@@ -206,36 +233,39 @@ public class GameOverlay extends Overlay {
                     List<EnumOverlayElement> targets = new ArrayList<>();
                     targets.addAll(EnumOverlayElement.getChildren(task.getV1()));
                     for (EnumOverlayElement target : targets) {
-                        //Debug.debug("CHIDL: " + targets.size() + " -> send to " + target);
+                        ConsoleWriter.debug("CHIDL: " + targets.size() + " -> send to " + target);
                         if (this.elements.containsKey(target)) {
                             this.elements.get(target).doTask(task.getV2());
                         }
                     }
                 } else {
-                    Debug.debug("\n*************\nWARNING!\nyou shouldn't call this method like this : " + received.getV3());
+                    ConsoleWriter.debug("\n*************\nWARNING!\nyou shouldn't call this method like this : " + received.getV3());
                     for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
                         entry.getValue().doTask(received.getV3());
                     }
                 }
             }
         } else if (arg instanceof Pair) {
-            //Debug.debug("OVERLAY RECEIVED pair: " + arg);
+            ConsoleWriter.debug("OVERLAY RECEIVED pair: " + arg);
             if (((Pair) arg).getV1() instanceof EnumOverlayElement && ((Pair) arg).getV2() instanceof EnumOverlayElement) {
                 Pair<EnumOverlayElement, EnumOverlayElement> received = (Pair<EnumOverlayElement, EnumOverlayElement>) arg;
 
-                if (received.getV2() == EnumOverlayElement.EXIT) {
+                if (received.getV2() == EnumOverlayElement.EXIT && this.elements.containsKey(received.getV1())) {
                     this.elements.get(received.getV1()).stop();
                     this.setChanged();
                     this.notifyObservers(TaskFactory.createTask(EnumTargetTask.GAME_OVERLAY, EnumTargetTask.GAME, EnumWindow.INTERFACE));
                 } else {
-                    this.elements.get(received.getV1()).stop();
-                    this.elements.get(received.getV2()).start();
+                    if (this.elements.containsKey(received.getV1()) && this.elements.containsKey(received.getV2())) {
+                        this.elements.get(received.getV1()).stop();
+                        this.elements.get(received.getV2()).start();
+                    }
                 }
             } else if (((Pair) arg).getV2() instanceof Pair) {
                 Pair<EnumOverlayElement, Pair> received = (Pair<EnumOverlayElement, Pair>) arg;
-                this.elements.get(received.getV1()).doTask(received.getV2());
-                this.overlayConfigs.setAvailableInput(received.getV1(), this.elements.get(received.getV1()).getReachable());
-                //todo à envoyer à une classe qui gère les accès via un fichier
+                if (this.elements.containsKey(received.getV1())) {
+                    this.elements.get(received.getV1()).doTask(received.getV2());
+                    this.overlayConfigs.setAvailableInput(received.getV1(), this.elements.get(received.getV1()).getReachable());
+                }
             }
         }
     }

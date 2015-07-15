@@ -1,4 +1,4 @@
-package com.lefrantguillaume.Utils.stockage;
+package com.lefrantguillaume.utils.stockage;
 
 /**
  * Created by andres_k on 13/03/2015.

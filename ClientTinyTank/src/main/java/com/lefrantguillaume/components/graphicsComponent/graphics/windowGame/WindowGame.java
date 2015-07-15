@@ -1,30 +1,30 @@
 package com.lefrantguillaume.components.graphicsComponent.graphics.windowGame;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.MathTools;
-import com.lefrantguillaume.Utils.tools.StringTools;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorGameData;
 import com.lefrantguillaume.components.gameComponent.animations.AnimatorOverlayData;
 import com.lefrantguillaume.components.gameComponent.controllers.GameController;
 import com.lefrantguillaume.components.gameComponent.gameObject.tanks.equipment.TankState;
 import com.lefrantguillaume.components.gameComponent.playerData.action.EnumDirection;
+import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
+import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
 import com.lefrantguillaume.components.graphicsComponent.input.EnumInput;
 import com.lefrantguillaume.components.graphicsComponent.input.InputData;
 import com.lefrantguillaume.components.graphicsComponent.input.InputGame;
-import com.lefrantguillaume.components.graphicsComponent.sounds.MusicController;
-import com.lefrantguillaume.components.graphicsComponent.sounds.SoundController;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.GameOverlay;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.windowOverlay.GameOverlay;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.MathTools;
+import com.lefrantguillaume.utils.tools.StringTools;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.newdawn.slick.*;
-import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.state.StateBasedGame;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import java.util.List;
  * Created by andres_k on 10/03/2015.
  */
 
-public class WindowGame extends BasicGameState implements ScreenController {
+public class WindowGame extends WindowBasedGame implements ScreenController {
     private AnimatorGameData animatorGameData;
     private AnimatorOverlayData animatorOverlayData;
     private GameController gameController;
@@ -46,7 +46,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
     private StateBasedGame stateWindow;
     private Nifty nifty;
     private int id;
-    private boolean debug = true;
+    private boolean debug = false;
 
     private int frameRate = 60;
     private long runningTime = 0l;
@@ -83,9 +83,6 @@ public class WindowGame extends BasicGameState implements ScreenController {
         this.stateWindow = stateBasedGame;
         this.container.setForceExit(false);
 
-        MusicController.init();
-        SoundController.init();
-
         this.animatorGameData.initMap(this.gameController.getMapController().getConfigMapFile());
         this.animatorGameData.init();
 
@@ -120,9 +117,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        this.gameController.clearData();
-        this.nifty.getNiftyMouse().resetMouseCursor();
-        this.gameOverlay.leave();
+        this.clean();
     }
 
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics g) throws SlickException {
@@ -149,6 +144,7 @@ public class WindowGame extends BasicGameState implements ScreenController {
                     g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getGraphicalY(), 1, 1);
                     g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX() - 2, this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY() - 2, 5, 5);
                     g.drawRect(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), 1, 1);
+                    g.draw(new Circle(this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getX(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankState().getY(), this.gameController.getPlayer(CurrentUser.getId()).getTank().getTankWeapon().getMaxRangeShot()));
                 }
                 g.setColor(Color.darkGray);
                 for (Pair<Integer, Integer> pos : this.mousePos) {
@@ -312,5 +308,18 @@ public class WindowGame extends BasicGameState implements ScreenController {
 
     @Override
     public void onEndScreen() {
+    }
+
+    @Override
+    public void clean() {
+        this.gameController.clearData();
+        this.nifty.getNiftyMouse().resetMouseCursor();
+        this.gameOverlay.leave();
+    }
+
+    @Override
+    public void quit() {
+        this.clean();
+        this.stateWindow.enterState(EnumWindow.INTERFACE.getValue());
     }
 }

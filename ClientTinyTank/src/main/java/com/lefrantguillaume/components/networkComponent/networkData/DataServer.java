@@ -1,6 +1,6 @@
 package com.lefrantguillaume.components.networkComponent.networkData;
 
-import com.lefrantguillaume.Utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Pair;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;

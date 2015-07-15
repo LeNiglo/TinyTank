@@ -1,17 +1,17 @@
 package com.lefrantguillaume.components.graphicsComponent.userInterface.elements.chat;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.stockage.Tuple;
-import com.lefrantguillaume.Utils.tools.Debug;
-import com.lefrantguillaume.Utils.tools.StringTools;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.ConsoleWriter;
+import com.lefrantguillaume.utils.tools.StringTools;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.elements.InterfaceElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.EnumOverlayElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.Element;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.StringElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.ActivatedTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.BodyRect;
-import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.SelectionField;
+import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.elements.SelectionField;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.items.StringTimer;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.ListElement;
 import com.lefrantguillaume.components.graphicsComponent.userInterface.tools.listElements.StringListElement;
@@ -44,8 +44,8 @@ public class ChatElement extends InterfaceElement {
     }
 
     private void childInit() {
-        this.selectionField = new SelectionField(new StringElement(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, StringTools.charSizeY()), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
-                new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID));
+        this.selectionField = new SelectionField(new BodyRect(new Rectangle(this.body.getMinX() + 20, this.body.getMinY() + 170, 300, StringTools.charSizeY()), new Color(0.2f, 0.2f, 0.3f, 0.6f)),
+                new StringElement(new StringTimer(""), Color.white, Element.PositionInBody.LEFT_MID), EnumOverlayElement.SELECT_FIELD.getValue() + "chat", true);
         float chatSizeY = 170;
         this.stringListElement = new StringListElement(new BodyRect(new Rectangle(this.body.getMinX(), this.body.getMinY(), this.body.getSizeX(), chatSizeY)));
     }
@@ -69,8 +69,8 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public void update() {
-        if (!this.isActivated() && this.selectionField.isFocused()) {
-            this.selectionField.setFocused(false);
+        if (!this.isActivated() && this.selectionFocused()) {
+            this.setSelectionFocus(false);
         }
     }
 
@@ -79,25 +79,38 @@ public class ChatElement extends InterfaceElement {
         this.stringListElement.clear();
     }
 
+    private boolean selectionFocused(){
+        if (this.selectionField.doTask(new Pair<>("check", "focus")) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void setSelectionFocus(boolean value){
+        this.selectionField.doTask(new Pair<>("setFocus", value));
+    }
+
     @Override
     public Object eventPressed(int key, char c) {
         if (key == Input.KEY_ENTER) {
-            if (this.selectionField.isFocused()) {
-                this.selectionField.setFocused(false);
-                if (!this.selectionField.getCurrent().equals("")) {
-                    MessageChat request = new MessageChat(CurrentUser.getPseudo(), CurrentUser.getId(), true, this.selectionField.getCurrent());
-                    this.selectionField.setCurrent("");
+            if (this.selectionFocused()) {
+                this.setSelectionFocus(false);
+                if (!this.selectionField.toString().equals("")) {
+                    MessageChat request = new MessageChat(CurrentUser.getPseudo(), CurrentUser.getId(), true, this.selectionField.toString());
+                    this.selectionField.doTask(new Pair<>("setCurrent", ""));
+                    this.selectionField.doTask(new Pair<>("sendTo", ""));
                     return request;
                 }
             } else {
-                this.selectionField.setFocused(true);
+                this.setSelectionFocus(true);
                 this.activatedTimer.setActivated(true);
             }
             this.activatedTimer.startTimer();
-        } else if (key == Input.KEY_ESCAPE && this.selectionField.isFocused()) {
+        } else if (key == Input.KEY_ESCAPE && this.selectionFocused()) {
             return true;
-        } else if (this.selectionField.isFocused()) {
-            this.selectionField.event(key, c);
+        } else if (this.selectionFocused()) {
+            this.selectionField.doTask(new Tuple("event", key, c));
             this.activatedTimer.startTimer();
         } else {
             return null;
@@ -107,10 +120,10 @@ public class ChatElement extends InterfaceElement {
 
     @Override
     public Object eventReleased(int key, char c) {
-        if (this.selectionField.isFocused()) {
+        if (this.selectionFocused()) {
             if (key == Input.KEY_ESCAPE) {
                 this.activatedTimer.startTimer();
-                this.selectionField.setFocused(false);
+                this.setSelectionFocus(false);
             }
             return true;
         }
@@ -123,12 +136,12 @@ public class ChatElement extends InterfaceElement {
             Object result = this.stringListElement.isOnFocus(x, y);
             if (result instanceof Element) {
                 //todo catach l'element et l'envoyer au selectField pour envois de message by id
-                Debug.debug("element CATCH");
-                this.selectionField.addToCurrent(((Element) result).getId());
+                ConsoleWriter.debug("element CATCH");
+                this.selectionField.doTask(new Pair<>("sendTo", ((Element) result).toString()));
                 return result;
             }
-            if (this.selectionField.isOnFocus(x, y)) {
-                Debug.debug("selection CATCH");
+            if (this.selectionField.isOnFocus(x, y) != null) {
+                ConsoleWriter.debug("selection CATCH");
                 return true;
             }
         }

@@ -1,8 +1,8 @@
 package com.lefrantguillaume.components.gameComponent.playerData.action;
 
-import com.lefrantguillaume.Utils.configs.CurrentUser;
-import com.lefrantguillaume.Utils.stockage.Pair;
-import com.lefrantguillaume.Utils.tools.Block;
+import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.tools.Block;
 import com.lefrantguillaume.components.collisionComponent.CollisionController;
 import com.lefrantguillaume.components.collisionComponent.CollisionObject;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
@@ -110,11 +110,11 @@ public class PlayerActionController { //extends Observable {
     }
 
     private void addShootTimer(PlayerAction playerAction, CollisionController collisionController, Player player) {
-        player.getTank().getTankSpell().stopCurrentSpell();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                player.getTank().getTankSpell().stopCurrentSpell();
                 generateShot(playerAction, collisionController, player);
             }
         }, 500);

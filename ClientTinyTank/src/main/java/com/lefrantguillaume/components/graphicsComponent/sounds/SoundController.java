@@ -14,18 +14,19 @@ public class SoundController {
     private static boolean needInit = true;
     private static float pitch;
     private static float volume;
-
+    private static float maxVolume;
 
     public static void init() {
         if (needInit == true) {
             sounds = new ArrayList<>();
             pitch = 1.0f;
             volume = 1.0f;
+            maxVolume = 2.0f;
             needInit = false;
         }
     }
 
-    public static void clearSounds(){
+    public static void clearSounds() {
         if (needInit == false) {
             for (int i = 0; i < sounds.size(); ++i) {
                 if (sounds.get(i).getSound().playing() == false) {
@@ -36,14 +37,14 @@ public class SoundController {
         }
     }
 
-    public static void update(){
+    public static void update() {
         if (needInit == false) {
             clearSounds();
         }
     }
 
     public static String play(EnumSound value) {
-        if (needInit == false){
+        if (needInit == false) {
             try {
                 Sound sound = new Sound(value.getPath());
                 if (sound != null) {
@@ -61,7 +62,7 @@ public class SoundController {
     }
 
     public static String loop(EnumSound value) {
-        if (needInit == false){
+        if (needInit == false) {
             try {
                 Sound sound = new Sound(value.getPath());
                 SoundElement soundElement = new SoundElement(sound, value);
@@ -76,15 +77,27 @@ public class SoundController {
         return null;
     }
 
-    public static boolean stop(String id){
-        if (needInit == false){
-            for (SoundElement element : sounds){
-                if (element.getId().equals(id)){
+    public static boolean stop(String id) {
+        if (needInit == false) {
+            for (SoundElement element : sounds) {
+                if (element.getId().equals(id)) {
                     element.getSound().stop();
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public static void changeVolume(float value) {
+        volume = value;
+    }
+
+    public static float getVolume() {
+        return volume;
+    }
+
+    public static float getMaxVolume() {
+        return maxVolume;
     }
 }

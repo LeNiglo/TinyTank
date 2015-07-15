@@ -12,13 +12,15 @@ public class AnimatorFactory {
         return null;
     }
 
-    protected Animation loadAnimation(SpriteSheet spriteSheet, int startX, int endX, int startY, int endY, int speed) {
+    protected Animation loadAnimation(SpriteSheet spriteSheet, int startX, int endX, int startY, int endY, boolean looped, int speed) {
         Animation animation = new Animation();
         for (int y = startY; y < endY; y++) {
             for (int x = startX; x < endX; x++) {
                 animation.addFrame(spriteSheet.getSprite(x, y), speed);
             }
 
-        }        return animation;
+        }
+        animation.setLooping(looped);
+        return animation;
     }
 }

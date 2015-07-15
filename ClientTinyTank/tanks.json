@@ -27,6 +27,7 @@
           "shotType": "rocket",
           "speed": "250.0",
           "damage": "30.0",
+          "maxRange": "100000",
           "cooldown" : "700",
           "build": {
             "centerX": "-41.0", // centre arbitraire du hit, signe '-' pour le décalage x/y pour l'affichage
@@ -109,6 +110,7 @@
           "shotType": "laser",
           "speed": "500.0",
           "damage": "200.0",
+          "maxRange": "100000",
           "cooldown": "2000",
           "build": {
             "centerX": "-11.0",
@@ -191,6 +193,7 @@
           "shotType": "machine_gun",
           "speed": "235.0",
           "damage": "10.0",
+          "maxRange": "300",
           "cooldown": "100",
           "build": {
             "centerX": "-16.0",
@@ -230,7 +233,7 @@
       },
       "tankSpell": {
         "spellType": "teleport",
-        "cooldown" : "3000"
+        "cooldown" : "1000"
       },
       "tankBox": {
         "boxType": "mine",
