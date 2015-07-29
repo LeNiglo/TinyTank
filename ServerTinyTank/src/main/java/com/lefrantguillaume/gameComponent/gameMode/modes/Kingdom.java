@@ -27,7 +27,7 @@ public class Kingdom extends GameMode {
         this.obstacles = new ArrayList<>();
         this.playersInObjective = new HashMap<>();
         this.objectiveScore = 100;
-        this.maxPlayerTeam = 4;
+        this.maxPlayerTeam = 3;
         this.init(maxTeam, maxPlayerTeam);
         this.createObstacles(obstacleConfigData);
         this.initPlayersInObjective();

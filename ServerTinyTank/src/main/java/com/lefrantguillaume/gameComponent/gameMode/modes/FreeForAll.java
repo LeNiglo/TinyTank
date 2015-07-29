@@ -16,7 +16,7 @@ public class FreeForAll extends GameMode {
 
     public FreeForAll(int maxTeam) {
         this.obstacles = new ArrayList<>();
-        this.objectiveScore = 30;
+        this.objectiveScore = 100;
         this.maxPlayerTeam = 1;
         this.init(maxTeam, maxPlayerTeam);
     }

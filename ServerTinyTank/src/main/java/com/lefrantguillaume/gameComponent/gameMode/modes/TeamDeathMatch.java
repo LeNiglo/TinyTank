@@ -16,8 +16,8 @@ public class TeamDeathMatch extends GameMode {
 
     public TeamDeathMatch(int maxTeam) {
         this.obstacles = new ArrayList<>();
-        this.objectiveScore = 50;
-        this.maxPlayerTeam = 4;
+        this.objectiveScore = 100;
+        this.maxPlayerTeam = 3;
         this.init(maxTeam, maxPlayerTeam);
     }
 

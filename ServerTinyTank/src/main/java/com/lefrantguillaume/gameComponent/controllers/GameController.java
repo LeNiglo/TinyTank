@@ -142,9 +142,8 @@ public class GameController extends Observable {
     }
 
     public void doMessagePlayerNew(MessagePlayerNew received, Connection connection) {
-        WindowController.addConsoleMsg("Nouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue());
-
         String teamId = this.gameModeController.getCurrentMode().attributeATeam();
+        WindowController.addConsoleMsg("\nNouveau joueur: " + received.getId() + " with :" + received.getEnumTanks().getValue() + " teamID:" + teamId);
         if (teamId != null) {
             this.sendAllTargetsToSomeone(connection, true, true, false);
             this.targets.addPlayer(new Player(received.getId(), received.getPseudo(), teamId,
