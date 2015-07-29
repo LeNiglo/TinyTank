@@ -1,13 +1,12 @@
 package com.lefrantguillaume.components.gameComponent.gameObject.projectiles;
 
-import com.lefrantguillaume.utils.stockage.Pair;
-import com.lefrantguillaume.utils.stockage.Tuple;
-import com.lefrantguillaume.utils.tools.Block;
-import com.lefrantguillaume.utils.tools.ConsoleWriter;
-import com.lefrantguillaume.utils.tools.MathTools;
 import com.lefrantguillaume.components.gameComponent.animations.Animator;
 import com.lefrantguillaume.components.gameComponent.animations.EnumAnimation;
 import com.lefrantguillaume.components.gameComponent.gameObject.EnumGameObject;
+import com.lefrantguillaume.utils.stockage.Pair;
+import com.lefrantguillaume.utils.stockage.Tuple;
+import com.lefrantguillaume.utils.tools.Block;
+import com.lefrantguillaume.utils.tools.MathTools;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 
@@ -107,8 +106,6 @@ public class Shot extends Observable implements Observer {
             Pair<Float, Float> coords = this.movePredict(delta);
             this.positions.setV1(this.getX() + coords.getV1());
             this.positions.setV2(this.getY() + coords.getV2());
-            ConsoleWriter.debug("\n newDistance: [" + coords.getV1() + ", " + coords.getV2() + "]");
-            ConsoleWriter.debug("distance: " + this.currentRange + " + " + "/(" + (coords.getV1() * coords.getV1()) + " + " + (coords.getV2() * coords.getV2()) + ") = " + Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2())));
             this.currentRange += Math.sqrt((coords.getV1() * coords.getV1()) + (coords.getV2() * coords.getV2()));
             this.addNewPosition();
             return coords;

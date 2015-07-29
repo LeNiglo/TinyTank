@@ -450,6 +450,7 @@ public class GameController extends Observable {
                 tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
                 tmpMessage.setId(entry.getValue().getId());
                 tmpMessage.setPseudo(entry.getValue().getPseudo());
+                tmpMessage.setTeamId(entry.getValue().getTeamId());
                 tmpMessage.setPosX(0);
                 tmpMessage.setPosY(0);
                 this.setChanged();
@@ -487,6 +488,7 @@ public class GameController extends Observable {
                     MessagePlayerNew tmpMessage = new MessagePlayerNew();
                     tmpMessage.setEnumTanks(entry.getValue().getTank().getTankState().getType());
                     tmpMessage.setId(entry.getValue().getId());
+                    tmpMessage.setTeamId(entry.getValue().getTeamId());
                     tmpMessage.setPseudo(entry.getValue().getPseudo());
                     tmpMessage.setPosX(0);
                     tmpMessage.setPosY(0);
