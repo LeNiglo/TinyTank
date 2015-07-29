@@ -11,6 +11,7 @@ import com.lefrantguillaume.userInterface.ConsoleUserInterface;
 import com.lefrantguillaume.userInterface.GraphicalUserInterface;
 import com.lefrantguillaume.userInterface.UserInterface;
 import com.lefrantguillaume.utils.CallbackTask;
+import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.StringTools;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
@@ -100,8 +101,9 @@ public class MasterController extends Observable implements Observer {
                         }
                     }, () -> {
                         gameController.getMapController().setCurrentMapIndex(userInterface.getSelectedMapIndex());
-                        //config = theInterface.getGameConfig();
-                        //config.setMap(currentMap);
+                        GameConfig config = MasterController.this.userInterface.getGameConfig();
+                        gameController.setMode(config.getGameMode());
+
                         if (MasterController.this.server.start()) {
                             MasterController.this.gameController.startGame();
                             if (!gameStarted) {

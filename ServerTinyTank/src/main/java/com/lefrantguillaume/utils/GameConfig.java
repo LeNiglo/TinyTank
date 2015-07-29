@@ -17,4 +17,8 @@ public class GameConfig {
         GameConfig.timeLimit = timeLimit;
         GameConfig.gameMode = gameMode;
     }
+
+    public EnumGameMode getGameMode() {
+        return gameMode;
+    }
 }

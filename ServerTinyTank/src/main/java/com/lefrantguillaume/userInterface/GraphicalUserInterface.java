@@ -74,6 +74,11 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
         public void stopGame() {}
         public void refreshPlayers() {}
         public void refreshMaps() {}
+
+        @Override
+        public GameConfig getGameConfig() {
+            return null;
+        }
     }
 
 
@@ -122,12 +127,21 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
     }
 
     public GameConfig getGameConfig() {
+        EnumGameMode mode = EnumGameMode.Nothing;
+        if (combo_mode.getSelectedItem().equals("Free For All"))
+            mode = EnumGameMode.FreeForAll;
+        if (combo_mode.getSelectedItem().equals("Team Deathmatch"))
+            mode = EnumGameMode.TeamDeathMatch;
+        if (combo_mode.getSelectedItem().equals("King of the Hill"))
+            mode = EnumGameMode.Kingdom;
+        if (combo_mode.getSelectedItem().equals("Drop the Bomb"))
+            mode = EnumGameMode.TouchDown;
         return new GameConfig(Integer.valueOf(field_pts.getText()),
-                Integer.valueOf(field_timelimit.getText()),
-                (combo_mode.getName() != null ? EnumGameMode.FreeForAll : EnumGameMode.FreeForAll));
+                Integer.valueOf(field_timelimit.getText()), mode);
     }
 
     private void button_startMouseClicked(MouseEvent e) {
+        this.getGameConfig();
         talker.askStartGame();
     }
 
@@ -436,8 +450,8 @@ public class GraphicalUserInterface extends JFrame implements UserInterface {
                 combo_mode.setModel(new DefaultComboBoxModel(new String[]{
                         "Free For All",
                         "Team Deathmatch",
-                        "Capture The Flag",
-                        "Domination"
+                        "King of the Hill",
+                        "Drop the Bomb"
                 }));
 
                 //---- button_start ----

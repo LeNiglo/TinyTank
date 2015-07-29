@@ -7,6 +7,7 @@ import com.lefrantguillaume.gameComponent.EnumCollision;
 import com.lefrantguillaume.gameComponent.EnumGameObject;
 import com.lefrantguillaume.gameComponent.collisionVote.CollisionVoteController;
 import com.lefrantguillaume.gameComponent.collisionVote.CollisionVoteElement;
+import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameMode.GameModeController;
 import com.lefrantguillaume.gameComponent.gameMode.Team;
 import com.lefrantguillaume.gameComponent.gameobjects.obstacles.Obstacle;
@@ -663,6 +664,10 @@ public class GameController extends Observable {
             notifyObservers(new Pair<>(EnumTargetTask.NETWORK, RequestFactory.createRequest(message)));
         }
         this.mapController.getCurrentMap().resetCurrentObject();
+    }
+
+    public void setMode(EnumGameMode mode) {
+        this.gameModeController.setCurrentGameMode(mode);
     }
 
     // GETTERS
