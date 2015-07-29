@@ -1,6 +1,7 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
 import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.configs.GlobalVariable;
 import com.lefrantguillaume.utils.configs.MasterConfig;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
@@ -462,12 +463,13 @@ public class GameController extends Observable implements Observer {
             } else {
                 current.draw(g);
 
-                // debug
-                g.setColor(Color.black);
-                g.drawRect(current.getX(), current.getY(), 1, 1);
-                g.setColor(Color.blue);
-                g.drawRect(current.getGraphicalX(), current.getGraphicalY(), 1, 1);
-                g.setColor(Color.red);
+                if (GlobalVariable.debug == true) {
+                    g.setColor(Color.black);
+                    g.drawRect(current.getX(), current.getY(), 1, 1);
+                    g.setColor(Color.blue);
+                    g.drawRect(current.getGraphicalX(), current.getGraphicalY(), 1, 1);
+                    g.setColor(Color.red);
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.w
 import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.Overlay;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.utils.configs.CurrentUser;
+import com.lefrantguillaume.utils.configs.GlobalVariable;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.tools.MathTools;
 import com.lefrantguillaume.utils.tools.StringTools;
@@ -126,7 +127,7 @@ public class WindowGame extends WindowBasedGame implements ScreenController {
             this.gameController.drawGamePlayers(g);
             this.gameController.drawGameShots(g);
 
-            if (debug == true) {
+            if (GlobalVariable.debug == true) {
                 // debug
                 if (this.gameController.getCollisionController() != null) {
                     g.setColor(Color.red);
