@@ -13,7 +13,6 @@ import org.kohsuke.args4j.Option;
  */
 
 public class Main  {
-    private static WindowConfig windowConfig;
 
     @Option(name = "-c", usage = "console mode", aliases = "--console")
     private boolean console = false;
@@ -25,7 +24,6 @@ public class Main  {
     }
 
     public Main(String args[]) {
-        windowConfig = new WindowConfig();
         CmdLineParser parser = new CmdLineParser(this);
         try {
             parser.parseArgument(args);
