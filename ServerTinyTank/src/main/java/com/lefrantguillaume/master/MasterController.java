@@ -103,7 +103,6 @@ public class MasterController extends Observable implements Observer {
                         gameController.getMapController().setCurrentMapIndex(userInterface.getSelectedMapIndex());
                         GameConfig config = MasterController.this.userInterface.getGameConfig();
                         gameController.setMode(config.getGameMode());
-
                         if (MasterController.this.server.start()) {
                             MasterController.this.gameController.startGame();
                             if (!gameStarted) {

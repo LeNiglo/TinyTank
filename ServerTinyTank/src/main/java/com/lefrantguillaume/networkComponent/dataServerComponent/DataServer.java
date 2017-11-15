@@ -85,6 +85,7 @@ public class DataServer {
     }
 
     public boolean initServer() {
+        return true; /*
         try {
             InitServerSnd st = new InitServerSnd(ServerConfig.gameName, ServerConfig.tcpPort, ServerConfig.udpPort);
             ClientResponse response = this.getClientResponse(st, "init_server");
@@ -105,7 +106,7 @@ public class DataServer {
             e.printStackTrace();
             return false;
         }
-        return true;
+        return true;*/
     }
 
     public void updateServer() {
