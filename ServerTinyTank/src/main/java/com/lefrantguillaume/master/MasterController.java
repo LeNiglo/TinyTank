@@ -3,6 +3,7 @@ package com.lefrantguillaume.master;
 import com.lefrantguillaume.WindowController;
 import com.lefrantguillaume.WindowObserver;
 import com.lefrantguillaume.gameComponent.controllers.GameController;
+import com.lefrantguillaume.gameComponent.gameMode.EnumGameMode;
 import com.lefrantguillaume.gameComponent.gameobjects.player.Player;
 import com.lefrantguillaume.gameComponent.maps.Map;
 import com.lefrantguillaume.networkComponent.dataServerComponent.DataServer;
@@ -13,6 +14,7 @@ import com.lefrantguillaume.userInterface.UserInterface;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.StringTools;
+import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -102,7 +104,11 @@ public class MasterController extends Observable implements Observer {
                     }, () -> {
                         gameController.getMapController().setCurrentMapIndex(userInterface.getSelectedMapIndex());
                         GameConfig config = MasterController.this.userInterface.getGameConfig();
-                        gameController.setMode(config.getGameMode());
+                        try {
+                            gameController.setMode(config.getGameMode());
+                        } catch (Exception e) {
+                            gameController.setMode(EnumGameMode.FreeForAll);
+                        }
                         if (MasterController.this.server.start()) {
                             MasterController.this.gameController.startGame();
                             if (!gameStarted) {

@@ -144,7 +144,7 @@ public class WindowAccount extends WindowBasedGame implements ScreenController {
             if (key == Input.KEY_C) {
                 if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                     ConsoleWriter.write("Connected as hacker");
-                    ServerEntry srv = new ServerEntry("Server de Hacker", "37.187.0.176", "Cheated Map", 13333, 13444);
+                    ServerEntry srv = new ServerEntry("Server de Hacker", "127.0.0.1", "Cheated Map", 13333, 13444);
                     ConsoleWriter.debug("Trying to cheat ! Connect to " + srv);
                     this.accountController.connect(srv);
                 }
