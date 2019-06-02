@@ -10,6 +10,7 @@ import com.lefrantguillaume.components.graphicsComponent.userInterface.overlay.O
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
 import com.lefrantguillaume.components.taskComponent.GenericSendTask;
 import com.lefrantguillaume.utils.tools.ConsoleWriter;
+import com.lefrantguillaume.utils.tools.FastHack;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.ListBox;
@@ -144,7 +145,7 @@ public class WindowAccount extends WindowBasedGame implements ScreenController {
             if (key == Input.KEY_C) {
                 if (this.container.getInput().isKeyDown(Input.KEY_LCONTROL) || this.container.getInput().isKeyDown(Input.KEY_RCONTROL)) {
                     ConsoleWriter.write("Connected as hacker");
-                    ServerEntry srv = new ServerEntry("Server de Hacker", "127.0.0.1", "Cheated Map", 13333, 13444);
+                    ServerEntry srv = new ServerEntry(FastHack.name, FastHack.ip, FastHack.map, FastHack.tcp, FastHack.udp);
                     ConsoleWriter.debug("Trying to cheat ! Connect to " + srv);
                     this.accountController.connect(srv);
                 }

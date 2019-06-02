@@ -1,5 +1,6 @@
 package com.lefrantguillaume.components.gameComponent.controllers;
 
+import com.esotericsoftware.kryonet.Server;
 import com.lefrantguillaume.components.graphicsComponent.graphics.EnumWindow;
 import com.lefrantguillaume.components.graphicsComponent.graphics.WindowBasedGame;
 import com.lefrantguillaume.components.networkComponent.ServerEntry;
@@ -10,6 +11,7 @@ import com.lefrantguillaume.utils.configs.NetworkServerConfig;
 import com.lefrantguillaume.utils.stockage.Pair;
 import com.lefrantguillaume.utils.stockage.Tuple;
 import com.lefrantguillaume.utils.tools.ConsoleWriter;
+import com.lefrantguillaume.utils.tools.FastHack;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -50,6 +52,13 @@ public class AccountController extends Observable implements Observer {
             }
         }
     }
+/*
+    public List<ServerEntry> createServerList() {
+        this.servers.clear();
+        ServerEntry server = new ServerEntry(FastHack.name, FastHack.ip, FastHack.map, FastHack.tcp, FastHack.udp);
+        this.servers.add(server);
+        return this.servers;
+    }*/
 
     public List<ServerEntry> createServerList() {
         try {

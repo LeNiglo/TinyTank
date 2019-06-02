@@ -71,7 +71,7 @@ public class MasterController extends Observable implements Observer {
             for (File file : files) {
                 String name = file.getName().substring(0, file.getName().lastIndexOf("."));
                 WindowController.addConsoleMsg("mapName: " + name);
-                if (new File("maps/" + name + ".jpg").exists()) {
+                if (new File("maps" + File.separator + name + ".jpg").exists()) {
                     this.parseJsonMap(file, name);
                 } else {
                     System.out.println("not valid");
@@ -84,7 +84,7 @@ public class MasterController extends Observable implements Observer {
     public void parseJsonMap(File file, String name) {
         try {
             JSONObject object = new JSONObject(StringTools.readFile(file.getAbsolutePath()));
-            Map map = new Map(this.gameController.getObstacleConfigData(), file, new File("maps/" + name + ".jpg"), object);
+            Map map = new Map(this.gameController.getObstacleConfigData(), file, new File("maps" + File.separator + name + ".jpg"), object);
             this.gameController.addMap(map);
         } catch (Exception e) {
             System.out.println("Error in parseJson: " + e.getMessage());
