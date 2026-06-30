@@ -14,7 +14,6 @@ import com.lefrantguillaume.userInterface.UserInterface;
 import com.lefrantguillaume.utils.CallbackTask;
 import com.lefrantguillaume.utils.GameConfig;
 import com.lefrantguillaume.utils.StringTools;
-import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
 import javafx.util.Pair;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

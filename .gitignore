@@ -1,6 +1,7 @@
 .idea
 
 ClientTinyTank/target/
+ServerTinyTank/target/
 ServeurTinyTank/target/
 ClientTinyTank/configInput.json
 
