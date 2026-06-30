@@ -11,63 +11,74 @@
     <url>http://tinytank.lefrantguillaume.com</url>
 
     <properties>
-        <java.version>1.8</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
+        <!-- 2D game framework (bundles LWJGL 2.x — note: LWJGL 2 has no Apple Silicon natives) -->
         <dependency>
             <groupId>org.slick2d</groupId>
             <artifactId>slick2d-core</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
+            <exclusions>
+                <!-- jnlp-api is system-scoped to javaws.jar (Java Web Start), removed in JDK 11+.
+                     The desktop client does not use Web Start. -->
+                <exclusion>
+                    <groupId>javax.jnlp</groupId>
+                    <artifactId>jnlp-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+        <!-- Low-latency game networking (latest available; project is unmaintained) -->
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryonet</artifactId>
             <version>2.22.0-RC1</version>
         </dependency>
 
+        <!-- JSON parsing of tanks/obstacles/overlay config (was transitive via jersey-json) -->
         <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>1.9</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
-            <version>1.9</version>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>1.5.4</version>
         </dependency>
 
+        <!-- POJO <-> JSON for the master-server REST DTOs (replaces jersey-json POJO mapping) -->
         <dependency>
-            <groupId>lessvoid</groupId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.18.2</version>
+        </dependency>
+
+        <!-- Nifty GUI 1.4.x — migrated from the dead lessvoid SourceForge HTTP repo to the
+             maintained com.github.nifty-gui republication on Maven Central. -->
+        <dependency>
+            <groupId>com.github.nifty-gui</groupId>
             <artifactId>nifty</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3</version>
         </dependency>
-
         <dependency>
-            <groupId>lessvoid</groupId>
+            <groupId>com.github.nifty-gui</groupId>
             <artifactId>nifty-default-controls</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3</version>
         </dependency>
-
         <dependency>
-            <groupId>lessvoid</groupId>
+            <groupId>com.github.nifty-gui</groupId>
             <artifactId>nifty-lwjgl-renderer</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3</version>
         </dependency>
-
         <dependency>
-            <groupId>lessvoid</groupId>
+            <groupId>com.github.nifty-gui</groupId>
             <artifactId>nifty-slick2d-renderer</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3</version>
         </dependency>
-
         <dependency>
-            <groupId>lessvoid</groupId>
+            <groupId>com.github.nifty-gui</groupId>
             <artifactId>nifty-style-black</artifactId>
-            <version>1.4.2-SNAPSHOT</version>
+            <version>1.4.3</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -75,14 +86,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
+                <version>3.13.0</version>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -92,17 +100,23 @@
                             <addClasspath>true</addClasspath>
                             <mainClass>com.lefrantguillaume.Main</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <!-- KryoNet bundles an old Kryo that reflects into the JDK;
+                                 modern JDKs require these packages to be opened at runtime. -->
+                            <Add-Opens>java.base/java.lang java.base/java.lang.reflect java.base/java.util java.base/java.io</Add-Opens>
+                        </manifestEntries>
                     </archive>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>nifty-maven-repo.sourceforge.net</id>
-            <url>http://nifty-gui.sourceforge.net/nifty-maven-repo</url>
-        </repository>
-    </repositories>
 
 </project>
