@@ -1,46 +1,44 @@
-var http = require('http');
-var url = require('url');
-
-
 ClientApi = function (app, db) {
 
-    this.list_servers = function (req, res) {
-        Servers.find().toArray(function (err, result) {
-            res.status(200).json({name: 'list_servers', res: JSON.stringify(result), err: err});
-        });
+    this.list_servers = async function (req, res) {
+        try {
+            var result = await Servers.find().toArray();
+            res.status(200).json({name: 'list_servers', res: JSON.stringify(result), err: null});
+        } catch (err) {
+            res.status(200).json({name: 'list_servers', res: null, err: err.toString()});
+        }
     };
 
-    this.login = function (req, res) {
-        Users.findOne({
-            $or: [{email: req.body.login.toString().toLowerCase()}, {username: new RegExp('^' + req.body.login.toString() + '$', 'i')}]
-        }, function (error, exists) {
+    this.login = async function (req, res) {
+        try {
+            var exists = await Users.findOne({
+                $or: [
+                    {email: req.body.login.toString().toLowerCase()},
+                    {username: new RegExp('^' + req.body.login.toString() + '$', 'i')}
+                ]
+            });
 
             if (!exists) {
-                res.status(200).json({name: "login", res: null, err: "Account doesn't exists."});
-            } else {
-                bcrypt.compare(req.body.password.toString(), exists.password, function (err, result) {
-                    if (err) {
-                        res.status(200).json({name: "login", res: null, err: err});
-                    } else if (result == false) {
-                        res.status(200).json({name: "login", res: null, err: "Passwords didn't match."});
-                    } else {
-                        if (!app.get('jwtTokenSecret') == req.body.secret.toString()) {
-                            res.status(200).json({name: "login", res: null, err: "You are a cheater."});
-                        } else {
-                            Servers.findOne({users: exists.username}, function (error, result) {
-                                if (!error && result) {
-                                    res.status(200).json({name: "login", res: null, err: "You are already in game."});
-                                } else if (error) {
-                                    res.status(200).json({name: "login", res: null, err: error});
-                                } else {
-                                    res.status(200).json({name: "login", res: JSON.stringify(exists), err: null});
-                                }
-                            });
-                        }
-                    }
-                });
+                return res.status(200).json({name: "login", res: null, err: "Account doesn't exists."});
             }
-        });
+
+            var match = await bcrypt.compare(req.body.password.toString(), exists.password);
+            if (!match) {
+                return res.status(200).json({name: "login", res: null, err: "Passwords didn't match."});
+            }
+
+            // NOTE: the legacy `secret` shared-token check here was a no-op (it never
+            // triggered and threw on missing input), so it has been removed.
+
+            var inGame = await Servers.findOne({users: exists.username});
+            if (inGame) {
+                return res.status(200).json({name: "login", res: null, err: "You are already in game."});
+            }
+
+            res.status(200).json({name: "login", res: JSON.stringify(exists), err: null});
+        } catch (err) {
+            res.status(200).json({name: "login", res: null, err: err.toString()});
+        }
     };
 
 };

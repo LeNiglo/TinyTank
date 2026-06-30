@@ -2,40 +2,27 @@
  * Created by leniglo on 11/06/15.
  */
 
+var express = require('express');
 var morgan = require('morgan');
-var jwt = require('jwt-simple');
-var cors = require('express-cors');
+var cors = require('cors');
 var basicAuth = require('basic-auth-connect');
-var bodyParser = require('body-parser');
 
-var Config = function (app, mailer) {
+var ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://tinytank.dev",
+    "http://tinytank.com",
+    "http://lefrantguillaume.com",
+    "http://tinytank.lefrantguillaume.com"
+];
 
-    mailer.extend(app, {
-        from: 'TinyTank <no-reply@tinytank.lefrantguillaume.com>',
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        transportMethod: 'SMTP',
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASSWORD
-        }
-    });
-
-    app.set('views', __dirname + '/emails');
-    app.set('view engine', 'jade');
+var Config = function (app) {
 
     app.use(morgan('combined'));
 
     app.enable('trust proxy');
 
     app.use(cors({
-        allowedOrigins: [
-            "http://localhost",
-            "http://tinytank.dev",
-            "http://tinytank.com",
-            "http://lefrantguillaume.com",
-            "http://tinytank.lefrantguillaume.com"
-        ]
+        origin: ALLOWED_ORIGINS
     }));
 
     /*
@@ -44,8 +31,9 @@ var Config = function (app, mailer) {
     app.use(basicAuth(process.env.AUTH_USER || "T0N1jjOQIDmA4cJnmiT6zHvExjoSLRnbqEJ6h2zWKXLtJ9N8ygVHvkP7Sy4kqrv",
         process.env.AUTH_PASSWORD || "lMhIq0tVVwIvPKSBg8p8YbPg0zcvihBPJW6hsEGUiS6byKjoZcymXQs5urequUo"));
 
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
+    // Body parsing is built into Express 5 (formerly the body-parser package).
+    app.use(express.json());
+    app.use(express.urlencoded({extended: true}));
 
 };
 

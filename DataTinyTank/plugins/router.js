@@ -8,8 +8,10 @@ var Router = function(app, db) {
   var clientApi = new ClientApi(app, db);
   var webApi = new WebApi(app, db);
 
-  var token_auth = require('./token_auth.js');
-  app.all('*', [token_auth]);
+  // Best-effort JWT decoding on every request (Express 5: use pathless app.use,
+  // bare '*' is no longer a valid path pattern).
+  var token_auth = require('./token_auth.js')(app);
+  app.use(token_auth);
 
   /*
   **	Server communication
@@ -47,10 +49,10 @@ var Router = function(app, db) {
   app.get('/web/get_tank_list', serverApi.get_tank_list);
 
   /*
-  **	Error handling
+  **	Error handling (catch-all 404)
   */
 
-  app.all('*', function(req, res) { res.status(404).end(JSON.stringify({title:"Not Found",data:"404 Not Found"})); });
+  app.use(function(req, res) { res.status(404).json({title: "Not Found", data: "404 Not Found"}); });
 
 };
 

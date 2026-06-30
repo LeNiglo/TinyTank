@@ -1,34 +1,35 @@
 {
   "name": "MasterTinyTank",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "The Master Server of our game is now a Web Service.",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com/LeNiglo/TinyTank.git"
   },
   "dependencies": {
-    "MD5": "*",
-    "background-task": "^0.7.3",
-    "basic-auth-connect": "^1.0.0",
-    "bcrypt": "^5.0.0",
-    "body-parser": "^1.12.0",
-    "express": "^4.12.2",
-    "express-cors": "0.0.3",
-    "express-mailer": "^0.2.4",
-    "jade": "^1.9.2",
+    "basic-auth-connect": "^1.1.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
     "jwt-simple": "^0.5.6",
-    "moment": "^2.9.0",
-    "mongodb": "^1.4.34",
-    "mongoskin": "^1.4.12",
-    "morgan": "^1.5.2",
-    "rand-token": "^0.2.1"
+    "moment": "^2.30.1",
+    "mongodb": "^7.4.0",
+    "morgan": "^1.11.0",
+    "nodemailer": "^9.0.3",
+    "pug": "^3.0.4"
   },
   "author": "LeNiglo",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/LeNiglo/TinyTank/issues"
   },
-  "homepage": "https://github.com/leniglo/TinyTank",
-  "README": "https://github.com/LeNiglo/TinyTank/MasterTinyTank/README.md"
+  "homepage": "https://github.com/leniglo/TinyTank"
 }

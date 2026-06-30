@@ -1,53 +1,50 @@
-#!/usr/bin/nodejs
+#!/usr/bin/env node
+
+require('dotenv').config();
 
 var express = require('express');
-var mailer = require('express-mailer');
-var app = express();
+var mailer = require('./plugins/mailer.js');
+var { MongoClient, ObjectId } = require('mongodb');
 
+var app = express();
+app.set('mailer', mailer);
 
 /*
-**	Starts by initilizing the connection with the Database
+**	Globals shared across the API modules (kept for backward-compat).
 */
 bcrypt = require('bcrypt');
-app.set('jwtTokenSecret', 'TheSecretStringIsMuchStrongerThanOneMillionOfTanks');
 moment = require('moment');
+ObjectID = ObjectId; // legacy alias used throughout the codebase
+global.ObjectId = ObjectId;
 
-var db = require('mongoskin').db(process.env.MONGO_URL || 'mongodb://localhost:27017/tiny-tank');
-ObjectID = require('mongoskin').ObjectID;
+app.set('jwtTokenSecret', process.env.JWT_SECRET || 'TheSecretStringIsMuchStrongerThanOneMillionOfTanks');
 
-
-Servers = db.collection('servers');
-Users = db.collection('users');
-Tanks = db.collection('tanks');
-Matches = db.collection('matches');
-
-
-/*
-**	Initializes the APIs
-*/
 WEB_URL = process.env.WEB_URL || 'http://tinytank.dev';
 
-/*
-**	Init Configs
-*/
-
-require('./config.js')(app, mailer);
-
+var MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/tiny-tank';
 
 /*
-**	Loads the Routes
+**	Connect to Mongo first, then wire up the app (the modern driver is async).
 */
+(async function start() {
+    var client = new MongoClient(MONGO_URL);
+    await client.connect();
+    var db = client.db(); // database name is taken from MONGO_URL
 
-require('./plugins/router.js')(app, db);
-require('./plugins/background.js')(app, db);
+    Servers = db.collection('servers');
+    Users = db.collection('users');
+    Tanks = db.collection('tanks');
+    Matches = db.collection('matches');
 
-/*
-**	Starts the App
-*/
+    require('./config.js')(app);
+    require('./plugins/router.js')(app, db);
+    require('./plugins/background.js')(app, db);
 
-var server = app.listen(process.env.PORT || 1337, function () {
-
-	var host = server.address().address
-	var port = server.address().port
-
-})
+    var port = process.env.PORT || 1337;
+    app.listen(port, function () {
+        console.log('TinyTank master server listening on port ' + port);
+    });
+})().catch(function (err) {
+    console.error('Failed to start master server:', err);
+    process.exit(1);
+});
