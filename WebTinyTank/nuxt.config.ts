@@ -17,7 +17,14 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: 'TinyTank',
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        // Faithful port: reuse the original Cosmo (dark-red) Bootstrap 3 theme +
+        // custom styles, served as static assets. The ported markup is all
+        // Bootstrap-3 classes, so this gives a pixel-faithful look with no rewrite.
+        { rel: 'stylesheet', href: '/css/bootstrap.cosmo.css' },
+        { rel: 'stylesheet', href: '/css/style.css' }
+      ]
     }
   }
 })
