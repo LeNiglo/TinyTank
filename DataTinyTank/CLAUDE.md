@@ -6,36 +6,46 @@ match-stats aggregation. Game servers self-register here; the website and game c
 ## Run
 
 ```bash
-node server.js          # executable bit is set; listens on PORT or 1337
+nvm use                 # .nvmrc -> Node 22
+npm install
+npm start               # = node server.js; listens on PORT or 1337
+# or: docker build -t tinytank-data . && docker run -p 1337:1337 --env-file .env tinytank-data
 ```
+
+Config is loaded from a `.env` file via `dotenv` (see `.env.example`; `.env` is gitignored).
 
 | Env var                     | Default                                  | Used for                          |
 | --------------------------- | ---------------------------------------- | --------------------------------- |
 | `PORT`                      | `1337`                                   | HTTP listen port (`server.js`)    |
-| `MONGO_URL`                 | `mongodb://localhost:27017/tiny-tank`    | Mongo connection (mongoskin)      |
+| `MONGO_URL`                 | `mongodb://localhost:27017/tiny-tank`    | Mongo connection (mongodb driver) |
 | `WEB_URL`                   | `http://tinytank.dev`                    | Base for activation/download links |
+| `JWT_SECRET`                | hardcoded fallback (see gotchas)         | Secret for signing JWT tokens     |
 | `AUTH_USER` / `AUTH_PASSWORD` | hardcoded fallbacks (see gotchas)      | HTTP Basic auth on **all** routes |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` | — | express-mailer transport          |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASSWORD` | — | nodemailer transport (optional in dev) |
 
-Stack: Express 4, mongoskin 1.4 (Mongo driver 1.4), jwt-simple, bcrypt 0.8, express-mailer +
-Jade, background-task, moment. All vintage — pinned, no lockfile discipline expected.
+Stack (modernized 2026): **Express 5**, the official **`mongodb` driver 7** (async/await; no more
+mongoskin), `jwt-simple`, **bcrypt 6**, **nodemailer 9 + Pug** email templates (replaced
+express-mailer/Jade), `dotenv`, `moment`, `morgan`, `cors`, `basic-auth-connect`. `package-lock.json`
+committed; `npm audit` clean. Multi-stage `Dockerfile` + `.dockerignore` present.
 
 ## Architecture
 
-`server.js` connects Mongo, exposes four collection globals (`Servers`, `Users`, `Tanks`,
-`Matches`) plus `ObjectID`, `bcrypt`, `moment`, `WEB_URL` as **globals** (no `var`), then loads
-`config.js`, `plugins/router.js`, `plugins/background.js`. Handlers rely on those globals.
+`server.js` `await`s a `MongoClient` connection inside an async bootstrap, then exposes four
+collection globals (`Servers`, `Users`, `Tanks`, `Matches`) plus `ObjectId`/`ObjectID`, `bcrypt`,
+`moment`, `WEB_URL` as **globals**, sets `app.set('mailer', …)`, and loads `config.js`,
+`plugins/router.js`, `plugins/background.js` before `app.listen`. Handlers rely on those globals.
 
 ### Request pipeline (`config.js`, order matters)
 
-morgan → `trust proxy` → CORS whitelist → **HTTP Basic auth (every route)** → body-parser.
-CORS whitelist: `localhost`, `tinytank.dev`, `tinytank.com`, `lefrantguillaume.com`,
+morgan → `trust proxy` → CORS whitelist (`cors` pkg) → **HTTP Basic auth (every route)** →
+`express.json()` / `express.urlencoded()` (built into Express 5; body-parser removed). CORS
+whitelist: `localhost`, `tinytank.dev`, `tinytank.com`, `lefrantguillaume.com`,
 `tinytank.lefrantguillaume.com`.
 
 ### Routes (`plugins/router.js`)
 
-`app.all('*', [token_auth])` runs the JWT middleware before every handler; a catch-all returns
-JSON 404. Three surfaces, all under Basic auth:
+`app.use(token_auth)` (pathless — Express 5 dropped bare `'*'`) runs the JWT middleware before
+every handler; a pathless catch-all returns JSON 404. Three surfaces, all under Basic auth:
 
 | Prefix    | Source file     | Endpoints                                                                              |
 | --------- | --------------- | -------------------------------------------------------------------------------------- |
@@ -57,30 +67,31 @@ All responses share the envelope `{ name, res, err }`. Most failures still retur
 
 ## Key patterns
 
-- **JWT flow** (`token_auth.js`): token read from `X-Access-Token` header, or `access_token` in
-  body/query. Decoded with secret `jwtTokenSecret` (set in `server.js`), looks up the user, and
-  attaches `req.user`. Issued at `/web/login` with `{ iss: userId, exp }`, 7-day expiry, stored
-  on the user doc and reused if already present.
+- **JWT flow** (`token_auth.js`): exported as a factory `require('./token_auth.js')(app)` so the
+  middleware can reach `jwtTokenSecret`. Token read from `X-Access-Token` header or `access_token`
+  in body/query; decoded, `await`s the user lookup, attaches `req.user`. Best-effort: missing/
+  invalid/expired tokens fall through as anonymous (Basic auth is the real gate). Issued at
+  `/web/login` with `{ iss: userId, exp }`, 7-day expiry, stored on the user doc and reused.
 - **Server lifecycle**: game servers `POST /server/init_server` (returns the new `_id`), heartbeat
   via `update_last_active`, and `stop_server` on shutdown. `add_user`/`remove_user` push/pull the
   `users` array; `change_map` updates `map`.
-- **Reaping** (`background.js`): every 30 s, `Servers.remove({ last_active < now-5min })`. A
-  server that stops heartbeating disappears from the registry within ~5 min.
+- **Reaping** (`background.js`): a plain `setInterval` (the `background-task`/Redis dependency was
+  removed) runs every 30 s and `await Servers.deleteMany({ last_active < now-5min })`. A server
+  that stops heartbeating disappears from the registry within ~5 min.
 - **Stats aggregation** (`web_api.user_profile`): no aggregation pipeline — loads every match
   containing the user, sums kills/deaths/score/shots in JS, derives per-game averages (`*PG`).
   O(matches) per profile request.
 
 ## Gotchas
 
-- **Hardcoded secrets**: `jwtTokenSecret` is a literal in `server.js`; `AUTH_USER`/`AUTH_PASSWORD`
-  have long hardcoded fallbacks in `config.js`. Set the env vars in any real deployment.
-- **`/web/ladder` is fully mocked** — returns a static 5-entry array (`TODO` to compute from DB).
-- **`token_auth` failures fall through**: an expired token calls `res.end(...)` but does not
-  `return`, and any decode error just calls `next()` — auth is effectively advisory; Basic auth is
-  the real gate.
-- **`client_api.login` cheat check is inverted/broken**: `!app.get('jwtTokenSecret') == req.body.secret`
-  always evaluates `false == secret`, so the guard never triggers as intended.
-- Several handlers assume the lookup found a doc (e.g. `user_profile` dereferences `exists` with no
-  null check) — malformed input can throw.
-- `add_game_stats` only responds on success (`!err & result`, bitwise `&`); on error the request
-  hangs with no reply.
+- **Hardcoded secret fallbacks**: `JWT_SECRET`, `AUTH_USER`, `AUTH_PASSWORD` have hardcoded
+  fallbacks in `server.js`/`config.js` — always set the env vars in any real deployment.
+- **`/web/ladder` is still fully mocked** — returns a static 5-entry array (`TODO` to compute
+  from DB). Untouched by the modernization.
+- **`token_auth` is best-effort by design**: a missing/invalid/expired token never blocks the
+  request; HTTP Basic auth is the real gate.
+
+> Fixed during the 2026 modernization (were bugs): `token_auth` no longer references an undefined
+> `app` (JWT now actually works), `add_game_stats` no longer hangs on error, `user_profile` guards
+> a missing user, and the broken `client_api.login` "cheater" check (a no-op that threw on missing
+> input) was removed.

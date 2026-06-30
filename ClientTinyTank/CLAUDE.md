@@ -2,14 +2,21 @@
 
 The playable desktop game client. Renders the arena with Slick2D/LWJGL, drives a Nifty
 UI, talks to a game server over KryoNet (TCP/UDP) for gameplay, and to the master server
-over REST/JSON for login and the server list. Java 1.8, Maven, `com.lefrantguillaume`.
+over REST/JSON for login and the server list. **Java 21**, Maven, `com.lefrantguillaume`.
 
 ## Build & run
 
 ```bash
-mvn clean package                                   # -> target/ClientTinyTank-<ver>-jar-with-dependencies.jar
+mvn clean package                                   # -> target/ClientTinyTank-2.3-jar-with-dependencies.jar
 java -jar target/ClientTinyTank-2.3-jar-with-dependencies.jar
 ```
+
+> ⚠️ **Builds, but does not run on Apple Silicon (arm64).** Slick2D pulls **LWJGL 2.9.3**, which
+> has no arm64 natives (x86_64 only; abandoned ~2014). On an arm64 Mac the run dies with
+> `UnsatisfiedLinkError: no lwjgl in java.library.path`. To actually run it you need either an
+> **x86_64 JDK under Rosetta** + staged LWJGL natives + a display, or a port off LWJGL 2.
+> **See [`docs/ClientTinyTank-libgdx-port.md`](../docs/ClientTinyTank-libgdx-port.md)** for the
+> libGDX/LWJGL 3 port plan and the Rosetta stopgap. No Dockerfile — it's a GUI app, not a service.
 
 - Main class: `com.lefrantguillaume.Main` -> builds `MasterGame` and calls `start()`.
 - Needs a display + native LWJGL libs (windowed mode). No headless / unit tests in this module.
@@ -71,9 +78,9 @@ java -jar target/ClientTinyTank-2.3-jar-with-dependencies.jar
     connect/disconnect, move/shoot/spell, player new/delete/revive/update-state/position,
     obstacle put/update, shot update, round start/end/kill/score, chat, change-team,
     collision. Inbound server messages become `MESSAGE_SERVER -> GAME` tasks.
-  - *Account / lobby* = Jersey REST (`networkData/DataServer`) to the master server at
-    `http://tinytank.lefrantguillaume.com/api/client/` (`login`, `list_servers`),
-    behind HTTP Basic auth.
+  - *Account / lobby* = REST via JDK `HttpClient` + Jackson (`networkData/DataServer`; was
+    Jersey 1.9) to the master server at `http://tinytank.lefrantguillaume.com/api/client/`
+    (`login`, `list_servers`), behind HTTP Basic auth.
 
 ## Config files (module root, read from CWD)
 
@@ -100,5 +107,9 @@ java -jar target/ClientTinyTank-2.3-jar-with-dependencies.jar
   reader, not strict JSON. Keep that in mind before reformatting with a strict tool.
 - The `assets/old/interface/*.xml` Nifty screens are legacy; the active UI is built in code
   under `userInterface/`.
-- Vintage stack (Java 1.8, Slick2D, Nifty 1.4.2-SNAPSHOT, Jersey 1.9) pulled from the
-  `nifty-gui.sourceforge.net` Maven repo over plain HTTP.
+- **Dependencies (modernized 2026):** Java 21; Nifty migrated from the dead
+  `lessvoid:*:1.4.2-SNAPSHOT` SourceForge HTTP repo to **`com.github.nifty-gui:*:1.4.3`** on
+  Maven Central; `slick2d-core` 1.0.1 → 1.0.2 (with its dead `javax.jnlp:jnlp-api` excluded);
+  Jersey 1.9 → JDK `HttpClient` + Jackson; `jettison` now a direct dep (was transitive). KryoNet
+  2.22.0-RC1 kept + `Add-Opens` manifest. **The deep blocker is Slick2D → LWJGL 2** (no arm64) —
+  see the run caveat above and `docs/ClientTinyTank-libgdx-port.md`.

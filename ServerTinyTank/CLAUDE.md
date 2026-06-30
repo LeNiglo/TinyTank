@@ -8,11 +8,17 @@ clients, and reports lifecycle/stats to the master server over REST. One JVM = o
 | Command | Effect |
 | ------- | ------ |
 | `mvn clean package` | Fat JAR (`jar-with-dependencies`) in `target/`, main class `com.lefrantguillaume.Main` |
-| `java -jar target/ServerTinyTank-1.8-jar-with-dependencies.jar` | Run with **JavaFX/graphical** UI (default) |
+| `java -jar target/ServerTinyTank-1.8-jar-with-dependencies.jar` | Run with **Swing/graphical** UI (default) |
 | `java -jar … -c` (`--console`) | Run with **console** UI (commands; type `help`) |
+| `docker build -t tinytank-server . && docker run -it -p 13333:13333 -p 13444:13444/udp tinytank-server` | Containerized (console mode) |
 
-Java 1.8 only. Working dir must contain `tanks.json`, `obstacles.json`, `config.properties`,
-and `maps/` — they are read by relative path at startup, not bundled in the JAR.
+**Java 21** (modernized 2026; builds on JDK 26 via `maven.compiler.release`). The fat JAR's
+manifest sets `Add-Opens` so KryoNet's old Kryo can reflect into the JDK at runtime. Working dir
+must contain `tanks.json`, `obstacles.json`, `config.properties`, and `maps/` — read by relative
+path at startup, not bundled in the JAR.
+
+The container runs **console mode** (Swing can't run headless); the server only binds its ports
+once a game is `start`ed from the console, so run it interactively (`-it` / compose `stdin_open`).
 
 ## Architecture
 
@@ -23,8 +29,8 @@ four collaborators and routes every event between them:
 | --------- | ------- | ---- |
 | `GameController` (~700 lines) | `gameComponent/controllers/` | Core game logic; dispatches every client message via a big `instanceof` chain in `doTask` → `doMessageXxx` |
 | `GameServer` | `networkComponent/gameServerComponent/` | KryoNet `Server`; receives messages, re-broadcasts (`sendToAllTCP` / `sendToTCP`) |
-| `DataServer` | `networkComponent/dataServerComponent/` | Jersey REST client to the master (`init/update/stop_server`, `add/remove_user`, `add_game_stats`) |
-| `UserInterface` | `userInterface/` | `GraphicalUserInterface` (JavaFX) or `ConsoleUserInterface`; start/stop game, pick map & mode |
+| `DataServer` | `networkComponent/dataServerComponent/` | REST client to the master via JDK `HttpClient` + Jackson (was Jersey 1.9): `init/update/stop_server`, `add/remove_user`, `add_game_stats` |
+| `UserInterface` | `userInterface/` | `GraphicalUserInterface` (**Swing/AWT**, not JavaFX) or `ConsoleUserInterface`; start/stop game, pick map & mode |
 
 Supporting `gameComponent/` packages: `gameMode/` (controller + `Team` + abstract `GameMode`),
 `gameMode/modes/` (the four concrete modes), `gameobjects/` (`tanks/`, `shots/`, `obstacles/`,
@@ -65,10 +71,19 @@ Supporting `gameComponent/` packages: `gameMode/` (controller + `Team` + abstrac
 
 ## Gotchas
 
-- **`DataServer.initServer()` is short-circuited to `return true`** — the whole REST flow
-  (register, 30s/120s keep-alive, stats) is commented out. The server currently runs fully offline;
-  master-server URL and HTTP Basic credentials are hardcoded in `DataServer.getClientResponse`.
+- **`DataServer.initServer()` is short-circuited to `return true`** — the register + 30s/120s
+  keep-alive flow stays commented out, so the server runs fully offline (the other REST calls —
+  add/remove user, stats — do fire on game events but hit a dead master domain). Master URL + HTTP
+  Basic credentials are hardcoded in `DataServer.postJson`.
 - `tanks.json` is loaded from disk with a `// TODO get this from the data server` note.
+- **Dependencies (modernized 2026):** Java 21; Jersey 1.9 → JDK `HttpClient` + Jackson; `jettison`
+  is now a direct dep (was transitive via jersey-json) for config JSON parsing;
+  `javafx.geometry.Rectangle2D` → `java.awt.geom.Rectangle2D`; `javafx.util.Pair` is **vendored**
+  at `src/main/java/javafx/util/Pair.java` (org.openjfx's per-platform classifiers broke Docker
+  builds). KryoNet 2.22.0-RC1 is kept (it is the latest; the project is abandoned).
+- A pre-existing **init race**: the console input thread starts before `gameController` is
+  assigned, so issuing `start` instantly (scripted input) can NPE. A human typing it a moment
+  later is fine.
 - Heavy `System.out`/`WindowController.addConsoleMsg` logging on hot paths (per move/position
   update) — noisy and not free.
 - `maps/`, `tanks.json`, `obstacles.json` are a **shared contract** with the client and web bundle
