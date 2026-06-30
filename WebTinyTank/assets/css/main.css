@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tt-red-1: #7f0000;
+  --tt-red-2: #cc0000;
+  --tt-red-3: #7f2626;
+  --tt-ladder-1: #f15841;
+  --tt-ladder-2: #a83a2a;
+  --tt-ladder-3: #4d241e;
+}

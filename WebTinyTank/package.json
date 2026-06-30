@@ -1,0 +1,30 @@
+{
+  "name": "webtinytank",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "node .output/server/index.mjs",
+    "postinstall": "nuxt prepare",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "nuxt": "^3.15.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.15.4",
+    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@playwright/test": "^1.49.1",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^16.5.3",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.3",
+    "vitest": "^3.2.0"
+  }
+}
