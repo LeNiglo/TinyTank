@@ -2,15 +2,15 @@ function web {
 
   echo "Building Web"
   cd WebTinyTank
-  sudo meteor update
-  sudo meteor build .
-  sudo mv WebTinyTank.tar.gz /opt/tinytank/web/.
-  cd /opt/tinytank/web/
+  # Nuxt (Nitro) build -> .output/ run by the tinytankweb systemd service:
+  #   node /opt/tinytank/web/.output/server/index.mjs
+  # The unit must set API_URL, API_AUTH, SENTRY_DSN and PORT in its environment.
+  npm ci
+  npm run build
   sudo service tinytankweb stop
-  sudo rm -rf bundle/
-  sudo tar -zxf WebTinyTank.tar.gz
-  cd bundle/programs/server/
-  sudo npm install
+  sudo rm -rf /opt/tinytank/web/.output /opt/tinytank/web/public
+  sudo cp -r .output /opt/tinytank/web/.output
+  sudo cp -r public /opt/tinytank/web/public
   cd /opt/tinytank
   sudo chown tinytank -R /opt/tinytank
   sudo service tinytankweb start
@@ -48,5 +48,5 @@ fi
 
 cd $current
 sudo service nginx restart
-sudo rm -f /opt/tinytank/DataTinyTank.tar.gz /opt/tinytank/web/WebTinyTank.tar.gz
+sudo rm -f /opt/tinytank/DataTinyTank.tar.gz
 echo "There you go :)"

@@ -1,4 +1,18 @@
-.meteor/local
-.meteor/meteorite
+# Nuxt / Nitro
+.nuxt
+.output
+.data
 
-server/kadira.js
+# deps
+node_modules
+
+# tests
+test-results
+playwright-report
+
+# env (secrets — never commit; see .env.example)
+.env
+
+# misc
+.DS_Store
+*.log

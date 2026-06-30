@@ -1,0 +1,8 @@
+node_modules
+.nuxt
+.output
+tests
+test-results
+playwright-report
+.git
+*.log

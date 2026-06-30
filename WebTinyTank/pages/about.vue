@@ -1,0 +1,69 @@
+<script setup lang="ts">
+useHead({ title: 'About — TinyTank' })
+
+const users = [
+  { name: 'Guillaume Lefrant', picture: '/img/team/ban.jpg' },
+  { name: 'Kévin Andres', picture: '/img/team/fry.jpg' },
+  { name: 'Styve Simonneau', picture: '/img/team/thugswiti.jpg' },
+  { name: 'Alexandre Quintin', picture: '/img/team/hippolance.png' }
+]
+</script>
+
+<template>
+  <div id="aboutTinyTank" class="container-fluid">
+    <h1 class="text-center page-header">About TinyTank</h1>
+    <img src="/img/tinytank.png" class="img-responsive" alt="Logo" style="height: 150px; margin: 40px auto 0 auto">
+
+    <section id="team">
+      <div class="container text-center">
+        <h2 class="page-header col-md-6 col-md-offset-3">Our Team</h2>
+        <table class="list-users">
+          <tbody>
+            <tr>
+              <td v-for="u in users" :key="u.name">
+                <div>
+                  <h4>{{ u.name }}</h4>
+                  <div class="circular"><img :src="u.picture" :alt="u.name"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="donate">
+      <div class="container text-center">
+        <h2 class="page-header col-md-6 col-md-offset-3">Help us through PayPal</h2>
+        <div class="row">
+          <div class="col-md-9">
+            <p>
+              Building and maintaining a free online game isn't free for us ! We have to pay server, domain
+              name, ...<br>
+              Furthermore, we would like to give you a great experience by adding news contents or upgrade
+              features time to time.<br>
+              By donating, <strong>YOU will allow us</strong> to keep the game online and motivate us to
+              bring you some new awesome stuff !<br>
+              You have the power to keep this game alive, while you enjoy it.
+            </p>
+            <p class="lead">But don't blast your Credit Card too much and blast foes on Tiny Tank !</p>
+          </div>
+          <div class="col-md-3"><PaypalButton /></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="content"><div class="container text-center" /></section>
+    <section id="development"><div class="container text-center" /></section>
+
+    <section id="legal">
+      <div class="container text-right">
+        <p>
+          We don't own everything on this project, all rights reserved for their respective owners. <br>
+          Project is still building, you can follow us on
+          <a href="//github.com/LeNiglo/TinyTank" target="_blank">GitHub</a>.
+        </p>
+      </div>
+    </section>
+  </div>
+</template>
